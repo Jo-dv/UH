@@ -10,6 +10,8 @@ module.exports = {
         formText : '#353131',
         formInput : 'rgba(236, 236, 236, 0.72)',
         formButton : 'rgba(165, 72, 140, 0.85)',
+        cancelButton : '#676767',
+        modalBorder : '#6B6B6B',
         mc1 : '#F72585',
         mc2 : '#B5179E',
         mc3 : '#7209B7',

@@ -4,7 +4,7 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import UserVideoComponent from './UserVideoComponent';
 import Chat from '../../components/Chat';
-
+import Modal from '../../components/Modal';
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
 class Room extends Component {
@@ -221,10 +221,13 @@ class Room extends Component {
       }
   }
 
+  
   render() {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
-
+    const testModal = () => {
+      alert('모달 수락 버튼 작동함')
+    }
     return (
       <div className="w-screen h-screen">
         {this.state.session === undefined ? (
@@ -260,6 +263,13 @@ class Room extends Component {
                         </p>
                     </form>
                 </div>
+                <Modal 
+                    btnText={'모달 여는 버튼'}
+                    content={'모달내용'}
+                    cancelText={'닫기'}
+                    okText={'수락'}
+                    onClick={testModal}
+                />
             </div>
         ) : null}
 
