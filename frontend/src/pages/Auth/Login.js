@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 
 import googleLogo from './img/googleLogo.png'
 import kakaoLogo from './img/kakaoLogoB.png'
 import naverLogo from './img/naverLogo.png'
 
 const Login = () => {
-  const navigate = useNavigate();
-  const onClick = (path) => navigate(`/${path}`);
+
 
   const [form, setForm] = useState({
     userId: '',

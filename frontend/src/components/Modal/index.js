@@ -13,10 +13,11 @@ const Modal = ({btnText, content, cancelText, okText, onClick, ...props}) => {
 <div onClick={modalOnOff}
 className="w-screen h-screen absolute inset-0
 flex justify-center items-center">
+
   <section onClick={(e) => e.stopPropagation()}
-  className="bg-formBG w-80 h-40 rounded-2xl border-2 border-modalBorder
+  className="bg-formBG min-w-80 min-h-40 rounded-2xl border-2 border-modalBorder
   flex flex-col justify-center items-center" >
-    <p className='text-xl text-center'>{content}</p>
+    <p className='text-xl text-center p-4'>{content}</p>
     <div className=''>
       <button onClick={modalOnOff}
       className='bg-cancelButton py-2 px-4 m-2 rounded'>
