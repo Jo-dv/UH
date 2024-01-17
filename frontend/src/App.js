@@ -15,7 +15,7 @@ function App() {
 
       <img className="animate-fade animate-delay-[2000ms] 
         absolute h-screen w-full" 
-        alt="Background" src="img/background.png"/>
+        alt="Background" src="img/startBackground.png"/>
       {/* <div className='z-10 absolute w-3/4 h-3/4
       bg-gradient-to-r from-spaceP via-amber-300 via-white via-cyan-100 to-spaceB
       animate-fade-right animate-once animate-delay-[2000ms]'>

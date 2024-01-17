@@ -6,3 +6,12 @@
   font-family: 'pixel';
   src: url(./font/DungGeunMo.woff);
 }
+
+body {
+  background-image: url(../public/img/background.png);
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: 'pixel';
+}
