@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Room from "./room"
-import { Link } from "react-router-dom"
+
 
 const Lobby = () => {
   // [검색창] 게임 선택
@@ -54,23 +54,6 @@ const Lobby = () => {
   
   return (
     <div>
-      <nav>
-        <ul className="flex flex-row items-end">
-          <li>
-            <Link to='/lobby'>
-              <img src='img/logo.png' alt="Logo" 
-              className="h-20"/>
-            </Link>
-          </li>
-          <li className="bg-mc1 p-2">방 만들기</li>
-          <li className="bg-mc2 p-2">빠른 입장</li>
-          <li className="bg-mc3 p-2">친구</li>
-          <li className="bg-mc3 p-2">랭킹</li>
-          <li className="bg-mc3 p-2">설정</li>
-          <li className="bg-mc3 p-2">피드백</li>
-          <li className="bg-mc4 p-2">로그아웃</li>
-        </ul>
-      </nav>
       <h1>로비</h1>
       <div>
         {/* 친구 목록 */}
