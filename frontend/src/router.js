@@ -6,6 +6,7 @@ import Lobby from "./pages/Lobby";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import Layout from "./components/layout";
+import CreateNickname from "./pages/Auth/CreateNickname";
 import VideoRoomComponent from "./components/OpenVidu/VideoRoomComponent";
 const route = (
     <>
@@ -17,6 +18,7 @@ const route = (
         <Route path="auth">
             <Route path="login" element={<Login />}></Route>
             <Route path="signup" element={<Signup />}></Route>
+            <Route path="nickname" element={<CreateNickname />}></Route>
         </Route>
     </Route>
     </>
