@@ -4,6 +4,8 @@ import com.example.member.dto.MemberDTO;
 //import com.example.member.service.MemberService;
 import com.example.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpEntity;
@@ -12,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -38,19 +42,64 @@ public class MemberController {
         return "login";
     }
 
-    @GetMapping("/member/login/kakao")
-    public String loginKakao() {
-        return "loginKakao";
-    }
-
     @PostMapping("/member/join")
     public String join(@ModelAttribute MemberDTO memberDTO) {
         System.out.println("MemberController.join");
         System.out.println("memberDTO = " + memberDTO);
-//        memberService.join(memberDTO);
+        memberService.join(memberDTO);
+        return "login";
+    }
+
+    @PostMapping("/member/login")
+    public String login(@ModelAttribute MemberDTO memberDTO, HttpSession session) {
+        MemberDTO loginResult = memberService.login(memberDTO);
+        if (loginResult != null) {
+            // login 성공
+            session.setAttribute("loginNickname", loginResult.getMemberNickname());
+            return "lobby";
+        } else {
+            // login 실패
+            return "login";
+        }
+    }
+
+    @GetMapping("/member/list")
+    public String findAll(Model model) {
+        List<MemberDTO> memberDTOList = memberService.findAll();
+        model.addAttribute("memberList", memberDTOList);
+        return "list";
+    }
+
+// 위에 멤버리스트 조회는 여러개라서 list, 밑에 상세조회는 한사람이라 하나만 반환
+    @GetMapping("/member/{id}")
+    public String findById(@PathVariable Long id, Model model) {
+        MemberDTO memberDTO = memberService.findById(id);
+        model.addAttribute("member", memberDTO);
+        return "detail";
+    }
+
+    @GetMapping("/member/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
         return "index";
     }
 
+    @PostMapping("/member/nickname-check")
+    public @ResponseBody String nicknameCheck(@RequestParam("memberNickname") String memberNickname) {
+        System.out.println(memberNickname);
+        String checkResult = memberService.nicknameCheck(memberNickname);
+        if (checkResult != null) {
+            return "가능";
+        } else {
+            return "no";
+        }
+    }
+
+
+    @GetMapping("/member/login/kakao")
+    public String loginKakao() {
+        return "loginKakao";
+    }
 
     @RequestMapping("/member/login/naver")
     public String naver_login(HttpServletRequest request) {

@@ -1,15 +1,46 @@
 <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>join</title>
+    <!--    jquery cdn-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
 <form action="/member/join" method="post">
-    닉네임: <input type="text" name="memberNickname"><br>
+<!--    onkeyup하면 닉네임 치는 내내 중복 검사, onblur 하면 커서 떼야 검사-->
+    닉네임: <input type="text" name="memberNickname" id="memberNickname" onblur="nicknameCheck()"><br>
+    <span id="check-result"></span><br>
     아이디: <input type="text" name="memberId"><br>
     비밀번호 : <input type="password" name="memberPassword"><br>
     <input type="submit" value="회원가입">
 </form>
 </body>
+<script th:inline="javascript">
+    const nicknameCheck = () => {
+        const nickname = document.getElementById("memberNickname").value;
+        const checkResult = document.getElementById("check-result");
+
+    $.ajax({
+        // 요청방식 : post, url: "/member/nickname-check", 데이터:닉네임
+        type: "post",
+        url : "/member/nickname-check",
+        data : {
+            "memberNickname" : nickname
+            },
+        success : function(res) {
+            console.log("성공", res);
+            if (res == "가능") {
+                checkResult.innerHTML = "사용가능한 닉네임";
+            } else {
+                checkResult.innerHTML = "중복된 닉네임";
+            }
+        },
+        error : function(err) {
+            console.log(err);
+        }
+    });
+}
+</script>
 </html>
