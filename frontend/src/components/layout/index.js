@@ -6,7 +6,7 @@ const Layout = () => {
     <>
       <Header />
       <Outlet />
-      <MainBox />
+      {/* <MainBox /> */}
     </>
   );
 };
