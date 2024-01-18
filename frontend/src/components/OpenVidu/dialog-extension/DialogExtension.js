@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-// import Card from '@mui/material/Card';
-// import CardActions from '@mui/material/CardActions';
-// import CardContent from '@mui/material/CardContent';
-// import Typography from '@mui/material/Typography';
-// import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
 import './DialogExtension.css';
 
 export default class DialogExtensionComponent extends Component {
@@ -44,7 +44,7 @@ export default class DialogExtensionComponent extends Component {
             <div>
                 {this.props && this.props.showDialog ? (
                     <div id="dialogExtension">
-                        {/* <Card id="card">
+                        <Card id="card">
                             <CardContent>
                                 <Typography color="textSecondary">Hello</Typography>
                                 <Typography color="textSecondary">
@@ -65,7 +65,7 @@ export default class DialogExtensionComponent extends Component {
                                     </Button>
                                 ) : null}
                             </CardActions>
-                        </Card> */}
+                        </Card>
                     </div>
                 ) : null}
             </div>

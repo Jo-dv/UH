@@ -497,6 +497,11 @@ class VideoRoomComponent extends Component {
         var chatDisplay = { display: this.state.chatDisplay };
 
         return (
+            <>
+            {this.state.session === undefined ? (
+                <div>Loading</div>
+            ) : null}
+            {this.state.session !== undefined ? (
             <div className="container" id="container">
                 <ToolbarComponent
                     sessionId={mySessionId}
@@ -537,6 +542,8 @@ class VideoRoomComponent extends Component {
                     )}
                 </div>
             </div>
+            ) : null}
+            </>
         );
     }
 

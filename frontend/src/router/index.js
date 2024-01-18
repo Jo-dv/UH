@@ -12,7 +12,7 @@ const route = (
     <>
     <Route path="/" element={<Start />}></Route>
     <Route element={<Layout/>}>
-        <Route path="room" element={<Room />}></Route>
+        {/* <Route path="room" element={<Room />}></Route> */}
         <Route path="room2" element={<VideoRoomComponent />}></Route>
         <Route path="lobby" element={<Lobby />}></Route>
         <Route path="auth">
