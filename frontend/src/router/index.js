@@ -5,6 +5,7 @@ import Room from "../pages/Room";
 import Lobby from "../pages/Lobby";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/Signup";
+import CreateNickname from "../pages/Auth/CreateNickname";
 import Layout from "../layout";
 const route = (
     <>
@@ -15,6 +16,7 @@ const route = (
         <Route path="auth">
             <Route path="login" element={<Login />}></Route>
             <Route path="signup" element={<Signup />}></Route>
+            <Route path="nickname" element={<CreateNickname />}></Route>
         </Route>
     </Route>
     </>

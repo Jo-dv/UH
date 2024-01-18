@@ -32,22 +32,38 @@ const Signup = () => {
         // 입력 값 범위 설정
         const eRegEx = /^[a-z0-9A-Z]{4,20}$/;
 
+        // 아이디 입력 안했을 때
         if (!form.userId) {
             setErr((err) => ({ ...err, userId: "아이디를 입력해주세요" }));
+            // 영어와 숫자를 제외한 것을 입력했을 때
         } else if (!eRegEx.test(form.userId)) {
             setErr((err) => ({ ...err, userId: "영어랑 숫자만 써주세요" }));
         }
+        // 비밀번호 입력 안했을 때
         if (!form.password) {
             setErr((err) => ({ ...err, password: "비밀번호를 입력해주세요" }));
+            // 영어와 숫자를 제외한 것을 입력했을 때
         } else if (!eRegEx.test(form.password)) {
             setErr((err) => ({ ...err, password: "영어랑 숫자만 써주세요" }));
         }
+        // 비밀번호 길이가 20자가 넘어갔을 때
+        if (form.password.length > 20) {
+            setErr((err) => ({...err, password: "비밀번호는 20자 이하로 입력해주세요" }));
+        }
+        // 비밀번호 확인 입력 안했을 때
         if (!form.passwordCheck) {
             setErr((err) => ({ ...err, passwordCheck: "비밀번호를 입력해주세요" }));
         }
+        // 비밀번호와 비밀번호 확인이 일치하지 않을 때
         if (form.password !== form.passwordCheck) {
             setErr((err) => ({ ...err, passwordCheck: "비밀번호가 일치하지 않습니다" }));
         }
+        // 비밀번호와 비밀번호 확인이 일치하면 에러메시지 지우기
+        if (form.password === form.passwordCheck) {
+            setErr((err) => ({...err, passwordCheck: "" }));
+        }
+
+
     };
     return (
         <div className="w-full h-screen p-5 flex justify-center items-center z-10">
