@@ -11,7 +11,7 @@ const Header = () => {
           <ul className="flex flex-row items-end">
             <li>
               <Link to='/lobby'>
-                <img src='image/logo.png' alt="Logo" className="h-20"/>
+                <img src='../../image/logo.png' alt="Logo" className="h-20"/>
               </Link>
             </li>
             {isLobbyPage?
