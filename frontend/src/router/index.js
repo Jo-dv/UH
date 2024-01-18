@@ -1,14 +1,15 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 
-import App from "../App";
+import Start from "../pages/Start";
 import Room from "../pages/Room";
 import Lobby from "../pages/Lobby";
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/Signup";
-
+import Layout from "../layout";
 const route = (
-    <Route>
-        <Route path="/" element={<App />}></Route>
+    <>
+    <Route path="/" element={<Start />}></Route>
+    <Route element={<Layout/>}>
         <Route path="room" element={<Room />}></Route>
         <Route path="lobby" element={<Lobby />}></Route>
         <Route path="auth">
@@ -16,6 +17,7 @@ const route = (
             <Route path="signup" element={<Signup />}></Route>
         </Route>
     </Route>
+    </>
 );
 
 const rootRouter = createBrowserRouter(createRoutesFromElements(route));

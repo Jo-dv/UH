@@ -1,7 +1,4 @@
-
-
-
-function App() {
+function Start() {
   return (
     <>
     <div className="w-full h-screen bg-black
@@ -26,4 +23,4 @@ function App() {
   );
 }
 
-export default App;
+export default Start;
