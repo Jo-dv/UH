@@ -46,9 +46,13 @@ const Signup = () => {
         } else if (!eRegEx.test(form.password)) {
             setErr((err) => ({ ...err, password: "영어랑 숫자만 써주세요" }));
         }
+        // 비밀번호가 4자리 미만일 때
+        if (form.password.length > 0 && form.password.length < 4) {
+            setErr((err) => ({ ...err, password: "비밀번호는 4자 이상으로 입력해주세요" }));
+        }
         // 비밀번호 길이가 20자가 넘어갔을 때
         if (form.password.length > 20) {
-            setErr((err) => ({...err, password: "비밀번호는 20자 이하로 입력해주세요" }));
+            setErr((err) => ({ ...err, password: "비밀번호는 20자 이하로 입력해주세요" }));
         }
         // 비밀번호 확인 입력 안했을 때
         if (!form.passwordCheck) {
@@ -60,10 +64,13 @@ const Signup = () => {
         }
         // 비밀번호와 비밀번호 확인이 일치하면 에러메시지 지우기
         if (form.password === form.passwordCheck) {
-            setErr((err) => ({...err, passwordCheck: "" }));
+            setErr((err) => ({ ...err, passwordCheck: "" }));
         }
-
-
+        // 모든 유효성 검사를 통과했다고 가정
+        if (!err.userId && !err.password && !err.passwordCheck && form.password === form.passwordCheck) {
+            // 콘솔창에 사용자 입력 값 출력
+            console.log('회원가입 정보:', form);
+        }
     };
     return (
         <div className="w-full h-screen p-5 flex justify-center items-center z-10">
