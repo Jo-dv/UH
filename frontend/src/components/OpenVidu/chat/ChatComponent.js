@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-// import IconButton from '@mui/material/IconButton';
-// import Fab from '@mui/material/Fab';
-// import HighlightOff from '@mui/icons-material/HighlightOff';
-// import Send from '@mui/icons-material/Send';
+import IconButton from '@mui/material/IconButton';
+import Fab from '@mui/material/Fab';
+import HighlightOff from '@mui/icons-material/HighlightOff';
+import Send from '@mui/icons-material/Send';
 
 import './ChatComponent.css';
-// import { Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 
 export default class ChatComponent extends Component {
     constructor(props) {
@@ -85,9 +85,9 @@ export default class ChatComponent extends Component {
                 <div id="chatComponent" style={styleChat}>
                     <div id="chatToolbar">
                         <span>{this.props.user.getStreamManager().stream.session.sessionId} - CHAT</span>
-                        <button id="closeButton" onClick={this.close}>
-                            X
-                        </button>
+                        <IconButton id="closeButton" onClick={this.close}>
+                            <HighlightOff color="secondary" />
+                        </IconButton>
                     </div>
                     <div className="message-wrap" ref={this.chatScroll}>
                         {this.state.messageList.map((data, i) => (
@@ -120,11 +120,11 @@ export default class ChatComponent extends Component {
                             onChange={this.handleChange}
                             onKeyPress={this.handlePressKey}
                         />
-
-                        <button size="small" id="sendButton" onClick={this.sendMessage}>
-                            보내기
-                        </button>
-
+                        <Tooltip title="Send message">
+                            <Fab size="small" id="sendButton" onClick={this.sendMessage}>
+                                <Send />
+                            </Fab>
+                        </Tooltip>
                     </div>
                 </div>
             </div>

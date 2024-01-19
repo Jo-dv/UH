@@ -133,7 +133,7 @@ class Room extends Component {
                           let publisher = await this.OV.initPublisherAsync(undefined, {
                               audioSource: undefined, // The source of audio. If undefined default microphone
                               videoSource: undefined, // The source of video. If undefined default webcam
-                              publishAudio: false, // Whether you want to start publishing with your audio unmuted or not
+                              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
                               publishVideo: true, // Whether you want to start publishing with your video enabled or not
                               resolution: '640x480', // The resolution of your video
                               frameRate: 30, // The frame rate of your video
@@ -279,11 +279,12 @@ class Room extends Component {
           <div id="session" className='bg-neutral-200 p-2 m-2 border rounded-3xl'>
             <h1 id="session-title" className='text-4xl'>{mySessionId}</h1>
             <div id="video-container" className="grid grid-rows-2 grid-cols-4 gap-2 p-2">
+              
               {this.state.publisher !== undefined ? (
                 <div className="bg-green-500 p-1 " 
                   onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                      <UserVideoComponent streamManager={this.state.publisher}/>
-                  </div>
+                    <UserVideoComponent streamManager={this.state.publisher}/>
+                </div>
               ) : null}
                 {/* 나말고 */}
               {this.state.subscribers.map((sub, i) => (
