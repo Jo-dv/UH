@@ -50,10 +50,10 @@ export default class UserVideoComponent extends Component {
                         <OpenViduVideoComponent streamManager={this.props.streamManager} />
                         <div className='userName'>
                             <p>{this.getNicknameTag()}</p>
-                            {this.state.isMute === true 
+                            {/* {this.state.isMute === true 
                             ? (<button onClick={this.onMic}><MicOff/></button>) 
                             : (<button onClick={this.muteMic}><Mic/></button>)
-                            }
+                            } */}
                             <p>{this.state.streamManagerName}</p>
                             {this.props.streamManager.stream.audioActive === false
                             ? (<button onClick={this.onMic}><MicOff/></button>) 

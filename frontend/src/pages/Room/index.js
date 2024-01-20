@@ -223,7 +223,6 @@ class Room extends Component {
       }
   }
 
-  
   render() {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
@@ -279,7 +278,6 @@ class Room extends Component {
           <div id="session" className='bg-neutral-200 p-2 m-2 border rounded-3xl'>
             <h1 id="session-title" className='text-4xl'>{mySessionId}</h1>
             <div id="video-container" className="grid grid-rows-2 grid-cols-4 gap-2 p-2">
-              
               {this.state.publisher !== undefined ? (
                 <div className="bg-green-500 p-1 " 
                   onClick={() => this.handleMainVideoStream(this.state.publisher)}>
@@ -297,7 +295,10 @@ class Room extends Component {
             </div>
             <div className='grid grid-cols-4 gap-2'>
               <div className='col-span-3'>
-                <Chat/>
+                <Chat
+                  myUserName={myUserName}
+                  session={this.state.session}
+                />
               </div>
 
               <div className='col-span-1 grid grid-cols-2 gap-2'>
