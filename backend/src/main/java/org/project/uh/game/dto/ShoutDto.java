@@ -1,4 +1,4 @@
-package org.project.uh.game.shout.dto;
+package org.project.uh.game.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
