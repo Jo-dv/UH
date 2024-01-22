@@ -16,9 +16,11 @@ public interface UserDao {
 	@Select("select * from user")
 	public List<UserDto> listUser();
 
+
 	// 회원가입 시 userId 중복 체크
 	@Select("select count(*) from user where user_id = #{userId}")
 	public int checkUserId(String userId);
+
 
 	// 로그인 시 userId, userPassword 체크
 	@Select("select * from user where user_id=#{userId} and user_password=#{userPassword}")

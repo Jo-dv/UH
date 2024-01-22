@@ -66,7 +66,7 @@ const Login = () => {
                 const response = await axios.post("http://localhost:5000/user/login", { userId, userPassword });
                 const res = response.data
                 console.log("서버 응답:", res);
-                if (res.userNickname === "NULL") {
+                if (res.userNickname === null) {
                     navigate("/auth/nickname");
                 } else {
                     navigate("/lobby");

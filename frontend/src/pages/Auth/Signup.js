@@ -35,18 +35,19 @@ const Signup = () => {
     //아이디 중복검사
     const checkUserIdDuplicate = async (e) => {
         try {
-            const response = await axios.post("/user/id-check", {
+            const response = await axios.post("http://localhost:5000/user/idcheck", {
                 userId: form.userId,
             });
             const res = response.data;
             console.log(res);
-            if (res === "가능") {
-                setCheckUserId("사용가능한 아이디");
+            if (res === 0) {
+                setErr({ ...err, userId: "중복된 아이디입니다" }); // 중복된 경우 에러 메시지 설정
             } else {
-                setCheckUserId("중복된 아이디");
+                setErr({ ...err, userId: "사용 가능한 아이디입니다" }); // 중복되지 않은 경우 에러 메시지 초기화
             }
         } catch (error) {
             console.error("에러 발생", error);
+            setErr({ ...err, userId: "아이디 중복 검사 중 오류 발생" }); // 에러 발생 시 에러 메시지 설정
         }
     };
 
@@ -73,8 +74,8 @@ const Signup = () => {
             // 입력 기준 충족하지 못한다면
         } else if (!eRegEx.test(form.userId)) {
             newErr.userId = "영어, 숫자만 써주세요 (4-20자)";
-        } else if (checkUserId !== "사용가능한 아이디") {
-            newErr.userId = "중복된 아이디입니다";
+        // } else if (checkUserId !== "사용가능한 아이디") {
+        //     newErr.userId = "중복된 아이디입니다";
         } else {
             newErr.userId = "";
         }

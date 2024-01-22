@@ -8,6 +8,10 @@ public interface UserService {
 	// 회원가입
 	public int insertUser(UserDto dto);
 
+	// 아이디 중복 체크
+	public int idCheck(UserDto dto);
+
+
 	// 회원 목록조회
 	public List<UserDto> listUser();
 

@@ -24,10 +24,22 @@ public class UserServiceImpl implements UserService {
 		// 회원가입 시 userId 중복 체크
 		if (dao.checkUserId(dto.getUserId()) > 0) {
 			// 존재하는 userId, 회원가입 불가
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "중복된 아이디");
+			return 0;
 		}
 		// 중복 없으면 회원가입
 		return dao.insertUser(dto);
+	}
+
+	// 아이디 중복 체크
+	@Override
+	public int idCheck(UserDto dto) {
+		// 회원가입 시 userId 중복 체크
+		if (dao.checkUserId(dto.getUserId()) > 0) {
+			// 존재하는 userId, 회원가입 불가
+			return 0;
+		}
+		// 중복 없으면 1
+		return 1;
 	}
 
 	// 회원 목록 조회
@@ -37,11 +49,12 @@ public class UserServiceImpl implements UserService {
 	}
 
 
+	// 로그인
 	@Override
 	public UserDto login(UserDto dto) {
 		UserDto user = dao.login(dto);
 		if (user == null) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "로그인 오류");
+			return null;
 		}
 		return user;
 	}
@@ -59,7 +72,8 @@ public class UserServiceImpl implements UserService {
 		// 닉네임 중복 체크
 		int nicknameCount = dao.checkUserNickname(dto.getUserNickname());
 		if (nicknameCount > 0) {
-			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "중복된 닉네임");
+			// 닉네임 중복일 때
+			return 0;
 		}
 		// 중복 없으면 닉네임 생성
 		return dao.nickname(dto);
@@ -69,5 +83,7 @@ public class UserServiceImpl implements UserService {
 	public int getUserNickname(UserDto dto) {
 		return dao.getUserNickname(dto);
 	}
+
+
 
 }
