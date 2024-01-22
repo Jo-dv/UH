@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: 'pixel';
+  font-family: "pixel";
   src: url(./font/DungGeunMo.woff);
 }
 
@@ -13,5 +13,5 @@ body {
   background-position: top center;
   background-size: cover;
   background-attachment: fixed;
-  font-family: 'pixel';
+  font-family: "pixel";
 }
