@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect } from "react";
 import Webcam from "react-webcam";
 
 const WebcamComponent = (props) => {
+  const webcamRef = useRef(null);
 
-  return(
-    <Webcam 
-      className="rounded-md"
-      audio = {props.audio}
-      mirrored = {props.mirrored}
-      // setAudio = {setAudio}
-      // setMirrored = {setMirrored}
-    />
-  )}
+  useEffect(() => {
+    if (webcamRef.current) {
+      const webcamInstance = webcamRef.current;
+      webcamInstance.requestUserMedia();
+      webcamInstance.video.autoplay = false;
+    }
+  }, []);
+
+  return (
+    <Webcam ref={webcamRef} className="rounded-md" audio={props.audio} mirrored={props.mirrored} />
+  );
+};
 
 export default WebcamComponent;
