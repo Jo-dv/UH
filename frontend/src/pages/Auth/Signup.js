@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -16,6 +17,8 @@ const Signup = () => {
         passwordCheck: "",
     });
 
+    const [checkUserId, setCheckUserId] = useState("");
+
     const [showPassword, setShowPassword] = useState(false);
 
     const onChange = (e) => {
@@ -29,10 +32,23 @@ const Signup = () => {
         setShowPassword((showPassword) => !showPassword);
     };
 
-    // 아이디 중복검사
-    // const checkUserIdDuplicate = async (e) => {
-        
-    // };
+    //아이디 중복검사
+    const checkUserIdDuplicate = async (e) => {
+        try {
+            const response = await axios.post("/user/id-check", {
+                userId: form.userId,
+            });
+            const res = response.data;
+            console.log(res);
+            if (res === "가능") {
+                setCheckUserId("사용가능한 아이디");
+            } else {
+                setCheckUserId("중복된 아이디");
+            }
+        } catch (error) {
+            console.error("에러 발생", error);
+        }
+    };
 
     // const onBlurUserId = async (e) => {
     //     if(!form.userId) {
@@ -57,10 +73,12 @@ const Signup = () => {
             // 입력 기준 충족하지 못한다면
         } else if (!eRegEx.test(form.userId)) {
             newErr.userId = "영어, 숫자만 써주세요 (4-20자)";
+        } else if (checkUserId !== "사용가능한 아이디") {
+            newErr.userId = "중복된 아이디입니다";
         } else {
             newErr.userId = "";
         }
-        
+
         // 비밀번호 검사
         // 비밀번호 input에 입력하지 않았다면
         if (!form.userPassword) {
@@ -71,7 +89,7 @@ const Signup = () => {
         } else {
             newErr.userPassword = "";
         }
-        
+
         // 비밀번호 확인 검사
         if (!form.passwordCheck) {
             newErr.passwordCheck = "비밀번호를 입력해주세요";
@@ -100,7 +118,14 @@ const Signup = () => {
                 <h1 className="font-['pixel'] text-7xl">회원가입</h1>
 
                 {/* 아이디 입력창 */}
-                <input type="text" placeholder="아이디" onChange={onChange} name="userId" value={form.userId} />
+                <input 
+                type="text" 
+                placeholder="아이디" 
+                onChange={onChange} 
+                onBlur={checkUserIdDuplicate}
+                name="userId" 
+                value={form.userId} 
+                />
                 <p className="font-['pixel'] text-red-500 mb-1">{err.userId}</p>
 
                 {/* 비밀번호 입력창 */}
@@ -108,7 +133,6 @@ const Signup = () => {
                     type={showPassword ? "text" : "password"}
                     placeholder="비밀번호 (영문, 숫자 4-20자)"
                     onChange={onChange}
-                    // onBlur={onBlurUserId}
                     name="userPassword"
                     value={form.userPassword}
                 />

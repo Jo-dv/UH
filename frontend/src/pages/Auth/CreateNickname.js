@@ -14,7 +14,7 @@ const CreateNickname = () => {
         userNickname: "",
     });
 
-    const [checkUserNickname, setCheckUserNickname] = useState=("");
+    const [checkUserNickname, setCheckUserNickname] = useState("");
 
     const onChange = (e) => {
         const { name, value } = e.currentTarget;
@@ -55,6 +55,9 @@ const CreateNickname = () => {
             // 입력 기준을 충족하지 못했다면
         } else if (!eRegEx.test(form.userNickname)) {
             newErr.userNickname = "한글, 영어, 숫자만 써주세요 (2-10자)";
+            // 닉네임 중복 검사
+        } else if (checkUserNickname !== "사용가능한 닉네임") {
+            newErr.userNickname = "중복된 닉네임입니다";
             // 모든 기준 충족 시, 에러메시지 초기화
         } else {
             newErr.userNickname = "";
