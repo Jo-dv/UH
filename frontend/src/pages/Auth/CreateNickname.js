@@ -22,24 +22,24 @@ const CreateNickname = () => {
         setErr({ ...err, [name]: "" });
     };
 
-    const checkNickname = async () => {
-        console.log("ㄱㄱ")
-        try {
-            const response = await axios.post("/user/nickname-check", {
-                userNickname: form.userNickname,
-            });
-            const res = response.data;
-            console.log(res);
-            if (res === "가능") {
-                setCheckUserNickname("사용가능한 닉네임");              
-            } else {
-                setCheckUserNickname("중복된 닉네임");
-            }
-        } catch (error) {
-            console.error("에러 발생", error);
-        }
+    // const checkNickname = async () => {
+    //     console.log("ㄱㄱ")
+    //     try {
+    //         const response = await axios.post("/user/nickname-check", {
+    //             userNickname: form.userNickname,
+    //         });
+    //         const res = response.data;
+    //         console.log(res);
+    //         if (res === "가능") {
+    //             setCheckUserNickname("사용가능한 닉네임");              
+    //         } else {
+    //             setCheckUserNickname("중복된 닉네임");
+    //         }
+    //     } catch (error) {
+    //         console.error("에러 발생", error);
+    //     }
 
-    };
+    // };
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -68,6 +68,15 @@ const CreateNickname = () => {
 
         if (newErr.userNickname === "") {
             console.log("닉네임 :", form);
+            try {
+                const response = await axios.post("http://localhost:5000/user/nickname", form);
+                console.log("서버 응답:", response)
+                navigate("/lobby");
+            } catch (error) {
+                console.error("닉네임 생성 중 에러 발생", error);
+                // 에러 처리
+                // 예: 사용자에게 에러 메시지 표시
+            }
         }
     };
 
@@ -85,7 +94,7 @@ const CreateNickname = () => {
                     type="text"
                     placeholder="닉네임"
                     onChange={onChange}
-                    onBlur={checkNickname}
+                    // onBlur={checkNickname}
                     name="userNickname"
                     value={form.userNickname}
                 />
