@@ -104,7 +104,19 @@ const Signup = () => {
 
         // 모든 유효성 검사를 통과하면 서버로 데이터 전송
         if (newErr.userId === "" && newErr.userPassword === "" && newErr.passwordCheck === "") {
-            console.log("회원가입 정보:", form);
+            const { userId, userPassword } = form;
+            console.log("회원가입 정보:", { userId, userPassword });
+            try {
+                const response = await axios.post("/user/join", { userId, userPassword });
+                console.log("서버 응답:", response);
+                // 회원가입 성공 후 처리
+                // 예: navigate("/login") 또는 성공 메시지 표시
+                navigate("/auth/login");
+            } catch (error) {
+                console.error("회원가입 중 에러 발생", error);
+                // 에러 처리
+                // 예: 사용자에게 에러 메시지 표시
+            }
         }
     };
 
