@@ -1,25 +1,16 @@
 import React, { useState } from "react";
 import Webcam from "react-webcam";
 
-const WebcamComponent = () => {
+const WebcamComponent = (props) => {
 
   return(
     <Webcam 
       className="rounded-md"
-      mirrored = {true}
-      audio = {true}
+      audio = {props.audio}
+      mirrored = {props.mirrored}
+      // setAudio = {setAudio}
+      // setMirrored = {setMirrored}
     />
   )}
-
-const stopStreamedVideo = (videoElem) => {
-  const stream = videoElem.srcObject;
-  const tracks = stream.getTracks();
-
-  tracks.forEach((track) => {
-    track.stop();
-  });
-
-  videoElem.srcObject = null;
-}
 
 export default WebcamComponent;
