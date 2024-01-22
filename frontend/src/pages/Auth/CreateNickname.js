@@ -27,6 +27,9 @@ const CreateNickname = () => {
         if (!eRegEx.test(form.nickname)) {
             setErr((err) => ({ ...err, nickname: "한글, 영어, 숫자만 써주세요" }));
         }
+        if (form.nickname.length < 2 || form.nickname.length > 10) {
+            setErr((err) => ({ ...err, nickname: "2-10글자 사이로 써주세요" }));
+        }
     };
     return (
         <div className="w-full h-screen p-5 flex justify-center items-center z-10">
