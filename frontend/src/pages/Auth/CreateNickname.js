@@ -56,8 +56,8 @@ const CreateNickname = () => {
         } else if (!eRegEx.test(form.userNickname)) {
             newErr.userNickname = "한글, 영어, 숫자만 써주세요 (2-10자)";
             // 닉네임 중복 검사
-        } else if (checkUserNickname !== "사용가능한 닉네임") {
-            newErr.userNickname = "중복된 닉네임입니다";
+        // } else if (checkUserNickname !== "사용가능한 닉네임") {
+        //     newErr.userNickname = "중복된 닉네임입니다";
             // 모든 기준 충족 시, 에러메시지 초기화
         } else {
             newErr.userNickname = "";
@@ -70,8 +70,13 @@ const CreateNickname = () => {
             console.log("닉네임 :", form);
             try {
                 const response = await axios.post("http://localhost:5000/user/nickname", form);
-                console.log("서버 응답:", response)
+                const res = response.data;
+                console.log("서버 응답:", res)
+                if ( res.status === 400 ) {
+                    setErr({ ...err, userNickname: "중복된 닉네임입니다" });
+                } else {
                 navigate("/lobby");
+            }
             } catch (error) {
                 console.error("닉네임 생성 중 에러 발생", error);
                 // 에러 처리
