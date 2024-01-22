@@ -11,11 +11,11 @@ import org.project.uh.game.dto.ShoutDto;
 public interface GameDao {
 	@Select("SELECT * "
 		+ "FROM quiz_shout "
-		+ "ORDER BY RAND()") // 무작위 문제 생성
+		+ "ORDER BY RAND(123)") // 무작위 문제 생성
 	List<ShoutDto> shoutList();
 
 	@Select("SELECT * "
 		+ "FROM quiz_shout qs "
-		+ "WHERE qs.quiz_id = #{quizId} AND qs.quiz_answer = #{quizAnswer}")
+		+ "WHERE qs.quiz_id = #{quizId} AND qs.quiz_answer = #{userAnswer}")
 	AnswerDto checkAnswer(AnswerDto userAnswer);
 }

@@ -20,15 +20,16 @@ public class GameController {
 
 	@GetMapping("/game/{code}")
 	public List<ShoutDto> shoutList(@PathVariable int code) {
-		if(code == 200)
+		if(code == 200) {
 			return service.shoutList();
+		}
 		return Collections.emptyList();
 	}
 
 	@GetMapping("/game/answer")  // client에서 현재 문제의 문제 id와 사용자의 답을 받아 검색
 	public boolean checkAnswer(AnswerDto userAnswer) {
 		AnswerDto result = service.checkAnswer(userAnswer);
-		System.out.println(result);
+		System.out.println("from GameController: " + result != null);
 		return result != null;
 	}
 }

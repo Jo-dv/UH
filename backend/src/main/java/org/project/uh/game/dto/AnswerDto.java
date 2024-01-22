@@ -12,7 +12,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class AnswerDto {
-	private int quizCategory;
+	private int gameCategory;  // 실행하는 게임이 뭔지
 	private int quizId;
-	private String quizAnswer;
+	private String userAnswer;
 }
