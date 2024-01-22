@@ -1,7 +1,7 @@
-// 개별 방 모달
-const Room = (props) => {
+// 개별 방
+const Rooms = (props) => {
   return(
-    <div className="w-1/3 container mx-auto px-4 border border-black-200 rounded">
+    <div className="m-2 p-2 col-start-3 col-end-7 row-start-2 row-end-12 rounded-md border">
       <div className="flex justify-start items-center space-x-2">
         <p>{props.isLocked? '잠금' : '안잠금'}</p>
         <h4>{props.roomTitle}</h4> 
@@ -15,4 +15,4 @@ const Room = (props) => {
   )
 }
 
-export default Room;
+export default Rooms;

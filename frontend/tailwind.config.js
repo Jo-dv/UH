@@ -23,6 +23,9 @@ module.exports = {
         mc9 : '#4895EF',
         mc10 : '#4CC9F0',
       },
+      height: {
+        "screen-80": "calc(100vh-96px)",
+      },
     },
   },
   plugins: [
