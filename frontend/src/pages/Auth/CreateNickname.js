@@ -68,8 +68,12 @@ const CreateNickname = () => {
 
         if (newErr.userNickname === "") {
             console.log("닉네임 :", form);
+            const userId = sessionStorage.getItem("userId");
             try {
-                const response = await axios.post("http://localhost:5000/user/nickname", form);
+                const response = await axios.post("http://localhost:5000/user/nickname", {
+                    userId,
+                    userNickname: form.userNickname,
+                });
                 const res = response.data;
                 console.log("서버 응답:", res)
                 if ( res.status === 400 ) {

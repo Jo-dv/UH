@@ -67,6 +67,7 @@ const Login = () => {
                 const res = response.data
                 console.log("서버 응답:", res);
                 if (res.userNickname === null) {
+                    sessionStorage.setItem("userId", userId);
                     navigate("/auth/nickname");
                 } else {
                     navigate("/lobby");
