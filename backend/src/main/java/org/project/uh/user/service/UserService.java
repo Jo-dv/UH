@@ -11,4 +11,14 @@ public interface UserService {
 	// 회원 목록조회
 	public List<UserDto> listUser();
 
+	public int getUserId(UserDto dto);
+
+	// 로그인
+	public UserDto login(UserDto dto);
+
+
+	// 닉네임 생성
+	public int nickname(UserDto dto);
+	public int getUserNickname(UserDto dto);
+
 }
