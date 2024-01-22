@@ -7,7 +7,7 @@ const MyCam = (props) => {
   
   const [audio, setAudio] = useState(true);
   const [mirrored, setMirrored] = useState(true);
-  console.log(audio)  
+ 
   return(
     <div className="ml-2 mr-2 mb-2 p-2 p-2 col-start-1 col-end-3 row-start-8 row-end-12 rounded-md border">
         <p>{ props.nickname }</p>
