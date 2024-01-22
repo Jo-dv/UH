@@ -27,9 +27,10 @@ DROP TABLE IF EXISTS `common_code`;
 CREATE TABLE `common_code` (
   `group_code` int NOT NULL,
   `common_code` int NOT NULL,
-  `code_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`group_code`,`common_code`),
-  CONSTRAINT `common_code_ibfk_1` FOREIGN KEY (`group_code`) REFERENCES `group_code` (`group_code`)
+  `code_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`common_code`),
+  KEY `common_code_to_group_code_fk_idx` (`group_code`),
+  CONSTRAINT `common_code_to_group_code_fk` FOREIGN KEY (`group_code`) REFERENCES `group_code` (`group_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -39,7 +40,34 @@ CREATE TABLE `common_code` (
 
 LOCK TABLES `common_code` WRITE;
 /*!40000 ALTER TABLE `common_code` DISABLE KEYS */;
+INSERT INTO `common_code` VALUES (100,101,'고요 속의 외침'),(100,102,'인물 맞추기'),(200,201,'인물');
 /*!40000 ALTER TABLE `common_code` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `feedback`
+--
+
+DROP TABLE IF EXISTS `feedback`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `feedback` (
+  `feedback_id` int NOT NULL AUTO_INCREMENT,
+  `user_seq` int NOT NULL,
+  `feedback_content` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`feedback_id`),
+  KEY `user_seq_idx` (`user_seq`),
+  CONSTRAINT `user_seq` FOREIGN KEY (`user_seq`) REFERENCES `user` (`user_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `feedback`
+--
+
+LOCK TABLES `feedback` WRITE;
+/*!40000 ALTER TABLE `feedback` DISABLE KEYS */;
+/*!40000 ALTER TABLE `feedback` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -50,11 +78,15 @@ DROP TABLE IF EXISTS `friends`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `friends` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `from_user_id` int DEFAULT NULL,
-  `to_user_id` int DEFAULT NULL,
-  `state` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  `friends_id` int NOT NULL AUTO_INCREMENT,
+  `from_user_id` int NOT NULL,
+  `to_user_id` int NOT NULL,
+  `friends_state` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`friends_id`),
+  KEY `friends_from_user_id_fk_idx` (`from_user_id`),
+  KEY `friends_to_user_id_fk_idx` (`to_user_id`),
+  CONSTRAINT `friends_from_user_id_fk` FOREIGN KEY (`from_user_id`) REFERENCES `user` (`user_seq`),
+  CONSTRAINT `friends_to_user_id_fk` FOREIGN KEY (`to_user_id`) REFERENCES `user` (`user_seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -65,6 +97,45 @@ CREATE TABLE `friends` (
 LOCK TABLES `friends` WRITE;
 /*!40000 ALTER TABLE `friends` DISABLE KEYS */;
 /*!40000 ALTER TABLE `friends` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `game_result`
+--
+
+DROP TABLE IF EXISTS `game_result`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `game_result` (
+  `result_id` int NOT NULL AUTO_INCREMENT,
+  `user1` int DEFAULT NULL,
+  `user2` int DEFAULT NULL,
+  `user3` int DEFAULT NULL,
+  `user4` int DEFAULT NULL,
+  `game_category` int NOT NULL,
+  `score` int NOT NULL,
+  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`result_id`),
+  KEY `result_user1_fk_idx` (`user1`,`user2`,`user3`,`user4`),
+  KEY `result_user2_fk_idx` (`user2`),
+  KEY `result_user3_fk_idx` (`user3`),
+  KEY `result_user4_fk_idx` (`user4`),
+  KEY `result_game_category_fk_idx` (`game_category`),
+  CONSTRAINT `result_game_category_fk` FOREIGN KEY (`game_category`) REFERENCES `common_code` (`common_code`),
+  CONSTRAINT `result_user1_fk` FOREIGN KEY (`user1`) REFERENCES `user` (`user_seq`),
+  CONSTRAINT `result_user2_fk` FOREIGN KEY (`user2`) REFERENCES `user` (`user_seq`),
+  CONSTRAINT `result_user3_fk` FOREIGN KEY (`user3`) REFERENCES `user` (`user_seq`),
+  CONSTRAINT `result_user4_fk` FOREIGN KEY (`user4`) REFERENCES `user` (`user_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `game_result`
+--
+
+LOCK TABLES `game_result` WRITE;
+/*!40000 ALTER TABLE `game_result` DISABLE KEYS */;
+/*!40000 ALTER TABLE `game_result` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -87,33 +158,8 @@ CREATE TABLE `group_code` (
 
 LOCK TABLES `group_code` WRITE;
 /*!40000 ALTER TABLE `group_code` DISABLE KEYS */;
+INSERT INTO `group_code` VALUES (100,'게임 종류'),(200,'퀴즈 카테고리');
 /*!40000 ALTER TABLE `group_code` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `quiz`
---
-
-DROP TABLE IF EXISTS `quiz`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `quiz` (
-  `quiz_id` int NOT NULL AUTO_INCREMENT,
-  `game_category` int NOT NULL,
-  `quiz_category` int DEFAULT NULL,
-  `quiz_answer` varchar(255) NOT NULL,
-  `quiz_photo` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`quiz_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `quiz`
---
-
-LOCK TABLES `quiz` WRITE;
-/*!40000 ALTER TABLE `quiz` DISABLE KEYS */;
-/*!40000 ALTER TABLE `quiz` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -126,7 +172,7 @@ DROP TABLE IF EXISTS `quiz_person`;
 CREATE TABLE `quiz_person` (
   `quiz_id` int NOT NULL AUTO_INCREMENT,
   `quiz_photo` varchar(255) NOT NULL,
-  `quiz_answer` varchar(45) NOT NULL,
+  `quiz_answer` varchar(255) NOT NULL,
   PRIMARY KEY (`quiz_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -149,9 +195,11 @@ DROP TABLE IF EXISTS `quiz_shout`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `quiz_shout` (
   `quiz_id` int NOT NULL AUTO_INCREMENT,
-  `quiz_category` int DEFAULT NULL,
+  `quiz_category` int NOT NULL,
   `quiz_answer` varchar(255) NOT NULL,
-  PRIMARY KEY (`quiz_id`)
+  PRIMARY KEY (`quiz_id`),
+  KEY `quiz_category_fk_idx` (`quiz_category`),
+  CONSTRAINT `quiz_category_fk` FOREIGN KEY (`quiz_category`) REFERENCES `common_code` (`common_code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=401 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -166,23 +214,56 @@ INSERT INTO `quiz_shout` VALUES (1,201,'남궁원'),(2,201,'안성기'),(3,201,'
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `ranking`
+-- Temporary view structure for view `rank_person`
 --
 
-DROP TABLE IF EXISTS `ranking`;
-/*!50001 DROP VIEW IF EXISTS `ranking`*/;
+DROP TABLE IF EXISTS `rank_person`;
+/*!50001 DROP VIEW IF EXISTS `rank_person`*/;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `ranking` AS SELECT 
+/*!50001 CREATE VIEW `rank_person` AS SELECT 
  1 AS `result_id`,
  1 AS `user1`,
  1 AS `user2`,
  1 AS `user3`,
  1 AS `user4`,
  1 AS `game_category`,
- 1 AS `winner_score`,
- 1 AS `team_photo`,
+ 1 AS `score`,
  1 AS `created`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `rank_shout`
+--
+
+DROP TABLE IF EXISTS `rank_shout`;
+/*!50001 DROP VIEW IF EXISTS `rank_shout`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `rank_shout` AS SELECT 
+ 1 AS `result_id`,
+ 1 AS `user1`,
+ 1 AS `user2`,
+ 1 AS `user3`,
+ 1 AS `user4`,
+ 1 AS `game_category`,
+ 1 AS `score`,
+ 1 AS `created`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `rank_user`
+--
+
+DROP TABLE IF EXISTS `rank_user`;
+/*!50001 DROP VIEW IF EXISTS `rank_user`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `rank_user` AS SELECT 
+ 1 AS `user_seq`,
+ 1 AS `user_id`,
+ 1 AS `user_nickname`,
+ 1 AS `rating`*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -193,12 +274,12 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(20) NOT NULL,
-  `user_password` varchar(20) NOT NULL,
-  `user_nickname` varchar(10) NOT NULL,
-  `user_role` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `user_seq` int NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(255) NOT NULL,
+  `user_password` varchar(255) NOT NULL,
+  `user_nickname` varchar(255) DEFAULT NULL,
+  `rating` int NOT NULL DEFAULT '1000',
+  PRIMARY KEY (`user_seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -212,40 +293,10 @@ LOCK TABLES `user` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `winner_result`
+-- Final view structure for view `rank_person`
 --
 
-DROP TABLE IF EXISTS `winner_result`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `winner_result` (
-  `result_id` int NOT NULL AUTO_INCREMENT,
-  `user1` int DEFAULT NULL,
-  `user2` int DEFAULT NULL,
-  `user3` int DEFAULT NULL,
-  `user4` int DEFAULT NULL,
-  `game_category` int DEFAULT NULL,
-  `winner_score` int NOT NULL,
-  `team_photo` varchar(255) DEFAULT NULL,
-  `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`result_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `winner_result`
---
-
-LOCK TABLES `winner_result` WRITE;
-/*!40000 ALTER TABLE `winner_result` DISABLE KEYS */;
-/*!40000 ALTER TABLE `winner_result` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Final view structure for view `ranking`
---
-
-/*!50001 DROP VIEW IF EXISTS `ranking`*/;
+/*!50001 DROP VIEW IF EXISTS `rank_person`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -254,7 +305,43 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `ranking` AS select `winner_result`.`result_id` AS `result_id`,`winner_result`.`user1` AS `user1`,`winner_result`.`user2` AS `user2`,`winner_result`.`user3` AS `user3`,`winner_result`.`user4` AS `user4`,`winner_result`.`game_category` AS `game_category`,`winner_result`.`winner_score` AS `winner_score`,`winner_result`.`team_photo` AS `team_photo`,`winner_result`.`created` AS `created` from `winner_result` order by `winner_result`.`winner_score` desc limit 10 */;
+/*!50001 VIEW `rank_person` AS select `game_result`.`result_id` AS `result_id`,`game_result`.`user1` AS `user1`,`game_result`.`user2` AS `user2`,`game_result`.`user3` AS `user3`,`game_result`.`user4` AS `user4`,`game_result`.`game_category` AS `game_category`,`game_result`.`score` AS `score`,`game_result`.`created` AS `created` from `game_result` where (`game_result`.`game_category` = 102) order by `game_result`.`score` desc limit 10 */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rank_shout`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rank_shout`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rank_shout` AS select `game_result`.`result_id` AS `result_id`,`game_result`.`user1` AS `user1`,`game_result`.`user2` AS `user2`,`game_result`.`user3` AS `user3`,`game_result`.`user4` AS `user4`,`game_result`.`game_category` AS `game_category`,`game_result`.`score` AS `score`,`game_result`.`created` AS `created` from `game_result` where (`game_result`.`game_category` = 101) order by `game_result`.`score` desc limit 10 */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rank_user`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rank_user`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rank_user` AS select `user`.`user_seq` AS `user_seq`,`user`.`user_id` AS `user_id`,`user`.`user_nickname` AS `user_nickname`,`user`.`rating` AS `rating` from `user` order by `user`.`rating` desc limit 10 */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -268,4 +355,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-01-22 10:41:08
+-- Dump completed on 2024-01-22 14:53:27
