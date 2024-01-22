@@ -34,20 +34,25 @@ const Signup = () => {
 
     //아이디 중복검사
     const checkUserIdDuplicate = async (e) => {
-        try {
-            const response = await axios.post("http://localhost:5000/user/idcheck", {
-                userId: form.userId,
-            });
-            const res = response.data;
-            console.log(res);
-            if (res === 0) {
-                setErr({ ...err, userId: "중복된 아이디입니다" }); // 중복된 경우 에러 메시지 설정
-            } else {
-                setErr({ ...err, userId: "사용 가능한 아이디입니다" }); // 중복되지 않은 경우 에러 메시지 초기화
+        const eRegEx = /^[a-z0-9A-Z]{4,20}$/;
+        if (!eRegEx.test(form.userId)) {
+            setErr({ ...err, userId: "영어, 숫자만 써주세요 (4-20자)"});
+        } else {
+            try {
+                const response = await axios.post("http://localhost:5000/user/idcheck", {
+                    userId: form.userId,
+                });
+                const res = response.data;
+                console.log(res);
+                if (res === 0) {
+                    setErr({ ...err, userId: "중복된 아이디입니다" }); // 중복된 경우 에러 메시지 설정
+                } else {
+                    setErr({ ...err, userId: "사용 가능한 아이디입니다" }); // 중복되지 않은 경우 에러 메시지 초기화
+                }
+            } catch (error) {
+                console.error("에러 발생", error);
+                setErr({ ...err, userId: "아이디 중복 검사 중 오류 발생" }); // 에러 발생 시 에러 메시지 설정
             }
-        } catch (error) {
-            console.error("에러 발생", error);
-            setErr({ ...err, userId: "아이디 중복 검사 중 오류 발생" }); // 에러 발생 시 에러 메시지 설정
         }
     };
 
