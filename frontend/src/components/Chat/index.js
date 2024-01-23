@@ -38,35 +38,35 @@ const Chat = ({ session, myUserName }) => {
   return (
     <section
       className="bg-neutral-300 
-    border rounded-3xl overflow-hidden h-full w-full"
+    border rounded-3xl overflow-hidden h-full"
     >
       <h2 className="bg-neutral-400 px-8">채팅</h2>
       <div>
         <ul
           className="m-4 px-2 border rounded-3xl bg-white h-80
-         overflow-auto"
+         overflow-y-auto"
         >
           {messgaeList.map((item, index) => {
             return <li key={index}>{item}</li>;
           })}
-          <li>{receiveMsg}</li>
+          <li className="">{receiveMsg}</li>
         </ul>
         <form
-          className="m-4 px-2 
+          className="m-4 px-2
           border rounded-3xl bg-white
-          flex"
+          flex flex-row overflow-hidden"
           onSubmit={sendMsg}
         >
           <input
             type="text"
             placeholder="채팅을 입력해 주세요!"
-            className="flex-auto"
+            className="grow"
             maxLength="100"
             value={chat}
             onChange={(e) => setChat(e.target.value)}
           />
           <button
-            className="flex-none m-1 px-2 border-l-2 border-solid"
+            className="w-11 m-1 pl-2 border-l-2 border-solid"
             type="submit"
           >
             채팅

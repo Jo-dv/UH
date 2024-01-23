@@ -6,7 +6,12 @@ import UserVideoComponent from "./UserVideoComponent";
 import Chat from "../../components/Chat";
 import Modal from "../../components/Modal";
 import RoomNavbar from "./RoomNavbar";
-import { createRoom } from "../../api/room";
+import {
+  createSession,
+  createToken,
+  listRoom,
+  checkPassword,
+} from "../../api/roomAPI.js";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -78,14 +83,14 @@ class Room extends Component {
     }
   }
 
-  joinSession() {
+  async joinSession() {
     // --- 1) Get an OpenVidu object ---
 
     this.OV = new OpenVidu();
 
     // --- 2) Init a session ---
 
-    this.setState(
+    await this.setState(
       {
         session: this.OV.initSession(),
       },
@@ -167,7 +172,6 @@ class Room extends Component {
                 publisher: publisher,
               });
               console.log(this.state);
-              createRoom();
             })
             .catch((error) => {
               console.log(
@@ -179,6 +183,7 @@ class Room extends Component {
         });
       }
     );
+    await console.log(this.state);
   }
 
   leaveSession() {
@@ -339,22 +344,17 @@ class Room extends Component {
                   </div>
                 ))}
               </div>
-              <div className="col-span-1">
-                <div className="grid grid-cols-1 grid-rows-4 gap-2">
-                  <div className="row-span-3">
-                    <Chat
-                      myUserName={myUserName}
-                      session={this.state.session}
-                    />
-                  </div>
+              <div className="grid col-span-1 grid-rows-4 gap-2">
+                <div className="row-span-3">
+                  <Chat myUserName={myUserName} session={this.state.session} />
+                </div>
 
-                  <div className="row-span-1 grid grid-cols-2 gap-1 w-full">
-                    <button className="bg-mc1 border rounded-3xl">A팀</button>
-                    <button className="bg-mc8 border rounded-3xl">B팀</button>
-                    <button className="col-span-2 bg-mc3 border rounded-3xl">
-                      준비
-                    </button>
-                  </div>
+                <div className="row-span-1 grid grid-cols-2 gap-1 w-full">
+                  <button className="bg-mc1 border rounded-3xl">A팀</button>
+                  <button className="bg-mc8 border rounded-3xl">B팀</button>
+                  <button className="col-span-2 bg-mc3 border rounded-3xl">
+                    준비
+                  </button>
                 </div>
               </div>
             </div>
