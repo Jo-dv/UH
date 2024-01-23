@@ -38,12 +38,12 @@ const Chat = ({ session, myUserName }) => {
   return (
     <section
       className="bg-neutral-300 
-    border rounded-3xl overflow-hidden h-full "
+    border rounded-3xl overflow-hidden h-full w-full"
     >
       <h2 className="bg-neutral-400 px-8">채팅</h2>
       <div>
         <ul
-          className="m-4 px-2 border rounded-3xl bg-white h-80 
+          className="m-4 px-2 border rounded-3xl bg-white h-80
          overflow-auto"
         >
           {messgaeList.map((item, index) => {

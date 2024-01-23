@@ -339,8 +339,8 @@ class Room extends Component {
                   </div>
                 ))}
               </div>
-              <div className="col-span-1 ">
-                <div className="grid grid-rows-4 gap-2">
+              <div className="col-span-1">
+                <div className="grid grid-cols-1 grid-rows-4 gap-2">
                   <div className="row-span-3">
                     <Chat
                       myUserName={myUserName}
@@ -348,7 +348,7 @@ class Room extends Component {
                     />
                   </div>
 
-                  <div className="row-span-1 grid grid-cols-2 gap-1">
+                  <div className="row-span-1 grid grid-cols-2 gap-1 w-full">
                     <button className="bg-mc1 border rounded-3xl">A팀</button>
                     <button className="bg-mc8 border rounded-3xl">B팀</button>
                     <button className="col-span-2 bg-mc3 border rounded-3xl">
