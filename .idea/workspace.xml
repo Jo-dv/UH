@@ -5,18 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5ff66d3b-a4f8-488c-96d0-1296c35f6a8a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Chat/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Chat/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/CreateRoomModal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/CreateRoomModal/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/Modal/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Modal/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/components/OpenVidu/chat/ChatComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/OpenVidu/chat/ChatComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Room/OvVideo.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Room/OvVideo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Room/RoomNavbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Room/RoomNavbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Room/UserVideo.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Room/UserVideo.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Room/UserVideoComponent.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Room/UserVideoComponent.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Room/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Room/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tailwind.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tailwind.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/backend/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/org/project/uh/config/SecurityConfig.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,9 +38,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="2bIkqN6f42XatqgGZPKkbc7bvOo" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -56,17 +48,20 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.UhApplication.executor": "Run",
     "Gradle.backend [:UhApplication.main()].executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Shin",
-    "kotlin-language-version-configured": "true"
+    "git-widget-placeholder": "fe__dev",
+    "kotlin-language-version-configured": "true",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle"
   }
 }]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
         <option value="jdk-17.0.9-azul-17.0.9-4caba194b151-171533a4" />
+        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
       </set>
     </attachedChunks>
   </component>
