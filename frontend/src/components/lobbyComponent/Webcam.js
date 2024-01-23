@@ -3,7 +3,7 @@ import Webcam from "react-webcam";
 
 const WebcamComponent = (props) => {
   const webcamRef = useRef(null);
-  console.log(webcamRef.current.webcamInstance.video.autoplay);
+
   useEffect(() => {
     if (webcamRef.current) {
       const webcamInstance = webcamRef.current;
