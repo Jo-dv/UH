@@ -7,7 +7,6 @@ import org.project.uh.game.dto.AnswerDto;
 import org.project.uh.game.dto.ShoutDto;
 import org.project.uh.game.service.GameService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,9 +17,9 @@ import lombok.RequiredArgsConstructor;
 public class GameController {
 	private final GameService service;
 
-	@GetMapping("/game/{code}")
-	public List<ShoutDto> shoutList(@PathVariable int code) {
-		if(code == 200) {
+	@GetMapping("/game/{game_request}")
+	public List<ShoutDto> shoutList(@PathVariable int game_request) {
+		if (game_request == 200) {
 			return service.shoutList();
 		}
 		return Collections.emptyList();

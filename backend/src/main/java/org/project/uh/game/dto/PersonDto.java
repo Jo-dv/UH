@@ -13,6 +13,6 @@ import lombok.ToString;
 @ToString
 public class PersonDto {
 	private int quizId;
-	private int quizPhoto;
+	private String quizPhoto;
 	private String quizAnswer;
 }
