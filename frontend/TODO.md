@@ -4,6 +4,10 @@
 2. 매일 5시, fe_dev에 작업결과를 merge하기
    
 ## fe_dev에 브랜치 분리하여 작업하기
+- ### 원격 저장소 변경사항 최신화
+  ```
+  git remote update
+  ```
 - ### 브랜치 이동
   ```
   git switch 브랜치이름
