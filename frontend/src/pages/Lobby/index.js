@@ -1,10 +1,30 @@
 /*eslint-disable*/
 
-import { useState } from "react"
+import { useState, useEffect,  } from "react";
+import { useNavigate } from "react-router-dom";
 import Room from "./room"
+import axios from "axios";
+
 
 
 const Lobby = () => {
+  const navigate = useNavigate();
+  // 로비가 새로고침 될 때마다 유저정보 체크
+  useEffect(() => {
+    const fetchUserAuth = async () => {
+      try {
+        // 서버에 사용자 인증 상태 요청
+        const response = await axios.get("http://localhost:5000/user/check");
+        if (response.data === null) {
+          navigate("/auth/login");
+        }
+      } catch (error) {
+        console.error("사용자 인증 확인 중 에러 발생" , error);
+      }
+    };
+    fetchUserAuth();
+  }, [navigate]);
+
   // [검색창] 게임 선택
   const [selectedGame, setSelectedGame] = useState('');
   const handleChangeOfGame = (e) => {

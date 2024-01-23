@@ -70,6 +70,8 @@ const Login = () => {
                     sessionStorage.setItem("userId", userId);
                     navigate("/auth/nickname");
                 } else {
+                    sessionStorage.setItem("userNickname", res.userNickname);
+                    sessionStorage.setItem("userSeq", res.userSeq);
                     navigate("/lobby");
                 }
             } catch (error) {

@@ -1,5 +1,7 @@
 import React, { useState } from "react"
-import { BrowserRouter, Router, Route, Switch,Link } from "react-router-dom"
+import { BrowserRouter, Router, Route, Switch, Link, useNavigate } from "react-router-dom"
+import axios from "axios"
+
 
 
 const Header = () => {
@@ -97,8 +99,20 @@ const FeedbackTab = () => {
 }
 
 const LogOutTab = () => {
+  const navigate = useNavigate();
+
+  const handleLogOut = async () => {
+    try {
+      await axios.post("http://localhost:5000/user/logout");
+      sessionStorage.clear();
+      navigate("/auth/login")
+    } catch (error){
+      console.error("로그아웃 에러", error);
+    }
+  };
+
   return(
-    <h3 className="bg-mc7 p-2">로그아웃</h3>
+      <h3 className="bg-mc7 p-2" onClick={handleLogOut}>로그아웃</h3>
   )
 }
 
