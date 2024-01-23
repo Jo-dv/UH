@@ -36,4 +36,9 @@ public interface UserDao {
 	@Select("select count(*) from user where user_nickname = #{userNickname}")
 	public int checkUserNickname(String userNickname);
 	public int getUserNickname(UserDto dto);
+
+
+	// 마이 페이지
+	@Select("SELECT user_seq, user_id, user_nickname, rating FROM user WHERE user_seq = #{userSeq}")
+	public UserDto mypage(int userSeq);
 }

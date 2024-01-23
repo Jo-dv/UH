@@ -25,4 +25,6 @@ public interface UserService {
 	public int nickname(UserDto dto);
 	public int getUserNickname(UserDto dto);
 
+	// 마이페이지
+	public UserDto mypage(int userSeq);
 }

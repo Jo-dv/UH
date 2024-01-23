@@ -11,8 +11,9 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class UserDto {
-	private int id;
+	private int userSeq;
 	private String userId;
 	private String userPassword;
 	private String userNickname;
+	private int rating;
 }

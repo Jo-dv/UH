@@ -62,8 +62,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int getUserId(UserDto dto) {
 		return dao.getUserId(dto);
-		// int n = dao.getUserId(dto);
-		// return n;
 	}
 
 	// 닉네임 생성
@@ -85,5 +83,9 @@ public class UserServiceImpl implements UserService {
 	}
 
 
-
+	// 마이페이지
+	@Override
+	public UserDto mypage(int userSeq) {
+		return dao.mypage(userSeq);
+	}
 }
