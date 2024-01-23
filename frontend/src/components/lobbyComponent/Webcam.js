@@ -8,13 +8,11 @@ const WebcamComponent = (props) => {
     if (webcamRef.current) {
       const webcamInstance = webcamRef.current;
       webcamInstance.requestUserMedia();
-      webcamInstance.video.autoplay = false;
+      webcamInstance.video.autoplay = props.play;
     }
-  }, []);
+  }, [props.play]);
 
-  return (
-    <Webcam ref={webcamRef} className="rounded-md" audio={props.audio} mirrored={props.mirrored} />
-  );
+  return <Webcam ref={webcamRef} className="rounded-md" audio={props.audio} />;
 };
 
 export default WebcamComponent;

@@ -4,10 +4,7 @@ const CreateRoomModal = () => {
       className="w-screen h-screen absolute inset-0
     flex justify-center items-center"
     >
-      <form
-        className="bg-formBG p-2 flex flex-col"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <form className="bg-formBG p-2 flex flex-col" onClick={(e) => e.stopPropagation()}>
         <label>
           방제목: <input type="text" />
         </label>
@@ -35,6 +32,7 @@ const CreateRoomModal = () => {
           <input type="radio" value={"인물 맞추기"} name="game" />
         </div>
       </form>
+      <button onClick={() => {}}>방 만들기</button>
     </div>
   );
 };
