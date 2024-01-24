@@ -267,13 +267,13 @@ public class RoomController {
 	public ResponseEntity<String> hostPlayer(@RequestBody Map<String, Object> params) {
 		String sessionId = (String)params.get("sessionId");
 		String connectionId = (String)params.get("connectionId");
-		String userId = (String)params.get("userId");
+		int userSeq = (int)params.get("userSeq");
 		String userNickname = (String)params.get("userNickname");
 		boolean isHost = (boolean)params.get("isHost");
 
 		//플레이어 설정
 		PlayerDto newPlayer = new PlayerDto();
-		newPlayer.setUserId(userId);
+		newPlayer.setUserSeq(userSeq);
 		newPlayer.setUserNickname(userNickname);
 
 		//방장 설정

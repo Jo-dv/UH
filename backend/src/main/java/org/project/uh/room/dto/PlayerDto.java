@@ -14,7 +14,7 @@ import lombok.ToString;
 public class PlayerDto {
 	private String team;
 	private boolean isReady;
-	private String userId;
+	private int userSeq;
 	private String userNickname;
 
 }
