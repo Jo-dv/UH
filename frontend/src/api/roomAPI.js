@@ -12,11 +12,7 @@ const APPLICATION_SERVER_URL =
  * @param {string} roomPassword
  * @returns
  */
-export const createSession = async (
-  sessionId,
-  roomName = "방이름",
-  roomPassword = null
-) => {
+export const createSession = async (sessionId, roomName = "방이름", roomPassword = null) => {
   try {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "rooms",
@@ -62,15 +58,13 @@ export const createToken = async (sessionId) => {
 };
 
 export const listRoom = async () => {
-  axios
-    .get(APPLICATION_SERVER_URL + "rooms") // 백엔드 엔드포인트 변경
-    .then((response) => {
-      // 성공적으로 데이터를 받아오면 roomList에 할당
-      this.roomList = response.data;
-    })
-    .catch((error) => {
-      console.error("Error fetching room list:", error);
-    });
+  try {
+    const response = await axios.get(APPLICATION_SERVER_URL + "rooms");
+    console.log("룸 리스트", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching room list:", error);
+  }
 };
 
 // 비밀번호확인
