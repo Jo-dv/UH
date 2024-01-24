@@ -6,7 +6,6 @@ import org.project.uh.user.dto.UserDto;
 import org.project.uh.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
-
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class UserController {
