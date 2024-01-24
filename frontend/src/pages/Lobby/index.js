@@ -122,12 +122,13 @@ const Lobby = (props) => {
                 selectedGame={selectedGame}
             />
             <RoomList
-                roomTitle={roomTitle}
-                gameType={gameType}
-                numberOfPeople={numberOfPeople}
-                totalNumberOfPeople={totalNumberOfPeople}
-                isLocked={isLocked}
-                isPlaying={isPlaying}
+                rooms={rooms}
+                roomTitle={rooms.roomTitle}
+                gameType={rooms.gameType}
+                numberOfPeople={rooms.numberOfPeople}
+                totalNumberOfPeople={rooms.totalNumberOfPeople}
+                isLocked={rooms.isLocked}
+                isPlaying={rooms.isPlaying}
             />
         </div>
     );

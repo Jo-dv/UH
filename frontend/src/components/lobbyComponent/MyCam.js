@@ -8,7 +8,7 @@ const MyCam = (props) => {
   return (
     <div className="border-7 border-modalBorder col-start-1 col-end-2 row-start-8 row-end-13 ml-2 mr-2 mb-2 p-2 rounded-md border">
       <p>{props.nickname}</p>
-      <div className="p-2">
+      <div className="p-2 flex-auto">
         {play === true ? (
           <WebcamComponent audio={audio} setAudio={setAudio} play={play} setPlay={setPlay} />
         ) : (

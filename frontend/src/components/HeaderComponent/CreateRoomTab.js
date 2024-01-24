@@ -2,19 +2,21 @@ import React, { useState } from "react";
 import CreateRoom from "../CreateRoomModal/index";
 
 const CreateRoomTab = () => {
-  const [modal, setModal] = useState(false);
+  const [createRoom, setCreateRoom] = useState(false);
 
   return (
     <>
       <h3
         className="bg-mc1 p-2"
         onClick={() => {
-          setModal(!modal);
+          setCreateRoom(!createRoom);
         }}
       >
         방 만들기
       </h3>
-      {modal && <CreateRoom />}
+      {createRoom === true ? (
+        <CreateRoom createRoom={createRoom} setCreateRoom={setCreateRoom} />
+      ) : null}
     </>
   );
 };
