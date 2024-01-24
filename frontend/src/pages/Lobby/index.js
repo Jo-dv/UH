@@ -15,7 +15,10 @@ const Lobby = () => {
       try {
         // 서버에 사용자 인증 상태 요청
         const response = await axios.get("http://localhost:5000/user/check");
+        // 만약 반환된 데이터가 null (서버 세션에 유저 정보가 없다면)
         if (response.data === null) {
+          // 브라우저 세션에 저장된 정보를 삭제하고 로그인 창으로
+          sessionStorage.clear();
           navigate("/auth/login");
         }
       } catch (error) {
