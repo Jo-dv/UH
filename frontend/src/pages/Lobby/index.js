@@ -49,25 +49,17 @@ const Lobby = (props) => {
         event.preventDefault(); // 폼 제출에 의한 페이지 새로고침 방지
         console.log(`검색어: ${searchRoomTittle}`); // 실제 검색 로직 처리
     };
-
-    // [방목록] 방 제목 입력받는 변수
-    const [roomTitle, setRoomTitle] = useState("수비니가 최고야");
-
-    // [방목록] 게임 종류 입력받는 변수
-    const [gameType, setGameType] = useState("고요 속의 외침");
-
-    // [방목록] 인원수 입력받는 변수
-    const [numberOfPeople, setNumberOfPeople] = useState(0);
-
-    // [방목록] 총인원수 입력받는 변수
-    const [totalNumberOfPeople, setTotalNumberOfPeople] = useState(0);
-
-    // [방목록] lock과 unlock 입력받는 변수
-    const [isLocked, setIsLocked] = useState(false);
-
-    // [방목록] wait와 play 입력받는 변수
-    const [isPlaying, setIsPlaying] = useState(false); // 초기 상태는 'wait'로 설정
-
+    // [방목록]
+    const [rooms, setRooms] = useState([
+        {
+            roomTitle: "방1",
+            gameType: "게임1",
+            numberOfPeople: 1,
+            totalNumberOfPeople: 4,
+            isLocked: true,
+            isPlaying: false,
+        },
+    ]);
     // [검색창] wait와 play 입력받는 변수
     const [isSearchPlaying, setIsSearchPlaying] = useState(false); // 초기 상태는 'wait'로 설정
 
