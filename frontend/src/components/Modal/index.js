@@ -22,17 +22,11 @@ flex justify-center items-center"
           >
             <p className="text-xl text-center p-4">{content}</p>
             <div className="">
-              <button
-                onClick={modalOnOff}
-                className="bg-cancelButton py-2 px-4 m-2 rounded"
-              >
+              <button onClick={modalOnOff} className="bg-cancelButton py-2 px-4 m-2 rounded">
                 {cancelText}
               </button>
 
-              <button
-                onClick={onClick}
-                className="bg-formButton py-2 px-4 m-2 rounded"
-              >
+              <button onClick={onClick} className="bg-formButton py-2 px-4 m-2 rounded">
                 {okText}
               </button>
             </div>

@@ -1,4 +1,4 @@
-package org.project.uh.room.dto;
+package org.project.uh.game.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,13 +8,11 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class PlayerDto {
-	private String team;
-	private boolean isReady;
-	private int userSeq;
-	private String userNickname;
-
+public class ShoutDto {
+	private int quizId;
+	private int quizCategory;
+	private String quizAnswer;
 }
