@@ -12,6 +12,7 @@ import FriendList from "../../components/lobbyComponent/FriendList";
 import AccessorsList from "../../components/lobbyComponent/AccessorList";
 import MyCam from "../../components/lobbyComponent/MyCam";
 import Search from "../../components/lobbyComponent/Search";
+import axios from "axios";
 
 const Lobby = (props) => {
     const navigate = useNavigate();
@@ -21,7 +22,9 @@ const Lobby = (props) => {
             try {
                 // 서버에 사용자 인증 상태 요청
                 const response = await axios.get("http://localhost:5000/user/check");
-                if (response.data === null) {
+                const res = response
+                console.log(res)
+                if (res.data === 0) {
                     navigate("/auth/login");
                 }
             } catch (error) {
