@@ -1,10 +1,10 @@
 const Chat = () => {
   return (
-    <section className="bg-neutral-300 font-['pixel'] 
+    <section className="bg-neutral-300 
     border rounded-3xl overflow-hidden">
       <h2 className="bg-neutral-400 px-8">채팅</h2>
       <div>
-        <ul className='mx-4 my-4 px-2 border rounded-3xl h-32 bg-white'>
+        <ul className='mx-4 my-4 px-2 border rounded-3xl bg-white'>
           <li>일단 넣음: ㅇㅇ</li>
           <li>일단 넣음: 22</li>
         </ul>

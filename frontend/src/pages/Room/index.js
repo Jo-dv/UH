@@ -4,6 +4,8 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import UserVideoComponent from './UserVideoComponent';
 import Chat from '../../components/Chat';
+import Modal from '../../components/Modal';
+import RoomNavbar from './RoomNavbar';
 
 const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'https://demos.openvidu.io/';
 
@@ -13,8 +15,8 @@ class Room extends Component {
 
       // These properties are in the state's component in order to re-render the HTML whenever their values change
       this.state = {
-          mySessionId: 'SessionA',
-          myUserName: 'Participant' + Math.floor(Math.random() * 100),
+          mySessionId: 'E201',
+          myUserName: 'ㅇㅇ' + Math.floor(Math.random() * 100),
           session: undefined,
           mainStreamManager: undefined,  // Main video of the page. Will be the 'publisher' or one of the 'subscribers'
           publisher: undefined,
@@ -221,75 +223,61 @@ class Room extends Component {
       }
   }
 
+  
   render() {
     const mySessionId = this.state.mySessionId;
     const myUserName = this.state.myUserName;
-
+    const testModal = () => {
+      alert('모달 수락 버튼 작동함')
+    }
     return (
-      <div className="w-screen h-screen">
+      <div className="">
+        <RoomNavbar/>
         {this.state.session === undefined ? (
-            <div id="join" className='bg-slate-500 w-full'>
+            <div id="join" className='bg-slate-500'>
                 <div id="join-dialog">
-                    <h1 className='text-center'> Join a video session </h1>
-                    <form className="form-group flex flex-col justify-center items-center p-2" 
-                      onSubmit={this.joinSession}>
-                        <p>
-                            <label>Participant: </label>
-                            <input
-                                className="form-control"
-                                type="text"
-                                id="userName"
-                                value={myUserName}
-                                onChange={this.handleChangeUserName}
-                                required
-                            />
-                        </p>
-                        <p>
-                            <label> Session: </label>
-                            <input
-                                className="form-control"
-                                type="text"
-                                id="sessionId"
-                                value={mySessionId}
-                                onChange={this.handleChangeSessionId}
-                                required
-                            />
-                        </p>
-                        <p className="text-center">
-                            <input className="btn btn-lg btn-success" name="commit" type="submit" value="JOIN" />
-                        </p>
-                    </form>
+                  <form className="form-group flex flex-col justify-center items-center p-2" 
+                    onSubmit={this.joinSession}>
+                      <p>
+                          <label>Participant: </label>
+                          <input
+                              className="form-control"
+                              type="text"
+                              id="userName"
+                              value={myUserName}
+                              onChange={this.handleChangeUserName}
+                              required
+                          />
+                      </p>
+                      <p>
+                          <label> Session: </label>
+                          <input
+                              className="form-control"
+                              type="text"
+                              id="sessionId"
+                              value={mySessionId}
+                              onChange={this.handleChangeSessionId}
+                              required
+                          />
+                      </p>
+                      <p className="text-center">
+                          <input className="btn btn-lg btn-success" name="commit" type="submit" value="JOIN" />
+                      </p>
+                  </form>
                 </div>
+                <Modal 
+                    btnText={'모달 여는 버튼'}
+                    content={'모달내용'}
+                    cancelText={'닫기'}
+                    okText={'수락'}
+                    onClick={testModal}
+                />
             </div>
         ) : null}
 
         {this.state.session !== undefined ? (
-          <div id="session" className='bg-neutral-200'>
+          <div id="session" className='bg-neutral-200 p-2 m-2 border rounded-3xl'>
             <h1 id="session-title" className='text-4xl'>{mySessionId}</h1>
-
-            {/* <div id="session-header" className='text-center'>
-              <input
-                className="bg-red-500 p-2"
-                type="button"
-                id="buttonLeaveSession"
-                onClick={this.leaveSession}
-                value="Leave session"
-              />
-              <input
-                className="bg-slate-500 p-2"
-                type="button"
-                id="buttonSwitchCamera"
-                onClick={this.switchCamera}
-                value="Switch Camera"
-              />
-            </div> */}
-
-              {/* {this.state.mainStreamManager !== undefined ? (
-                  <div id="main-video" className="w-64">
-                      <UserVideoComponent streamManager={this.state.mainStreamManager}/>
-                  </div>
-              ) : null} */}
-              {/* 나 */}
             <div id="video-container" className="grid grid-rows-2 grid-cols-4 gap-2 p-2">
               {this.state.publisher !== undefined ? (
                 <div className="bg-green-500 p-1 " 
@@ -306,8 +294,17 @@ class Room extends Component {
                   </div>
               ))}
             </div>
-            
-            <Chat/>
+            <div className='grid grid-cols-4 gap-2'>
+              <div className='col-span-3'>
+                <Chat/>
+              </div>
+
+              <div className='col-span-1 grid grid-cols-2 gap-2'>
+                <button className='bg-mc1'>A팀</button>
+                <button className='bg-mc8'>B팀</button>
+                <button className='col-span-2 bg-mc3'>준비</button>
+              </div>
+            </div>
             
           </div>
         ) : null}
