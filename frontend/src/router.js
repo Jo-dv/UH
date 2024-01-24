@@ -13,13 +13,14 @@ import Layout from "./components/layout";
 import CreateNickname from "./pages/Auth/CreateNickname";
 // import VideoRoomComponent from "./components/OpenVidu/VideoRoomComponent";
 import Game from "./pages/Game";
-
+import RoomTest from "./pages/RoomTest";
 const route = (
   <>
     <Route path="/" element={<Start />}></Route>
     <Route path="game" element={<Game />}></Route>
     <Route element={<Layout />}>
       <Route path="room" element={<Room />}></Route>
+      <Route path="rt" element={<RoomTest />}></Route>
       {/* <Route path="room2" element={<VideoRoomComponent />}></Route> */}
       <Route path="lobby" element={<Lobby />}></Route>
       <Route path="auth">

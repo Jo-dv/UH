@@ -2,10 +2,10 @@ import { OpenVidu } from "openvidu-browser";
 
 import axios from "axios";
 import React, { Component } from "react";
-import UserVideoComponent from "./UserVideoComponent";
+import UserVideoComponent from "../RoomTest/UserVideoComponent.js";
 import Chat from "../../components/Chat";
 import Modal from "../../components/Modal";
-import RoomNavbar from "./RoomNavbar";
+import RoomNavbar from "../RoomTest/RoomNavbar.js";
 import {
   createSession,
   createToken,
@@ -252,7 +252,7 @@ class Room extends Component {
       alert("모달 수락 버튼 작동함");
     };
     return (
-      <div className="">
+      <>
         {/* <RoomNavbar /> */}
         {this.state.session === undefined ? (
           <div id="join" className="bg-slate-500">
@@ -360,7 +360,7 @@ class Room extends Component {
             </div>
           </div>
         ) : null}
-      </div>
+      </>
     );
   }
 
