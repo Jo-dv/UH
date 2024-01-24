@@ -5,15 +5,25 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:5000/";
 
-//방 만들기, 입장
-export const createSession = async (sessionId) => {
+/**
+ *
+ * @param {string} sessionId 생성시: 'create'
+ * @param {string} roomName
+ * @param {string} roomPassword
+ * @returns
+ */
+export const createSession = async (
+  sessionId,
+  roomName = "방이름",
+  roomPassword = null
+) => {
   try {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "rooms",
       {
         customSessionId: sessionId,
-        roomName: this.roomName,
-        roomPassword: this.roomPassword,
+        roomName: roomName,
+        roomPassword: roomPassword,
         gameCategory: 100,
         quizCategory: 100,
         max: 8,

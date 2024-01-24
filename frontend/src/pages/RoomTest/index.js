@@ -4,12 +4,18 @@ import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import Chat from "../../components/Chat";
+import {
+  createSession,
+  createToken,
+  listRoom,
+  checkPassword,
+} from "../../api/roomAPI.js";
 
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
+// const APPLICATION_SERVER_URL =
+//   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
 export default function RoomTest() {
-  const [mySessionId, setMySessionId] = useState("SessionA");
+  const [mySessionId, setMySessionId] = useState("create");
   const [myUserName, setMyUserName] = useState(
     `Participant${Math.floor(Math.random() * 100)}`
   );
@@ -193,32 +199,40 @@ export default function RoomTest() {
    * more about the integration of OpenVidu in your application server.
    */
   const getToken = useCallback(async () => {
-    return createSession(mySessionId).then((sessionId) =>
-      createToken(sessionId)
-    );
+    // return createSession(mySessionId).then((sessionId) =>
+    //   createToken(sessionId)
+    // );
+    const sessionId = await createSession(mySessionId);
+    console.log("방생성결과", sessionId);
+    // mySessionId = sessionId;
+    return await createToken(sessionId);
   }, [mySessionId]);
 
-  const createSession = async (sessionId) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions",
-      { customSessionId: sessionId },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    return response.data; // The sessionId
+  const createRoom = () => {
+    setMySessionId("create");
+    joinSession();
   };
+  //   const createSession = async (sessionId) => {
+  //     const response = await axios.post(
+  //       APPLICATION_SERVER_URL + "api/sessions",
+  //       { customSessionId: sessionId },
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //       }
+  //     );
+  //     return response.data; // The sessionId
+  //   };
 
-  const createToken = async (sessionId) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
-      {},
-      {
-        headers: { "Content-Type": "application/json" },
-      }
-    );
-    return response.data; // The token
-  };
+  //   const createToken = async (sessionId) => {
+  //     const response = await axios.post(
+  //       APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
+  //       {},
+  //       {
+  //         headers: { "Content-Type": "application/json" },
+  //       }
+  //     );
+  //     return response.data; // The token
+  //   };
   return (
     <>
       {/* <RoomNavbar /> */}
@@ -227,7 +241,7 @@ export default function RoomTest() {
           <div id="join-dialog">
             <form
               className="form-group flex flex-col justify-center items-center p-2"
-              onSubmit={joinSession}
+              onSubmit={createRoom}
             >
               <p>
                 <label>Participant: </label>
