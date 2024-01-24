@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import OpenViduVideoComponent from "./OvVideo";
+import OpenViduVideoComponent from "../Room/OvVideo";
 import "./UserVideo.css";
 import Mic from "@mui/icons-material/Mic";
 import MicOff from "@mui/icons-material/MicOff";
@@ -56,10 +56,7 @@ const UserVideoComponent = ({ streamManager, session, team }) => {
           <div className="bg-white">
             <p>
               {getNicknameTag()}
-              {/* {this.state.isMute === true 
-                            ? (<button onClick={this.onMic}><MicOff/></button>) 
-                            : (<button onClick={this.muteMic}><Mic/></button>)
-                            } */}
+
               {audioActive === false ? (
                 <button onClick={onMic}>
                   <MicOff />
