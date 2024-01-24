@@ -1,8 +1,4 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-} from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 
 import Start from "./pages/Start";
 import Room from "./pages/Room";
@@ -17,17 +13,11 @@ import RoomTest from "./pages/RoomTest";
 const route = (
   <>
     <Route path="/" element={<Start />}></Route>
-<<<<<<< HEAD
-    <Route element={<Layout />}>
-      <Route path="room" element={<Room />}></Route>
-      <Route path="room2" element={<VideoRoomComponent />}></Route>
-=======
     <Route path="game" element={<Game />}></Route>
     <Route element={<Layout />}>
       <Route path="room" element={<Room />}></Route>
       <Route path="rt" element={<RoomTest />}></Route>
       {/* <Route path="room2" element={<VideoRoomComponent />}></Route> */}
->>>>>>> origin/Shin_functional
       <Route path="lobby" element={<Lobby />}></Route>
       <Route path="auth">
         <Route path="login" element={<Login />}></Route>
