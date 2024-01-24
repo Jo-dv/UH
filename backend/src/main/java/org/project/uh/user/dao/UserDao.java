@@ -3,6 +3,8 @@ package org.project.uh.user.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.*;
+import org.project.uh.user.dto.MypageDto;
+import org.project.uh.user.dto.ResultDto;
 import org.project.uh.user.dto.UserDto;
 
 @Mapper
@@ -40,5 +42,11 @@ public interface UserDao {
 
 	// 마이 페이지
 	@Select("SELECT user_seq, user_id, user_nickname, rating FROM user WHERE user_seq = #{userSeq}")
-	public UserDto mypage(int userSeq);
+	public MypageDto mypage(int userSeq);
+
+	// 전적 조회
+	@Select("SELECT * FROM game_result "
+		+ "WHERE user1 = #{userSeq} OR user2 = #{userSeq} OR user3 = #{userSeq} OR user4 = #{userSeq} "
+		+ "ORDER BY created DESC LIMIT 20")
+	public List<ResultDto> userRecord(int userSeq);
 }

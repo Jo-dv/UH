@@ -3,6 +3,8 @@ package org.project.uh.user.service;
 import java.util.List;
 
 import org.project.uh.user.dao.UserDao;
+import org.project.uh.user.dto.MypageDto;
+import org.project.uh.user.dto.ResultDto;
 import org.project.uh.user.dto.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -85,7 +87,15 @@ public class UserServiceImpl implements UserService {
 
 	// 마이페이지
 	@Override
-	public UserDto mypage(int userSeq) {
+	public MypageDto mypage(int userSeq) {
 		return dao.mypage(userSeq);
 	}
+
+
+	// 전적 조회
+	@Override
+	public List<ResultDto> userRecord(int userSeq) {
+		return dao.userRecord(userSeq);
+	}
+
 }

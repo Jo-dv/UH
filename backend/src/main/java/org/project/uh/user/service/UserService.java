@@ -2,6 +2,8 @@ package org.project.uh.user.service;
 
 import java.util.List;
 
+import org.project.uh.user.dto.MypageDto;
+import org.project.uh.user.dto.ResultDto;
 import org.project.uh.user.dto.UserDto;
 
 public interface UserService {
@@ -26,5 +28,9 @@ public interface UserService {
 	public int getUserNickname(UserDto dto);
 
 	// 마이페이지
-	public UserDto mypage(int userSeq);
+	public MypageDto mypage(int userSeq);
+
+	// 전적조회
+	public List<ResultDto> userRecord(int userSeq);
+
 }
