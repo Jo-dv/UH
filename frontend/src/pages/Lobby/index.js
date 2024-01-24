@@ -1,5 +1,5 @@
 /*eslint-disable*/
-import { createBrowserRouter, createRoutesFromElements, Route, Routes } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route, Routes, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import RoomList from "../../components/lobbyComponent/RoomList";
 import FriendList from "../../components/lobbyComponent/FriendList";
@@ -8,6 +8,23 @@ import MyCam from "../../components/lobbyComponent/MyCam";
 import Search from "../../components/lobbyComponent/Search";
 
 const Lobby = (props) => {
+  const navigate = useNavigate();
+  // 로비가 새로고침 될 때마다 유저정보 체크
+  useEffect(() => {
+    const fetchUserAuth = async () => {
+      try {
+        // 서버에 사용자 인증 상태 요청
+        const response = await axios.get("http://localhost:5000/user/check");
+        if (response.data === null) {
+          navigate("/auth/login");
+        }
+      } catch (error) {
+        console.error("사용자 인증 확인 중 에러 발생" , error);
+      }
+    };
+    fetchUserAuth();
+  }, [navigate]);
+
   // [접속자 목록] 접속자 목록 변수
   const [accessors, setAccessors] = useState(["바가림", "황희굥", "바정인"]);
 
@@ -49,7 +66,7 @@ const Lobby = (props) => {
   const [isSearchPlaying, setIsSearchPlaying] = useState(false); // 초기 상태는 'wait'로 설정
 
   // [내 상태] nickname 변수
-  const nickname = "닉네임";
+  const nickname = sessionStorage.getItem("userNickname");
 
   // [친구 목록] 친구 목록 변수
   const [friends, setFriends] = useState([

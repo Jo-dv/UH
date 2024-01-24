@@ -5,10 +5,13 @@ import axios from "axios";
 const LogOutModal = (props) => {
   const navigate = useNavigate();
 
+  // 로그아웃 로직
   const handleLogOut = async () => {
     try {
       await axios.post("http://localhost:5000/user/logout");
       sessionStorage.clear();
+      // 모달 검사 불리언 값 바꾸기
+      props.setLogout(false);
       navigate("/auth/login")
     } catch (error){
       console.error("로그아웃 에러", error);
