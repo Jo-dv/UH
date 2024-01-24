@@ -3,7 +3,6 @@ import './ToolbarComponent.css';
 
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-
 import Mic from '@mui/icons-material/Mic';
 import MicOff from '@mui/icons-material/MicOff';
 import Videocam from '@mui/icons-material/Videocam';
@@ -19,6 +18,7 @@ import PowerSettingsNew from '@mui/icons-material/PowerSettingsNew';
 import QuestionAnswer from '@mui/icons-material/QuestionAnswer';
 
 import IconButton from '@mui/material/IconButton';
+
 
 
 export default class ToolbarComponent extends Component {
@@ -76,6 +76,7 @@ export default class ToolbarComponent extends Component {
             <AppBar className="toolbar" id="header">
                 <Toolbar className="toolbar">
                     <div id="navSessionInfo">
+
                         {this.props.sessionId && <div id="titleContent">
                             <span id="session-title">{mySessionId}</span>
                         </div>}
@@ -114,7 +115,7 @@ export default class ToolbarComponent extends Component {
                         <IconButton color="secondary" className="navButton" onClick={this.leaveSession} id="navLeaveButton">
                             <PowerSettingsNew />
                         </IconButton>
-                         <IconButton color="inherit" onClick={this.toggleChat} className="navButton">
+                         <IconButton color="inherit" onClick={this.toggleChat} id="navChatButton">
                             {this.props.showNotification && <div id="point" className="" />}
                             <Tooltip title="Chat">
                                 <QuestionAnswer />

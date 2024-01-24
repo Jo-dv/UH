@@ -6,7 +6,7 @@ import DialogExtensionComponent from './dialog-extension/DialogExtension';
 import StreamComponent from './stream/StreamComponent';
 import './VideoRoomComponent.css';
 
-import OpenViduLayout from './openvidu-layout';
+import OpenViduLayout from './openvidu-layout.js';
 import UserModel from '../../models/user-model';
 import ToolbarComponent from './toolbar/ToolbarComponent';
 
@@ -497,11 +497,6 @@ class VideoRoomComponent extends Component {
         var chatDisplay = { display: this.state.chatDisplay };
 
         return (
-            <>
-            {this.state.session === undefined ? (
-                <div>Loading</div>
-            ) : null}
-            {this.state.session !== undefined ? (
             <div className="container" id="container">
                 <ToolbarComponent
                     sessionId={mySessionId}
@@ -542,8 +537,6 @@ class VideoRoomComponent extends Component {
                     )}
                 </div>
             </div>
-            ) : null}
-            </>
         );
     }
 
