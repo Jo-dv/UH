@@ -33,7 +33,7 @@ dependencies {
 	implementation 'io.openvidu:openvidu-java-client:2.29.0'
 	// https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
 	implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '1.2-b01'
-
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
