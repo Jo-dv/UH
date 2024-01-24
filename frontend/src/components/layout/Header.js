@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import CreateRoom from "../CreateRoomModal/index";
+import CreateRoomTab from "../HeaderComponent/CreateRoomTab";
+import FastTrackTab from "../HeaderComponent/FastTrackTab";
+import RankingTab from "../HeaderComponent/RankingTab";
+import SettingTab from "../HeaderComponent/SettingTab";
+import FeedbackTab from "../HeaderComponent/FeedbackTab";
+import LogOutTab from "../HeaderComponent/LogOutTab";
+import RoomSettingTab from "../HeaderComponent/RoomSettingTab";
+import InvitingTab from "../HeaderComponent/InvitingTab";
+import LeavingTab from "../HeaderComponent/LeavingTab";
 
 const Header = () => {
   let [isLobbyPage, setIsLobbyPage] = useState(true);
@@ -20,13 +28,10 @@ const Header = () => {
           {isLobbyPage ? (
             <>
               <li>
-                <RoomTab />
+                <CreateRoomTab />
               </li>
               <li>
                 <FastTrackTab />
-              </li>
-              <li>
-                <FriendTab />
               </li>
               <li>
                 <RankingTab />
@@ -63,56 +68,4 @@ const Header = () => {
   );
 };
 
-const RoomTab = () => {
-  const [modalOpen, setModalOpen] = useState(false);
-  return (
-    <>
-      <h3
-        className="bg-mc1 p-2"
-        onClick={() => {
-          setModalOpen(!modalOpen);
-        }}
-      >
-        방 만들기
-      </h3>
-      {modalOpen && <CreateRoom />}
-    </>
-  );
-};
-
-const FastTrackTab = () => {
-  return <h3 className="bg-mc2 p-2">빠른 입장</h3>;
-};
-
-const FriendTab = () => {
-  return <h3 className="bg-mc3 p-2">친구</h3>;
-};
-
-const RankingTab = () => {
-  return <h3 className="bg-mc4 p-2">랭킹</h3>;
-};
-
-const SettingTab = () => {
-  return <h3 className="bg-mc5 p-2">설정</h3>;
-};
-
-const FeedbackTab = () => {
-  return <h3 className="bg-mc6 p-2">피드백</h3>;
-};
-
-const LogOutTab = () => {
-  return <h3 className="bg-mc7 p-2">로그아웃</h3>;
-};
-
-const RoomSettingTab = () => {
-  return <h3 className="bg-mc1 p-2">방 설정</h3>;
-};
-
-const InvitingTab = () => {
-  return <h3 className="bg-mc2 p-2">친구 초대</h3>;
-};
-
-const LeavingTab = () => {
-  return <h3 className="bg-mc7 p-2">방 나가기</h3>;
-};
 export default Header;

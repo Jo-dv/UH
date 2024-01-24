@@ -25,9 +25,6 @@ module.exports = {
         "screen-80": "calc(100vh - 96px)",
         "screen-40": "calc(100% - 40px)",
       },
-      height: {
-        "screen-80": "calc(100vh-96px)",
-      },
     },
   },
   plugins: [require("tailwindcss-animated")],

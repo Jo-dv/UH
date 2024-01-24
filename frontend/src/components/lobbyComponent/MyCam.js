@@ -6,7 +6,7 @@ const MyCam = (props) => {
   const [play, setPlay] = useState(true);
 
   return (
-    <div className="ml-2 mr-2 mb-2 p-2 p-2 col-start-1 col-end-3 row-start-8 row-end-12 rounded-md border">
+    <div className="border-7 border-modalBorder col-start-1 col-end-2 row-start-8 row-end-13 ml-2 mr-2 mb-2 p-2 rounded-md border">
       <p>{props.nickname}</p>
       <div className="p-2">
         {play === true ? (

@@ -6,8 +6,6 @@ import FriendList from "../../components/lobbyComponent/FriendList";
 import AccessorsList from "../../components/lobbyComponent/AccessorList";
 import MyCam from "../../components/lobbyComponent/MyCam";
 import Search from "../../components/lobbyComponent/Search";
-import Rooms from "../../components/lobbyComponent/Rooms";
-import Header from "../../components/layout/Header";
 
 const Lobby = (props) => {
   // [접속자 목록] 접속자 목록 변수
@@ -62,10 +60,35 @@ const Lobby = (props) => {
   // [친구 목록] 친구 목록을 '온라인 상태'에 따라 정렬
   const sortedFriends = friends.sort((a, b) => b.isOnline - a.isOnline);
 
+  // [친구 목록, 접속자 목록] 2개 토글
+  const [toggleFriend, setToggleFriend] = useState(true);
+
   return (
-    <div className="ml-2 mr-2 mb-2 p-2 grid grid-cols-8 grid-rows-11 gap-2 rounded-md bg-formBG">
-      <FriendList sortedFriends={sortedFriends} />
-      {/* <AccessorsList accessors={accessors}/> */}
+    <div className="bg-neutral-200 grid grid-rows-12 grid-cols-6 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
+      <div className="col-start-1 col-end-2 row-start-1 row-end-2 m-2 p-2">
+        <div className="flex items-center">
+          <div
+            className="mr-3"
+            onClick={() => {
+              setToggleFriend(true);
+            }}
+          >
+            친구 목록
+          </div>
+          <div
+            onClick={() => {
+              setToggleFriend(false);
+            }}
+          >
+            접속자 목록
+          </div>
+        </div>
+      </div>
+      {toggleFriend === true ? (
+        <FriendList sortedFriends={sortedFriends} />
+      ) : (
+        <AccessorsList accessors={accessors} />
+      )}
       <MyCam nickname={nickname} />
       <Search
         isSearchPlaying={isSearchPlaying}
@@ -82,7 +105,6 @@ const Lobby = (props) => {
         totalNumberOfPeople={totalNumberOfPeople}
         isLocked={isLocked}
         isPlaying={isPlaying}
-        className="opacity-0 transition-all-0.5s"
       />
     </div>
   );

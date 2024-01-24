@@ -9,19 +9,19 @@ import Layout from "./components/layout";
 import CreateNickname from "./pages/Auth/CreateNickname";
 import VideoRoomComponent from "./components/OpenVidu/VideoRoomComponent";
 const route = (
-    <>
+  <>
     <Route path="/" element={<Start />}></Route>
-    <Route element={<Layout/>}>
-        <Route path="room" element={<Room />}></Route>
-        <Route path="room2" element={<VideoRoomComponent />}></Route>
-        <Route path="lobby" element={<Lobby />}></Route>
-        <Route path="auth">
-            <Route path="login" element={<Login />}></Route>
-            <Route path="signup" element={<Signup />}></Route>
-            <Route path="nickname" element={<CreateNickname />}></Route>
-        </Route>
+    <Route element={<Layout />}>
+      <Route path="room" element={<Room />}></Route>
+      <Route path="room2" element={<VideoRoomComponent />}></Route>
+      <Route path="lobby" element={<Lobby />}></Route>
+      <Route path="auth">
+        <Route path="login" element={<Login />}></Route>
+        <Route path="signup" element={<Signup />}></Route>
+        <Route path="nickname" element={<CreateNickname />}></Route>
+      </Route>
     </Route>
-    </>
+  </>
 );
 
 const rootRouter = createBrowserRouter(createRoutesFromElements(route));

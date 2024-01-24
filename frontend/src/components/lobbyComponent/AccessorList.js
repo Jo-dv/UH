@@ -1,8 +1,7 @@
 const AccessorsList = (props) => {
   return (
     <div>
-      <div className="m-2 p-2 col-start-1 col-end-3 row-start-1 row-end-8  rounded-md border">
-        <h2>접속자 목록</h2>
+      <div className="col-start-1 col-end-2 row-start-2 row-end-8 m-2 p-2 divide-gray-500 rounded-md border">
         {props.accessors.map((accessor, i) => (
           <p i={i}>{accessor.name}</p>
         ))}
