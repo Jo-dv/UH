@@ -25,29 +25,6 @@ export default function RoomId() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [roomName, setRoomName] = useState(null);
-  const [roomList, setRoomList] = useState([
-    {
-      sessionId: "세션아이디",
-      roomName: "방이름",
-      roomPassword: null,
-      gameCategory: 100,
-      quizCategory: 100,
-      count: 1,
-      max: 8,
-      play: false,
-    },
-    {
-      sessionId: "세션아이디2",
-      roomName: "방이름2",
-      roomPassword: null,
-      gameCategory: 100,
-      quizCategory: 100,
-      count: 1,
-      max: 8,
-      play: false,
-    },
-  ]);
 
   const OV = useRef(new OpenVidu());
 
@@ -235,15 +212,6 @@ export default function RoomId() {
     return await createToken(sessionId);
   }, [mySessionId]);
 
-  const createRoom = () => {
-    setMySessionId("create");
-    joinSession();
-  };
-
-  const showRoomList = async () => {
-    let res = await listRoom();
-    setRoomList(res);
-  };
   return (
     <>
       {session === undefined ? (
