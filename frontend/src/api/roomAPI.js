@@ -17,7 +17,7 @@ export const createSession = async (sessionId, roomName = "방이름", roomPassw
     const response = await axios.post(
       APPLICATION_SERVER_URL + "rooms",
       {
-        customSessionId: sessionId,
+        sessionId: sessionId,
         roomName: roomName,
         roomPassword: roomPassword,
         gameCategory: 100,
