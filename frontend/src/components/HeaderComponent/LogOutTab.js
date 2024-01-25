@@ -7,7 +7,7 @@ const LogOutTab = () => {
   return (
     <>
       <h3
-        className="bg-mc7 p-2"
+        className="rounded-t-lg bg-mc7 p-2"
         onClick={() => {
           setLogout(!logout);
         }}

@@ -10,6 +10,7 @@ import CreateNickname from "./pages/Auth/CreateNickname";
 // import VideoRoomComponent from "./components/OpenVidu/VideoRoomComponent";
 import Game from "./pages/Game";
 import RoomTest from "./pages/RoomTest";
+
 const route = (
   <>
     <Route path="/" element={<Start />}></Route>

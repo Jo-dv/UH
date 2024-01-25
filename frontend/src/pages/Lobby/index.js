@@ -6,8 +6,9 @@ import FriendList from "../../components/lobbyComponent/FriendList";
 import AccessorsList from "../../components/lobbyComponent/AccessorList";
 import MyCam from "../../components/lobbyComponent/MyCam";
 import Search from "../../components/lobbyComponent/Search";
+import UseRoomListApiCall from "../../api/UseRoomListApiCall";
 
-const Lobby = (props) => {
+const Lobby = () => {
   // [접속자 목록] 접속자 목록 변수
   const [accessors, setAccessors] = useState(["바가림", "황희굥", "바정인"]);
 
@@ -21,23 +22,14 @@ const Lobby = (props) => {
   const [searchRoomTittle, setSerchRoomTittel] = useState(""); // 검색어 상태 관리
   const handleChangeOfRoomTittle = (e) => {
     setSerchRoomTittel(e.target.value);
-  }; // [검색창] 사용자의 입력에 따라 검색어 상태 업데이트
-  const handleSubmit = (event) => {
-    event.preventDefault(); // 폼 제출에 의한 페이지 새로고침 방지
+  };
+
+  // [검색창] 사용자의 입력에 따라 검색어 상태 업데이트
+  const handleSubmit = (e) => {
+    e.preventDefault(); // 폼 제출에 의한 페이지 새로고침 방지
     console.log(`검색어: ${searchRoomTittle}`); // 실제 검색 로직 처리
   };
 
-  // [방목록]
-  const [rooms, setRooms] = useState([
-    {
-      roomTitle: "방1",
-      gameType: "게임1",
-      numberOfPeople: 1,
-      totalNumberOfPeople: 4,
-      isLocked: true,
-      isPlaying: false,
-    },
-  ]);
   // [검색창] wait와 play 입력받는 변수
   const [isSearchPlaying, setIsSearchPlaying] = useState(false); // 초기 상태는 'wait'로 설정
 
@@ -91,15 +83,7 @@ const Lobby = (props) => {
         handleChangeOfRoomTittle={handleChangeOfRoomTittle}
         selectedGame={selectedGame}
       />
-      <RoomList
-        rooms={rooms}
-        roomTitle={rooms.roomTitle}
-        gameType={rooms.gameType}
-        numberOfPeople={rooms.numberOfPeople}
-        totalNumberOfPeople={rooms.totalNumberOfPeople}
-        isLocked={rooms.isLocked}
-        isPlaying={rooms.isPlaying}
-      />
+      <RoomList />
     </div>
   );
 };
