@@ -3,16 +3,16 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: "pixel";
-    src: url(./asset/font/DungGeunMo.woff);
+  font-family: "pixel";
+  src: url(./asset/font/DungGeunMo.woff);
 }
 
 body {
-    /* background-image: url("../public/image/background.png"); */
-    background-image: url("../public/image/b2.png");
-    background-repeat: no-repeat;
-    background-position: top center;
-    background-size: cover;
-    background-attachment: fixed;
-    font-family: "pixel";
+  /* background-image: url("../public/image/background.png"); */
+  background-image: url("../public/image/b2.png");
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: cover;
+  background-attachment: fixed;
+  font-family: "pixel";
 }

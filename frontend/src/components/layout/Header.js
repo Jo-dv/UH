@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import CreateRoomTab from "../HeaderComponent/CreateRoomTab";
 import FastTrackTab from "../HeaderComponent/FastTrackTab";
 import RankingTab from "../HeaderComponent/RankingTab";
@@ -11,11 +11,17 @@ import InvitingTab from "../HeaderComponent/InvitingTab";
 import LeavingTab from "../HeaderComponent/LeavingTab";
 
 const Header = () => {
-  let [isLobbyPage, setIsLobbyPage] = useState(true);
-  const [modalOpen, setModalOpen] = useState(false);
-  const modalOnOff = () => {
-    setModalOpen(!modalOpen);
-  };
+  const location = useLocation();
+  const [isLobbyPage, setIsLobbyPage] = useState(true);
+
+  useEffect(() => {
+    if (location.pathname === "/lobby") {
+      setIsLobbyPage(true);
+    } else if (location.pathname.startsWith("/room")) {
+      setIsLobbyPage(false);
+    }
+  }, [location]);
+
   return (
     <div>
       <nav>
