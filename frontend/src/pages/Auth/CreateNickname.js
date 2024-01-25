@@ -31,7 +31,7 @@ const CreateNickname = () => {
     //         const res = response.data;
     //         console.log(res);
     //         if (res === "가능") {
-    //             setCheckUserNickname("사용가능한 닉네임");              
+    //             setCheckUserNickname("사용가능한 닉네임");
     //         } else {
     //             setCheckUserNickname("중복된 닉네임");
     //         }
@@ -56,8 +56,13 @@ const CreateNickname = () => {
         } else if (!eRegEx.test(form.userNickname)) {
             newErr.userNickname = "한글, 영어, 숫자만 써주세요 (2-10자)";
             // 닉네임 중복 검사
+<<<<<<< HEAD
         // } else if (checkUserNickname !== "사용가능한 닉네임") {
         //     newErr.userNickname = "중복된 닉네임입니다";
+=======
+            // } else if (checkUserNickname !== "사용가능한 닉네임") {
+            //     newErr.userNickname = "중복된 닉네임입니다";
+>>>>>>> fe_dev
             // 모든 기준 충족 시, 에러메시지 초기화
         } else {
             newErr.userNickname = "";
@@ -68,6 +73,7 @@ const CreateNickname = () => {
 
         if (newErr.userNickname === "") {
             console.log("닉네임 :", form);
+<<<<<<< HEAD
             const userId = sessionStorage.getItem("userId");
             try {
                 const response = await axios.post("http://localhost:5000/user/nickname", {
@@ -81,6 +87,22 @@ const CreateNickname = () => {
                 } else {
                 navigate("/lobby");
             }
+=======
+            const userSeq = sessionStorage.getItem("userSeq");
+            try {
+                const response = await axios.post("http://localhost:5000/user/nickname", {
+                    userSeq,
+                    userNickname: form.userNickname,
+                });
+                const res = response.data;
+                console.log("서버 응답:", res);
+                if (res.status === 400) {
+                    setErr({ ...err, userNickname: "중복된 닉네임입니다" });
+                } else {
+                    sessionStorage.setItem("userNickname", form.userNickname);
+                    navigate("/lobby");
+                }
+>>>>>>> fe_dev
             } catch (error) {
                 console.error("닉네임 생성 중 에러 발생", error);
                 // 에러 처리
@@ -110,7 +132,9 @@ const CreateNickname = () => {
                 <p className="font-['pixel'] text-red-500 mb-1">{err.userNickname}</p>
                 <span>{checkUserNickname}</span>
 
-                <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">입장하기</button>
+                <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">
+                    입장하기
+                </button>
             </form>
         </div>
     );
