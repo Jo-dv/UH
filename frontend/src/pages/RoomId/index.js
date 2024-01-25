@@ -1,9 +1,9 @@
 import { OpenVidu } from "openvidu-browser";
 
-import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import UserVideoComponent from "./UserVideoComponent";
-import Chat from "../../components/Chat";
+import { useParams } from "react-router-dom";
+import UserVideoComponent from "./UserVideoComponent.js";
+import Chat from "../../components/Chat/index.js";
 import {
   createSession,
   createToken,
@@ -16,37 +16,15 @@ import {
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
-export default function Room() {
-  const [mySessionId, setMySessionId] = useState("create");
-  const [myUserName, setMyUserName] = useState(`익명${Math.floor(Math.random() * 100)}`);
+export default function RoomId() {
+  const { id } = useParams();
+  const [mySessionId, setMySessionId] = useState(id);
+  const [myUserName, setMyUserName] = useState(`id${Math.floor(Math.random() * 100)}`);
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [roomName, setRoomName] = useState(null);
-  const [roomList, setRoomList] = useState([
-    {
-      sessionId: "세션아이디",
-      roomName: "방이름",
-      roomPassword: null,
-      gameCategory: 100,
-      quizCategory: 100,
-      count: 1,
-      max: 8,
-      play: false,
-    },
-    {
-      sessionId: "세션아이디2",
-      roomName: "방이름2",
-      roomPassword: null,
-      gameCategory: 100,
-      quizCategory: 100,
-      count: 1,
-      max: 8,
-      play: false,
-    },
-  ]);
 
   const OV = useRef(new OpenVidu());
 
@@ -234,84 +212,15 @@ export default function Room() {
     return await createToken(sessionId);
   }, [mySessionId]);
 
-  const createRoom = () => {
-    setMySessionId("create");
-    joinSession();
-  };
-
-  const showRoomList = async () => {
-    let res = await listRoom();
-    setRoomList(res);
-  };
   return (
     <>
       {session === undefined ? (
-        <>
-          <div id="join" className="bg-slate-500">
-            <div id="join-dialog">
-              <form
-                className="form-group flex flex-col justify-center items-center p-2"
-                onSubmit={joinSession}
-              >
-                <p>
-                  <label>Participant: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="userName"
-                    value={myUserName}
-                    onChange={handleChangeUserName}
-                    required
-                  />
-                </p>
-                <p>
-                  <label> Session: </label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="sessionId"
-                    value={mySessionId}
-                    onChange={handleChangeSessionId}
-                    required
-                  />
-                </p>
-                <p className="text-center">
-                  <input
-                    className="btn btn-lg btn-success"
-                    name="commit"
-                    type="submit"
-                    value="JOIN"
-                  />
-                </p>
-              </form>
-            </div>
-            {/* <Modal
-                      btnText={"모달 여는 버튼"}
-                      content={"모달내용"}
-                      cancelText={"닫기"}
-                      okText={"수락"}
-                      onClick={testModal}
-                    /> */}
-          </div>
-          <div>
-            <button className="bg-mc3" onClick={showRoomList}>
-              Show List
-            </button>
-            <ul className="bg-white">
-              {roomList.map((item, index) => (
-                <li key={index} className="border">
-                  <p>{item.sessionId}</p>
-                  <p>
-                    {item.roomName} | {item.play}
-                  </p>
-                  <p>
-                    {item.count} / {item.max}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </>
+        <div>
+          {id}
+          <button onClick={joinSession} className="bg-mc1">
+            JOIN SESSION
+          </button>
+        </div>
       ) : null}
 
       {session !== undefined ? (
