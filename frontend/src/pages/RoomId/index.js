@@ -17,9 +17,9 @@ import {
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
 export default function RoomId() {
-  const params = useParams();
-  const [mySessionId, setMySessionId] = useState("create");
-  const [myUserName, setMyUserName] = useState(`익명${Math.floor(Math.random() * 100)}`);
+  const { id } = useParams();
+  const [mySessionId, setMySessionId] = useState(id);
+  const [myUserName, setMyUserName] = useState(`id${Math.floor(Math.random() * 100)}`);
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -246,7 +246,14 @@ export default function RoomId() {
   };
   return (
     <>
-      {session === undefined ? <div>{params}</div> : null}
+      {session === undefined ? (
+        <div>
+          {id}
+          <button onClick={joinSession} className="bg-mc1">
+            JOIN SESSION
+          </button>
+        </div>
+      ) : null}
 
       {session !== undefined ? (
         <div id="session" className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
