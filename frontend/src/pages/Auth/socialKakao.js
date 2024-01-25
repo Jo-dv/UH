@@ -7,23 +7,25 @@ const KakaoRedirectHandler = () => {
     const code = new URL(window.location.href).searchParams.get('code');
 
     useEffect(() => {
-        console.log( {code} )
+        const fetchData = async () => {
+        console.log( {code} );
         // 요청 보내기
-        // if (code) {
-        //     axios.post('http://localhost:5000/auth/kakao', { code })
-        //         .then(response => {
-        //             if (response.data.hasNickname) {
-        //                 navigate('/lobby');
-        //             } else {
-        //                 navigate('/auth/nickname');
-        //             }
-        //         })
-        //         .catch(error => {
-        //             console.error('Error during Kakao login', error);
-        //             // 적절한 에러 처리
-        //         });
-        // }
-    }, [code, navigate]);
+        if (code) {
+            try {
+                const response = await axios.post('http://localhost:5000/user/login/kakao', code);
+                if (response.data.userNickname) {
+                    navigate('/lobby');
+                } else {
+                    navigate('/auth/nickname');
+                }
+            } catch (error) {
+                console.error('Error during Kakao login', error);
+                // 적절한 에러 처리
+            }
+        }
+    };
+    fetchData();
+}, [code, navigate]);
 
     return (
         <div>

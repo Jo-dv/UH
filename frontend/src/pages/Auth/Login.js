@@ -76,11 +76,12 @@ const Login = () => {
                 const res = response.data
                 console.log("서버 응답:", res);
                 if (res.userNickname === null) {
-                    sessionStorage.setItem("userId", userId);
+                    sessionStorage.setItem("userSeq", res.userSeq);
                     navigate("/auth/nickname");
                 } else {
                     sessionStorage.setItem("userNickname", res.userNickname);
                     sessionStorage.setItem("userSeq", res.userSeq);
+                    console.log("로그인 성공")
                     navigate("/lobby");
                 }
             } catch (error) {

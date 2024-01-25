@@ -21,10 +21,11 @@ const Lobby = (props) => {
     const fetchUserAuth = async () => {
       try {
         // 서버에 사용자 인증 상태 요청
-        const response = await axios.get("http://localhost:5000/user/check");
+        const response = await axios.get("http://localhost:5000/user/check", { withCredentials: true } );
         const res = response;
         console.log(res);
         if (res.data === 0) {
+          sessionStorage.clear();
           navigate("/auth/login");
         }
       } catch (error) {
