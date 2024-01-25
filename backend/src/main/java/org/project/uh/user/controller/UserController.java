@@ -3,39 +3,47 @@ package org.project.uh.user.controller;
 import java.util.List;
 
 import org.project.uh.user.dto.MypageDto;
-import org.project.uh.user.dto.ResultDto;
 import org.project.uh.user.dto.UserDto;
 import org.project.uh.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping(produces = "application/json; charset=UTF8")
+@Tag(name = "유저 api")
 public class UserController {
 	private final UserService service;
 
-	public UserController(UserService service) {
-		super();
-		this.service = service;
-	}
-
 	// 유저 목록
+	@Operation(
+		summary = "유저 목록"
+	)
 	@GetMapping("/user")
 	public List<UserDto> listUser() {
 		return service.listUser();
 	}
 
+	@Operation(
+		summary = "유저 가입"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "가입 성공"),
+		@ApiResponse(responseCode = "400", description = "중복된 아이디")
+	})
 	// 회원가입
 	@PostMapping("/user/join")
 	public ResponseEntity<String> insertUser(@RequestBody UserDto dto) {
@@ -47,11 +55,15 @@ public class UserController {
 	}
 
 	// 유저 정보 확인
+	@Operation(
+		summary = "로그인 상태 확인",
+		description = "로그인 상태라면 user정보를 아니라면 null을 반환"
+	)
 	@GetMapping("/user/check")
 	public ResponseEntity<Object> userCheck(HttpSession session) {
 		System.out.println("요청 들어옴");
 		// 세션에서 'user' 속성 가져오기
-		UserDto user = (UserDto) session.getAttribute("user");
+		UserDto user = (UserDto)session.getAttribute("user");
 		if (user != null) {
 			// 사용자 정보가 세션에 있으면, 해당 정보 반환
 			System.out.println(user);
@@ -63,35 +75,45 @@ public class UserController {
 		}
 	}
 
-
 	// 로그인
+	@Operation(
+		summary = "로그인"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "로그인 성공"),
+		@ApiResponse(responseCode = "400", description = "로그인 오류")
+	})
 	@PostMapping("/user/login")
 	public ResponseEntity<Object> login(@RequestBody UserDto dto, HttpSession session) {
-		Object result = service.login(dto);
+		UserDto result = service.login(dto);
 		if (result == null) {
 			return new ResponseEntity<>("로그인 오류", HttpStatus.BAD_REQUEST);
 		}
 		// 로그인 성공
+		result.setUserPassword(null);
 		session.setAttribute("user", result);
-		System.out.println(result);
-		System.out.println("dto = " + dto + ", session = " + session);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
-
 	// 로그아웃
+	@Operation(
+		summary = "로그아웃"
+	)
 	@PostMapping("/user/logout")
-	public ResponseEntity<Object> logout(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		if (session != null) {
-			session.invalidate();
-		}
-		System.out.println("session = " + session);
+	public ResponseEntity<Object> logout(HttpSession session) {
+		session.invalidate();
 		return new ResponseEntity<>("로그아웃", HttpStatus.OK);
 	}
 
-
 	// 닉네임 생성
+	@Operation(
+		summary = "닉네임 생성",
+		description = "처음 로그인한 유저의 닉네임 생성"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "닉네임 생성 성공"),
+		@ApiResponse(responseCode = "400", description = "중복된 닉네임")
+	})
 	@PostMapping("/user/nickname")
 	public ResponseEntity<String> nickname(@RequestBody UserDto dto) {
 		int result = service.nickname(dto);
@@ -102,24 +124,36 @@ public class UserController {
 	}
 
 	// 회원가입 시 아이디 중복 체크
+	@Operation(
+		summary = "아이디 중복 체크",
+		description = "중복된 아이디가 있으면 0, 없으면 1 반환"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "닉네임 생성 성공"),
+		@ApiResponse(responseCode = "400", description = "중복된 닉네임")
+	})
 	@PostMapping("/user/idcheck")
 	public int idCheck(@RequestBody UserDto dto) {
 		return service.idCheck(dto);
 	}
 
 	// 마이페이지
+	@Operation(
+		summary = "회원 정보 조회",
+		description = "회원 정보와 전적 제공"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "회원 정보 조회 성공"),
+		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
+	})
 	@GetMapping("/mypage/{userSeq}")
-	public MypageDto mypage(@PathVariable(value = "userSeq") int userSeq) {
-		return service.mypage(userSeq);
+	public ResponseEntity<MypageDto> mypage(@PathVariable(value = "userSeq") int userSeq) {
+		try {
+			return new ResponseEntity<>(service.mypage(userSeq), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-
-
-	// 개인 전적 조회
-	@GetMapping("/mypage/{userSeq}/record")
-	public List<ResultDto> record(@PathVariable(value = "userSeq") int userSeq) {
-		return service.userRecord(userSeq);
-	}
-
 
 	// 카카오 로그인
 	// @GetMapping("/user/login/kakao")

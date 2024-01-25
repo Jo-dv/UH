@@ -4,21 +4,16 @@ import java.util.List;
 
 import org.project.uh.user.dao.UserDao;
 import org.project.uh.user.dto.MypageDto;
-import org.project.uh.user.dto.ResultDto;
 import org.project.uh.user.dto.UserDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 	private final UserDao dao;
-
-	public UserServiceImpl(UserDao dao) {
-		super();
-		this.dao = dao;
-	}
 
 	// 회원 가입
 	@Override
@@ -49,7 +44,6 @@ public class UserServiceImpl implements UserService {
 	public List<UserDto> listUser() {
 		return dao.listUser();
 	}
-
 
 	// 로그인
 	@Override
@@ -84,18 +78,11 @@ public class UserServiceImpl implements UserService {
 		return dao.getUserNickname(dto);
 	}
 
-
 	// 마이페이지
 	@Override
 	public MypageDto mypage(int userSeq) {
-		return dao.mypage(userSeq);
+		MypageDto mypage = dao.mypage(userSeq);
+		mypage.setRecord(dao.userRecord(userSeq));
+		return mypage;
 	}
-
-
-	// 전적 조회
-	@Override
-	public List<ResultDto> userRecord(int userSeq) {
-		return dao.userRecord(userSeq);
-	}
-
 }
