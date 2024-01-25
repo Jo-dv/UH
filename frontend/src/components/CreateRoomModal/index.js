@@ -45,9 +45,9 @@ const CreateRoomModal = (props) => {
           border rounded-3xl bg-white"
           >
             게임선택:
-            <input type="radio" className="p-2 m-2" value={"고요속의 침묵"} name="game" />
-            고요 속의 침묵
-            <input type="radio" className="p-2 m-2" value={"인물 맞추기"} name="game" />
+            <input type="radio" className="p-2 m-2" value={"100"} name="game" />
+            고요 속의 외침
+            <input type="radio" className="p-2 m-2" value={"200"} name="game" />
             인물 맞추기
           </div>
           <button onClick={props.setCreateRoom} className="p-2 m-1 rounded w-72 bg-formButton">

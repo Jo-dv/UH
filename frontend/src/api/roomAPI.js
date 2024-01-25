@@ -63,13 +63,12 @@ export const createToken = async (sessionId) => {
 };
 
 /**
- *
+ * 방 진입 후 플레이어 추가
  * @param {string} sessionId
  * @param {string} connectionId
  * @param {number} userSeq
  * @param {string} userNickname
  * @param {boolean} isHost
- * @returns
  */
 export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, isHost) => {
   console.log("플레이어추가 진행함", sessionId, connectionId, userSeq, userNickname, isHost);
@@ -98,7 +97,6 @@ export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, 
  *
  * @param {string} sessionId
  * @param {string} connectionId
- * @returns
  */
 export const exitRoom = async (sessionId, connectionId) => {
   console.log("방나가기 sessionId:", sessionId, " connectionId:", connectionId);
@@ -132,7 +130,12 @@ export const listRoom = async () => {
   }
 };
 
-// 비밀번호확인
+/**
+ *
+ * @param {string} sessionId
+ * @param {string} enterPassword
+ * @returns token
+ */
 export const checkPassword = async (sessionId, enterPassword) => {
   const response = await axios.post(
     APPLICATION_SERVER_URL + "password",

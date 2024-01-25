@@ -28,10 +28,6 @@ export default function RoomId() {
 
   const OV = useRef(new OpenVidu());
 
-  const handleChangeSessionId = useCallback((e) => {
-    setMySessionId(e.target.value);
-  }, []);
-
   const handleChangeUserName = useCallback((e) => {
     setMyUserName(e.target.value);
   }, []);
