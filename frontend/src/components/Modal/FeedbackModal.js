@@ -2,21 +2,22 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const FeedbackModal = (props) => {
-  const [feedback, setFeedback] = useState("");
-  const userNickname = sessionStorage.getItem("userNickname");
+  const [feedbackContent, setFeedback] = useState("");
+  const userSeq = sessionStorage.getItem("userSeq");
 
   const onChange = (e) => {
     setFeedback(e.currentTarget.value);
   };
   // sendFeedback console 버전
   const sendFeedbackConsole = () => {
-    console.log({userNickname, feedback});
+    console.log({userSeq, feedbackContent});
     props.setFeedback(false);
   }
   // 피드백 내용을 가지고 axios 요청
   const sendFeedback = async () =>{
     try {
-      await axios.post("http://localhost:5000/feedback", { feedback });
+      await axios.post("http://localhost:5000/feedback", { userSeq, feedbackContent });
+      console.log({userSeq, feedbackContent});
       props.setFeedback(false);
     } catch (error) {
       console.error("feedback 전송 실패", error);
@@ -36,11 +37,11 @@ const FeedbackModal = (props) => {
                 placeholder="피드백을 입력해주세요!"
                 className="m-1 px-2 
           border rounded-3xl bg-white"
-                value={feedback}
+                value={feedbackContent}
                 onChange={onChange}
               />
             </div>
-            <button onClick={sendFeedbackConsole} className="bg-formButton py-2 px-4 m-2 rounded">
+            <button onClick={sendFeedback} className="bg-formButton py-2 px-4 m-2 rounded">
               보내기
             </button>
           </div>

@@ -12,6 +12,7 @@ const LogOutModal = (props) => {
             sessionStorage.clear();
             // 모달 검사 불리언 값 바꾸기
             props.setLogout(false);
+            console.log("로그아웃 완료")
             navigate("/auth/login");
         } catch (error) {
             console.error("로그아웃 에러", error);
