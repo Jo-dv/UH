@@ -7,7 +7,7 @@ const CreateRoomTab = () => {
   return (
     <>
       <h3
-        className="rounded-t-lg bg-mc1 p-2 w-25"
+        className="w-24 text-center rounded-t-lg bg-mc1 p-2"
         onClick={() => {
           setCreateRoom(!createRoom);
         }}

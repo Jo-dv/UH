@@ -6,7 +6,7 @@ const FeedbackTab = () => {
   return (
     <>
       <h3
-        className="rounded-t-lg bg-mc6 p-2"
+        className="w-20 text-center rounded-t-lg bg-mc6 p-2"
         onClick={() => {
           setFeedback(!feedback);
         }}
