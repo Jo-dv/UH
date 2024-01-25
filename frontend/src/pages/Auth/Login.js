@@ -63,7 +63,7 @@ const Login = () => {
             const { userId, userPassword } = form;
             console.log("로그인 정보 :", { userId, userPassword });
             try {
-                const response = await axios.post("http://localhost:5000/user/login", { userId, userPassword });
+                const response = await axios.post("http://localhost:5000/user/login", { userId, userPassword },{ withCredentials: true });
                 const res = response.data
                 console.log("서버 응답:", res);
                 if (res.userNickname === null) {
