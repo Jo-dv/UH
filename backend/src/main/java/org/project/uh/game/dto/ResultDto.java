@@ -1,4 +1,4 @@
-package org.project.uh.user.dto;
+package org.project.uh.game.dto;
 
 import java.time.LocalDateTime;
 

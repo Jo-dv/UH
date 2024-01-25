@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserDto {
+public class UserRankDto {
 	private int userSeq;
 	private String userNickname;
 	private int rating;

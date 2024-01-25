@@ -13,8 +13,8 @@ public class SwaggerConfig {
 	public OpenAPI openAPI() {
 		return new OpenAPI()
 			.info(new Info()
-				.title("Uh")
-				.description("Uh")
+				.title("UH!?")
+				.description("대규모 프로젝트.")
 				.version("1.0.0"));
 	}
 }

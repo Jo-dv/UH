@@ -31,7 +31,7 @@ public class FriendsController {
 	private final FriendsService friendsService;
 
 	@Operation(
-		summary = "친구 목록 불러오기",
+		summary = "친구 목록",
 		description = "본인이 친구 요청을 보냈을 때는 요청을 수락한 친구 목록을 가져오고<br>"
 			+ "본인이 요청을 받았을 땐 친구 요청과 수락된 친구의 목록을 가져온다."
 	)
@@ -42,7 +42,7 @@ public class FriendsController {
 	}
 
 	@Operation(
-		summary = "친구 요청하기",
+		summary = "친구 요청",
 		description = "이미 친구이거나 요청이 간 상태인지 확인하고<br>"
 			+ "아니라면 친구 요청을 보낸다."
 	)
