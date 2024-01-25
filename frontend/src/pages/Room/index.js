@@ -4,19 +4,27 @@ import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import Chat from "../../components/Chat";
-import { createSession, createToken, listRoom, checkPassword } from "../../api/roomAPI.js";
+import {
+  createSession,
+  createToken,
+  listRoom,
+  checkPassword,
+  addPlayer,
+  exitRoom,
+} from "../../api/roomAPI.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
 export default function Room() {
   const [mySessionId, setMySessionId] = useState("create");
-  const [myUserName, setMyUserName] = useState(`Participant${Math.floor(Math.random() * 100)}`);
+  const [myUserName, setMyUserName] = useState(`익명${Math.floor(Math.random() * 100)}`);
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
+  const [roomName, setRoomName] = useState(null);
   const [roomList, setRoomList] = useState([
     {
       sessionId: "세션아이디",
@@ -81,46 +89,59 @@ export default function Room() {
   useEffect(() => {
     if (session) {
       // Get a token from the OpenVidu deployment
-      getToken().then(async (token) => {
-        try {
-          await session.connect(token, { clientData: myUserName });
+      getToken()
+        .then(async (token) => {
+          try {
+            await session.connect(token, { clientData: myUserName });
 
-          let publisher = await OV.current.initPublisherAsync(undefined, {
-            audioSource: undefined,
-            videoSource: undefined,
-            publishAudio: true,
-            publishVideo: true,
-            resolution: "640x480",
-            frameRate: 30,
-            insertMode: "APPEND",
-            mirror: false,
-          });
+            let publisher = await OV.current.initPublisherAsync(undefined, {
+              audioSource: undefined,
+              videoSource: undefined,
+              publishAudio: true,
+              publishVideo: true,
+              resolution: "640x480",
+              frameRate: 30,
+              insertMode: "APPEND",
+              mirror: false,
+            });
 
-          session.publish(publisher);
+            session.publish(publisher);
 
-          const devices = await OV.current.getDevices();
-          const videoDevices = devices.filter((device) => device.kind === "videoinput");
-          const currentVideoDeviceId = publisher.stream
-            .getMediaStream()
-            .getVideoTracks()[0]
-            .getSettings().deviceId;
-          const currentVideoDevice = videoDevices.find(
-            (device) => device.deviceId === currentVideoDeviceId
-          );
+            const devices = await OV.current.getDevices();
+            const videoDevices = devices.filter((device) => device.kind === "videoinput");
+            const currentVideoDeviceId = publisher.stream
+              .getMediaStream()
+              .getVideoTracks()[0]
+              .getSettings().deviceId;
+            const currentVideoDevice = videoDevices.find(
+              (device) => device.deviceId === currentVideoDeviceId
+            );
 
-          setMainStreamManager(publisher);
-          setPublisher(publisher);
-          setCurrentVideoDevice(currentVideoDevice);
-        } catch (error) {
-          console.log("There was an error connecting to the session:", error.code, error.message);
-        }
-      });
+            setMainStreamManager(publisher);
+            setPublisher(publisher);
+            setCurrentVideoDevice(currentVideoDevice);
+          } catch (error) {
+            console.log("There was an error connecting to the session:", error.code, error.message);
+          }
+        })
+        .then(() => {
+          const playerSessionId = session.sessionId;
+          const playerConnectionId = session.connection.connectionId;
+          console.log("플레이어 추가", mySessionId);
+          if (mySessionId === "create") {
+            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
+          } else {
+            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
+          }
+        });
     }
   }, [session, myUserName]);
 
   const leaveSession = useCallback(() => {
     // Leave the session
     if (session) {
+      console.log("리브세션", session);
+      exitRoom(session.sessionId, session.connection.connectionId);
       session.disconnect();
     }
 
@@ -128,8 +149,8 @@ export default function Room() {
     OV.current = new OpenVidu();
     setSession(undefined);
     setSubscribers([]);
-    setMySessionId("SessionA");
-    setMyUserName("Participant" + Math.floor(Math.random() * 100));
+    // setMySessionId("create");
+    // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
   }, [session]);
@@ -206,12 +227,10 @@ export default function Room() {
    * more about the integration of OpenVidu in your application server.
    */
   const getToken = useCallback(async () => {
-    // return createSession(mySessionId).then((sessionId) =>
-    //   createToken(sessionId)
-    // );
+    //API import 함수 사용 중
     const sessionId = await createSession(mySessionId);
     console.log("방생성결과", sessionId);
-    // mySessionId = sessionId;
+    // await createToken(sessionId);
     return await createToken(sessionId);
   }, [mySessionId]);
 
@@ -219,27 +238,7 @@ export default function Room() {
     setMySessionId("create");
     joinSession();
   };
-  //   const createSession = async (sessionId) => {
-  //     const response = await axios.post(
-  //       APPLICATION_SERVER_URL + "api/sessions",
-  //       { customSessionId: sessionId },
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //       }
-  //     );
-  //     return response.data; // The sessionId
-  //   };
 
-  //   const createToken = async (sessionId) => {
-  //     const response = await axios.post(
-  //       APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
-  //       {},
-  //       {
-  //         headers: { "Content-Type": "application/json" },
-  //       }
-  //     );
-  //     return response.data; // The token
-  //   };
   const showRoomList = async () => {
     let res = await listRoom();
     setRoomList(res);

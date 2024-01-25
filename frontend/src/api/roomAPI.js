@@ -6,11 +6,11 @@ const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost:5000/";
 
 /**
- *
+ * 방 생성 & 입장
  * @param {string} sessionId 생성시: 'create'
  * @param {string} roomName
  * @param {string} roomPassword
- * @returns
+ * @returns sessionId
  */
 export const createSession = async (sessionId, roomName = "방이름", roomPassword = null) => {
   try {
@@ -28,7 +28,7 @@ export const createSession = async (sessionId, roomName = "방이름", roomPassw
         headers: { "Content-Type": "application/json" },
       }
     );
-    console.log("방만들기", response.data);
+    // console.log("방만들기", response.data);
     // 성공적인 응답의 경우 sessionId 반환
     return response.data;
   } catch (error) {
@@ -46,6 +46,11 @@ export const createSession = async (sessionId, roomName = "방이름", roomPassw
   }
 };
 
+/**
+ * openvidu가 생성한 토큰 서버로 전송
+ * @param {string} sessionId
+ * @returns token
+ */
 export const createToken = async (sessionId) => {
   const response = await axios.post(
     APPLICATION_SERVER_URL + "tokens/" + sessionId,
@@ -57,10 +62,70 @@ export const createToken = async (sessionId) => {
   return response.data; // The token
 };
 
+/**
+ *
+ * @param {string} sessionId
+ * @param {string} connectionId
+ * @param {number} userSeq
+ * @param {string} userNickname
+ * @param {boolean} isHost
+ * @returns
+ */
+export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, isHost) => {
+  console.log("플레이어추가 진행함", sessionId, connectionId, userSeq, userNickname, isHost);
+  try {
+    const response = await axios.post(
+      APPLICATION_SERVER_URL + "players",
+      {
+        sessionId: sessionId,
+        connectionId: connectionId,
+        userSeq: userSeq,
+        userNickname: userNickname,
+        isHost: isHost,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    console.log(response.data); // "방에 입장했습니다."
+  } catch (error) {
+    console.log("플레이어 추가 에러");
+    console.error("Error:", error.message);
+  }
+};
+
+/**
+ *
+ * @param {string} sessionId
+ * @param {string} connectionId
+ * @returns
+ */
+export const exitRoom = async (sessionId, connectionId) => {
+  console.log("방나가기 sessionId:", sessionId, " connectionId:", connectionId);
+  try {
+    const response = await axios.delete(
+      APPLICATION_SERVER_URL + "exitrooms/" + sessionId + "/" + connectionId,
+      {},
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    console.log(response.data);
+  } catch (error) {
+    console.log("방나가기 에러");
+    console.error("Error:", error.message);
+  }
+};
+
+/**
+ * 룸 리스트 가져오기
+ *
+ * @returns 룸 리스트
+ */
 export const listRoom = async () => {
   try {
     const response = await axios.get(APPLICATION_SERVER_URL + "rooms");
-    console.log("룸 리스트", response.data);
+    // console.log("룸 리스트", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching room list:", error);
