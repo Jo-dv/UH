@@ -1,7 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import UserVideoComponent from "./UserVideoComponent.js";
 import Chat from "../../components/Chat/index.js";
 import {
@@ -26,8 +26,13 @@ export default function RoomId() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
+  const [openLink, setOpenLink] = useState("");
 
   const OV = useRef(new OpenVidu());
+
+  const location = useLocation();
+  const roomInfo = { ...location.state };
+  console.log(roomInfo);
 
   const handleChangeUserName = useCallback((e) => {
     setMyUserName(e.target.value);
@@ -103,11 +108,12 @@ export default function RoomId() {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
           console.log("플레이어 추가", mySessionId);
-          if (mySessionId === "create") {
-            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
-          } else {
-            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
-          }
+          addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
+          // if (mySessionId === "create") {
+          //   addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
+          // } else {
+          //   addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
+          // }
         });
     }
   }, [session, myUserName]);
@@ -206,6 +212,7 @@ export default function RoomId() {
     const sessionId = await createSession(mySessionId);
     console.log("방생성결과", sessionId);
     // await createToken(sessionId);
+    setOpenLink(sessionId);
     return await createToken(sessionId);
   }, [mySessionId]);
 
@@ -214,7 +221,7 @@ export default function RoomId() {
       {session === undefined ? (
         <div>
           <button onClick={joinSession} className="bg-mc1 p-2">
-            JOIN SESSION {id}
+            {roomInfo.roomName} : JOIN ROOM
           </button>
           <section className="w-1/2">
             <MyCam></MyCam>
@@ -226,22 +233,23 @@ export default function RoomId() {
         <div id="session" className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
           <div id="session-header" className="flex flex-row">
             <h1 id="session-title" className="text-xl">
-              {mySessionId}
+              {roomInfo.roomName}
             </h1>
             <input
-              className="bg-mc1"
+              className="bg-mc1 p-2"
               type="button"
               id="buttonLeaveSession"
               onClick={leaveSession}
               value="Leave session"
             />
             <input
-              className="bg-mc3"
+              className="bg-mc3 p-2"
               type="button"
               id="buttonSwitchCamera"
               onClick={switchCamera}
               value="Switch Camera"
             />
+            <p>초대링크 : http://localhost:3000/room/{openLink}</p>
           </div>
           <div className="grid grid-cols-4 h-screen-40">
             <div id="video-container" className="col-span-3 grid grid-rows-2 grid-cols-4 gap-2 p-2">

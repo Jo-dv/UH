@@ -1,6 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { addPlayer, createSession, createToken, exitRoom } from "../../api/roomAPI";
+import { useNavigate } from "react-router-dom";
 
 const CreateRoomModal = ({ modalOnOff }) => {
   const [roomName, setRoomName] = useState(`X-${Math.floor(Math.random() * 1000)}`);
@@ -28,10 +29,20 @@ const CreateRoomModal = ({ modalOnOff }) => {
   const handleChangeRoomGame = useCallback((e) => {
     setRoomGame(e.target.value);
   }, []);
+
+  const navigate = useNavigate();
   const submitHandler = (e) => {
     //1. 페이지 리로드 방지
     e.preventDefault();
-    joinSession();
+    // joinSession();
+    navigate("/room/create", {
+      state: {
+        roomName: roomName,
+        roomPassword: roomPassword,
+        roomMax: roomMax,
+        roomGame: roomGame,
+      },
+    });
   };
   const OV = useRef(new OpenVidu());
 
@@ -57,52 +68,51 @@ const CreateRoomModal = ({ modalOnOff }) => {
   useEffect(() => {
     if (session) {
       // Get a token from the OpenVidu deployment
-      getToken()
-        .then(async (token) => {
-          try {
-            await session.connect(token, { clientData: myUserName });
+      getToken().then(async (token) => {
+        try {
+          await session.connect(token, { clientData: myUserName });
 
-            let publisher = await OV.current.initPublisherAsync(undefined, {
-              audioSource: undefined,
-              videoSource: undefined,
-              publishAudio: true,
-              publishVideo: true,
-              resolution: "640x480",
-              frameRate: 30,
-              insertMode: "APPEND",
-              mirror: false,
-            });
+          let publisher = await OV.current.initPublisherAsync(undefined, {
+            audioSource: undefined,
+            videoSource: undefined,
+            publishAudio: true,
+            publishVideo: true,
+            resolution: "640x480",
+            frameRate: 30,
+            insertMode: "APPEND",
+            mirror: false,
+          });
 
-            session.publish(publisher);
+          session.publish(publisher);
 
-            const devices = await OV.current.getDevices();
-            const videoDevices = devices.filter((device) => device.kind === "videoinput");
-            const currentVideoDeviceId = publisher.stream
-              .getMediaStream()
-              .getVideoTracks()[0]
-              .getSettings().deviceId;
-            const currentVideoDevice = videoDevices.find(
-              (device) => device.deviceId === currentVideoDeviceId
-            );
+          const devices = await OV.current.getDevices();
+          const videoDevices = devices.filter((device) => device.kind === "videoinput");
+          const currentVideoDeviceId = publisher.stream
+            .getMediaStream()
+            .getVideoTracks()[0]
+            .getSettings().deviceId;
+          const currentVideoDevice = videoDevices.find(
+            (device) => device.deviceId === currentVideoDeviceId
+          );
 
-            setMainStreamManager(publisher);
-            setPublisher(publisher);
-            setCurrentVideoDevice(currentVideoDevice);
-          } catch (error) {
-            console.log("There was an error connecting to the session:", error.code, error.message);
-          }
-        })
-        // 플레이어 추가
-        .then(() => {
-          const playerSessionId = session.sessionId;
-          const playerConnectionId = session.connection.connectionId;
-          console.log("플레이어 추가", mySessionId);
-          if (mySessionId === "create") {
-            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
-          } else {
-            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
-          }
-        });
+          setMainStreamManager(publisher);
+          setPublisher(publisher);
+          setCurrentVideoDevice(currentVideoDevice);
+        } catch (error) {
+          console.log("There was an error connecting to the session:", error.code, error.message);
+        }
+      });
+      // 플레이어 추가
+      // .then(() => {
+      //   const playerSessionId = session.sessionId;
+      //   const playerConnectionId = session.connection.connectionId;
+      //   console.log("플레이어 추가", mySessionId);
+      //   if (mySessionId === "create") {
+      //     addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
+      //   } else {
+      //     addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
+      //   }
+      // });
     }
   }, [session, myUserName]);
 
@@ -154,7 +164,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
     console.log("방생성결과", sessionId, roomName);
     // await createToken(sessionId);
     return await createToken(sessionId);
-  }, [mySessionId]);
+  }, [mySessionId, roomName]);
 
   const switchCamera = useCallback(async () => {
     try {
