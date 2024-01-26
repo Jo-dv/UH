@@ -1,0 +1,11 @@
+meter {
+  appearance: auto;
+  box-sizing: border-box;
+  line-height: normal;
+  border: none;
+  margin: 0px;
+  display: block;
+
+  width: 100%;
+  height: 60px;
+}
