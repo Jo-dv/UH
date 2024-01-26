@@ -12,6 +12,7 @@ import {
   addPlayer,
   exitRoom,
 } from "../../api/roomAPI.js";
+import MyCam from "../../components/lobbyComponent/MyCam.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -212,10 +213,12 @@ export default function RoomId() {
     <>
       {session === undefined ? (
         <div>
-          {id}
-          <button onClick={joinSession} className="bg-mc1">
-            JOIN SESSION
+          <button onClick={joinSession} className="bg-mc1 p-2">
+            JOIN SESSION {id}
           </button>
+          <section className="w-1/2">
+            <MyCam></MyCam>
+          </section>
         </div>
       ) : null}
 

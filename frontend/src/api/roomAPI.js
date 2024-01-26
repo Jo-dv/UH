@@ -13,6 +13,7 @@ const APPLICATION_SERVER_URL =
  * @returns sessionId
  */
 export const createSession = async (sessionId, roomName = "방이름", roomPassword = null) => {
+  console.log("아ㅣ르망ㄴ마옴너아ㅗㅓㅏ", roomName);
   try {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "rooms",
