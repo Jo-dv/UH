@@ -22,5 +22,5 @@ public class ResultDto {
 	private int gameCategory;
 	private int score;
 	private LocalDateTime created;
-	private boolean win;
+	private boolean isWin;
 }
