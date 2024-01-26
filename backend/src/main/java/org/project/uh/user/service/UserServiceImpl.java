@@ -6,9 +6,7 @@ import org.project.uh.user.dao.UserDao;
 import org.project.uh.user.dto.MypageDto;
 import org.project.uh.user.dto.ResultDto;
 import org.project.uh.user.dto.UserDto;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -50,7 +48,6 @@ public class UserServiceImpl implements UserService {
 		return dao.listUser();
 	}
 
-
 	// 로그인
 	@Override
 	public UserDto login(UserDto dto) {
@@ -84,13 +81,11 @@ public class UserServiceImpl implements UserService {
 		return dao.getUserNickname(dto);
 	}
 
-
 	// 마이페이지
 	@Override
 	public MypageDto mypage(int userSeq) {
 		return dao.mypage(userSeq);
 	}
-
 
 	// 전적 조회
 	@Override
@@ -98,4 +93,9 @@ public class UserServiceImpl implements UserService {
 		return dao.userRecord(userSeq);
 	}
 
+	// 아이디로 유저 정보 조회
+	@Override
+	public UserDto findById(String userId) {
+		return dao.findById(userId);
+	}
 }

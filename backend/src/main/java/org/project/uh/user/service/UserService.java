@@ -13,7 +13,6 @@ public interface UserService {
 	// 아이디 중복 체크
 	public int idCheck(UserDto dto);
 
-
 	// 회원 목록조회
 	public List<UserDto> listUser();
 
@@ -22,9 +21,9 @@ public interface UserService {
 	// 로그인
 	public UserDto login(UserDto dto);
 
-
 	// 닉네임 생성
 	public int nickname(UserDto dto);
+
 	public int getUserNickname(UserDto dto);
 
 	// 마이페이지
@@ -33,4 +32,6 @@ public interface UserService {
 	// 전적조회
 	public List<ResultDto> userRecord(int userSeq);
 
+	// 아이디로 유저 정보 조회
+	public UserDto findById(String userId);
 }
