@@ -8,6 +8,15 @@ import naverLogo from "./img/naverLogo.png";
 
 const Login = () => {
     const navigate = useNavigate();
+
+    // 카카오 소셜 로그인 
+    const REST_API_KEY = '4fffa78521feee5e1eb947c704c08cf2';
+    const REDIRECT_URI = 'http://localhost:3000/callback/kakao';
+    const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+    const kakaoLoginHandler = () => {
+        window.location.href = link;
+    };
+
     const [form, setForm] = useState({
         userId: "",
         userPassword: "",
@@ -63,13 +72,16 @@ const Login = () => {
             const { userId, userPassword } = form;
             console.log("로그인 정보 :", { userId, userPassword });
             try {
-                const response = await axios.post("http://localhost:5000/user/login", { userId, userPassword });
+                const response = await axios.post("http://localhost:5000/user/login", { userId, userPassword },{ withCredentials: true });
                 const res = response.data
                 console.log("서버 응답:", res);
                 if (res.userNickname === null) {
-                    sessionStorage.setItem("userId", userId);
+                    sessionStorage.setItem("userSeq", res.userSeq);
                     navigate("/auth/nickname");
                 } else {
+                    sessionStorage.setItem("userNickname", res.userNickname);
+                    sessionStorage.setItem("userSeq", res.userSeq);
+                    console.log("로그인 성공")
                     navigate("/lobby");
                 }
             } catch (error) {
@@ -121,6 +133,7 @@ const Login = () => {
                     <img src={kakaoLogo} alt="google Logo" />
                     <img src={naverLogo} alt="google Logo" />
                 </div>
+                <button type='button' onClick={kakaoLoginHandler}>카카오 로그인</button>
             </form>
         </div>
     );

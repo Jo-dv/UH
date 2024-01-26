@@ -31,7 +31,7 @@ const CreateNickname = () => {
     //         const res = response.data;
     //         console.log(res);
     //         if (res === "가능") {
-    //             setCheckUserNickname("사용가능한 닉네임");              
+    //             setCheckUserNickname("사용가능한 닉네임");
     //         } else {
     //             setCheckUserNickname("중복된 닉네임");
     //         }
@@ -68,19 +68,20 @@ const CreateNickname = () => {
 
         if (newErr.userNickname === "") {
             console.log("닉네임 :", form);
-            const userId = sessionStorage.getItem("userId");
+            const userSeq = sessionStorage.getItem("userSeq");
             try {
                 const response = await axios.post("http://localhost:5000/user/nickname", {
-                    userId,
+                    userSeq,
                     userNickname: form.userNickname,
                 });
                 const res = response.data;
-                console.log("서버 응답:", res)
-                if ( res.status === 400 ) {
+                console.log("서버 응답:", res);
+                if (res.status === 400) {
                     setErr({ ...err, userNickname: "중복된 닉네임입니다" });
                 } else {
-                navigate("/lobby");
-            }
+                    sessionStorage.setItem("userNickname", form.userNickname);
+                    navigate("/lobby");
+                }
             } catch (error) {
                 console.error("닉네임 생성 중 에러 발생", error);
                 // 에러 처리
@@ -110,7 +111,9 @@ const CreateNickname = () => {
                 <p className="font-['pixel'] text-red-500 mb-1">{err.userNickname}</p>
                 <span>{checkUserNickname}</span>
 
-                <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">입장하기</button>
+                <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">
+                    입장하기
+                </button>
             </form>
         </div>
     );
