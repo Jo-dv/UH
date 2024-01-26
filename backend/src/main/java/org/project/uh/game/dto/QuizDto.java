@@ -11,8 +11,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AnswerDto {
-	private int gameCategory;  // 실행하는 게임이 뭔지
+public class QuizDto {
 	private int quizId;
-	private String userAnswer;
+	private String quizPhoto;
+	private String quizAnswer;
 }
