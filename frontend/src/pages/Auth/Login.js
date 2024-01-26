@@ -76,11 +76,7 @@ const Login = () => {
                 const res = response.data
                 console.log("서버 응답:", res);
                 if (res.userNickname === null) {
-<<<<<<< HEAD
-                    sessionStorage.setItem("userId", userId);
-=======
                     sessionStorage.setItem("userSeq", res.userSeq);
->>>>>>> fe_dev
                     navigate("/auth/nickname");
                 } else {
                     sessionStorage.setItem("userNickname", res.userNickname);
