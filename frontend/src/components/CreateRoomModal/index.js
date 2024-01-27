@@ -1,6 +1,4 @@
-import { OpenVidu } from "openvidu-browser";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { addPlayer, createSession, createToken, exitRoom } from "../../api/roomAPI";
+import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CreateRoomModal = ({ modalOnOff }) => {
@@ -8,14 +6,6 @@ const CreateRoomModal = ({ modalOnOff }) => {
   const [roomPassword, setRoomPassword] = useState(null);
   const [roomMax, setRoomMax] = useState(4);
   const [roomGame, setRoomGame] = useState(100);
-
-  const [mySessionId, setMySessionId] = useState("create");
-  const [myUserName, setMyUserName] = useState(`익명${Math.floor(Math.random() * 100)}`);
-  const [session, setSession] = useState(undefined);
-  const [mainStreamManager, setMainStreamManager] = useState(undefined);
-  const [publisher, setPublisher] = useState(undefined);
-  const [subscribers, setSubscribers] = useState([]);
-  const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
 
   const handleChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
@@ -44,159 +34,6 @@ const CreateRoomModal = ({ modalOnOff }) => {
       },
     });
   };
-  const OV = useRef(new OpenVidu());
-
-  const joinSession = useCallback(() => {
-    const mySession = OV.current.initSession();
-
-    mySession.on("streamCreated", (event) => {
-      const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscribers((subscribers) => [...subscribers, subscriber]);
-    });
-
-    mySession.on("streamDestroyed", (event) => {
-      deleteSubscriber(event.stream.streamManager);
-    });
-
-    mySession.on("exception", (exception) => {
-      console.warn(exception);
-    });
-
-    setSession(mySession);
-  }, []);
-
-  useEffect(() => {
-    if (session) {
-      // Get a token from the OpenVidu deployment
-      getToken().then(async (token) => {
-        try {
-          await session.connect(token, { clientData: myUserName });
-
-          let publisher = await OV.current.initPublisherAsync(undefined, {
-            audioSource: undefined,
-            videoSource: undefined,
-            publishAudio: true,
-            publishVideo: true,
-            resolution: "640x480",
-            frameRate: 30,
-            insertMode: "APPEND",
-            mirror: false,
-          });
-
-          session.publish(publisher);
-
-          const devices = await OV.current.getDevices();
-          const videoDevices = devices.filter((device) => device.kind === "videoinput");
-          const currentVideoDeviceId = publisher.stream
-            .getMediaStream()
-            .getVideoTracks()[0]
-            .getSettings().deviceId;
-          const currentVideoDevice = videoDevices.find(
-            (device) => device.deviceId === currentVideoDeviceId
-          );
-
-          setMainStreamManager(publisher);
-          setPublisher(publisher);
-          setCurrentVideoDevice(currentVideoDevice);
-        } catch (error) {
-          console.log("There was an error connecting to the session:", error.code, error.message);
-        }
-      });
-      // 플레이어 추가
-      // .then(() => {
-      //   const playerSessionId = session.sessionId;
-      //   const playerConnectionId = session.connection.connectionId;
-      //   console.log("플레이어 추가", mySessionId);
-      //   if (mySessionId === "create") {
-      //     addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
-      //   } else {
-      //     addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
-      //   }
-      // });
-    }
-  }, [session, myUserName]);
-
-  const leaveSession = useCallback(() => {
-    // Leave the session
-    if (session) {
-      console.log("리브세션", session);
-      exitRoom(session.sessionId, session.connection.connectionId);
-      session.disconnect();
-    }
-
-    // Reset all states and OpenVidu object
-    OV.current = new OpenVidu();
-    setSession(undefined);
-    setSubscribers([]);
-    // setMySessionId("create");
-    // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
-    setMainStreamManager(undefined);
-    setPublisher(undefined);
-  }, [session]);
-
-  const deleteSubscriber = useCallback((streamManager) => {
-    setSubscribers((prevSubscribers) => {
-      const index = prevSubscribers.indexOf(streamManager);
-      if (index > -1) {
-        const newSubscribers = [...prevSubscribers];
-        newSubscribers.splice(index, 1);
-        return newSubscribers;
-      } else {
-        return prevSubscribers;
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      leaveSession();
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [leaveSession]);
-
-  const getToken = useCallback(async () => {
-    //API import 함수 사용 중
-    const sessionId = await createSession(mySessionId, roomName);
-    console.log("방생성결과", sessionId, roomName);
-    // await createToken(sessionId);
-    return await createToken(sessionId);
-  }, [mySessionId, roomName]);
-
-  const switchCamera = useCallback(async () => {
-    try {
-      const devices = await OV.current.getDevices();
-      const videoDevices = devices.filter((device) => device.kind === "videoinput");
-
-      if (videoDevices && videoDevices.length > 1) {
-        const newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== currentVideoDevice.deviceId
-        );
-
-        if (newVideoDevice.length > 0) {
-          const newPublisher = OV.current.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: true,
-          });
-
-          if (session) {
-            await session.unpublish(mainStreamManager);
-            await session.publish(newPublisher);
-            setCurrentVideoDevice(newVideoDevice[0]);
-            setMainStreamManager(newPublisher);
-            setPublisher(newPublisher);
-          }
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [currentVideoDevice, session, mainStreamManager]);
 
   return (
     <>

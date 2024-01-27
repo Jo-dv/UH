@@ -13,6 +13,7 @@ import {
   exitRoom,
 } from "../../api/roomAPI.js";
 import MyCam from "../../components/lobbyComponent/MyCam.js";
+import { getRoomInfo, playerTeam } from "../../api/waitRoom.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -108,12 +109,12 @@ export default function RoomId() {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
           console.log("플레이어 추가", mySessionId);
-          addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
-          // if (mySessionId === "create") {
-          //   addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
-          // } else {
-          //   addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
-          // }
+          // addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
+          if (mySessionId === "create") {
+            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
+          } else {
+            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
+          }
         });
     }
   }, [session, myUserName]);
@@ -192,30 +193,23 @@ export default function RoomId() {
     };
   }, [leaveSession]);
 
-  /**
-   * --------------------------------------------
-   * GETTING A TOKEN FROM YOUR APPLICATION SERVER
-   * --------------------------------------------
-   * The methods below request the creation of a Session and a Token to
-   * your application server. This keeps your OpenVidu deployment secure.
-   *
-   * In this sample code, there is no user control at all. Anybody could
-   * access your application server endpoints! In a real production
-   * environment, your application server must identify the user to allow
-   * access to the endpoints.
-   *
-   * Visit https://docs.openvidu.io/en/stable/application-server to learn
-   * more about the integration of OpenVidu in your application server.
-   */
   const getToken = useCallback(async () => {
     //API import 함수 사용 중
-    const sessionId = await createSession(mySessionId);
+    const sessionId = await createSession(mySessionId, roomInfo.roomName);
     console.log("방생성결과", sessionId);
     // await createToken(sessionId);
     setOpenLink(sessionId);
     return await createToken(sessionId);
   }, [mySessionId]);
 
+  const changeTeam = (team) => {
+    console.log(`팀변경 ${team}`, session);
+    try {
+      playerTeam(session.sessionId, session.connection.connectionId, team);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
   return (
     <>
       {session === undefined ? (
@@ -276,9 +270,24 @@ export default function RoomId() {
               </div>
 
               <div className="row-span-1 grid grid-cols-2 gap-1 w-full">
-                <button className="bg-mc1 border rounded-3xl">A팀</button>
-                <button className="bg-mc8 border rounded-3xl">B팀</button>
-                <button className="col-span-2 bg-mc3 border rounded-3xl">준비</button>
+                <button
+                  className="bg-mc1 border rounded-3xl active:bg-mc2"
+                  onClick={() => changeTeam("A")}
+                >
+                  A팀
+                </button>
+                <button
+                  className="bg-mc8 border rounded-3xl active:bg-mc7"
+                  onClick={() => changeTeam("B")}
+                >
+                  B팀
+                </button>
+                <button
+                  className="col-span-2 bg-mc3 border rounded-3xl"
+                  onClick={() => getRoomInfo(session.sessionId)}
+                >
+                  준비
+                </button>
               </div>
             </div>
           </div>
