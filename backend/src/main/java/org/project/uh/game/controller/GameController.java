@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class GameController {
 
 	private final GameService service;
-	
+
 	@Operation(
 		summary = "문제 로드",
 		description = "각 방에 맞는 문제를 방의 참여자들에게 보낸다."
