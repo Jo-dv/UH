@@ -24,13 +24,14 @@ const KakaoRedirectHandler = () => {
                 if (res.userNickname) {
                     sessionStorage.setItem("userSeq", res.userSeq);
                     sessionStorage.setItem("userNickname", res.userNickname);
+                    // zustand 사용해보기
+                    setUser({ userSeq: res.userSeq, userNickname: res.userNickname});
                     navigate('/lobby');
                     // 닉네임이 없다면
                 } else {
                     sessionStorage.setItem("userSeq", res.userSeq);
                     // zustand 사용해보기
                     setUser({ userSeq: res.userSeq, userNickname: null});
-                    console.log("userInfo:", userState());
                     navigate('/auth/nickname');
                 }
             } catch (error) {
