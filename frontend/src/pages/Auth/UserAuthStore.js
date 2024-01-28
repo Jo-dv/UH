@@ -1,10 +1,8 @@
 import create from 'zustand';
 
 const useStore = create(set=> ({
-    userNickname: '',
-    userSeq: '',
-    setNickname: (nickname) => set({userNickname: nickname}),
-    setSeq: (seq) => set({userSeq: seq}),
+    user: { userSeq: null, userNickname: null },
+    setUser: user => set({ user })
 }));
 
 export default useStore;
