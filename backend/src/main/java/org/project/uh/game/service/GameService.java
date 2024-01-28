@@ -2,10 +2,11 @@ package org.project.uh.game.service;
 
 import java.util.List;
 
-import org.project.uh.game.dto.AnswerDto;
-import org.project.uh.game.dto.ShoutDto;
+import org.project.uh.game.dto.QuizDto;
+import org.project.uh.room.dto.RoomStatusDto;
 
 public interface GameService {
-	List<ShoutDto> shoutList();
-	AnswerDto checkAnswer(AnswerDto userAnswer);
+	List<QuizDto> listQuiz(int gameCategory, int quizCategory);
+
+	int saveResult(int gameCategory, RoomStatusDto roomStatus, String winTeam, int winScore, int loseScore);
 }

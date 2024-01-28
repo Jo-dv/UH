@@ -15,9 +15,9 @@ public class RoomDto {
 	private String sessionId;
 	private String roomName;
 	private String roomPassword;
-	private int gameCategory;
-	private int quizCategory;
+	private int gameCategory = 101;
+	private int quizCategory = 201;
 	private int count = 1;
-	private int max;
+	private int max = 8;
 	private boolean isPlay;
 }
