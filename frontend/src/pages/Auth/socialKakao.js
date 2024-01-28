@@ -14,14 +14,20 @@ const KakaoRedirectHandler = () => {
     useEffect(() => {
         const fetchData = async () => {
         console.log( {code} );
+        console.log("userInfo: ", userState);
         // 요청 보내기
         if (code) {
             try {
                 const response = await axios.post('http://localhost:5000/user/login/kakao', code, { withCredentials: true });
                 const res = response.data;
+                // 닉네임이 있다면
                 if (res.userNickname) {
+                    sessionStorage.setItem("userSeq", res.userSeq);
+                    sessionStorage.setItem("userNickname", res.userNickname);
                     navigate('/lobby');
+                    // 닉네임이 없다면
                 } else {
+                    sessionStorage.setItem("userSeq", res.userSeq);
                     // zustand 사용해보기
                     setUser({ userSeq: res.userSeq, userNickname: null});
                     console.log("userInfo:", userState());

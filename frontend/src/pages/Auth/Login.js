@@ -39,7 +39,7 @@ const Login = () => {
 
     useEffect(() => {
         // useEffect 내에서 상태를 로그로 출력
-        console.log("현재 저장된 유저 정보:", userState());
+        console.log("userInfo:", userState());
     }, [userState]); // userState가 변경될 때마다 실행
 
     const onSubmit = async (e) => {
