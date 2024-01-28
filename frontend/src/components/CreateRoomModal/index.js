@@ -1,4 +1,8 @@
+import React, { useState, useEffect, useRef, useCallback } from "react";
+
 const CreateRoomModal = (props) => {
+  const [lock, setLock] = useState(false);
+
   return (
     <>
       <div
@@ -19,8 +23,16 @@ const CreateRoomModal = (props) => {
           border rounded-3xl bg-white"
           >
             <label>
-              비밀번호: <input type="text" placeholder="비밀번호를 입력해주세요!" />
+              비밀번호:{" "}
+              <input
+                type="checkbox"
+                checked={lock}
+                onChange={() => {
+                  setLock(!lock);
+                }}
+              />
             </label>
+            {lock && <input type="text" placeholder="비밀번호를 입력해주세요!" />}
           </div>
           <div
             className="m-1 px-2 
