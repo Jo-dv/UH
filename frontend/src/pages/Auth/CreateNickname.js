@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+// zustand에서 생성한 useStore 사용
+import useStore from "./UserAuthStore";
 
 const CreateNickname = () => {
     const navigate = useNavigate();
     const onClick = (path) => navigate(`/${path}`);
+    // UserAuthStore의 User를 변경하기 위해
+    const setUser = useStore(state => state.setUser);
 
     const [form, setForm] = useState({
         userNickname: "",
@@ -79,6 +83,8 @@ const CreateNickname = () => {
                 if (res.status === 400) {
                     setErr({ ...err, userNickname: "중복된 닉네임입니다" });
                 } else {
+                    // zustand 사용해보기
+                    setUser({ userNickname: form.userNickname });
                     sessionStorage.setItem("userNickname", form.userNickname);
                     navigate("/lobby");
                 }

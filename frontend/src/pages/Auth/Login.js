@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+// zustand에서 생성한 useStore 사용
+import useStore from "./UserAuthStore";
 
 import googleLogo from "./img/googleLogo.png";
 import kakaoLogo from "./img/kakaoLogoB.png";
@@ -8,6 +10,8 @@ import naverLogo from "./img/naverLogo.png";
 
 const Login = () => {
     const navigate = useNavigate();
+    // UserAuthStore의 User를 변경하기 위해
+    const setUser = useStore(state => state.setUser);
 
     // 카카오 소셜 로그인 
     const REST_API_KEY = '4fffa78521feee5e1eb947c704c08cf2';
@@ -75,12 +79,21 @@ const Login = () => {
                 const response = await axios.post("http://localhost:5000/user/login", { userId, userPassword },{ withCredentials: true });
                 const res = response.data
                 console.log("서버 응답:", res);
+                // 로그인 했을 때, 해당 유저의 닉네임이 없다면
                 if (res.userNickname === null) {
+                    // 브라우저 세션에 해당 유저 정보 저장
                     sessionStorage.setItem("userSeq", res.userSeq);
+                    // zustand 사용해보기
+                    setUser({ userSeq: res.userSeq, userNickname: null});
+                    // 닉네임 생성 페이지로
                     navigate("/auth/nickname");
+                    // 로그인 했을 때, 해당 유저의 닉네임이 있다면
                 } else {
+                    // 브라우저 세션에 해당 유저 정보 저장
                     sessionStorage.setItem("userNickname", res.userNickname);
                     sessionStorage.setItem("userSeq", res.userSeq);
+                    // zustand 사용해보기
+                    setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
                     console.log("로그인 성공")
                     navigate("/lobby");
                 }

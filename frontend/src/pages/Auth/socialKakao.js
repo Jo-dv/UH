@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+// zustand에서 생성한 useStore 사용
+import useStore from "./UserAuthStore";
 
 const KakaoRedirectHandler = () => {
     const navigate = useNavigate();
     const code = new URL(window.location.href).searchParams.get('code');
+
+    const setUser = useStore(state => state.setUser);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -13,9 +17,12 @@ const KakaoRedirectHandler = () => {
         if (code) {
             try {
                 const response = await axios.post('http://localhost:5000/user/login/kakao', code);
-                if (response.data.userNickname) {
+                const res = response.data;
+                if (res.userNickname) {
                     navigate('/lobby');
                 } else {
+                    // zustand 사용해보기
+                    setUser({ userSeq: res.userSeq, userNickname: null});
                     navigate('/auth/nickname');
                 }
             } catch (error) {
