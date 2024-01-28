@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 // zustand에서 생성한 useStore 사용
@@ -34,7 +34,14 @@ const Login = () => {
         setForm({ ...form, [name]: value });
     };
 
+    // useStore를 통해 스토어의 상태를 가져오는 함수
     const userState = useStore();
+
+    useEffect(() => {
+        // useEffect 내에서 상태를 로그로 출력
+        console.log("현재 저장된 유저 정보:", userState());
+    }, [userState]); // userState가 변경될 때마다 실행
+
     const onSubmit = async (e) => {
         e.preventDefault();
 
@@ -86,7 +93,6 @@ const Login = () => {
                     sessionStorage.setItem("userSeq", res.userSeq);
                     // zustand 사용해보기
                     setUser({ userSeq: res.userSeq, userNickname: null});
-                    console.log("userInfo:", userState());
                     // 닉네임 생성 페이지로
                     navigate("/auth/nickname");
                     // 로그인 했을 때, 해당 유저의 닉네임이 있다면
@@ -96,7 +102,6 @@ const Login = () => {
                     sessionStorage.setItem("userSeq", res.userSeq);
                     // zustand 사용해보기
                     setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
-                    console.log("userInfo:", userState());
                     console.log("로그인 성공")
                     navigate("/lobby");
                 }
