@@ -9,6 +9,7 @@ const KakaoRedirectHandler = () => {
     const code = new URL(window.location.href).searchParams.get('code');
 
     const setUser = useStore(state => state.setUser);
+    const userState = useStore();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,13 +17,14 @@ const KakaoRedirectHandler = () => {
         // 요청 보내기
         if (code) {
             try {
-                const response = await axios.post('http://localhost:5000/user/login/kakao', code);
+                const response = await axios.post('http://localhost:5000/user/login/kakao', code, { withCredentials: true });
                 const res = response.data;
                 if (res.userNickname) {
                     navigate('/lobby');
                 } else {
                     // zustand 사용해보기
                     setUser({ userSeq: res.userSeq, userNickname: null});
+                    console.log("userInfo:", userState());
                     navigate('/auth/nickname');
                 }
             } catch (error) {
@@ -32,7 +34,7 @@ const KakaoRedirectHandler = () => {
         }
     };
     fetchData();
-}, [code, navigate]);
+}, [code, navigate, setUser, userState]);
 
     return (
         <div>

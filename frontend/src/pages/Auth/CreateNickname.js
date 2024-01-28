@@ -45,6 +45,7 @@ const CreateNickname = () => {
 
     // };
 
+    const userState = useStore();
     const onSubmit = async (e) => {
         e.preventDefault();
 
@@ -77,7 +78,7 @@ const CreateNickname = () => {
                 const response = await axios.post("http://localhost:5000/user/nickname", {
                     userSeq,
                     userNickname: form.userNickname,
-                });
+                }, { withCredentials: true });
                 const res = response.data;
                 console.log("서버 응답:", res);
                 if (res.status === 400) {
@@ -85,6 +86,7 @@ const CreateNickname = () => {
                 } else {
                     // zustand 사용해보기
                     setUser({ userNickname: form.userNickname });
+                    console.log("UserInfo:", userState());
                     sessionStorage.setItem("userNickname", form.userNickname);
                     navigate("/lobby");
                 }

@@ -34,6 +34,7 @@ const Login = () => {
         setForm({ ...form, [name]: value });
     };
 
+    const userState = useStore();
     const onSubmit = async (e) => {
         e.preventDefault();
 
@@ -85,6 +86,7 @@ const Login = () => {
                     sessionStorage.setItem("userSeq", res.userSeq);
                     // zustand 사용해보기
                     setUser({ userSeq: res.userSeq, userNickname: null});
+                    console.log("userInfo:", userState());
                     // 닉네임 생성 페이지로
                     navigate("/auth/nickname");
                     // 로그인 했을 때, 해당 유저의 닉네임이 있다면
@@ -94,6 +96,7 @@ const Login = () => {
                     sessionStorage.setItem("userSeq", res.userSeq);
                     // zustand 사용해보기
                     setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
+                    console.log("userInfo:", userState());
                     console.log("로그인 성공")
                     navigate("/lobby");
                 }
