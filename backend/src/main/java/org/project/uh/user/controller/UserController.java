@@ -58,6 +58,7 @@ public class UserController {
 	public ResponseEntity<Object> userCheck(HttpSession session) {
 		// 세션에서 'user' 속성 가져오기
 		UserDto user = (UserDto)session.getAttribute("user");
+		System.out.println("UserController.userCheck 유저 정보 확인 세션 = " + session);
 		// System.out.println(user);
 		if (user != null) {
 			// 사용자 정보가 세션에 있으면, 해당 정보 반환
@@ -127,7 +128,7 @@ public class UserController {
 	@PostMapping("/user/login/kakao")
 	// 인가 코드로 Access 토큰 발급 받기
 	public ResponseEntity<Object> kakaoLogin(@RequestBody String code, HttpSession session) {
-		System.out.println("code = " + code);
+		// System.out.println("code = " + code);
 		RestTemplate restTemplate = new RestTemplate();
 		String tokenRequestUri = "https://kauth.kakao.com/oauth/token";
 
@@ -184,7 +185,11 @@ public class UserController {
 				return new ResponseEntity<>(kakaoUserInfo, HttpStatus.OK);
 			}
 			// 처음 접속한 회원이라면 회원가입
-			return new ResponseEntity<>("가입 성공", HttpStatus.OK);
+			Object kUserInfo = service.findById("K" + kakaoId);
+			session.setAttribute("user", kUserInfo);
+			System.out.println("카카오톡 부분 세션 = " + session);
+			System.out.println("session.getAttribute(user) = " + session.getAttribute("user"));
+			return new ResponseEntity<>(kUserInfo, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("카카오 로그인 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
