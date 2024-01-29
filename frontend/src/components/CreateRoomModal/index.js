@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -35,12 +34,6 @@ const CreateRoomModal = ({ modalOnOff }) => {
       },
     });
   };
-=======
-import React, { useState, useEffect, useRef, useCallback } from "react";
-
-const CreateRoomModal = (props) => {
-  const [lock, setLock] = useState(false);
->>>>>>> origin/Hwang
 
   return (
     <>
@@ -75,25 +68,15 @@ const CreateRoomModal = (props) => {
           border rounded-3xl bg-white"
           >
             <label>
-<<<<<<< HEAD
               비밀번호:
               <input
                 type="text"
                 placeholder="비밀번호를 입력해주세요!"
                 value={roomPassword}
                 onChange={handleChangeRoomPassword}
-=======
-              비밀번호:{" "}
-              <input
-                type="checkbox"
-                checked={lock}
-                onChange={() => {
-                  setLock(!lock);
-                }}
->>>>>>> origin/Hwang
               />
             </label>
-            {lock && <input type="text" placeholder="비밀번호를 입력해주세요!" />}
+            {/* {lock && <input type="text" placeholder="비밀번호를 입력해주세요!" />} */}
           </div>
           <div
             className="m-1 px-2 

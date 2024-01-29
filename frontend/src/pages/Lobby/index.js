@@ -18,23 +18,9 @@ const Lobby = () => {
 
   useEffect(() => {
     const fetchUserAuth = async () => {
-<<<<<<< HEAD
-      try {
-        // 서버에 사용자 인증 상태 요청
-        const response = await axios.get("http://localhost:5000/user/check", { withCredentials: true } );
-        const res = response;
-        console.log(res);
-        if (res.data === 0) {
-          sessionStorage.clear();
-          navigate("/auth/login");
-        }
-      } catch (error) {
-        console.error("사용자 인증 확인 중 에러 발생", error);
-=======
       const data = await getUserCheck();
       if (data === 0) {
         navigate("/auth/login");
->>>>>>> origin/Hwang
       }
     };
     fetchUserAuth();

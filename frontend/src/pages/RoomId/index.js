@@ -12,7 +12,7 @@ import {
   addPlayer,
   exitRoom,
 } from "../../api/roomAPI.js";
-import MyCam from "../../components/lobbyComponent/MyCam.js";
+import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import { getRoomInfo, playerTeam } from "../../api/waitRoom.js";
 
 // const APPLICATION_SERVER_URL =

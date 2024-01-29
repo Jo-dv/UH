@@ -51,7 +51,7 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
             </div>
           ))
         ) : (
-          <div>방 목록이 없어요.</div>
+          <div className="flex flex-auto">방이 없어요.</div>
         )}
       </div>
     </section>
