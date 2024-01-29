@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Room from "./Room";
-import useLobby from "../../hook/useLobby";
+import useLobby from "../../hooks/useLobby";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 
 const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {

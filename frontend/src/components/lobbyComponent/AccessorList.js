@@ -1,4 +1,5 @@
 const AccessorsList = () => {
+  const socket = new WebSocket("");
   return (
     <div>
       <div>
