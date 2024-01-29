@@ -485,7 +485,7 @@ public class RoomController {
 			+ "방장을 제외한 플레이어들의 준비 상태 변경"
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "준비 상태를 변경했습니다."),
+		@ApiResponse(responseCode = "200", description = "connectionId"),
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PutMapping("/ready")

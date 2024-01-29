@@ -12,7 +12,7 @@ import org.project.uh.game.dto.ResultDto;
 public interface GameDao {
 	@Select("select * "
 		+ "from quiz_shout "
-		+ "where quiz_category=#{quizCategory}"
+		+ "where quiz_category=#{quizCategory} "
 		+ "ORDER BY RAND(123)")
 		// 무작위 문제 생성
 	List<QuizDto> shoutList(int quizCategory);
