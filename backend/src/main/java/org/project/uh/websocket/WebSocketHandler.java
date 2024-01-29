@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpSession;
 public class WebSocketHandler extends TextWebSocketHandler {
 
 	private static final Map<WebSocketSession, HttpSession> CLIENTS = new ConcurrentHashMap<>();
+	private static final Map<String, WebSocketSession> connectionIds = new ConcurrentHashMap<>();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -34,7 +35,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		// 	return;
 		// }
 		CLIENTS.put(session, httpSession);
-
+		connectionIds.put(session.getId(), session);
 		// 클라이언트 접속 시 모든 클라이언트에게 접속 유저 리스트를 전송
 		sendConnectors();
 	}
@@ -46,20 +47,20 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		connectionIds.remove(session.getId());
 		CLIENTS.remove(session);
-
 		// 클라이언트 연결 종료 시 모든 클라이언트에게 접속 유저 리스트를 전송 다시 전송
 		sendConnectors();
 	}
 
 	private void sendConnectors() throws IOException {
-		// 현재 접속한 모든 클라이언트의 닉네임 전송
-		List<String> connectors = new ArrayList<>();
+		// 현재 접속한 모든 클라이언트의 connectionId와 닉네임 전송
+		List<String[]> connectors = new ArrayList<>();
 		for (WebSocketSession client : CLIENTS.keySet()) {
 			HttpSession session = (HttpSession)client.getAttributes().get("httpSession");
 			UserDto dto = (UserDto)session.getAttribute("loginUser");
 			//테스트 코드 - 회원 연결 시 변경
-			connectors.add(client.getId());
+			connectors.add(new String[] {client.getId(), "닉네임"});
 			//실제 코드
 			// connectors.add(dto.getUserNickname());
 		}
@@ -79,25 +80,45 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		// 수신된 메시지 파싱
 		JsonObject jsonMessage = JsonParser.parseString(message.getPayload()).getAsJsonObject();
 
-		// 메시지 타입이 "notification"인 경우에만 처리
-		if (jsonMessage.has("type") && jsonMessage.get("type").getAsString().equals("notification")) {
-			System.out.println("here");
-			// 알림 내용 추출
-			String notificationContent = jsonMessage.get("content").getAsString();
-			System.out.println(notificationContent);
-			// 여기서 알림을 받은 세션에 대한 추가 처리를 수행
-			handleNotification(notificationContent, jsonMessage);
+		// 친구 초대(invite)
+		if (jsonMessage.has("type") && jsonMessage.get("type").getAsString().equals("invite")) {
+			System.out.println("invite");
+			// 초대 받는 대상의 connectionId 추출
+			String toConnectionId = jsonMessage.get("toConnectionId").getAsString();
+			jsonMessage.remove(toConnectionId);
+			HttpSession httpSession = CLIENTS.get(session);
+
+			//httpSession을 통해 초대를 보낸 유저의 roomId 추출
+			String roomId = (String)httpSession.getAttribute("roomId");
+			jsonMessage.add("roomId", JsonParser.parseString(roomId));
+
+			handleInvite(toConnectionId, jsonMessage);
+		} else if (jsonMessage.has("type") && jsonMessage.get("type").getAsString().equals("follow")) {
+			System.out.println("follow");
+			// 따라가는 대상의 connectionId 추출
+			String connectionId = jsonMessage.get("connectionId").getAsString();
+			jsonMessage.remove(connectionId);
+
+			//따라가는 대상의 roomId 추출 후 메시지에 담음
+			WebSocketSession followSession = connectionIds.get(connectionId);
+			HttpSession followHttpSession = CLIENTS.get(followSession);
+			String roomId = (String)followHttpSession.getAttribute("roomId");
+			jsonMessage.add("roomId", JsonParser.parseString(roomId));
+
+			handleFollow(session, jsonMessage);
 		}
 	}
 
-	private void handleNotification(String sessionId, JsonObject jsonMessage) throws IOException {
-		// 알림을 받은 세션에 메시지 전송
-		TextMessage notificationMessage = new TextMessage(jsonMessage.toString());
-		for (WebSocketSession client : CLIENTS.keySet()) {
-			if (client.getId().equals(sessionId)) {
-				client.sendMessage(notificationMessage);
-				break;
-			}
-		}
+	private void handleInvite(String toConnectionId, JsonObject jsonMessage) throws IOException {
+		// 초대를 받은 세션에 메시지 전송
+		TextMessage inviteMessage = new TextMessage(jsonMessage.toString());
+		WebSocketSession session = connectionIds.get(toConnectionId);
+		session.sendMessage(inviteMessage);
+	}
+
+	private void handleFollow(WebSocketSession session, JsonObject jsonMessage) throws IOException {
+		//따라가기를 요청한 세션에 메시시 전송
+		TextMessage followMessage = new TextMessage(jsonMessage.toString());
+		session.sendMessage(followMessage);
 	}
 }

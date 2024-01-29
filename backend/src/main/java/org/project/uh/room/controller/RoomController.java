@@ -8,15 +8,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 
+import org.project.uh.game.dto.QuizDto;
+import org.project.uh.game.service.GameService;
 import org.project.uh.room.dto.PlayerDto;
 import org.project.uh.room.dto.RoomDetailsDto;
 import org.project.uh.room.dto.RoomDto;
 import org.project.uh.room.dto.RoomStatusDto;
+import org.project.uh.room.dto.SetPlayDto;
 import org.project.uh.util.PasswordHashUtil;
 import org.project.uh.util.RandomNumberUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,8 +41,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
 @RestController
+@RequiredArgsConstructor
+@CrossOrigin(allowedHeaders = "*", originPatterns = "*")
 @Tag(name = "방 api")
 public class RoomController {
 
@@ -53,11 +62,16 @@ public class RoomController {
 	//랜덤 난수 생성
 	private final RandomNumberUtil randomNumber = new RandomNumberUtil();
 
+	private final GameService gameService;
+
 	// 방 관리
 	//방 리스트 (sessionId,방 정보)
 	private Map<String, RoomDto> roomList = new ConcurrentHashMap<>();
 	//방 상태 정보 리스트(sessionId,방 상태)
 	private Map<String, RoomStatusDto> roomStatusList = new ConcurrentHashMap<>();
+
+	//게임 시작 시에 퀴즈 목록
+	private Map<String, List<QuizDto>> quizList = new ConcurrentHashMap<>();
 
 	@PostConstruct
 	public void init() {
@@ -472,7 +486,7 @@ public class RoomController {
 			+ "방장을 제외한 플레이어들의 준비 상태 변경"
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "준비 상태를 변경했습니다."),
+		@ApiResponse(responseCode = "200", description = "connectionId"),
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PutMapping("/ready")
@@ -500,13 +514,15 @@ public class RoomController {
 			roomStatus.setReadyCount(roomStatus.getReadyCount() - 1);
 			player.setReady(false);
 		}
-		return new ResponseEntity<>("준비 상태를 변경했습니다.", HttpStatus.OK);
+		return new ResponseEntity<>(connectionId, HttpStatus.OK);
 	}
 
 	@Operation(
 		summary = "게임 시작/종료",
-		description = "sessionId, isPlay를 받고<br>"
-			+ "게임 시작/종료 처리"
+		description = "게임 시작/종료 처리<br>"
+			+ "각 방의 설정에 맞는 문제를 미리 서버에 불러와서 저장한다.<br>"
+			+ "게임이 끝날 때에는 결과를 저장한다.<br>"
+			+ "종료 시에는 이긴 팀, 양 팀의 스코어를 같이 받는다."
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "게임이 시작/종료 되었습니다."),
@@ -516,25 +532,32 @@ public class RoomController {
 		@ApiResponse(responseCode = "502", description = "준비를 하지 않은 인원이 있습니다.")
 	})
 	@PutMapping("/play")
-	public ResponseEntity<String> gameStart(@RequestBody Map<String, Object> params) {
-		String sessionId = (String)params.get("sessionId");
-		boolean isPlay = (boolean)params.get("isPlay");
+	public ResponseEntity<String> gameStatus(@RequestBody SetPlayDto setPlayDto) {
+		String sessionId = setPlayDto.getSessionId();
+		boolean isPlay = setPlayDto.isPlay();
 
 		RoomDto room = roomList.get(sessionId);
+		RoomStatusDto roomStatus = roomStatusList.get(sessionId);
+		Set<String> players = roomStatus.getPlayers().keySet();
+
 		if (room == null) {
 			return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 		//게임 종료
 		if (!isPlay) {
+			String winTeam = setPlayDto.getWinTeam();
+			int winScore = setPlayDto.getWinScore();
+			int loseScore = setPlayDto.getLoseScore();
 			room.setPlay(false);
-			return new ResponseEntity<>("게임이 종료되었습니다.", HttpStatus.OK);
+			if (gameService.saveResult(room.getGameCategory(), roomStatus, winTeam, winScore, loseScore) == 1) {
+				return new ResponseEntity<>("게임이 종료되었습니다.", HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
+			}
 		}
 		//게임 시작
 		else {
-			RoomStatusDto roomStatus = roomStatusList.get(sessionId);
-			Set<String> players = roomStatus.getPlayers().keySet();
-
 			//시작 조건
 			if (room.getCount() < 4) {
 				return new ResponseEntity<>("인원을 확인해주세요.", HttpStatus.BAD_REQUEST);
@@ -546,6 +569,8 @@ public class RoomController {
 				return new ResponseEntity<>("준비를 하지 않은 인원이 있습니다.", HttpStatus.BAD_GATEWAY);
 			}
 
+			//문제를 불러와서 sessionId별로 저장 후 model에 저장해서 gameController에서 사용
+			quizList.put(sessionId, gameService.listQuiz(room.getGameCategory(), room.getQuizCategory()));
 			//게임 시작 할 때 전부 준비 취소 처리
 			for (String player : players) {
 				roomStatus.getPlayers().get(player).setReady(false);

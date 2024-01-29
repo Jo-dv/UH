@@ -1,7 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import UserVideoComponent from "./UserVideoComponent.js";
 import Chat from "../../components/Chat/index.js";
 import {
@@ -19,9 +19,9 @@ import { getGameData, getRoomInfo, playerTeam, ready, startPlay } from "../../ap
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
 
 export default function RoomId() {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [mySessionId, setMySessionId] = useState(id);
-
   const [myUserName, setMyUserName] = useState(`guest-${Math.floor(Math.random() * 100)}`);
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
@@ -238,7 +238,12 @@ export default function RoomId() {
     try {
       if (isHost) {
         await startPlay(session.sessionId);
-        // await getGameData(session.sessionId); 서버 부르기 전에 호출함
+        try {
+          const quizs = await getGameData(session.sessionId);
+          console.log(quizs);
+        } catch (error) {
+          console.error("getGameData Error", error);
+        }
       } else {
         if (isReady) {
           await ready(session.sessionId, session.connection.connectionId, false);
@@ -248,8 +253,16 @@ export default function RoomId() {
         setIsReady(!isReady);
       }
       await getRoomInfo(session.sessionId);
+      // navigate("/game", {
+      //   state: {
+      //     roomName: roomName,
+      //     roomPassword: roomPassword,
+      //     roomMax: roomMax,
+      //     roomGame: roomGame,
+      //   },
+      // });
     } catch (error) {
-      console.error("set Ready Error:", error.message);
+      console.error("set Ready Error:", error);
     }
   };
   // useEffect(() => {}, [subscribers]);

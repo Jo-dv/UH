@@ -1,4 +1,4 @@
-package org.project.uh.game.dto;
+package org.project.uh.code.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AnswerDto {
-	private int gameCategory;  // 실행하는 게임이 뭔지
-	private int quizId;
-	private String userAnswer;
+public class CodeDto {
+	private int commonCode;
+	private String codeName;
 }
