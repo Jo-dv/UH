@@ -33,7 +33,7 @@ const KakaoRedirectHandler = () => {
           } else {
             sessionStorage.setItem("userSeq", res.userSeq);
             // zustand 사용해보기
-            setUser({ userSeq: res.userSeq, userNickname: null });
+            setUser({ userSeq: res.userSeq });
             navigate("/auth/nickname");
           }
         } catch (error) {

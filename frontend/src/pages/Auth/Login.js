@@ -91,19 +91,29 @@ const Login = () => {
         );
         const res = response.data;
         console.log("서버 응답:", res);
+        // 닉네임이 없다면
         if (res.userNickname === null) {
           sessionStorage.setItem("userSeq", res.userSeq);
+          // zustand 사용해보기
+          setUser({ userSeq: res.userSeq, userPassword: res.userPassword });
           navigate("/auth/nickname");
+          // 닉네임이 있다면
         } else {
           sessionStorage.setItem("userNickname", res.userNickname);
           sessionStorage.setItem("userSeq", res.userSeq);
+          // zustand 사용해보기
+          setUser({ userSeq: res.userSeq, userNickname: res.userNickname, userPassword: res.userPassword });
           console.log("로그인 성공");
           navigate("/lobby");
         }
       } catch (error) {
+        if (error.response && error.response.status === 400){
+          setErr({...err, general: "올바른 정보를 입력해주세요."});
+        } else {
         console.error("로그인 중 에러 발생", error);
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
+      }
       }
     }
   };
@@ -138,6 +148,7 @@ const Login = () => {
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
 
         <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">로그인</button>
+        <p className="font-['pixel'] text-red-500 mb-1">{err.general}</p>
         <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3>
