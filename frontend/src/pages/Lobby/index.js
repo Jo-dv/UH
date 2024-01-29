@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+import SelectedRanking from "../../components/lobbyComponent/SelectedRanking";
 import UserList from "../../components/lobbyComponent/UserList";
 import RoomList from "../../components/lobbyComponent/RoomList";
 import UserMediaProfile from "../../components/lobbyComponent/UserMediaProfile";
@@ -9,7 +10,12 @@ import GameRoomSearchPanel from "../../components/lobbyComponent/GameRoomSearchP
 
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 
+import UseIsLobbyStore from "../../store/UseIsLobbyStore";
+
 const Lobby = () => {
+  // [ranking component] 실행
+  const { isLobby } = UseIsLobbyStore();
+
   // [userAuth] 페이지가 이동할 때 사용
   const navigate = useNavigate();
 
@@ -53,16 +59,22 @@ const Lobby = () => {
     <div className="bg-neutral-200 grid grid-rows-12 grid-cols-6 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
       <UserList />
       <UserMediaProfile />
-      <GameRoomSearchPanel
-        onToggleView={handleToggleView}
-        onGameCategoryView={handleGameCategoryView}
-        onSearchView={handleSearchView}
-      />
-      <RoomList
-        viewAllRooms={viewAllRooms}
-        viewGameCategoryRooms={viewGameCategoryRooms}
-        viewSearchRooms={viewSearchRooms}
-      />
+      {isLobby === true ? (
+        <>
+          <GameRoomSearchPanel
+            onToggleView={handleToggleView}
+            onGameCategoryView={handleGameCategoryView}
+            onSearchView={handleSearchView}
+          />
+          <RoomList
+            viewAllRooms={viewAllRooms}
+            viewGameCategoryRooms={viewGameCategoryRooms}
+            viewSearchRooms={viewSearchRooms}
+          />
+        </>
+      ) : (
+        <SelectedRanking />
+      )}
     </div>
   );
 };
