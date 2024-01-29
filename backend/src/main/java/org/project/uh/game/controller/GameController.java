@@ -27,21 +27,6 @@ public class GameController {
 
 	private final GameService service;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-	@GetMapping("/game/{game_request}")
-	public List<ShoutDto> shoutList(@PathVariable int game_request) {
-		if (game_request == 200) {
-=======
-	@GetMapping("/{code}")
-	public List<ShoutDto> shoutList(@PathVariable int code) {
-		if (code == 201) {
->>>>>>> d46fdcd3241b9365de9b40dcaf7812f96b4c74bf
-			return service.shoutList();
-		}
-		return Collections.emptyList();
-	}
-=======
 	@Operation(
 		summary = "문제 로드",
 		description = "각 방에 맞는 문제를 방의 참여자들에게 보낸다."
@@ -52,7 +37,6 @@ public class GameController {
 	})
 	@GetMapping("/{sessionId}")
 	public ResponseEntity<List<QuizDto>> listQuiz(@PathVariable String sessionId, Model model) {
->>>>>>> 93c18c2debab931d50da18e06823b0026278b11c
 
 		Map<String, List<QuizDto>> quizList = (Map<String, List<QuizDto>>)model.getAttribute("quizList");
 		if (quizList == null) {
