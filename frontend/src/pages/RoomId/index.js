@@ -13,7 +13,7 @@ import {
   exitRoom,
 } from "../../api/roomAPI.js";
 import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
-import { getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
+import { getGameData, getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -122,11 +122,14 @@ export default function RoomId() {
         })
         //방조회
         .then(async () => {
-          const roomInfo = await getRoomInfo(session.sessionId);
-          console.log("서버에서 받은 방정보", roomInfo);
-          console.log("방 호스트 아이디", roomInfo.roomStatus.hostId);
-          console.log("세션 커넥션 아이디", session.connection.connectionId);
-          if (roomInfo.roomStatus.hostId === session.connection.connectionId) {
+          const serverRoomInfo = await getRoomInfo(session.sessionId);
+          await console.log("서버에서 받은 방정보", serverRoomInfo);
+          // console.log("방 호스트 아이디", serverRoomInfo.roomStatus.hostId);
+          // console.log("세션 커넥션 아이디", session.connection.connectionId);
+          if (mySessionId === "create") {
+            console.log("나는 호스트");
+            setIsHost(true);
+          } else if (serverRoomInfo.roomStatus.hostId === session.connection.connectionId) {
             console.log("나는 호스트");
             setIsHost(true);
           }
@@ -210,10 +213,13 @@ export default function RoomId() {
 
   const getToken = useCallback(async () => {
     //API import 함수 사용 중
-    const sessionId = await createSession(mySessionId, firstRoomInfo.roomName);
+    const sessionId = await createSession(
+      mySessionId,
+      firstRoomInfo.roomName,
+      firstRoomInfo.roomMax
+    );
     console.log("방생성결과", sessionId);
     // await createToken(sessionId);
-    setOpenLink(sessionId);
     setOpenLink(sessionId);
     return await createToken(sessionId);
   }, [mySessionId]);
@@ -228,16 +234,25 @@ export default function RoomId() {
   };
 
   const setReady = async () => {
-    console.log("준비");
+    // console.log("준비");
     try {
-      await ready(session.sessionId, session.connection.connectionId, isReady);
-      setIsReady(!isReady);
-      await startPlay(session.sessionId);
+      if (isHost) {
+        await startPlay(session.sessionId);
+        // await getGameData(session.sessionId); 서버 부르기 전에 호출함
+      } else {
+        if (isReady) {
+          await ready(session.sessionId, session.connection.connectionId, false);
+        } else {
+          await ready(session.sessionId, session.connection.connectionId, true);
+        }
+        setIsReady(!isReady);
+      }
+      await getRoomInfo(session.sessionId);
     } catch (error) {
-      console.error("Error:", error.message);
+      console.error("set Ready Error:", error.message);
     }
   };
-
+  // useEffect(() => {}, [subscribers]);
   return (
     <>
       {session === undefined ? (
@@ -270,13 +285,19 @@ export default function RoomId() {
               onClick={switchCamera}
               value="Switch Camera"
             />
-            <p>초대링크 : http://localhost:3000/room/{openLink}</p>
+            <p>초대링크 :</p>
+            <p> http://localhost:3000/room/{openLink}</p>
           </div>
           <div className="grid grid-cols-4 h-screen-40">
             <div id="video-container" className="col-span-3 grid grid-rows-2 grid-cols-4 gap-2 p-2">
               {publisher !== undefined ? (
                 <div className="bg-green-500 p-1 " onClick={() => handleMainVideoStream(publisher)}>
-                  <UserVideoComponent streamManager={publisher} session={session} />
+                  <UserVideoComponent
+                    streamManager={publisher}
+                    session={session}
+                    isHost={isHost}
+                    isReady={isReady}
+                  />
                 </div>
               ) : null}
               {/* 나말고 */}
@@ -287,7 +308,12 @@ export default function RoomId() {
                   onClick={() => handleMainVideoStream(sub)}
                 >
                   <span>{sub.id}</span>
-                  <UserVideoComponent streamManager={sub} session={session} />
+                  <UserVideoComponent
+                    streamManager={sub}
+                    session={session}
+                    isHost={isHost}
+                    isReady={isReady}
+                  />
                 </div>
               ))}
             </div>
@@ -316,6 +342,7 @@ export default function RoomId() {
                 >
                   {isHost ? "게임시작" : "준비"}
                 </button>
+                <button onClick={() => getGameData(session.sessionId)}>a</button>
               </div>
             </div>
           </div>

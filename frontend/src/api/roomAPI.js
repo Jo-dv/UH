@@ -12,7 +12,12 @@ const APPLICATION_SERVER_URL =
  * @param {string} roomPassword
  * @returns sessionId
  */
-export const createSession = async (sessionId, roomName = "방이름", roomPassword = null) => {
+export const createSession = async (
+  sessionId,
+  roomName = "방이름",
+  roomPassword = null,
+  max = 4
+) => {
   try {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "rooms",
@@ -22,7 +27,7 @@ export const createSession = async (sessionId, roomName = "방이름", roomPassw
         roomPassword: roomPassword,
         gameCategory: 101,
         quizCategory: 201,
-        max: 8,
+        max: max,
       },
       {
         headers: { "Content-Type": "application/json" },

@@ -110,7 +110,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
             <label>
               <input
                 type="radio"
-                value={100}
+                value={101}
                 name="game"
                 onChange={handleChangeRoomGame}
                 defaultChecked
@@ -118,7 +118,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
               고요 속의 외침
             </label>
             <label>
-              <input type="radio" value={200} name="game" onChange={handleChangeRoomGame} />
+              <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} />
               인물 맞추기
             </label>
           </div>

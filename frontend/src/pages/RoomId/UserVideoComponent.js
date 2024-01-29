@@ -4,10 +4,8 @@ import "./UserVideo.css";
 import Mic from "@mui/icons-material/Mic";
 import MicOff from "@mui/icons-material/MicOff";
 
-const UserVideoComponent = ({ streamManager, session, team }) => {
-  const [audioActive, setAudioActive] = useState(
-    streamManager.stream.audioActive
-  );
+const UserVideoComponent = ({ streamManager, session, isHost, isReady }) => {
+  const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const getNicknameTag = () => {
     // Gets the nickName of the user
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -66,6 +64,9 @@ const UserVideoComponent = ({ streamManager, session, team }) => {
                   <Mic />
                 </button>
               )}
+            </p>
+            <p>
+              isHost : {isHost ? "true" : "false"}, isReady : {isReady ? "true" : "false"}
             </p>
           </div>
         </div>
