@@ -513,7 +513,7 @@ public class RoomController {
 			roomStatus.setReadyCount(roomStatus.getReadyCount() - 1);
 			player.setReady(false);
 		}
-		return new ResponseEntity<>("준비 상태를 변경했습니다.", HttpStatus.OK);
+		return new ResponseEntity<>(connectionId, HttpStatus.OK);
 	}
 
 	@Operation(
