@@ -20,7 +20,6 @@ import org.project.uh.util.RandomNumberUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,8 +41,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(allowedHeaders = "*", originPatterns = "*")
@@ -531,7 +532,7 @@ public class RoomController {
 		@ApiResponse(responseCode = "502", description = "준비를 하지 않은 인원이 있습니다.")
 	})
 	@PutMapping("/play")
-	public ResponseEntity<String> gameStatus(@RequestBody SetPlayDto setPlayDto, Model model) {
+	public ResponseEntity<String> gameStatus(@RequestBody SetPlayDto setPlayDto) {
 		String sessionId = setPlayDto.getSessionId();
 		boolean isPlay = setPlayDto.isPlay();
 
@@ -570,8 +571,6 @@ public class RoomController {
 
 			//문제를 불러와서 sessionId별로 저장 후 model에 저장해서 gameController에서 사용
 			quizList.put(sessionId, gameService.listQuiz(room.getGameCategory(), room.getQuizCategory()));
-			model.addAttribute("quizList", quizList);
-
 			//게임 시작 할 때 전부 준비 취소 처리
 			for (String player : players) {
 				roomStatus.getPlayers().get(player).setReady(false);
