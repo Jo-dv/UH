@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useStore from "../../store/UserAuthStore";
 
 import WebcamComponent from "./WebcamMicStateManager";
 import alternativeImage from "../../asset/image/alternativeImage.png";
@@ -9,7 +10,7 @@ const UserMediaProfile = () => {
   // 캠 상태 조절
   const [play, setPlay] = useState(true);
   // 닉네임 가져오기
-  const nickname = "예시";
+  const nickname = useStore(state => state.user.userNickname);
 
   return (
     <div className="col-start-1 col-end-2 row-start-8 row-end-13 m-2 p-2 rounded-3xl border border-7 border-modalBorder ">

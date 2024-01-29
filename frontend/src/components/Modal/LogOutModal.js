@@ -11,7 +11,9 @@ const LogOutModal = (props) => {
     const handleLogOut = async () => {
         if (userPassword !== null){
             try {
-                await axios.post("http://localhost:5000/user/logout");
+                await axios.post("http://localhost:5000/user/logout", { withCredentials: true });
+                // store의 유저 정보 초기화
+                resetUser();
                 sessionStorage.clear();
                 // 모달 검사 불리언 값 바꾸기
                 props.setLogout(false);
@@ -22,7 +24,9 @@ const LogOutModal = (props) => {
             }
         } else {
             try {
-                await axios.post("http://localhost:5000/user/logout/kakao");
+                await axios.post("http://localhost:5000/user/logout/kakao", { withCredentials: true });
+                // store의 유저 정보 초기화
+                resetUser();
                 sessionStorage.clear();
                 props.setLogout(false);
                 console.log("카카오 로그아웃 완료")
