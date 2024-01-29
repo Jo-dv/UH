@@ -289,24 +289,6 @@ export default function RoomId() {
                 >
                   준비
                 </button>
-                <button
-                  className="bg-mc1 border rounded-3xl active:bg-mc2"
-                  onClick={() => changeTeam("A")}
-                >
-                  A팀
-                </button>
-                <button
-                  className="bg-mc8 border rounded-3xl active:bg-mc7"
-                  onClick={() => changeTeam("B")}
-                >
-                  B팀
-                </button>
-                <button
-                  className="col-span-2 bg-mc3 border rounded-3xl"
-                  onClick={() => getRoomInfo(session.sessionId)}
-                >
-                  준비
-                </button>
               </div>
             </div>
           </div>
