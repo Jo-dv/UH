@@ -55,6 +55,10 @@ export default function RoomId() {
       console.log("리브세션", session);
       exitRoom(session.sessionId, session.connection.connectionId);
       session.disconnect();
+      // setSession(undefined);
+      // setSubscribers([]);
+      // setMainStreamManager(undefined);
+      // setPublisher(undefined);
     }
 
     const mySession = OV.current.initSession();
@@ -118,8 +122,6 @@ export default function RoomId() {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
           console.log("플레이어 추가", mySessionId);
-          // addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
-          // addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           if (mySessionId === "create") {
             addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           } else {
@@ -155,10 +157,10 @@ export default function RoomId() {
     OV.current = new OpenVidu();
     setSession(undefined);
     setSubscribers([]);
-    // setMySessionId("create");
-    // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
+    // setMySessionId("create");
+    // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
   }, [session]);
 
   const switchCamera = useCallback(async () => {
@@ -245,8 +247,8 @@ export default function RoomId() {
       if (isHost) {
         await startPlay(session.sessionId);
         try {
-          const quizs = await getGameData(session.sessionId);
-          console.log(quizs);
+          const quiz = await getGameData(session.sessionId);
+          console.log(quiz);
         } catch (error) {
           console.error("getGameData Error", error);
         }
@@ -258,15 +260,19 @@ export default function RoomId() {
         }
         setIsReady(!isReady);
       }
-      await getRoomInfo(session.sessionId);
-      // navigate("/game", {
-      //   state: {
-      //     roomName: roomName,
-      //     roomPassword: roomPassword,
-      //     roomMax: roomMax,
-      //     roomGame: roomGame,
-      //   },
-      // });
+      const roomData = await getRoomInfo(session.sessionId);
+      if (roomData.roomData.play) {
+        navigate("/game", {
+          state: {
+            roomData: roomData,
+            publisher: publisher,
+            subscribers: subscribers,
+            session: session,
+            myUserName: myUserName,
+          },
+        });
+      }
+      // console.log("데이터들", myUserName, roomData, publisher, subscribers, session);
     } catch (error) {
       console.error("set Ready Error:", error);
     }
