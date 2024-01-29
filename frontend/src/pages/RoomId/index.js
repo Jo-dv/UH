@@ -13,7 +13,7 @@ import {
   exitRoom,
 } from "../../api/roomAPI.js";
 import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
-import { getRoomInfo, playerTeam, ready } from "../../api/waitRoom.js";
+import { getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -34,7 +34,7 @@ export default function RoomId() {
   const OV = useRef(new OpenVidu());
 
   const location = useLocation();
-  const roomInfo = { ...location.state };
+  const firstRoomInfo = { ...location.state };
   // console.log(roomInfo);
 
   const handleChangeUserName = useCallback((e) => {
@@ -107,6 +107,7 @@ export default function RoomId() {
             console.log("There was an error connecting to the session:", error.code, error.message);
           }
         })
+        //플레이어 추가
         .then(() => {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
@@ -117,6 +118,17 @@ export default function RoomId() {
             addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           } else {
             addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
+          }
+        })
+        //방조회
+        .then(async () => {
+          const roomInfo = await getRoomInfo(session.sessionId);
+          console.log("서버에서 받은 방정보", roomInfo);
+          console.log("방 호스트 아이디", roomInfo.roomStatus.hostId);
+          console.log("세션 커넥션 아이디", session.connection.connectionId);
+          if (roomInfo.roomStatus.hostId === session.connection.connectionId) {
+            console.log("나는 호스트");
+            setIsHost(true);
           }
         });
     }
@@ -198,7 +210,7 @@ export default function RoomId() {
 
   const getToken = useCallback(async () => {
     //API import 함수 사용 중
-    const sessionId = await createSession(mySessionId, roomInfo.roomName);
+    const sessionId = await createSession(mySessionId, firstRoomInfo.roomName);
     console.log("방생성결과", sessionId);
     // await createToken(sessionId);
     setOpenLink(sessionId);
@@ -218,30 +230,20 @@ export default function RoomId() {
   const setReady = async () => {
     console.log("준비");
     try {
-      getRoomInfo(session.sessionId);
-      ready(session.sessionId, session.connection.connectionId, isReady);
-      getRoomInfo(session.sessionId);
+      await ready(session.sessionId, session.connection.connectionId, isReady);
       setIsReady(!isReady);
+      await startPlay(session.sessionId);
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
 
-  const gameStart = async () => {
-    console.log("게임 시작");
-    try {
-      ready(session.sessionId, session.connection.connectionId, isReady);
-      setIsReady(!isReady);
-    } catch (error) {
-      console.error("Error:", error.message);
-    }
-  };
   return (
     <>
       {session === undefined ? (
         <div>
           <button onClick={joinSession} className="bg-mc1 p-2">
-            {roomInfo.roomName} : JOIN ROOM
+            {firstRoomInfo.roomName} : JOIN ROOM
           </button>
           <section className="w-1/2">
             <MyCam></MyCam>
@@ -253,7 +255,7 @@ export default function RoomId() {
         <div id="session" className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
           <div id="session-header" className="flex flex-row">
             <h1 id="session-title" className="text-xl">
-              {roomInfo.roomName}
+              {firstRoomInfo.roomName}
             </h1>
             <input
               className="bg-mc1 p-2"
@@ -312,7 +314,7 @@ export default function RoomId() {
                   // onClick={() => getRoomInfo(session.sessionId)}
                   onClick={setReady}
                 >
-                  준비
+                  {isHost ? "게임시작" : "준비"}
                 </button>
               </div>
             </div>

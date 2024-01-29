@@ -36,7 +36,7 @@ export const getRoomInfo = async (sessionId) => {
   console.log("방정보 조회", sessionId);
   try {
     const response = await axios.get(APPLICATION_SERVER_URL + "rooms/" + sessionId);
-    console.log(response.data); // "방정보"
+    return response.data; // "방정보"
   } catch (error) {
     console.log("방정보");
     console.error("Error:", error.message);
@@ -77,7 +77,7 @@ export const startPlay = async (sessionId) => {
       APPLICATION_SERVER_URL + "play",
       {
         sessionId: sessionId,
-        play: true,
+        isPlay: true,
       },
       {
         headers: { "Content-Type": "application/json" },
@@ -85,7 +85,7 @@ export const startPlay = async (sessionId) => {
     );
     console.log(response.data);
   } catch (error) {
-    console.log("게임시작");
+    console.log("게임시작 에러");
     console.error("Error:", error.message);
   }
 };
