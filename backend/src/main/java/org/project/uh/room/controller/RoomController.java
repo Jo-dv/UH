@@ -86,8 +86,8 @@ public class RoomController {
 			+ "얻은 세션id로 오픈비두 토큰 생성 필요. "
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "가입 성공"),
-		@ApiResponse(responseCode = "400", description = "중복된 아이디")
+		@ApiResponse(responseCode = "200", description = "정상적으로 처리되었습니다."),
+		@ApiResponse(responseCode = "400", description = "인원 초과")
 	})
 	@PostMapping("/rooms")
 	public ResponseEntity<String> initializeSession(@RequestBody RoomDto roomDto)
