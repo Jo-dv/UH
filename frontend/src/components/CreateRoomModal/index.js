@@ -6,16 +6,20 @@ const CreateRoomModal = ({ modalOnOff }) => {
   const [roomPassword, setRoomPassword] = useState(null);
   const [roomMax, setRoomMax] = useState(4);
   const [roomGame, setRoomGame] = useState(100);
+  const [lock, setLock] = useState(false);
 
   const handleChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
   }, []);
+
   const handleChangeRoomPassword = useCallback((e) => {
     setRoomPassword(e.target.value);
   }, []);
+
   const handleChangeRoomMax = useCallback((e) => {
     setRoomMax(e.target.value);
   }, []);
+
   const handleChangeRoomGame = useCallback((e) => {
     setRoomGame(e.target.value);
   }, []);
@@ -67,16 +71,22 @@ const CreateRoomModal = ({ modalOnOff }) => {
             className="m-1 px-2 
           border rounded-3xl bg-white"
           >
-            <label>
-              비밀번호:
+            <label className="mr-2">비밀번호:</label>
+            <input
+              type="checkbox"
+              onClick={() => {
+                setLock(!lock);
+              }}
+            />
+            {lock && (
               <input
                 type="text"
                 placeholder="비밀번호를 입력해주세요!"
                 value={roomPassword}
                 onChange={handleChangeRoomPassword}
+                maxLength={15}
               />
-            </label>
-            {/* {lock && <input type="text" placeholder="비밀번호를 입력해주세요!" />} */}
+            )}
           </div>
           <div
             className="m-1 px-2 
