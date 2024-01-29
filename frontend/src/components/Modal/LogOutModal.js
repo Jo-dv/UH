@@ -6,6 +6,8 @@ import useStore from "../../store/UserAuthStore"
 const LogOutModal = (props) => {
     const navigate = useNavigate();
     const userPassword = useStore(state => state.userPassword);
+    // resetUser 가져오기
+    const resetUser = useStore(state => state.resetUser);
 
     // 로그아웃 로직
     const handleLogOut = async () => {
