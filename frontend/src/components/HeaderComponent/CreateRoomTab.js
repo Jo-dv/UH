@@ -3,7 +3,9 @@ import CreateRoom from "../CreateRoomModal/index";
 
 const CreateRoomTab = () => {
   const [createRoom, setCreateRoom] = useState(false);
-
+  const modalOnOff = () => {
+    setCreateRoom(!createRoom);
+  };
   return (
     <>
       <h3
@@ -14,9 +16,7 @@ const CreateRoomTab = () => {
       >
         방 만들기
       </h3>
-      {createRoom === true ? (
-        <CreateRoom createRoom={createRoom} setCreateRoom={setCreateRoom} />
-      ) : null}
+      {createRoom === true ? <CreateRoom modalOnOff={modalOnOff} /> : null}
     </>
   );
 };

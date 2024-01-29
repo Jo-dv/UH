@@ -2,7 +2,7 @@ import WebcamComponent from "./Webcam";
 import React, { useState } from "react";
 import alternativeImage from "../../asset/image/alternativeImage.png";
 const MyCam = (props) => {
-  const [audio, setAudio] = useState(true);
+  const [audio, setAudio] = useState(false);
   const [play, setPlay] = useState(true);
 
   return (
