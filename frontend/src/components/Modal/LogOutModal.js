@@ -20,17 +20,17 @@ const LogOutModal = (props) => {
             } catch (error) {
                 console.error("로그아웃 에러", error);
             }
-        } //else {
-        //     try {
-        //         await axios.post("카카오 로그아웃 링크");
-        //         sessionStorage.clear();
-        //         props.setLogout(false);
-        //         console.log("카카오 로그아웃 완료")
-        //         navigate("/auth/login");
-        //     } catch (error) {
-        //         console.error("로그아웃 에러", error);
-        //     }
-        // }
+        } else {
+            try {
+                await axios.post("http://localhost:5000/user/logout/kakao");
+                sessionStorage.clear();
+                props.setLogout(false);
+                console.log("카카오 로그아웃 완료")
+                navigate("/auth/login");
+            } catch (error) {
+                console.error("로그아웃 에러", error);
+            }
+        }
     };
 
     return (
