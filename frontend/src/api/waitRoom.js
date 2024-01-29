@@ -71,3 +71,14 @@ export const ready = async (sessionId, connectionId) => {
     console.error("Error:", error.message);
   }
 };
+
+export const getRoomInfo = async (sessionId) => {
+  console.log("방정보 조회", sessionId);
+  try {
+    const response = await axios.get(APPLICATION_SERVER_URL + "rooms/" + sessionId);
+    console.log(response.data); // "방정보"
+  } catch (error) {
+    console.log("방정보");
+    console.error("Error:", error.message);
+  }
+};
