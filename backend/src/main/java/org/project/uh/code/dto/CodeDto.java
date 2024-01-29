@@ -1,4 +1,4 @@
-package org.project.uh.feedback.dto;
+package org.project.uh.code.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,11 +8,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
-public class FeedbackDto {
-	private int feedbackId;
-	private int userSeq;
-	private String feedbackContent;
+public class CodeDto {
+	private int commonCode;
+	private String codeName;
 }
