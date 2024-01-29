@@ -1,22 +1,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useStore from "../../store/UserAuthStore"
 
 const LogOutModal = (props) => {
     const navigate = useNavigate();
+    const userPassword = useStore(state => state.userPassword);
 
     // 로그아웃 로직
     const handleLogOut = async () => {
-        try {
-            await axios.post("http://localhost:5000/user/logout");
-            sessionStorage.clear();
-            // 모달 검사 불리언 값 바꾸기
-            props.setLogout(false);
-            console.log("로그아웃 완료")
-            navigate("/auth/login");
-        } catch (error) {
-            console.error("로그아웃 에러", error);
-        }
+        if (userPassword !== null){
+            try {
+                await axios.post("http://localhost:5000/user/logout");
+                sessionStorage.clear();
+                // 모달 검사 불리언 값 바꾸기
+                props.setLogout(false);
+                console.log("로그아웃 완료")
+                navigate("/auth/login");
+            } catch (error) {
+                console.error("로그아웃 에러", error);
+            }
+        } //else {
+        //     try {
+        //         await axios.post("카카오 로그아웃 링크");
+        //         sessionStorage.clear();
+        //         props.setLogout(false);
+        //         console.log("카카오 로그아웃 완료")
+        //         navigate("/auth/login");
+        //     } catch (error) {
+        //         console.error("로그아웃 에러", error);
+        //     }
+        // }
     };
 
     return (

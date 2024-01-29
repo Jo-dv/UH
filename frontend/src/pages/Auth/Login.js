@@ -91,12 +91,18 @@ const Login = () => {
         );
         const res = response.data;
         console.log("서버 응답:", res);
+        // 닉네임이 없다면
         if (res.userNickname === null) {
           sessionStorage.setItem("userSeq", res.userSeq);
+          // zustand 사용해보기
+          setUser({ userSeq: res.userSeq, userPassword: res.userPassword });
           navigate("/auth/nickname");
+          // 닉네임이 있다면
         } else {
           sessionStorage.setItem("userNickname", res.userNickname);
           sessionStorage.setItem("userSeq", res.userSeq);
+          // zustand 사용해보기
+          setUser({ userSeq: res.userSeq, userNickname: res.userNickname, userPassword: res.userPassword });
           console.log("로그인 성공");
           navigate("/lobby");
         }
