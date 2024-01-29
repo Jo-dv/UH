@@ -13,7 +13,7 @@ import {
   exitRoom,
 } from "../../api/roomAPI.js";
 import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
-import { getRoomInfo, playerTeam } from "../../api/waitRoom.js";
+import { getRoomInfo, playerTeam, ready } from "../../api/waitRoom.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -21,19 +21,21 @@ import { getRoomInfo, playerTeam } from "../../api/waitRoom.js";
 export default function RoomId() {
   const { id } = useParams();
   const [mySessionId, setMySessionId] = useState(id);
-  const [myUserName, setMyUserName] = useState(`id${Math.floor(Math.random() * 100)}`);
+
+  const [myUserName, setMyUserName] = useState(`guest-${Math.floor(Math.random() * 100)}`);
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [openLink, setOpenLink] = useState("");
-
+  const [isReady, setIsReady] = useState(false);
+  const [isHost, setIsHost] = useState(false);
   const OV = useRef(new OpenVidu());
 
   const location = useLocation();
   const roomInfo = { ...location.state };
-  console.log(roomInfo);
+  // console.log(roomInfo);
 
   const handleChangeUserName = useCallback((e) => {
     setMyUserName(e.target.value);
@@ -212,6 +214,28 @@ export default function RoomId() {
       console.error("Error:", error.message);
     }
   };
+
+  const setReady = async () => {
+    console.log("준비");
+    try {
+      getRoomInfo(session.sessionId);
+      ready(session.sessionId, session.connection.connectionId, isReady);
+      getRoomInfo(session.sessionId);
+      setIsReady(!isReady);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
+
+  const gameStart = async () => {
+    console.log("게임 시작");
+    try {
+      ready(session.sessionId, session.connection.connectionId, isReady);
+      setIsReady(!isReady);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
   return (
     <>
       {session === undefined ? (
@@ -285,7 +309,8 @@ export default function RoomId() {
                 </button>
                 <button
                   className="col-span-2 bg-mc3 border rounded-3xl"
-                  onClick={() => getRoomInfo(session.sessionId)}
+                  // onClick={() => getRoomInfo(session.sessionId)}
+                  onClick={setReady}
                 >
                   준비
                 </button>
