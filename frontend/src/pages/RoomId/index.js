@@ -2,6 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import UserVideoComponent from "./UserVideoComponent.js";
 import Chat from "../../components/Chat/index.js";
 import {
@@ -28,8 +29,13 @@ export default function RoomId() {
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
   const [openLink, setOpenLink] = useState("");
+  const [openLink, setOpenLink] = useState("");
 
   const OV = useRef(new OpenVidu());
+
+  const location = useLocation();
+  const roomInfo = { ...location.state };
+  console.log(roomInfo);
 
   const location = useLocation();
   const roomInfo = { ...location.state };
@@ -109,6 +115,7 @@ export default function RoomId() {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
           console.log("플레이어 추가", mySessionId);
+          // addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           // addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           if (mySessionId === "create") {
             addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
@@ -196,12 +203,22 @@ export default function RoomId() {
   const getToken = useCallback(async () => {
     //API import 함수 사용 중
     const sessionId = await createSession(mySessionId, roomInfo.roomName);
+    const sessionId = await createSession(mySessionId, roomInfo.roomName);
     console.log("방생성결과", sessionId);
     // await createToken(sessionId);
+    setOpenLink(sessionId);
     setOpenLink(sessionId);
     return await createToken(sessionId);
   }, [mySessionId]);
 
+  const changeTeam = (team) => {
+    console.log(`팀변경 ${team}`, session);
+    try {
+      playerTeam(session.sessionId, session.connection.connectionId, team);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
   const changeTeam = (team) => {
     console.log(`팀변경 ${team}`, session);
     try {
@@ -216,7 +233,12 @@ export default function RoomId() {
         <div>
           <button onClick={joinSession} className="bg-mc1 p-2">
             {roomInfo.roomName} : JOIN ROOM
+          <button onClick={joinSession} className="bg-mc1 p-2">
+            {roomInfo.roomName} : JOIN ROOM
           </button>
+          <section className="w-1/2">
+            <MyCam></MyCam>
+          </section>
           <section className="w-1/2">
             <MyCam></MyCam>
           </section>
@@ -228,8 +250,10 @@ export default function RoomId() {
           <div id="session-header" className="flex flex-row">
             <h1 id="session-title" className="text-xl">
               {roomInfo.roomName}
+              {roomInfo.roomName}
             </h1>
             <input
+              className="bg-mc1 p-2"
               className="bg-mc1 p-2"
               type="button"
               id="buttonLeaveSession"
@@ -238,11 +262,13 @@ export default function RoomId() {
             />
             <input
               className="bg-mc3 p-2"
+              className="bg-mc3 p-2"
               type="button"
               id="buttonSwitchCamera"
               onClick={switchCamera}
               value="Switch Camera"
             />
+            <p>초대링크 : http://localhost:3000/room/{openLink}</p>
             <p>초대링크 : http://localhost:3000/room/{openLink}</p>
           </div>
           <div className="grid grid-cols-4 h-screen-40">
@@ -270,6 +296,24 @@ export default function RoomId() {
               </div>
 
               <div className="row-span-1 grid grid-cols-2 gap-1 w-full">
+                <button
+                  className="bg-mc1 border rounded-3xl active:bg-mc2"
+                  onClick={() => changeTeam("A")}
+                >
+                  A팀
+                </button>
+                <button
+                  className="bg-mc8 border rounded-3xl active:bg-mc7"
+                  onClick={() => changeTeam("B")}
+                >
+                  B팀
+                </button>
+                <button
+                  className="col-span-2 bg-mc3 border rounded-3xl"
+                  onClick={() => getRoomInfo(session.sessionId)}
+                >
+                  준비
+                </button>
                 <button
                   className="bg-mc1 border rounded-3xl active:bg-mc2"
                   onClick={() => changeTeam("A")}
