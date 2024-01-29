@@ -51,6 +51,12 @@ export default function RoomId() {
   );
 
   const joinSession = useCallback(() => {
+    if (session) {
+      console.log("리브세션", session);
+      exitRoom(session.sessionId, session.connection.connectionId);
+      session.disconnect();
+    }
+
     const mySession = OV.current.initSession();
 
     mySession.on("streamCreated", (event) => {
@@ -355,7 +361,6 @@ export default function RoomId() {
                 >
                   {isHost ? "게임시작" : "준비"}
                 </button>
-                <button onClick={() => getGameData(session.sessionId)}>a</button>
               </div>
             </div>
           </div>
