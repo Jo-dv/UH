@@ -85,4 +85,10 @@ public class UserServiceImpl implements UserService {
 		mypage.setRecord(dao.userRecord(userSeq));
 		return mypage;
 	}
+
+	// 아이디로 유저 정보 조회
+	@Override
+	public UserDto findById(String userId) {
+		return dao.findById(userId);
+	}
 }

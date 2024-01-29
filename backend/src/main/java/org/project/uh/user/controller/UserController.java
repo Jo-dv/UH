@@ -20,18 +20,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.servlet.http.HttpServletRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,6 +38,9 @@ import jakarta.servlet.http.HttpSession;
 @Tag(name = "유저 api")
 public class UserController {
 	private final UserService service;
+
+	private final String clientId = "4fffa78521feee5e1eb947c704c08cf2"; // 카카오 앱의 Client ID
+	private final String redirectUri = "http://localhost:3000/callback/kakao"; // Redirect URI
 
 	// 유저 목록
 	@Operation(
@@ -73,16 +75,17 @@ public class UserController {
 	)
 	@GetMapping("/user/check")
 	public ResponseEntity<Object> userCheck(HttpSession session) {
+		System.out.println("요청 들어옴");
 		// 세션에서 'user' 속성 가져오기
 		UserDto user = (UserDto)session.getAttribute("user");
-		System.out.println("UserController.userCheck 유저 정보 확인 세션 = " + session);
-		// System.out.println(user);
 		if (user != null) {
 			// 사용자 정보가 세션에 있으면, 해당 정보 반환
+			System.out.println(user);
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} else {
-			// 사용자 정보가 세션에 없으면 0 반환
-			return new ResponseEntity<>(0, HttpStatus.OK);
+			// 사용자 정보가 세션에 없으면, null 또는 적절한 응답 반환
+			System.out.println("null입니다");
+			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
 	}
 
@@ -96,8 +99,7 @@ public class UserController {
 	})
 	@PostMapping("/user/login")
 	public ResponseEntity<Object> login(@RequestBody UserDto dto, HttpSession session) {
-		Object result = service.login(dto);
-		// System.out.println("result = " + result);
+		UserDto result = service.login(dto);
 		if (result == null) {
 			return new ResponseEntity<>("로그인 오류", HttpStatus.BAD_REQUEST);
 		}
@@ -166,10 +168,6 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
-	// 카카오 로그인
-	private final String clientId = "4fffa78521feee5e1eb947c704c08cf2"; // 카카오 앱의 Client ID
-	private final String redirectUri = "http://localhost:3000/callback/kakao"; // Redirect URI
 
 	@PostMapping("/user/login/kakao")
 	// 인가 코드로 Access 토큰 발급 받기
