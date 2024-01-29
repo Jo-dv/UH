@@ -95,7 +95,7 @@ const Login = () => {
         if (res.userNickname === null) {
           sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
-          setUser({ userSeq: res.userSeq, userPassword: res.userPassword });
+          setUser({ userSeq: res.userSeq, userNickname: null, userPassword: res.userPassword });
           navigate("/auth/nickname");
           // 닉네임이 있다면
         } else {
