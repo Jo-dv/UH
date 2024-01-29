@@ -95,6 +95,7 @@ const CreateNickname = () => {
         }
       } catch (error) {
         console.error("닉네임 생성 중 에러 발생", error);
+        setErr({ ...err, userNickname: "중복된 닉네임입니다."});
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
       }
@@ -115,7 +116,7 @@ const CreateNickname = () => {
           type="text"
           placeholder="닉네임"
           onChange={onChange}
-          // onBlur={checkNickname}
+          // onBlur={checkUserNicknameDuplicate}
           name="userNickname"
           value={form.userNickname}
         />
