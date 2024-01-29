@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+// zustand에서 생성한 useStore 사용
+import useStore from "../../store/UserAuthStore";
 
 const CreateNickname = () => {
   const navigate = useNavigate();
   const onClick = (path) => navigate(`/${path}`);
+  // UserAuthStore의 User를 변경하기 위해
+  const setUser = useStore((state) => state.setUser);
+  const userState = useStore((state) => state.user);
+
+  useEffect(() => {
+    console.log("userInfo:", userState);
+  }, [userState]);
 
   const [form, setForm] = useState({
     userNickname: "",

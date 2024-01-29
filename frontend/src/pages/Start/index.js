@@ -1,4 +1,16 @@
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 function Start() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate('/auth/login'); // '/login'은 로그인 페이지의 경로
+    }, 5000); // 5000ms(5초) 후에 페이지 이동
+
+    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
+  }, [navigate]);
   return (
     <>
     <div className="w-full h-screen bg-black
