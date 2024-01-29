@@ -20,8 +20,8 @@ export const createSession = async (sessionId, roomName = "방이름", roomPassw
         sessionId: sessionId,
         roomName: roomName,
         roomPassword: roomPassword,
-        gameCategory: 100,
-        quizCategory: 100,
+        gameCategory: 101,
+        quizCategory: 201,
         max: 8,
       },
       {
