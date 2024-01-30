@@ -33,6 +33,7 @@ export default function RoomId() {
   const [isReady, setIsReady] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [isPlay, setIsPlay] = useState(false);
+  const [gameQuiz, setGameQuiz] = useState(undefined);
   const OV = useRef(new OpenVidu());
 
   const location = useLocation();
@@ -246,7 +247,7 @@ export default function RoomId() {
         await startPlay(session.sessionId);
         try {
           const quiz = await getGameData(session.sessionId);
-          console.log(quiz);
+          setGameQuiz(quiz);
         } catch (error) {
           console.error("getGameData Error", error);
         }
@@ -393,7 +394,7 @@ export default function RoomId() {
                 >
                   {isHost ? "게임시작" : "준비"}
                 </button>
-                <button onClick={sendPlay}>play</button>
+                {/* <button onClick={sendPlay}>play</button> */}
               </div>
             </div>
           </div>
@@ -406,6 +407,7 @@ export default function RoomId() {
           subscribers={subscribers}
           session={session}
           myUserName={myUserName}
+          quiz={gameQuiz}
         />
       ) : null}
     </>

@@ -38,12 +38,12 @@ const Chat = ({ session, myUserName }) => {
   return (
     <section
       className="bg-neutral-300 
-    border rounded-3xl overflow-hidden h-full"
+    border rounded-3xl overflow-hidden h-full flex flex-col"
     >
-      <h2 className="bg-neutral-400 px-8">채팅</h2>
+      <h2 className="bg-neutral-400 px-8 h-6">채팅</h2>
       <div>
         <ul
-          className="m-4 px-2 border rounded-3xl bg-white h-80
+          className="m-4 px-2 border rounded-3xl bg-white grow
          overflow-y-auto"
         >
           {messgaeList.map((item, index) => {
@@ -52,7 +52,7 @@ const Chat = ({ session, myUserName }) => {
           <li className="">{receiveMsg}</li>
         </ul>
         <form
-          className="m-4 px-2
+          className="m-4 px-2 h-8
           border rounded-3xl bg-white
           flex flex-row overflow-hidden"
           onSubmit={sendMsg}
@@ -65,10 +65,7 @@ const Chat = ({ session, myUserName }) => {
             value={chat}
             onChange={(e) => setChat(e.target.value)}
           />
-          <button
-            className="w-11 m-1 pl-2 border-l-2 border-solid"
-            type="submit"
-          >
+          <button className="w-11 m-1 pl-2 border-l-2 border-solid" type="submit">
             채팅
           </button>
         </form>

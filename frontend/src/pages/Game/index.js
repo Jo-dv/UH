@@ -54,35 +54,37 @@ const Game = ({ publisher, subscribers, session, myUserName }) => {
       // console.log(otherTeamStreamMagersCNT);
       setMyTeamStreamMagers(myTeamStreamMagersCNT);
       setOtherTeamStreamMagers(otherTeamStreamMagersCNT);
-      // console.log(myTeamStreamMagers);
-      // console.log(otherTeamStreamMagers);
     };
     callData();
   }, []);
-
+  // console.log("state myTeamStreamMagers", myTeamStreamMagers);
+  // console.log("state myTeamStreamMagers", otherTeamStreamMagers);
   return (
-    <main className="bg-neutral-200 p-2 m-2 h-screen-16 border rounded-3xl">
-      <div className="grid grid-cols-4 gap-2">
-        <section className="col-span-1">
-          같은팀 카메라
-          <UserVideoComponent streamManager={publisher} session={session} />
+    <main className="bg-neutral-200 p-2 mx-2 h-screen-80 border rounded-3xl">
+      <div className="flex flex-row justify-center">
+        <section className="cam grid grid-rows-4">
+          <div className="bg-teal-500 p-1 relative">
+            <span>{publisher.id}</span>
+            <UserVideoComponent streamManager={publisher} session={session} />
+          </div>
           {myTeamStreamMagers.map((sub, i) => (
-            <div key={sub.id} className="bg-teal-500 p-1">
+            <div key={sub.id} className="bg-teal-500 p-1 relative">
               <span>{sub.id}</span>
               <UserVideoComponent streamManager={sub} session={session} />
             </div>
           ))}
         </section>
-        <section className="col-span-2">
-          <div className="w-full bg-black">게임이미지</div>
-          <Timer maxT={maxTime} />
+        <section className="grow" grid grid-rows-2>
+          <div className="w-full bg-black">
+            게임이미지
+            <Timer maxT={maxTime} />
+          </div>
           <form className="relative">
             <input type="text" placeholder="정답을 입력해 주세요" className="" />
           </form>
           <Chat myUserName={myUserName} session={session} />
         </section>
-        <section className="col-span-1">
-          적팀 카메라
+        <section className="cam grid grid-rows-4">
           {otherTeamStreamMagers.map((sub, i) => (
             <div key={sub.id} className="bg-teal-500 p-1">
               <span>{sub.id}</span>
