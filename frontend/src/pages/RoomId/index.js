@@ -14,6 +14,7 @@ import {
 } from "../../api/roomAPI.js";
 import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import { getGameData, getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
+import Game from "../Game/index.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -31,15 +32,12 @@ export default function RoomId() {
   const [openLink, setOpenLink] = useState("");
   const [isReady, setIsReady] = useState(false);
   const [isHost, setIsHost] = useState(false);
+  const [isPlay, setIsPlay] = useState(false);
   const OV = useRef(new OpenVidu());
 
   const location = useLocation();
   const firstRoomInfo = { ...location.state };
   // console.log(roomInfo);
-
-  const handleChangeUserName = useCallback((e) => {
-    setMyUserName(e.target.value);
-  }, []);
 
   const handleMainVideoStream = useCallback(
     (stream) => {
@@ -262,22 +260,49 @@ export default function RoomId() {
       }
       const roomData = await getRoomInfo(session.sessionId);
       if (roomData.roomData.play) {
-        navigate("/game", {
-          state: {
-            roomData: roomData,
-            publisher: publisher,
-            subscribers: subscribers,
-            session: session,
-            myUserName: myUserName,
-          },
-        });
+        // navigate("/game", {
+        //   state: {
+        //     roomData: roomData,
+        //     publisher: publisher,
+        //     subscribers: subscribers,
+        //     session: session,
+        //     myUserName: myUserName,
+        //   },
+        // });
+        setIsPlay(true);
+        sendPlay();
+      } else {
+        setIsPlay(false);
       }
       // console.log("데이터들", myUserName, roomData, publisher, subscribers, session);
     } catch (error) {
       console.error("set Ready Error:", error);
     }
   };
-  // useEffect(() => {}, [subscribers]);
+  const sendPlay = () => {
+    console.log("플레이 소켓 보냄");
+    if (session !== undefined) {
+      session
+        .signal({
+          data: `${mySessionId} - 게임시작: ${isPlay}`, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: "room-play", // The type of message (optional)
+        })
+        .then(() => {
+          console.log("게임시작 :", isPlay);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+  if (session !== undefined) {
+    session.on("signal:room-play", (event) => {
+      console.log("플레이 소켓 받음", event.data);
+      setIsPlay(true);
+    });
+  }
+
   return (
     <>
       {session === undefined ? (
@@ -291,7 +316,7 @@ export default function RoomId() {
         </div>
       ) : null}
 
-      {session !== undefined ? (
+      {session !== undefined && isPlay === false ? (
         <div id="session" className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
           <div id="session-header" className="flex flex-row">
             <h1 id="session-title" className="text-xl">
@@ -342,6 +367,7 @@ export default function RoomId() {
                 </div>
               ))}
             </div>
+
             <div className="grid col-span-1 grid-rows-4 gap-2">
               <div className="row-span-3">
                 <Chat myUserName={myUserName} session={session} />
@@ -367,10 +393,20 @@ export default function RoomId() {
                 >
                   {isHost ? "게임시작" : "준비"}
                 </button>
+                <button onClick={sendPlay}>play</button>
               </div>
             </div>
           </div>
         </div>
+      ) : null}
+
+      {isPlay ? (
+        <Game
+          publisher={publisher}
+          subscribers={subscribers}
+          session={session}
+          myUserName={myUserName}
+        />
       ) : null}
     </>
   );
