@@ -1,45 +1,22 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigation } from "react-router-dom";
+import { useRef, useState } from "react";
+import useScrollAnimation from "./useScrollAnimation";
 
 const useLobby = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigation();
 
-  // 방 리스트를 받는 변수
+  // 여기서는 방 리스트와 접속자 리스트를 예시로 들었습니다.
+  // 실제로는 서버에서 데이터를 받아오거나 다른 로직에 따라 설정할 수 있습니다.
   const [rooms, setRooms] = useState([]);
 
-  // rooms 컴포넌트에 대한 참조를 저장할 배열
   const roomRefs = useRef([]);
 
-  // 스크롤 기능 구현
-  useEffect(() => {
-    // IntersectionObserver 초기화
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = 1;
-        } else {
-          entry.target.style.opacity = 0;
-        }
-      });
-    });
-
-    // 각 Rooms 컴포넌트를 관찰 대상으로 추가
-    roomRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    // 컴포넌트가 언마운트될 때 observer 해제
-    return () => {
-      roomRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
-      });
-    };
-  }, [rooms]); // rooms가 변경될 때마다 실행
-
-  // 다른 로직
-
+  // 스크롤 애니메이션 훅 사용
+  useScrollAnimation(roomRefs);
   return {
     navigate,
+    rooms,
+    setRooms,
     roomRefs,
   };
 };

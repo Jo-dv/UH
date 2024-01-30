@@ -4,10 +4,13 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { RouterProvider } from "react-router-dom";
 import rootRouter from "./router.js";
+import { WebSocketProvider } from "./webSocket/UseWebSocket.js";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <RouterProvider router={rootRouter}/>
+  <WebSocketProvider>
+    <RouterProvider router={rootRouter} />
+  </WebSocketProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

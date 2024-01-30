@@ -21,11 +21,9 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.4",
     "react-webcam": "^7.2.0",
-    "socket.io-client": "^4.7.4",
     "sockjs-client": "^1.6.1",
     "tailwindcss-animated": "^1.0.1",
     "web-vitals": "^2.1.4",
-    "ws": "^8.16.0",
     "zustand": "^4.5.0"
   },
   "scripts": {
