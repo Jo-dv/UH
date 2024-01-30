@@ -1,9 +1,11 @@
 package org.project.uh.user.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 import org.project.uh.user.dto.MypageDto;
+import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 import org.project.uh.user.service.UserService;
 import org.springframework.http.HttpEntity;
@@ -58,6 +60,7 @@ public class UserController {
 		@ApiResponse(responseCode = "200", description = "가입 성공"),
 		@ApiResponse(responseCode = "400", description = "중복된 아이디")
 	})
+
 	// 회원가입
 	@PostMapping("/user/join")
 	public ResponseEntity<String> insertUser(@RequestBody UserDto dto) {
@@ -75,16 +78,16 @@ public class UserController {
 	)
 	@GetMapping("/user/check")
 	public ResponseEntity<Object> userCheck(HttpSession session) {
-		System.out.println("요청 들어옴");
+		// System.out.println("요청 들어옴");
 		// 세션에서 'user' 속성 가져오기
 		UserDto user = (UserDto)session.getAttribute("user");
 		if (user != null) {
 			// 사용자 정보가 세션에 있으면, 해당 정보 반환
-			System.out.println(user);
+			// System.out.println(user);
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} else {
 			// 사용자 정보가 세션에 없으면, null 또는 적절한 응답 반환
-			System.out.println("null입니다");
+			// System.out.println("null입니다");
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
 	}
@@ -106,6 +109,7 @@ public class UserController {
 		// 로그인 성공
 		result.setUserPassword(null);
 		session.setAttribute("user", result);
+		// System.out.println("로그인 세션 = " + session.getAttribute("user"));
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -115,6 +119,7 @@ public class UserController {
 	)
 	@PostMapping("/user/logout")
 	public ResponseEntity<Object> logout(HttpSession session) {
+		System.out.println("로그아웃 세션 = " + session.getAttribute("user"));
 		session.invalidate();
 		return new ResponseEntity<>("로그아웃", HttpStatus.OK);
 	}
@@ -129,12 +134,12 @@ public class UserController {
 		@ApiResponse(responseCode = "400", description = "중복된 닉네임")
 	})
 	@PostMapping("/user/nickname")
-	public ResponseEntity<String> nickname(@RequestBody UserDto dto) {
+	public int nickname(@RequestBody UserDto dto) {
 		int result = service.nickname(dto);
 		if (result == 0) {
-			return new ResponseEntity<>("중복된 닉네임", HttpStatus.BAD_REQUEST);
+			return 0;
 		}
-		return new ResponseEntity<>("닉네임 생성 성공", HttpStatus.OK);
+		return 1;
 	}
 
 	// 회원가입 시 아이디 중복 체크
@@ -169,6 +174,14 @@ public class UserController {
 		}
 	}
 
+	// 카카오 로그인
+	@Operation(
+		summary = "카카오 로그인"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "카카오 로그인 또는 회원가입 성공"),
+		@ApiResponse(responseCode = "500", description = "카카오 로그인 에러")
+	})
 	@PostMapping("/user/login/kakao")
 	// 인가 코드로 Access 토큰 발급 받기
 	public ResponseEntity<Object> kakaoLogin(@RequestBody String code, HttpSession session) {
@@ -189,11 +202,13 @@ public class UserController {
 
 		try {
 			ResponseEntity<String> response = restTemplate.postForEntity(tokenRequestUri, request, String.class);
-			// System.out.println(response);
+			// System.out.println("response = " + response);
 			ObjectMapper objectMapper = new ObjectMapper();
 			String responseBody = response.getBody();
 			JsonNode rootNode = objectMapper.readTree(responseBody);
 			JsonNode accessTokenNode = rootNode.path("access_token");
+			JsonNode expiresInNode = rootNode.path("expires_in");
+			int expiresIn = expiresInNode.asInt();
 			String accessToken = accessTokenNode.asText();
 			// System.out.println("Access Token: " + accessToken);
 
@@ -216,23 +231,43 @@ public class UserController {
 
 			UserDto kakaoDto = new UserDto();
 			kakaoDto.setUserId("K" + kakaoId);
+			// System.out.println(kakaoDto);
 			int result = service.insertUser(kakaoDto);
 			// System.out.println("kakaoResult = " + result);
 			if (result == 0) {
 				// 이미 회원가입 된 회원, 카카오 로그인 진행
 				// userId 가지고 DB 조회해서 정보값 가져오기
 				Object kakaoUserInfo = service.findById("K" + kakaoId);
-				session.setAttribute("user", kakaoUserInfo);
-				System.out.println("카카오톡 부분 세션 = " + session);
-				System.out.println("session.getAttribute(user) = " + session.getAttribute("user"));
+				// session.setAttribute("user", kakaoUserInfo);
+				// System.out.println("카카오톡 부분 세션 = " + session);
+				// System.out.println("session.getAttribute(user) = " + session.getAttribute("user"));
 				// System.out.println("kakaoUserInfo = " + kakaoUserInfo);
+
+				// 소셜 토큰 테이블에 토큰 삽입
+				SocialUserDto socialDto = new SocialUserDto();
+				socialDto.setAccessToken(accessToken);
+				socialDto.setSocialProvider(1);
+				socialDto.setSocialUserId(kakaoDto.getUserId());
+				// 만료 시간 설정
+				LocalDateTime now = LocalDateTime.now();
+				LocalDateTime expireTime = now.plusSeconds(expiresIn);
+				socialDto.setExpiresIn(expireTime);
+
+				UserDto socialUserInfo = service.findById(kakaoDto.getUserId());
+				socialDto.setUserSeq(socialUserInfo.getUserSeq());
+
+				// System.out.println("socialDto = " + socialDto);
+				int kakaoResult = service.insertSocialUser(socialDto);
+				// System.out.println("UserController.kakaoLogin = " + socialDto);
+				session.setAttribute("user", kakaoUserInfo);
 				return new ResponseEntity<>(kakaoUserInfo, HttpStatus.OK);
 			}
 			// 처음 접속한 회원이라면 회원가입
 			Object kUserInfo = service.findById("K" + kakaoId);
 			session.setAttribute("user", kUserInfo);
-			System.out.println("카카오톡 부분 세션 = " + session);
-			System.out.println("session.getAttribute(user) = " + session.getAttribute("user"));
+			// System.out.println(kUserInfo);
+			// System.out.println("카카오톡 부분 세션 = " + session);
+			// System.out.println("session.getAttribute(user) = " + session.getAttribute("user"));
 			return new ResponseEntity<>(kUserInfo, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("카카오 로그인 실패", HttpStatus.INTERNAL_SERVER_ERROR);

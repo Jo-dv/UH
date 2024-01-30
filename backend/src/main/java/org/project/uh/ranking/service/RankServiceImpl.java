@@ -4,19 +4,21 @@ import java.util.List;
 
 import org.project.uh.ranking.dao.RankDao;
 import org.project.uh.ranking.dto.RankDto;
-import org.project.uh.ranking.dto.UserRankDto;
+import org.project.uh.ranking.dto.UserDto;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class RankServiceImpl implements RankService {
 
 	public final RankDao dao;
 
+	public RankServiceImpl(RankDao dao) {
+		super();
+		this.dao = dao;
+	}
+
 	@Override
-	public List<UserRankDto> userRank() {
+	public List<UserDto> userRank() {
 		return dao.userRank();
 	}
 
@@ -28,6 +30,11 @@ public class RankServiceImpl implements RankService {
 	@Override
 	public List<RankDto> personRank() {
 		return dao.personRank();
+	}
+
+	@Override
+	public List<RankDto> rank() {
+		return dao.rank();
 	}
 
 }
