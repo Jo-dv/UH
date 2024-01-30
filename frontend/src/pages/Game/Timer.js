@@ -19,17 +19,14 @@ const Timer = ({ maxT }) => {
   }, []);
 
   return (
-    <>
-      <meter
-        min="0"
-        max={maxTime}
-        optimum={maxTime / 4}
-        low={maxTime / 2}
-        high={(maxTime * 3) / 4}
-        value={count}
-      ></meter>
-      {count}
-    </>
+    <meter
+      min="0"
+      max={maxTime}
+      optimum={maxTime / 4}
+      low={maxTime / 2}
+      high={(maxTime * 3) / 4}
+      value={count}
+    ></meter>
   );
 };
 

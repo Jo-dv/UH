@@ -5,7 +5,7 @@ import Timer from "./Timer";
 import { getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "../RoomId/UserVideoComponent";
 
-const Game = ({ publisher, subscribers, session, myUserName }) => {
+const Game = ({ publisher, subscribers, session, myUserName, quiz }) => {
   let maxTime = 10000;
   const myConnectionId = session.connection.connectionId;
   const [myTeamStreamMagers, setMyTeamStreamMagers] = useState([]);
@@ -18,15 +18,15 @@ const Game = ({ publisher, subscribers, session, myUserName }) => {
         "게임 데이터 : ",
         myConnectionId,
         roomData,
-        publisher,
-        subscribers,
+        // publisher,
+        // subscribers,
         session,
-        myUserName
+        quiz
+        // myUserName
       );
+
       const players = roomData.roomStatus.players;
       const myTeam = roomData.roomStatus.players[myConnectionId].team; //A or B
-      // console.log(players);
-      // console.log(myTeam);
 
       const myTeamMember = [];
       for (const key in players) {
@@ -40,25 +40,20 @@ const Game = ({ publisher, subscribers, session, myUserName }) => {
       const otherTeamStreamMagersCNT = [];
       for (const sub of subscribers) {
         for (const member of myTeamMember) {
-          // console.log("팀멤버 각각", member);
           if (member === sub.stream.connection.connectionId) {
-            // console.log("팀맴버 찾음", member);
             myTeamStreamMagersCNT.push(sub);
           } else {
-            // console.log("팀맴버 아님", member);
             otherTeamStreamMagersCNT.push(sub);
           }
         }
       }
-      // console.log(myTeamStreamMagersCNT);
-      // console.log(otherTeamStreamMagersCNT);
       setMyTeamStreamMagers(myTeamStreamMagersCNT);
       setOtherTeamStreamMagers(otherTeamStreamMagersCNT);
     };
     callData();
   }, []);
-  // console.log("state myTeamStreamMagers", myTeamStreamMagers);
-  // console.log("state myTeamStreamMagers", otherTeamStreamMagers);
+
+  const answer = "정답임";
   return (
     <main className="bg-neutral-200 p-2 mx-2 h-screen-80 border rounded-3xl">
       <div className="flex flex-row justify-center">
@@ -74,15 +69,15 @@ const Game = ({ publisher, subscribers, session, myUserName }) => {
             </div>
           ))}
         </section>
-        <section className="grow" grid grid-rows-2>
-          <div className="w-full bg-black">
-            게임이미지
-            <Timer maxT={maxTime} />
-          </div>
+        <section className="grow">
+          <div className="w-full bg-black">게임이미지</div>
+          <Timer maxT={maxTime} />
           <form className="relative">
             <input type="text" placeholder="정답을 입력해 주세요" className="" />
           </form>
-          <Chat myUserName={myUserName} session={session} />
+          <div className="h-64">
+            <Chat myUserName={myUserName} session={session} />
+          </div>
         </section>
         <section className="cam grid grid-rows-4">
           {otherTeamStreamMagers.map((sub, i) => (

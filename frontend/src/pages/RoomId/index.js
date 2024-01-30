@@ -318,7 +318,7 @@ export default function RoomId() {
       ) : null}
 
       {session !== undefined && isPlay === false ? (
-        <div id="session" className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
+        <div className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
           <div id="session-header" className="flex flex-row">
             <h1 id="session-title" className="text-xl">
               {firstRoomInfo.roomName}
@@ -339,10 +339,10 @@ export default function RoomId() {
             <p>초대링크 :</p>
             <p> http://localhost:3000/room/{openLink}</p>
           </div>
-          <div className="grid grid-cols-4 h-screen-40">
-            <div id="video-container" className="col-span-3 grid grid-rows-2 grid-cols-4 gap-2 p-2">
+          <div className="grid grid-rows-3 h-screen-40">
+            <div className="row-span-2 grid grid-cols-4 grid-rows-2">
               {publisher !== undefined ? (
-                <div className="bg-green-500 p-1 " onClick={() => handleMainVideoStream(publisher)}>
+                <div className="bg-green-500 p-1" onClick={() => handleMainVideoStream(publisher)}>
                   <UserVideoComponent
                     streamManager={publisher}
                     session={session}
@@ -369,12 +369,12 @@ export default function RoomId() {
               ))}
             </div>
 
-            <div className="grid col-span-1 grid-rows-4 gap-2">
-              <div className="row-span-3">
+            <div className="grid col-span-1 grid-cols-4 gap-2 w-full">
+              <div className="col-span-3">
                 <Chat myUserName={myUserName} session={session} />
               </div>
 
-              <div className="row-span-1 grid grid-cols-2 gap-1 w-full">
+              <div className="col-span-1 grid grid-cols-2 gap-1 w-full">
                 <button
                   className="bg-mc1 border rounded-3xl active:bg-mc2"
                   onClick={() => changeTeam("A")}
@@ -394,7 +394,7 @@ export default function RoomId() {
                 >
                   {isHost ? "게임시작" : "준비"}
                 </button>
-                {/* <button onClick={sendPlay}>play</button> */}
+                <button onClick={sendPlay}>play</button>
               </div>
             </div>
           </div>
