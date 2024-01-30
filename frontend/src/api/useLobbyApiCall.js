@@ -11,6 +11,7 @@ const useLobbyApiCall = () => {
   const rankShoutUrl = `${baseUrl}rank/shout`;
   const rankSoloUrl = `${baseUrl}rank/solo`;
 
+
   // roomList 목록
   const getRoomsList = async () => {
     try {
@@ -106,6 +107,18 @@ const useLobbyApiCall = () => {
     }
   };
 
+  // 마이페이지 정보
+  const getMyPageInfo = async (userSeq) => {
+    try {
+      const response = await axios.get(`${baseUrl}mypage/${userSeq}`);
+      const myPageInfo = response.data;
+      return myPageInfo;
+    } catch (error) {
+      console.error("마이페이지 정보 확인 중 에러 발생", error);
+      throw error;
+    }
+  };
+
   return {
     getRoomsList,
     getSearchRooms,
@@ -115,6 +128,7 @@ const useLobbyApiCall = () => {
     getRankPerson,
     getRankShout,
     getRankSolo,
+    getMyPageInfo
   };
 };
 

@@ -7,14 +7,15 @@ import UserList from "../../components/lobbyComponent/UserList";
 import RoomList from "../../components/lobbyComponent/RoomList";
 import UserMediaProfile from "../../components/lobbyComponent/UserMediaProfile";
 import GameRoomSearchPanel from "../../components/lobbyComponent/GameRoomSearchPanel";
+import MyPage from "../../components/lobbyComponent/MyPage";
 
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 
 const Lobby = () => {
-  // [ranking component] 실행
-  const { isLobby } = UseIsLobbyStore();
+  // currentComponent 설정
+  const { isLobby, setIsLobby } = UseIsLobbyStore();
 
   // [userAuth] 페이지가 이동할 때 사용
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ const Lobby = () => {
   const { getUserCheck } = useLobbyApiCall();
 
   useEffect(() => {
+    // 로비로 들어올 때마다 isLobby의 값을 null로
+    // setIsLobby(null);
     const fetchUserAuth = async () => {
       const data = await getUserCheck();
       if (data === 0) {
@@ -54,12 +57,13 @@ const Lobby = () => {
   // [GameRoomSearchPanel] 검색별 방 보기
   const handleSearchView = (viewAll) => {
     setViewSearchRooms(viewAll);
+
   };
   return (
     <div className="bg-neutral-200 grid grid-rows-12 grid-cols-6 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
       <UserList />
       <UserMediaProfile />
-      {isLobby === true ? (
+      {isLobby === null ? (
         <>
           <GameRoomSearchPanel
             onToggleView={handleToggleView}
@@ -72,9 +76,11 @@ const Lobby = () => {
             viewSearchRooms={viewSearchRooms}
           />
         </>
-      ) : (
+      ) : isLobby === "SelectedRanking" ? (
         <SelectedRanking />
-      )}
+      ) : isLobby === "MyPage" ? (
+        <MyPage />
+      ) : null}
     </div>
   );
 };

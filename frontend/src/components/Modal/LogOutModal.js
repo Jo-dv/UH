@@ -7,15 +7,15 @@ const LogOutModal = (props) => {
   const navigate = useNavigate();
   // resetUser 가져오기
   const resetUser = useStore((state) => state.resetUser);
-  const userSeq = useStore((state) => state.userSeq);
+  const userSeq = useStore((state) => state.user.userSeq);
 
   // 로그아웃 로직
   const handleLogOut = async () => {
     try {
-      await axios.post("http://localhost:5000/user/logout", {
-        userSeq: userSeq,
-        withCredentials: true,
-      });
+      await axios.post("http://localhost:5000/user/logout", 
+      { userSeq: userSeq } ,
+      { withCredentials: true }
+      );
       // store의 유저 정보 초기화
       resetUser();
       sessionStorage.clear();
