@@ -25,7 +25,7 @@ const Lobby = () => {
 
   useEffect(() => {
     // 로비로 들어올 때마다 isLobby의 값을 null로
-    // setIsLobby(null);
+    setIsLobby(null);
     const fetchUserAuth = async () => {
       const data = await getUserCheck();
       if (data === 0) {
