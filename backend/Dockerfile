@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM openjdk:17
 EXPOSE 8000
 WORKDIR /app
 ARG JAR_FILE=build/libs/uh-0.0.1-SNAPSHOT.jar
