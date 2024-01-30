@@ -13,6 +13,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -59,15 +60,24 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		for (WebSocketSession client : CLIENTS.keySet()) {
 			HttpSession session = (HttpSession)client.getAttributes().get("httpSession");
 			UserDto dto = (UserDto)session.getAttribute("loginUser");
+
 			//테스트 코드 - 회원 연결 시 변경
 			connectors.add(new String[] {client.getId(), "닉네임"});
 			//실제 코드
-			// connectors.add(dto.getUserNickname());
+			// connectors.add(new String[]{client.getId(),dto.getUserNickname()});
 		}
 
 		// JSON 형식으로 구성
+		JsonArray connectorsArray = new JsonArray();
+		for (String[] connector : connectors) {
+			JsonObject connectorObject = new JsonObject();
+			connectorObject.addProperty("connectionId", connector[0]);
+			connectorObject.addProperty("nickname", connector[1]);
+			connectorsArray.add(connectorObject);
+		}
+
 		JsonObject jsonObject = new JsonObject();
-		jsonObject.add("connectors", JsonParser.parseString(connectors.toString()));
+		jsonObject.add("connectors", connectorsArray);
 
 		// 모든 클라이언트에게 전송
 		for (WebSocketSession client : CLIENTS.keySet()) {
