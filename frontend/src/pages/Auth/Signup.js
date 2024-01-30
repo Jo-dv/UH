@@ -32,6 +32,18 @@ const Signup = () => {
         setShowPassword((showPassword) => !showPassword);
     };
 
+    // 비밀번호 확인 검사
+    const checkPasswordMatch = () => {
+        let newErr = { ...err };
+        if (!form.passwordCheck) {
+            newErr.passwordCheck = "비밀번호를 입력해주세요";
+        } else if (form.userPassword !== form.passwordCheck) {
+            newErr.passwordCheck = "비밀번호가 일치하지 않습니다";
+        } else {
+            newErr.passwordCheck = "";
+        }
+        setErr(newErr);
+    };
     //아이디 중복검사
     const checkUserIdDuplicate = async (e) => {
         const eRegEx = /^[a-z0-9A-Z]{4,20}$/;
@@ -162,6 +174,7 @@ const Signup = () => {
                     type={showPassword ? "text" : "password"}
                     placeholder="비밀번호 확인"
                     onChange={onChange}
+                    onBlur={checkPasswordMatch}
                     name="passwordCheck"
                     value={form.passwordCheck}
                 />
