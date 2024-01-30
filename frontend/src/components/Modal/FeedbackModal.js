@@ -43,7 +43,11 @@ const FeedbackModal = (props) => {
     <>
       <div
       onClick={() => {
+        if ( feedbackContent === "" ) {
         props.setFeedback(!props.feedback);
+      } else {
+        setFeedbackError("피드백 전송해주세요ㅠㅠ");
+      }
       }}
         className="min-w-100 min-h-96 absolute inset-0
     flex justify-center items-center"
