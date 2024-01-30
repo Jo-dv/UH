@@ -1,22 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import useFriends from "../../hooks/useFriends";
+import UseFriendsStore from "../../store/UseFriendsStore";
 
 const FriendList = () => {
   const { friendRefs } = useFriends();
-  const [friends, setFriends] = useState([
-    "박정인",
-    "박아림",
-    "황희경",
-    "박수빈",
-    "유영준",
-    "신현중",
-    "조우재",
-    "황채원",
-    "이성완",
-    "박나린",
-  ]);
+  const { friends } = UseFriendsStore();
 
-  friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
+  useEffect(() => {
+    friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
+  }, [friends]);
 
   return (
     <div className="m-1 overflow-y-scroll h-[34vh]">

@@ -18,7 +18,6 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
       try {
         const data = await getRoomsList();
         setRooms(data);
-        console.log(1111111111111, data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {

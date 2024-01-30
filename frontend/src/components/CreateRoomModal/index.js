@@ -1,12 +1,17 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useLobbyApiCall from "../../api/useLobbyApiCall";
 
 const CreateRoomModal = ({ modalOnOff }) => {
-  const [roomName, setRoomName] = useState(`X-${Math.floor(Math.random() * 1000)}`);
+  const [roomName, setRoomName] = useState(`P-${Math.floor(Math.random() * 1000)}`);
   const [roomPassword, setRoomPassword] = useState(null);
   const [roomMax, setRoomMax] = useState(4);
   const [roomGame, setRoomGame] = useState(100);
   const [lock, setLock] = useState(false);
+  const [rooms, setRooms] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { getRoomsList } = useLobbyApiCall();
 
   const handleChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
@@ -25,10 +30,18 @@ const CreateRoomModal = ({ modalOnOff }) => {
   }, []);
 
   const navigate = useNavigate();
+
+  const checkRoomNameExists = (name) => {
+    return rooms.some((room) => room.roomName === name);
+  };
+
   const submitHandler = (e) => {
-    //1. 페이지 리로드 방지
     e.preventDefault();
-    // joinSession();
+    if (checkRoomNameExists(roomName)) {
+      setErrorMessage("이미 사용 중인 방 제목입니다.");
+      return;
+    }
+
     navigate("/room/create", {
       state: {
         roomName: roomName,
@@ -38,6 +51,18 @@ const CreateRoomModal = ({ modalOnOff }) => {
       },
     });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getRoomsList();
+        setRooms(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -62,11 +87,13 @@ const CreateRoomModal = ({ modalOnOff }) => {
                 type="text"
                 placeholder="방 제목을 입력해주세요!"
                 value={roomName}
+                maxLength={12}
                 onChange={handleChangeRoomName}
                 required
               />
             </label>
           </div>
+          {errorMessage && <div className="error-message ml-12 text-red-500">{errorMessage}</div>}
           <div
             className="m-1 px-2 
           border rounded-3xl bg-white"
