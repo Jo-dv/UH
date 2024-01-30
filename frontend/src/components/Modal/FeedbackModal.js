@@ -42,7 +42,9 @@ const FeedbackModal = (props) => {
   return (
     <>
       <div
-        onClick={modalOnOff}
+      onClick={() => {
+        props.setFeedback(!props.feedback);
+      }}
         className="min-w-100 min-h-96 absolute inset-0
     flex justify-center items-center"
       >
