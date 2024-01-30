@@ -31,6 +31,15 @@ public class UserServiceImpl implements UserService {
 		return dao.insertUser(dto);
 	}
 
+	// 닉네임 중복 체크
+	@Override
+	public int nicknameCheck(UserDto dto) {
+		if (dao.checkUserNickname(dto.getUserNickname()) > 0) {
+			return 0;
+		}
+		return 1;
+	}
+
 	// 소셜 로그인 회원가입
 	@Override
 	public int insertSocialUser(SocialUserDto dto) {
@@ -106,4 +115,15 @@ public class UserServiceImpl implements UserService {
 		return dao.findById(userId);
 	}
 
+	// seq로 유저 정보 조회
+	@Override
+	public UserDto findBySeq(int userSeq) {
+		return dao.findBySeq(userSeq);
+	}
+
+	// seq로 social token 조회
+	@Override
+	public SocialUserDto findSocial(int userSeq) {
+		return dao.findSocial(userSeq);
+	}
 }

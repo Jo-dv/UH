@@ -21,8 +21,13 @@ public interface UserDao {
 	public int insertUser(UserDto dto);
 
 	// 소셜 로그인 토큰 추가
-	@Insert("INSERT INTO social_token(user_seq, social_provider, social_user_id, access_token, expires_in) "
-		+ "values(#{userSeq}, #{socialProvider}, #{socialUserId}, #{accessToken}, #{expiresIn})")
+	@Insert("INSERT INTO social_token (user_seq, social_provider, social_user_id, access_token, expires_in) "
+		+ "VALUES (#{userSeq}, #{socialProvider}, #{socialUserId}, #{accessToken}, #{expiresIn}) "
+		+ "ON DUPLICATE KEY UPDATE "
+		+ "social_provider = #{socialProvider}, "
+		+ "social_user_id = #{socialUserId}, "
+		+ "access_token = #{accessToken}, "
+		+ "expires_in = #{expiresIn}")
 	public int insertSocialUser(SocialUserDto dto);
 
 	// 회원 목록조회
@@ -62,5 +67,13 @@ public interface UserDao {
 	// 아이디 가지고 회원 정보 조회
 	@Select("SELECT * from user WHERE user_id = #{userId}")
 	public UserDto findById(String userId);
+
+	// seq로 회원 정보 조회
+	@Select("SELECT * FROM user WHERE user_seq = #{userSeq}")
+	public UserDto findBySeq(int userSeq);
+
+	// seq로 social token 조회
+	@Select("SELECT * FROM social_token WHERE user_seq = #{userSeq}")
+	public SocialUserDto findSocial(int userSeq);
 
 }
