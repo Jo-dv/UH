@@ -123,7 +123,6 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
               ) : (
                 <G101Info maxTime={maxTime} />
               )}
-              {/* <UserVideoComponent streamManager={sub[1]} session={session} /> */}
             </div>
             <div className="opacity-90">
               <div className="relative flex justify-center items-center">
