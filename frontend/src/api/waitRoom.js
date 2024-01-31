@@ -39,7 +39,7 @@ export const getRoomInfo = async (sessionId) => {
     console.log(response.data);
     return response.data; // "방정보"
   } catch (error) {
-    console.log("방정보");
+    console.log("방정보 조회 에러");
     console.error("Error:", error.message);
   }
 };
@@ -107,7 +107,7 @@ export const startPlay = async (sessionId) => {
     console.log(response.data);
   } catch (error) {
     console.log("게임시작 에러");
-    console.error("Error:", error);
+    console.error("Error:", error.response.data);
   }
 };
 

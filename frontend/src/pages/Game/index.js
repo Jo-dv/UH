@@ -10,12 +10,13 @@ import G101Info from "./games/G101Info";
 const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone }) => {
   let maxTime = 60000;
   const myConnectionId = session.connection.connectionId;
-  const [ATeamStreamManagers, setATeamStreamManagers] = useState([]);
+  const [ATeamStreamManagers, setATeamStreamManagers] = useState(undefined);
   const [BTeamStreamManagers, setBTeamStreamManagers] = useState([]);
   const [myTeamStreamManagers, setMyTeamStreamManagers] = useState([]);
   const [otherTeamStreamManagers, setOtherTeamStreamManagers] = useState([]);
   const [TeamTurn, setTeamTurn] = useState("A");
-  const [PlayerTurn, setPlayerTurn] = useState(0);
+  const [TeamIndex, setTeamIndex] = useState(0);
+  const [turnPlayerId, setTurnPlayerId] = useState(undefined);
   const [quizData, setQuizData] = useState([
     { quizId: 180, quizPhoto: null, quizAnswer: "최주봉" },
     { quizId: 62, quizPhoto: null, quizAnswer: "이덕화" },
@@ -92,7 +93,10 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
       if (quiz !== undefined) {
         setQuizData(quiz);
       }
+
+      setTurnPlayerId(ATeamStreamManagersCNT[0]);
     };
+
     callData();
   }, []);
 
@@ -107,44 +111,70 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
             <UserVideoComponent streamManager={publisher} session={session} />
           </div> */}
           {myTeamStreamManagers.map((sub, i) => (
-            <div key={sub[0]} className="bg-mc8 p-1 overflow-hidden">
-              <UserVideoComponent streamManager={sub[1]} session={session} />
-            </div>
+            <>
+              {myConnectionId === sub[0] ? (
+                <div key={sub[0]} className="bg-mc10 p-1 overflow-hidden">
+                  <UserVideoComponent
+                    streamManager={sub[1]}
+                    session={session}
+                    gamePlayer={turnPlayerId[0]}
+                  />
+                </div>
+              ) : (
+                <div key={sub[0]} className="bg-mc8 p-1 overflow-hidden">
+                  <UserVideoComponent
+                    streamManager={sub[1]}
+                    session={session}
+                    gamePlayer={turnPlayerId[0]}
+                  />
+                </div>
+              )}
+            </>
           ))}
         </section>
         <section className="grow h-full">
           <div className="gameBox relative flex flex-col justify-end">
             <div className="w-full h-full bg-black text-white absolute">
-              {TeamTurn === "A" ? (
+              {turnPlayerId !== undefined ? (
                 <UserVideoComponent
-                  streamManager={ATeamStreamManagers[PlayerTurn][1]}
+                  streamManager={turnPlayerId[1]}
                   session={session}
+                  gamePlayer={turnPlayerId[0]}
                 />
-              ) : (
-                <G101Info maxTime={maxTime} />
-              )}
+              ) : null}
             </div>
             <div className="opacity-90">
               <div className="relative flex justify-center items-center">
                 <Timer maxT={maxTime} />
                 <div className="absolute flex">
-                  {/* <input type="text" placeholder="정답을 입력해 주세요" className="" /> */}
-                  <AnswerInput myUserName={myUserName} session={session} answer={answer} />
-                  {/* <button onClick={Turn}>dies</button> */}
-                  <button onClick={sendPlayDone}>playDone</button>
+                  {myConnectionId === turnPlayerId[0] ? (
+                    <p>{answer}</p>
+                  ) : (
+                    <AnswerInput myUserName={myUserName} session={session} answer={answer} />
+                  )}
                 </div>
               </div>
             </div>
           </div>
 
+          {/* <button onClick={sendPlayDone}>playDone</button> */}
           <div className="h-64">
-            <Chat myUserName={myUserName} session={session} />
+            <Chat
+              myUserName={myUserName}
+              session={session}
+              myConnectionId={myConnectionId}
+              gamePlayer={turnPlayerId[0]}
+            />
           </div>
         </section>
         <section className="cam grid grid-rows-4 gap-1">
           {otherTeamStreamManagers.map((sub, i) => (
             <div key={sub[0]} className="bg-mc1 p-1 overflow-hidden">
-              <UserVideoComponent streamManager={sub[1]} session={session} />
+              <UserVideoComponent
+                streamManager={sub[1]}
+                session={session}
+                gamePlayer={turnPlayerId[0]}
+              />
             </div>
           ))}
         </section>

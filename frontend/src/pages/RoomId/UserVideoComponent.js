@@ -4,7 +4,7 @@ import "./UserVideo.css";
 import Mic from "@mui/icons-material/Mic";
 import MicOff from "@mui/icons-material/MicOff";
 
-const UserVideoComponent = ({ streamManager, session, isHost, isReady }) => {
+const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlayer }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const getNicknameTag = () => {
     // Gets the nickName of the user
@@ -33,19 +33,34 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady }) => {
   });
 
   const muteMic = () => {
-    console.log("스트림메니저", streamManager);
-    // console.log("스2", streamManager.stream.audioActive);
-    if (streamManager.constructor.name === "Publisher") {
+    // console.log("스트림메니저", streamManager);
+    if (gamePlayer === streamManager.stream.connection.connectionId) {
+      alert("발화자는 음소거 해제가 불가능 합니다.");
+    } else if (streamManager.constructor.name === "Publisher") {
       streamManager.publishAudio(false);
       socketSend();
     }
   };
   const onMic = () => {
-    if (streamManager.constructor.name === "Publisher") {
+    if (gamePlayer === streamManager.stream.connection.connectionId) {
+      alert("발화자는 음소거 해제가 불가능 합니다.");
+    } else if (streamManager.constructor.name === "Publisher") {
       streamManager.publishAudio(true);
       socketSend();
     }
   };
+  // console.log(
+  //   "gamePlayer : ",
+  //   gamePlayer,
+  //   "connectionId : ",
+  //   streamManager.stream.connection.connectionId
+  // );
+  if (gamePlayer === streamManager.stream.connection.connectionId) {
+    if (streamManager.constructor.name === "Publisher") {
+      streamManager.publishAudio(false);
+      socketSend();
+    }
+  }
   return (
     <div className="">
       {streamManager !== undefined ? (
