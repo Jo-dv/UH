@@ -6,7 +6,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
   const [roomName, setRoomName] = useState(`P-${Math.floor(Math.random() * 1000)}`);
   const [roomPassword, setRoomPassword] = useState(null);
   const [roomMax, setRoomMax] = useState(4);
-  const [roomGame, setRoomGame] = useState(100);
+  const [roomGame, setRoomGame] = useState(101);
   const [lock, setLock] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -30,6 +30,8 @@ const CreateRoomModal = ({ modalOnOff }) => {
     setRoomMax(e.target.value);
   }, []);
 
+  console.log("!!!!!!!!!!!!!!!!!");
+  console.log("나 게임 이거하고 싶음", roomGame);
   const handleChangeRoomGame = useCallback((e) => {
     setRoomGame(e.target.value);
   }, []);
@@ -52,9 +54,9 @@ const CreateRoomModal = ({ modalOnOff }) => {
     // 비밀번호 입력란이 활성화되었고, 비밀번호가 입력되었을 때만 비밀번호 값을 전달합니다.
     const roomInfo = {
       roomName: roomName,
-      roomMax: roomMax,
-      roomGame: roomGame,
       roomPassword: lock && roomPassword ? roomPassword : null,
+      roomGame: roomGame,
+      roomMax: roomMax,
     };
 
     navigate("/room/create", { state: roomInfo });

@@ -224,6 +224,7 @@ export default function RoomId() {
       mySessionId,
       firstRoomInfo.roomName,
       firstRoomInfo.roomPassword,
+      firstRoomInfo.roomGame,
       firstRoomInfo.roomMax
     );
     console.log("방생성결과", sessionId);

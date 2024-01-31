@@ -17,10 +17,11 @@ export const createSession = async (
   sessionId,
   roomName = "방이름",
   roomPassword = null,
+  roomGame = "게임 종류",
   max = 4
 ) => {
   console.log("333333");
-  console.log("roomPassword", roomPassword);
+  console.log("나 받은 게임 이거임", roomGame);
 
   try {
     const response = await axios.post(
@@ -29,7 +30,7 @@ export const createSession = async (
         sessionId: sessionId,
         roomName: roomName,
         roomPassword: roomPassword,
-        gameCategory: 101,
+        gameCategory: roomGame,
         quizCategory: 201,
         max: max,
       },

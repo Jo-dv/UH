@@ -14,7 +14,7 @@ const Room = (props) => {
       navigate(`/room/${props.sessionId}`); // 잠금되지 않은 방 클릭 시 이동
     }
   };
-  console.log("엄마가 주는 비번", props.isLocked);
+  console.log("니 게임 뭐함", props.gameType);
   return (
     <div className="px-2">
       {props.isPlaying === false ? (
@@ -25,7 +25,7 @@ const Room = (props) => {
           </div>
           <p>Wait</p>
           <div className="">
-            <p>{props.gameType === 100 ? "고요 속의 외침" : "인물 맞추기"}</p>
+            <p>{props.gameType === 101 ? "고요 속의 외침" : "인물 맞추기"}</p>
             <p>
               {props.numberOfPeople}/{props.totalNumberOfPeople}
             </p>
@@ -39,7 +39,7 @@ const Room = (props) => {
           </div>
           <p>Play</p>
           <div className="">
-            <p>{props.gameType === 100 ? "고요 속의 외침" : "인물 맞추기"}</p>
+            <p>{props.gameType === 101 ? "고요 속의 외침" : "인물 맞추기"}</p>
             <p>
               {props.numberOfPeople}/{props.totalNumberOfPeople}
             </p>
