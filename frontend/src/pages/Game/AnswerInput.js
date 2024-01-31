@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const AnswerInput = ({ myUserName, session }) => {
+const AnswerInput = ({ myUserName, session, answer }) => {
   const [answerMsg, setAnswerMsg] = useState("");
 
   const sendAnswer = (e) => {

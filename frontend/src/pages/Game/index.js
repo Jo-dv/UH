@@ -11,6 +11,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
   const myConnectionId = session.connection.connectionId;
   const [myTeamStreamMagers, setMyTeamStreamMagers] = useState([]);
   const [otherTeamStreamMagers, setOtherTeamStreamMagers] = useState([]);
+  const [thisTeamTurn, setThisTeamTurn] = useState("");
   const [thisPlayerTurn, setThisPlayerTurn] = useState(undefined);
 
   useEffect(() => {
@@ -90,7 +91,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
                 <Timer maxT={maxTime} />
                 <div className="absolute">
                   {/* <input type="text" placeholder="정답을 입력해 주세요" className="" /> */}
-                  <AnswerInput myUserName={myUserName} session={session} />
+                  <AnswerInput myUserName={myUserName} session={session} answer={answer} />
                   {/* <button onClick={sendPlayDone}>playDone</button> */}
                 </div>
               </div>
