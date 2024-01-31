@@ -216,6 +216,7 @@ export default function RoomId() {
     const sessionId = await createSession(
       mySessionId,
       firstRoomInfo.roomName,
+      firstRoomInfo.roomPassword,
       firstRoomInfo.roomMax
     );
     console.log("방생성결과", sessionId);

@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import DontEnter from "../Modal/DontEnter";
 import { useState } from "react";
-// 개별 방
+import EnterPassword from "../Modal/Lobby/EnterPassword";
+
+// 개별 방 컴포넌트
 const Room = (props) => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -13,7 +14,7 @@ const Room = (props) => {
       navigate(`/room/${props.sessionId}`); // 잠금되지 않은 방 클릭 시 이동
     }
   };
-
+  console.log("엄마가 주는 비번", props.isLocked);
   return (
     <div className="px-2">
       {props.isPlaying === false ? (
@@ -43,8 +44,15 @@ const Room = (props) => {
               {props.numberOfPeople}/{props.totalNumberOfPeople}
             </p>
           </div>
-          {showModal && <DontEnter onClose={() => setShowModal(false)} />}
         </div>
+      )}
+      {showModal && (
+        <EnterPassword
+          isLocked={props.isLocked}
+          sessionId={props.sessionId}
+          onClose={() => setShowModal(false)}
+          showModal={showModal}
+        />
       )}
     </div>
   );

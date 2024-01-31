@@ -17,10 +17,15 @@ const CreateRoomModal = ({ modalOnOff }) => {
     setRoomName(e.target.value);
   }, []);
 
+  console.log("1111111111");
+  console.log("roomPassword", roomPassword);
+
   const handleChangeRoomPassword = useCallback((e) => {
     setRoomPassword(e.target.value);
   }, []);
 
+  console.log("22222222222");
+  console.log("roomPassword", roomPassword);
   const handleChangeRoomMax = useCallback((e) => {
     setRoomMax(e.target.value);
   }, []);
@@ -35,6 +40,8 @@ const CreateRoomModal = ({ modalOnOff }) => {
     return rooms.some((room) => room.roomName === name);
   };
 
+  console.log("Before calling createSession, roomPassword:", roomPassword);
+
   const submitHandler = (e) => {
     e.preventDefault();
     if (checkRoomNameExists(roomName)) {
@@ -42,14 +49,15 @@ const CreateRoomModal = ({ modalOnOff }) => {
       return;
     }
 
-    navigate("/room/create", {
-      state: {
-        roomName: roomName,
-        roomPassword: roomPassword,
-        roomMax: roomMax,
-        roomGame: roomGame,
-      },
-    });
+    // 비밀번호 입력란이 활성화되었고, 비밀번호가 입력되었을 때만 비밀번호 값을 전달합니다.
+    const roomInfo = {
+      roomName: roomName,
+      roomMax: roomMax,
+      roomGame: roomGame,
+      roomPassword: lock && roomPassword ? roomPassword : null,
+    };
+
+    navigate("/room/create", { state: roomInfo });
   };
 
   useEffect(() => {
