@@ -32,6 +32,18 @@ export const playerTeam = async (sessionId, connectionId, team) => {
   }
 };
 
+export const getRoomInfo = async (sessionId) => {
+  console.log("방정보 조회", sessionId);
+  try {
+    const response = await axios.get(APPLICATION_SERVER_URL + "rooms/" + sessionId);
+    console.log(response.data);
+    return response.data; // "방정보"
+  } catch (error) {
+    console.log("방정보");
+    console.error("Error:", error.message);
+  }
+};
+
 export const passHost = async (sessionId, connectionId) => {
   console.log("반장 변경", sessionId, connectionId);
   try {
@@ -52,7 +64,13 @@ export const passHost = async (sessionId, connectionId) => {
   }
 };
 
-export const ready = async (sessionId, connectionId) => {
+/**
+ *
+ * @param {string} sessionId
+ * @param {string} connectionId
+ * @param {boolean} isReady
+ */
+export const ready = async (sessionId, connectionId, isReady) => {
   console.log("준비", sessionId, connectionId);
   try {
     const response = await axios.put(
@@ -60,14 +78,70 @@ export const ready = async (sessionId, connectionId) => {
       {
         sessionId: sessionId,
         connectionId: connectionId,
+        isReady: isReady,
       },
       {
         headers: { "Content-Type": "application/json" },
       }
     );
-    console.log(response.data); // "방장 권한을 전달했습니다."
+    console.log(response.data); // "준비 상태를 변경했습니다"
   } catch (error) {
-    console.log("준비");
-    console.error("Error:", error.message);
+    console.log("준비 에러");
+    console.error("api ready Error:", error);
+  }
+};
+
+export const startPlay = async (sessionId) => {
+  console.log("게임시작 api", sessionId);
+  try {
+    const response = await axios.put(
+      APPLICATION_SERVER_URL + "play",
+      {
+        sessionId: sessionId,
+        play: true,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    console.log(response.data);
+  } catch (error) {
+    console.log("게임시작 에러");
+    console.error("Error:", error);
+  }
+};
+
+export const getGameData = async (sessionId) => {
+  console.log("게임 문제 로드", sessionId);
+  try {
+    const response = await axios.get(APPLICATION_SERVER_URL + "game/" + sessionId);
+    console.log(response.data);
+    return response.data; //
+  } catch (error) {
+    console.log("게임 문제 로드 error");
+    console.error("게임 문제 로드 error", error);
+  }
+};
+
+export const endPlay = async (sessionId, winTeam, winScore, loseScore) => {
+  console.log("게임종료", sessionId);
+  try {
+    const response = await axios.put(
+      APPLICATION_SERVER_URL + "play",
+      {
+        sessionId: sessionId,
+        play: false,
+        winTeam,
+        winScore,
+        loseScore,
+      },
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+    console.log(response.data);
+  } catch (error) {
+    console.log("게임종료");
+    console.error("Error:", error);
   }
 };

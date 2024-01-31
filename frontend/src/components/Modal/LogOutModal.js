@@ -1,21 +1,41 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useStore from "../../store/UserAuthStore"
 
 const LogOutModal = (props) => {
     const navigate = useNavigate();
+    const userPassword = useStore(state => state.userPassword);
+    // resetUser 가져오기
+    const resetUser = useStore(state => state.resetUser);
 
     // 로그아웃 로직
     const handleLogOut = async () => {
-        try {
-            await axios.post("http://localhost:5000/user/logout");
-            sessionStorage.clear();
-            // 모달 검사 불리언 값 바꾸기
-            props.setLogout(false);
-            console.log("로그아웃 완료")
-            navigate("/auth/login");
-        } catch (error) {
-            console.error("로그아웃 에러", error);
+        if (userPassword !== null){
+            try {
+                await axios.post("http://localhost:5000/user/logout", { withCredentials: true });
+                // store의 유저 정보 초기화
+                resetUser();
+                sessionStorage.clear();
+                // 모달 검사 불리언 값 바꾸기
+                props.setLogout(false);
+                console.log("로그아웃 완료")
+                navigate("/auth/login");
+            } catch (error) {
+                console.error("로그아웃 에러", error);
+            }
+        } else {
+            try {
+                await axios.post("http://localhost:5000/user/logout/kakao", { withCredentials: true });
+                // store의 유저 정보 초기화
+                resetUser();
+                sessionStorage.clear();
+                props.setLogout(false);
+                console.log("카카오 로그아웃 완료")
+                navigate("/auth/login");
+            } catch (error) {
+                console.error("로그아웃 에러", error);
+            }
         }
     };
 

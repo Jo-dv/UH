@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+// zustand에서 생성한 useStore 사용
+import useStore from "../../store/UserAuthStore";
 
 import googleLogo from "./img/googleLogo.png";
 import kakaoLogo from "./img/kakaoLogoB.png";
@@ -8,6 +10,8 @@ import naverLogo from "./img/naverLogo.png";
 
 const Login = () => {
   const navigate = useNavigate();
+  // UserAuthStore의 User를 변경하기 위해
+  const setUser = useStore((state) => state.setUser);
 
   // 카카오 소셜 로그인
   const REST_API_KEY = "4fffa78521feee5e1eb947c704c08cf2";
@@ -29,6 +33,14 @@ const Login = () => {
     const { name, value } = e.currentTarget;
     setForm({ ...form, [name]: value });
   };
+
+  // useStore를 통해 스토어의 상태를 가져오는 함수
+  const userState = useStore();
+
+  useEffect(() => {
+    // useEffect 내에서 상태를 로그로 출력
+    console.log("userInfo:", userState);
+  }, [userState]); // userState가 변경될 때마다 실행
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -79,22 +91,33 @@ const Login = () => {
         );
         const res = response.data;
         console.log("서버 응답:", res);
+        // 닉네임이 없다면
         if (res.userNickname === null) {
           sessionStorage.setItem("userSeq", res.userSeq);
+          // zustand 사용해보기
+          setUser({ userSeq: res.userSeq, userPassword: res.userPassword });
           navigate("/auth/nickname");
+          // 닉네임이 있다면
         } else {
           sessionStorage.setItem("userNickname", res.userNickname);
           sessionStorage.setItem("userSeq", res.userSeq);
+          // zustand 사용해보기
+          setUser({ userSeq: res.userSeq, userNickname: res.userNickname, userPassword: res.userPassword });
           console.log("로그인 성공");
           navigate("/lobby");
         }
       } catch (error) {
+        if (error.response && error.response.status === 400){
+          setErr({...err, general: "올바른 정보를 입력해주세요."});
+        } else {
         console.error("로그인 중 에러 발생", error);
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
       }
+      }
     }
   };
+
   return (
     <div className="w-full h-screen p-5 flex justify-center items-center z-10">
       <form
@@ -125,6 +148,7 @@ const Login = () => {
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
 
         <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">로그인</button>
+        <p className="font-['pixel'] text-red-500 mb-1">{err.general}</p>
         <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3>
