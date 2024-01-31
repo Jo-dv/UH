@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useStore from "../../store/UserAuthStore";
 
 import WebcamComponent from "./WebcamMicStateManager";
-import alternativeImage from "../../asset/image/alternativeImage.png";
+import alternativeImage from "/../../asset/image/alternativeImage.png";
 
 const UserMediaProfile = () => {
   // 오디오 상태 조절
