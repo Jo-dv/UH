@@ -1,4 +1,4 @@
-package org.project.uh.ranking.dto;
+package org.project.uh.friends.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +11,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserDto {
-	private int userSeq;
-	private String userNickname;
-	private int rating;
+public class FriendRequestDto {
+	private int fromUserSeq;
+	private int toUserSeq;
+
 }

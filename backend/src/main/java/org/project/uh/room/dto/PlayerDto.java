@@ -1,8 +1,4 @@
-package org.project.uh.user.dto;
-
-import java.util.List;
-
-import org.project.uh.game.dto.ResultDto;
+package org.project.uh.room.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,10 +11,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MypageDto {
+public class PlayerDto {
+	private String team;
+	private boolean isReady;
 	private int userSeq;
-	private String userId;
 	private String userNickname;
-	private int rating;
-	private List<ResultDto> record;
+
 }
