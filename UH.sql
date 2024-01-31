@@ -308,7 +308,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `user_seq` int NOT NULL AUTO_INCREMENT,
   `user_id` varchar(255) NOT NULL,
-  `user_password` varchar(255) NOT NULL,
+  `user_password` varchar(255) DEFAULT NULL,
   `user_nickname` varchar(255) DEFAULT NULL,
   `rating` int NOT NULL DEFAULT '1000',
   PRIMARY KEY (`user_seq`)
