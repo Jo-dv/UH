@@ -12,12 +12,16 @@ const APPLICATION_SERVER_URL =
  * @param {string} roomPassword
  * @returns sessionId
  */
+
 export const createSession = async (
   sessionId,
   roomName = "방이름",
   roomPassword = null,
   max = 4
 ) => {
+  console.log("333333");
+  console.log("roomPassword", roomPassword);
+
   try {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "rooms",
@@ -33,6 +37,8 @@ export const createSession = async (
         headers: { "Content-Type": "application/json" },
       }
     );
+    console.log("-----------------");
+    console.log("roomPassword", roomPassword);
     // console.log("방만들기", response.data);
     // 성공적인 응답의 경우 sessionId 반환
     return response.data;
