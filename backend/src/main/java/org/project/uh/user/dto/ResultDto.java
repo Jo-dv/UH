@@ -1,4 +1,4 @@
-package org.project.uh.game.dto;
+package org.project.uh.user.dto;
 
 import java.time.LocalDateTime;
 
@@ -22,5 +22,5 @@ public class ResultDto {
 	private int gameCategory;
 	private int score;
 	private LocalDateTime created;
-	private boolean isWin;
+	private boolean win;
 }

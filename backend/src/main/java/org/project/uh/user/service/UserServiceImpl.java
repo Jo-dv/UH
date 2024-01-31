@@ -4,16 +4,20 @@ import java.util.List;
 
 import org.project.uh.user.dao.UserDao;
 import org.project.uh.user.dto.MypageDto;
+import org.project.uh.user.dto.ResultDto;
+import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 import org.springframework.stereotype.Service;
 
-import lombok.RequiredArgsConstructor;
-
 @Service
-@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 	private final UserDao dao;
+
+	public UserServiceImpl(UserDao dao) {
+		super();
+		this.dao = dao;
+	}
 
 	// 회원 가입
 	@Override
@@ -25,6 +29,21 @@ public class UserServiceImpl implements UserService {
 		}
 		// 중복 없으면 회원가입
 		return dao.insertUser(dto);
+	}
+
+	// 닉네임 중복 체크
+	@Override
+	public int nicknameCheck(UserDto dto) {
+		if (dao.checkUserNickname(dto.getUserNickname()) > 0) {
+			return 0;
+		}
+		return 1;
+	}
+
+	// 소셜 로그인 회원가입
+	@Override
+	public int insertSocialUser(SocialUserDto dto) {
+		return dao.insertSocialUser(dto);
 	}
 
 	// 아이디 중복 체크
@@ -81,14 +100,30 @@ public class UserServiceImpl implements UserService {
 	// 마이페이지
 	@Override
 	public MypageDto mypage(int userSeq) {
-		MypageDto mypage = dao.mypage(userSeq);
-		mypage.setRecord(dao.userRecord(userSeq));
-		return mypage;
+		return dao.mypage(userSeq);
+	}
+
+	// 전적 조회
+	@Override
+	public List<ResultDto> userRecord(int userSeq) {
+		return dao.userRecord(userSeq);
 	}
 
 	// 아이디로 유저 정보 조회
 	@Override
 	public UserDto findById(String userId) {
 		return dao.findById(userId);
+	}
+
+	// seq로 유저 정보 조회
+	@Override
+	public UserDto findBySeq(int userSeq) {
+		return dao.findBySeq(userSeq);
+	}
+
+	// seq로 social token 조회
+	@Override
+	public SocialUserDto findSocial(int userSeq) {
+		return dao.findSocial(userSeq);
 	}
 }

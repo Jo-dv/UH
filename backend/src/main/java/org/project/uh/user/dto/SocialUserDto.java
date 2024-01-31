@@ -1,5 +1,7 @@
 package org.project.uh.user.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +13,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MypageDto {
+public class SocialUserDto {
+	private int tokenId;
 	private int userSeq;
-	private String userId;
-	private String userNickname;
-	private int rating;
+	private int socialProvider;
+	private String socialUserId;
+	private String accessToken;
+	private LocalDateTime expiresIn;
 }
