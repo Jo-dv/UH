@@ -15,6 +15,7 @@ import {
 import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import { getGameData, getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
 import Game from "../Game/index.js";
+import AnswerInput from "../Game/AnswerInput.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -366,7 +367,7 @@ export default function RoomId() {
             <div className="row-span-2 grid grid-cols-4 grid-rows-2">
               {publisher !== undefined ? (
                 <div
-                  className="bg-green-500 h-full overflow-hidden"
+                  className="bg-green-500 p-1 overflow-hidden"
                   onClick={() => handleMainVideoStream(publisher)}
                 >
                   <UserVideoComponent
@@ -381,7 +382,7 @@ export default function RoomId() {
               {subscribers.map((sub, i) => (
                 <div
                   key={sub.id}
-                  className="bg-teal-500 p-1"
+                  className="bg-teal-500 p-1 overflow-hidden"
                   onClick={() => handleMainVideoStream(sub)}
                 >
                   <span>{sub.id}</span>
