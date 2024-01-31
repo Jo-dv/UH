@@ -303,6 +303,29 @@ export default function RoomId() {
       setIsPlay(true);
     });
   }
+  const sendPlayDone = () => {
+    console.log("플레이 소켓 보냄");
+    if (session !== undefined) {
+      session
+        .signal({
+          data: `${mySessionId} - 게임끝: ${isPlay}`, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: "room-playDone", // The type of message (optional)
+        })
+        .then(() => {
+          console.log("게임끝 :", isPlay);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+  if (session !== undefined) {
+    session.on("signal:room-playDone", (event) => {
+      console.log("플레이 소켓 받음", event.data);
+      setIsPlay(false);
+    });
+  }
 
   return (
     <>
@@ -342,7 +365,10 @@ export default function RoomId() {
           <div className="grid grid-rows-3 h-screen-40">
             <div className="row-span-2 grid grid-cols-4 grid-rows-2">
               {publisher !== undefined ? (
-                <div className="bg-green-500 p-1" onClick={() => handleMainVideoStream(publisher)}>
+                <div
+                  className="bg-green-500 h-full overflow-hidden"
+                  onClick={() => handleMainVideoStream(publisher)}
+                >
                   <UserVideoComponent
                     streamManager={publisher}
                     session={session}
@@ -408,6 +434,7 @@ export default function RoomId() {
           session={session}
           myUserName={myUserName}
           quiz={gameQuiz}
+          sendPlayDone={sendPlayDone}
         />
       ) : null}
     </>

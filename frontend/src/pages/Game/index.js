@@ -5,7 +5,7 @@ import Timer from "./Timer";
 import { getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "../RoomId/UserVideoComponent";
 
-const Game = ({ publisher, subscribers, session, myUserName, quiz }) => {
+const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone }) => {
   let maxTime = 10000;
   const myConnectionId = session.connection.connectionId;
   const [myTeamStreamMagers, setMyTeamStreamMagers] = useState([]);
@@ -72,9 +72,10 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz }) => {
         <section className="grow">
           <div className="w-full bg-black">게임이미지</div>
           <Timer maxT={maxTime} />
-          <form className="relative">
+          <div className="relative">
             <input type="text" placeholder="정답을 입력해 주세요" className="" />
-          </form>
+            <button onClick={sendPlayDone}>playDone</button>
+          </div>
           <div className="h-64">
             <Chat myUserName={myUserName} session={session} />
           </div>
