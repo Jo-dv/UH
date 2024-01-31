@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logoImg from "../../asset/image/LOGO.png";
-import startBackImg from "../../asset/image/startBackGround.png";
+import logoImg from "/frontend/src/asset/image/LOGO.png";
+import startBackImg from "/frontend/src/asset/image/startBackGround.png";
 function Start() {
   const navigate = useNavigate();
 
