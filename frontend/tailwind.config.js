@@ -24,7 +24,7 @@ module.exports = {
       height: {
         "screen-80": "calc(100vh - 96px)",
         "screen-40": "calc(100% - 40px)",
-        "screen-16": "calc(100vh - 16px)",
+        "screen-16": "calc(100% - 16px)",
       },
     },
   },

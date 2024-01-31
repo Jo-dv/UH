@@ -1,10 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+// zustand에서 생성한 useStore 사용
+import useStore from "../../store/UserAuthStore";
 
 const CreateNickname = () => {
   const navigate = useNavigate();
   const onClick = (path) => navigate(`/${path}`);
+  // UserAuthStore의 User를 변경하기 위해
+  const setUser = useStore((state) => state.setUser);
+  const userState = useStore((state) => state.user);
+
+  useEffect(() => {
+    console.log("userInfo:", userState);
+  }, [userState]);
 
   const [form, setForm] = useState({
     userNickname: "",
@@ -73,17 +82,20 @@ const CreateNickname = () => {
         const response = await axios.post("http://localhost:5000/user/nickname", {
           userSeq,
           userNickname: form.userNickname,
-        });
+        }, { withCredentials: true });
         const res = response.data;
         console.log("서버 응답:", res);
         if (res.status === 400) {
           setErr({ ...err, userNickname: "중복된 닉네임입니다" });
         } else {
           sessionStorage.setItem("userNickname", form.userNickname);
+          // zustand 사용해보기
+          setUser({ userNickname: form.userNickname });
           navigate("/lobby");
         }
       } catch (error) {
         console.error("닉네임 생성 중 에러 발생", error);
+        setErr({ ...err, userNickname: "중복된 닉네임입니다."});
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
       }
@@ -104,7 +116,7 @@ const CreateNickname = () => {
           type="text"
           placeholder="닉네임"
           onChange={onChange}
-          // onBlur={checkNickname}
+          // onBlur={checkUserNicknameDuplicate}
           name="userNickname"
           value={form.userNickname}
         />
