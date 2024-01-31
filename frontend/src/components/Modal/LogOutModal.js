@@ -47,7 +47,7 @@ const LogOutModal = (props) => {
         className="min-w-100 min-h-96 absolute inset-0
       flex justify-center items-center"
       >
-        <div className=" bg-formBG rounded-2xl border-2 border-modalBorder justify-center items-center p-2 flex flex-col">
+        <div className=" bg-formBG rounded-2xl border-2 border-modalBorder justify-center items-center p-2 flex flex-col z-50">
           <div className="text-center">
             <label>로그아웃하시겠습니까?</label>
             <div>
@@ -55,7 +55,7 @@ const LogOutModal = (props) => {
                 취소
               </button>
 
-              <button onClick={kakaoLogoutHandler} className="bg-formButton py-2 px-4 m-2 rounded">
+              <button onClick={handleLogOut} className="bg-formButton py-2 px-4 m-2 rounded">
                 로그아웃
               </button>
               <button onClick={kakaoLogoutHandler} className="bg-formButton py-2 px-4 m-2 rounded">plz</button>
