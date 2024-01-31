@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logoImg from "/../../asset/image/LOGO.png";
-import startBackImg from "/../../asset/image/startBackGround.png";
+import logoImg from ".//../../asset/image/LOGO.png";
+import startBackImg from ".//../../asset/image/startBackGround.png";
 function Start() {
   const navigate = useNavigate();
 
@@ -24,15 +24,15 @@ function Start() {
         <img
           className="w-4/5 max-w-2xl
       animate-jump-in animate-duration-[2000ms] z-10"
-          src={logoImg}
           alt="Logo"
+          src={logoImg}
         />
 
         <img
           className="animate-fade animate-delay-[2000ms] 
         absolute h-screen w-full"
-          src={startBackImg}
           alt="Background"
+          src={startBackImg}
         />
         {/* <div className='z-10 absolute w-3/4 h-3/4
       bg-gradient-to-r from-spaceP via-amber-300 via-white via-cyan-100 to-spaceB
