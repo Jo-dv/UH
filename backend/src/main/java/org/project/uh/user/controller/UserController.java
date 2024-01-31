@@ -84,12 +84,13 @@ public class UserController {
 	public ResponseEntity<Object> userCheck(HttpSession session) {
 		// 세션에서 'user' 속성 가져오기
 		UserDto user = (UserDto)session.getAttribute("user");
+		System.out.println("로비 유저 정보 확인 = " + user);
 		if (user != null) {
 			// 사용자 정보가 세션에 있으면, 해당 정보 반환
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} else {
 			// 사용자 정보가 세션에 없으면, null 또는 적절한 응답 반환
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(0, HttpStatus.OK);
 		}
 	}
 
@@ -121,19 +122,39 @@ public class UserController {
 	public ResponseEntity<Object> logout(@RequestBody UserDto dto, HttpSession session) {
 		UserDto user = (UserDto)session.getAttribute("user");
 		UserDto loginUser = service.findBySeq(user.getUserSeq());
+		System.out.println("UserController.logout user 확인 = " + user);
+		System.out.println("UserController.logout loginuser 확인 = " + loginUser);
 		if (loginUser.getUserPassword() == null) {
-			// 비밀번호가 없으면 카카오 로그아웃
+			// 비밀번호가 없으면 카카오 계정과 함께 로그아웃
 			RestTemplate template = new RestTemplate();
 			String uri = UriComponentsBuilder.fromHttpUrl(kakaoLogoutUri)
 				.queryParam("client_id", clientId)
 				.queryParam("logout_redirect_uri", "http://localhost:3000/auth/login")
 				.toUriString();
 			ResponseEntity<String> response = template.getForEntity(uri, String.class);
+			System.out.println("카카오 로그아웃 response = " + response);
 			session.invalidate();
+			System.out.println("카카오 로그아웃 세션 = " + session);
 			return new ResponseEntity<>("카카오톡 로그아웃", HttpStatus.OK);
+
+			// 연결 끊기
+			// RestTemplate template = new RestTemplate();
+			// HttpHeaders header = new HttpHeaders();
+			// SocialUserDto loginUserSocialToken = service.findSocial(user.getUserSeq());
+			// header.add("Authorization", "Bearer " + loginUserSocialToken.getAccessToken());
+			// header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+			//
+			// HttpEntity<String> request = new HttpEntity<>(header);
+			//
+			// ResponseEntity<Map> rr = template.exchange(requestUri, HttpMethod.GET, request, Map.class);
+			// Map<String, Object> response = rr.getBody();
+			// System.out.println("카카오 연결끊기 response = " + response);
+			// session.invalidate();
+			// return new ResponseEntity<>("카카오톡 로그아웃", HttpStatus.OK);
 		}
 		// 비밀번호가 있으면 일반 로그아웃
 		session.invalidate();
+		System.out.println("일반 로그아웃 세션 = " + session);
 		return new ResponseEntity<>("로그아웃", HttpStatus.OK);
 	}
 
