@@ -13,6 +13,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -58,16 +59,25 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		List<String[]> connectors = new ArrayList<>();
 		for (WebSocketSession client : CLIENTS.keySet()) {
 			HttpSession session = (HttpSession)client.getAttributes().get("httpSession");
-			UserDto dto = (UserDto)session.getAttribute("loginUser");
+			UserDto dto = (UserDto)session.getAttribute("user");
+
 			//테스트 코드 - 회원 연결 시 변경
-			connectors.add(new String[] {client.getId(), "닉네임"});
+			// connectors.add(new String[] {client.getId(), "닉네임"});
 			//실제 코드
-			// connectors.add(dto.getUserNickname());
+			connectors.add(new String[] {client.getId(), dto.getUserNickname()});
 		}
 
 		// JSON 형식으로 구성
+		JsonArray connectorsArray = new JsonArray();
+		for (String[] connector : connectors) {
+			JsonObject connectorObject = new JsonObject();
+			connectorObject.addProperty("connectionId", connector[0]);
+			connectorObject.addProperty("nickname", connector[1]);
+			connectorsArray.add(connectorObject);
+		}
+
 		JsonObject jsonObject = new JsonObject();
-		jsonObject.add("connectors", JsonParser.parseString(connectors.toString()));
+		jsonObject.add("connectors", connectorsArray);
 
 		// 모든 클라이언트에게 전송
 		for (WebSocketSession client : CLIENTS.keySet()) {
@@ -93,7 +103,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			jsonMessage.add("roomId", JsonParser.parseString(roomId));
 
 			handleInvite(toConnectionId, jsonMessage);
-		} else if (jsonMessage.has("type") && jsonMessage.get("type").getAsString().equals("follow")) {
+		}//친구 따라가기 
+		else if (jsonMessage.has("type") && jsonMessage.get("type").getAsString().equals("follow")) {
 			System.out.println("follow");
 			// 따라가는 대상의 connectionId 추출
 			String connectionId = jsonMessage.get("connectionId").getAsString();
@@ -106,6 +117,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			jsonMessage.add("roomId", JsonParser.parseString(roomId));
 
 			handleFollow(session, jsonMessage);
+		}//전체에게 새로고침 요청
+		else if (jsonMessage.has("type") && jsonMessage.get("type").getAsString().equals("refresh")) {
+			handleRefresh(jsonMessage);
 		}
 	}
 
@@ -120,5 +134,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		//따라가기를 요청한 세션에 메시시 전송
 		TextMessage followMessage = new TextMessage(jsonMessage.toString());
 		session.sendMessage(followMessage);
+	}
+
+	private void handleRefresh(JsonObject jsonMessage) throws IOException {
+		//접속한 모든 유저에게 새로고침 요정을 보냄
+		TextMessage refreshMessage = new TextMessage(jsonMessage.toString());
+
+		for (WebSocketSession session : CLIENTS.keySet()) {
+			session.sendMessage(refreshMessage);
+		}
 	}
 }

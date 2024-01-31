@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.project.uh.game.dto.QuizDto;
-import org.project.uh.game.service.GameService;
+import org.project.uh.room.controller.RoomController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "게임 api")
 public class GameController {
 
-	private final GameService service;
+	private final RoomController roomController;
 
 	@Operation(
 		summary = "문제 로드",
@@ -36,9 +35,8 @@ public class GameController {
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@GetMapping("/{sessionId}")
-	public ResponseEntity<List<QuizDto>> listQuiz(@PathVariable String sessionId, Model model) {
-
-		Map<String, List<QuizDto>> quizList = (Map<String, List<QuizDto>>)model.getAttribute("quizList");
+	public ResponseEntity<List<QuizDto>> listQuiz(@PathVariable String sessionId) {
+		Map<String, List<QuizDto>> quizList = roomController.getQuizList();
 		if (quizList == null) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

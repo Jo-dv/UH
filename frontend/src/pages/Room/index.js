@@ -24,7 +24,6 @@ export default function Room() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [roomName, setRoomName] = useState(null);
   const [roomList, setRoomList] = useState([
     {
       sessionId: "세션아이디",

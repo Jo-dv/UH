@@ -4,10 +4,8 @@ import "./UserVideo.css";
 import Mic from "@mui/icons-material/Mic";
 import MicOff from "@mui/icons-material/MicOff";
 
-const UserVideoComponent = ({ streamManager, session, team }) => {
-  const [audioActive, setAudioActive] = useState(
-    streamManager.stream.audioActive
-  );
+const UserVideoComponent = ({ streamManager, session, isHost, isReady }) => {
+  const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const getNicknameTag = () => {
     // Gets the nickName of the user
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -49,11 +47,11 @@ const UserVideoComponent = ({ streamManager, session, team }) => {
     }
   };
   return (
-    <div>
+    <div className="">
       {streamManager !== undefined ? (
-        <div className="streamcomponent ">
+        <div className="streamcomponent">
           <OpenViduVideoComponent streamManager={streamManager} />
-          <div className="bg-white">
+          <div className="absolute">
             <p>
               {getNicknameTag()}
 
@@ -67,6 +65,9 @@ const UserVideoComponent = ({ streamManager, session, team }) => {
                 </button>
               )}
             </p>
+            {/* <p>
+              isHost : {isHost ? "true" : "false"}, isReady : {isReady ? "true" : "false"}
+            </p> */}
           </div>
         </div>
       ) : null}
