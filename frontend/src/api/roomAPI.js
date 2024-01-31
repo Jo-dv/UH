@@ -10,6 +10,7 @@ const APPLICATION_SERVER_URL =
  * @param {string} sessionId 생성시: 'create'
  * @param {string} roomName
  * @param {string} roomPassword
+ * @param {int} roomGame
  * @returns sessionId
  */
 
@@ -17,7 +18,7 @@ export const createSession = async (
   sessionId,
   roomName = "방이름",
   roomPassword = null,
-  roomGame = "게임 종류",
+  roomGame = 101,
   max = 4
 ) => {
   console.log("333333");

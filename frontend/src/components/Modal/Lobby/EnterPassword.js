@@ -25,6 +25,7 @@ const EnterPassword = ({ showModal, isLocked, sessionId, onClose }) => {
       console.error("서버에 요청하는 동안 오류가 발생했습니다.", error);
     }
   };
+
   return (
     <>
       {showModal && (
