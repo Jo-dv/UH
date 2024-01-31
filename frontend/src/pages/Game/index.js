@@ -11,8 +11,23 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
   const myConnectionId = session.connection.connectionId;
   const [myTeamStreamMagers, setMyTeamStreamMagers] = useState([]);
   const [otherTeamStreamMagers, setOtherTeamStreamMagers] = useState([]);
-  const [thisTeamTurn, setThisTeamTurn] = useState("");
+  const [thisTeamTurn, setThisTeamTurn] = useState("A");
   const [thisPlayerTurn, setThisPlayerTurn] = useState(undefined);
+  const [quizData, setQuizData] = useState([
+    { quizId: 180, quizPhoto: null, quizAnswer: "최주봉" },
+    { quizId: 62, quizPhoto: null, quizAnswer: "이덕화" },
+    { quizId: 12, quizPhoto: null, quizAnswer: "이병헌" },
+    { quizId: 296, quizPhoto: null, quizAnswer: "윤계상" },
+    { quizId: 73, quizPhoto: null, quizAnswer: "정한용" },
+    { quizId: 353, quizPhoto: null, quizAnswer: "최백호" },
+    { quizId: 49, quizPhoto: null, quizAnswer: "정태춘" },
+    { quizId: 12, quizPhoto: null, quizAnswer: "이병헌" },
+    { quizId: 186, quizPhoto: null, quizAnswer: "예지원" },
+    { quizId: 321, quizPhoto: null, quizAnswer: "최덕문" },
+    { quizId: 363, quizPhoto: null, quizAnswer: "김성겸" },
+    { quizId: 107, quizPhoto: null, quizAnswer: "이정길" },
+    { quizId: 82, quizPhoto: null, quizAnswer: "김희선" },
+  ]);
 
   useEffect(() => {
     const callData = async () => {
@@ -39,7 +54,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
       }
       console.log("팀맴버", myTeamMember);
 
-      const myTeamStreamMagersCNT = [];
+      const myTeamStreamMagersCNT = [publisher];
       const otherTeamStreamMagersCNT = [];
       for (const sub of subscribers) {
         for (const member of myTeamMember) {
@@ -50,22 +65,39 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
           }
         }
       }
+      myTeamStreamMagersCNT.sort();
+      otherTeamStreamMagersCNT.sort();
       setMyTeamStreamMagers(myTeamStreamMagersCNT);
       setOtherTeamStreamMagers(otherTeamStreamMagersCNT);
+
+      if (quiz !== undefined) {
+        setQuizData(quiz);
+      }
     };
     callData();
   }, []);
 
+  const Turn = () => {
+    const A = Math.floor(Math.random() * 1000);
+    const B = Math.floor(Math.random() * 1000);
+    if (A > B) {
+      console.log("A");
+      return "A";
+    } else {
+      console.log("B");
+      return "B";
+    }
+  };
   const answer = "정답임";
 
   return (
     <main className="bg-neutral-200 p-2 mx-2 mb-2  h-screen-80 border rounded-3xl">
       <div className="flex flex-row justify-center h-full">
         <section className="cam grid grid-rows-4 gap-1">
-          <div className="bg-mc6 p-1 overflow-hidden">
+          {/* <div className="bg-mc6 p-1 overflow-hidden">
             <span>{publisher.id}</span>
             <UserVideoComponent streamManager={publisher} session={session} />
-          </div>
+          </div> */}
           {myTeamStreamMagers.map((sub, i) => (
             <div key={sub.id} className="bg-mc8 p-1 overflow-hidden">
               <span>{sub.id}</span>
@@ -86,13 +118,14 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
               <br /> 팀당 {maxTime / 1000}초 동안 진행합니다.
               <br />
             </div>
-            <div className=" opacity-90">
+            <div className="opacity-90">
               <div className="relative flex justify-center items-center">
                 <Timer maxT={maxTime} />
-                <div className="absolute">
+                <div className="absolute flex">
                   {/* <input type="text" placeholder="정답을 입력해 주세요" className="" /> */}
                   <AnswerInput myUserName={myUserName} session={session} answer={answer} />
-                  {/* <button onClick={sendPlayDone}>playDone</button> */}
+                  <button onClick={Turn}>dies</button>
+                  <button onClick={sendPlayDone}>playDone</button>
                 </div>
               </div>
             </div>
