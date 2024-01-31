@@ -13,13 +13,13 @@ public interface GameDao {
 	@Select("select * "
 		+ "from quiz_shout "
 		+ "where quiz_category=#{quizCategory} "
-		+ "ORDER BY RAND(123)")
+		+ "ORDER BY RAND() limit 150")
 		// 무작위 문제 생성
 	List<QuizDto> shoutList(int quizCategory);
 
 	@Select("select * "
 		+ "from quiz_person "
-		+ "ORDER BY RAND(123)")
+		+ "ORDER BY RAND() limit 150")
 		// 무작위 문제 생성
 	List<QuizDto> personList();
 
