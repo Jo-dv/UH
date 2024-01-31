@@ -1,40 +1,24 @@
+import React, { useEffect } from "react";
+import useFriends from "../../hooks/useFriends";
+import UseFriendsStore from "../../store/UseFriendsStore";
+
 const FriendList = () => {
-  // // rooms 컴포넌트에 대한 참조를 저장할 배열
-  // const roomRefs = useRef([]);
+  const { friendRefs } = useFriends();
+  const { friends } = UseFriendsStore();
 
-  // // 스크롤 기능 구현
-  // useEffect(() => {
-  //   // IntersectionObserver 초기화
-  //   const observer = new IntersectionObserver((entries) => {
-  //     entries.forEach((entry) => {
-  //       if (entry.isIntersecting) {
-  //         entry.target.style.opacity = 1;
-  //       } else {
-  //         entry.target.style.opacity = 0;
-  //       }
-  //     });
-  //   });
-
-  //   // 각 Rooms 컴포넌트를 관찰 대상으로 추가
-  //   roomRefs.current.forEach((ref) => {
-  //     if (ref) observer.observe(ref);
-  //   });
-
-  //   // 컴포넌트가 언마운트될 때 observer 해제
-  //   return () => {
-  //     roomRefs.current.forEach((ref) => {
-  //       if (ref) observer.unobserve(ref);
-  //     });
-  //   };
-  // }, [rooms]); // rooms가 변경될 때마다 실행
+  useEffect(() => {
+    friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
+  }, [friends]);
 
   return (
-    <div>
-      {/* {sortedFriends.map((friend, i) => (
-        <p key={i} style={{ color: friend.isOnline ? "black" : "gray" }}>
-          {friend.name}
-        </p>
-      ))} */}
+    <div className="m-1 overflow-y-scroll h-[34vh]">
+      <div className="w-1/2 stretch m-3 ">
+        {friends.map((friend, i) => (
+          <div className="ml-3 mb-1" ref={(el) => (friendRefs.current[i] = el)} key={i}>
+            {friend}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

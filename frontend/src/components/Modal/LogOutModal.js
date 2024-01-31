@@ -27,6 +27,19 @@ const LogOutModal = (props) => {
       console.error("로그아웃 에러", error);
     }
   };
+  // 카카오 소셜 로그인 / 로그아웃
+  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+  const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
+  const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const LogoutLink = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`
+  const kakaoLoginHandler = () => {
+    window.location.href = loginLink;
+  };
+  const kakaoLogoutHandler = () => {
+    handleLogOut();
+    window.location.href = LogoutLink;
+  };
 
   return (
     <>
@@ -42,9 +55,10 @@ const LogOutModal = (props) => {
                 취소
               </button>
 
-              <button onClick={handleLogOut} className="bg-formButton py-2 px-4 m-2 rounded">
+              <button onClick={kakaoLogoutHandler} className="bg-formButton py-2 px-4 m-2 rounded">
                 로그아웃
               </button>
+              <button onClick={kakaoLogoutHandler} className="bg-formButton py-2 px-4 m-2 rounded">plz</button>
             </div>
           </div>
         </div>

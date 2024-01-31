@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import "./chat.css";
 
 const Chat = ({ session, myUserName }) => {
   const [chat, setChat] = useState("");
   const [receiveMsg, setReceiveMsg] = useState(`${myUserName}님 환영합니다`);
-  const [messgaeList, setMessgaes] = useState([]);
+  const [messageList, setMessageList] = useState([]);
+  const ulRef = useRef(null);
+
   const sendMsg = (e) => {
     e.preventDefault();
     console.log(session);
@@ -16,7 +19,7 @@ const Chat = ({ session, myUserName }) => {
       .then(() => {
         console.log("보냄 :", chat);
         setChat("");
-        setMessgaes([...messgaeList, receiveMsg]);
+        setMessageList([...messageList, receiveMsg]);
       })
       .catch((error) => {
         console.error(error);
@@ -29,30 +32,38 @@ const Chat = ({ session, myUserName }) => {
       console.log("받음d :", event.data); // Message
     }
     setReceiveMsg(event.data);
-    setMessgaes([...messgaeList, receiveMsg]);
-    // console.log(messgaeList)
+    setMessageList([...messageList, receiveMsg]);
+    // console.log(messageList)
     // console.log('폼',event.from); // Connection object of the sender
     // console.log('타입',event.type); // The type of message ("my-chat")
   });
 
+  useEffect(() => {
+    // 컴포넌트가 업데이트 될 때마다 스크롤을 맨 아래로 이동
+    if (ulRef.current) {
+      ulRef.current.scrollTop = ulRef.current.scrollHeight;
+    }
+  }, [messageList]);
+
   return (
     <section
       className="bg-neutral-300 
-    border rounded-3xl overflow-hidden h-full"
+    border rounded-3xl overflow-hidden h-full w-full flex flex-col"
     >
-      <h2 className="bg-neutral-400 px-8">채팅</h2>
-      <div>
+      <h2 className="bg-neutral-400 px-8 h-6">채팅</h2>
+      <div className="p-2 h-screen-16">
         <ul
-          className="m-4 px-2 border rounded-3xl bg-white h-80
-         overflow-y-auto"
+          ref={ulRef}
+          className="mb-2 px-2 border rounded-3xl bg-white h-screen-40 max-h-44 overflow-auto"
         >
-          {messgaeList.map((item, index) => {
+          {messageList.map((item, index) => {
             return <li key={index}>{item}</li>;
           })}
           <li className="">{receiveMsg}</li>
         </ul>
+
         <form
-          className="m-4 px-2
+          className="px-2 h-8 
           border rounded-3xl bg-white
           flex flex-row overflow-hidden"
           onSubmit={sendMsg}
@@ -61,14 +72,11 @@ const Chat = ({ session, myUserName }) => {
             type="text"
             placeholder="채팅을 입력해 주세요!"
             className="grow"
-            maxLength="100"
+            maxLength="50"
             value={chat}
             onChange={(e) => setChat(e.target.value)}
           />
-          <button
-            className="w-11 m-1 pl-2 border-l-2 border-solid"
-            type="submit"
-          >
+          <button className="w-11 m-1 pl-2 border-l-2 border-solid" type="submit">
             채팅
           </button>
         </form>

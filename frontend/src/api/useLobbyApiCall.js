@@ -10,7 +10,7 @@ const useLobbyApiCall = () => {
   const rankPersonUrl = `${baseUrl}rank/person`;
   const rankShoutUrl = `${baseUrl}rank/shout`;
   const rankSoloUrl = `${baseUrl}rank/solo`;
-
+  const checkPasswordUrl = `${baseUrl}password`;
 
   // roomList 목록
   const getRoomsList = async () => {
@@ -119,6 +119,18 @@ const useLobbyApiCall = () => {
     }
   };
 
+  // [방 입장] 방 비밀번호 일치 확인
+  const postCheckPassword = async () => {
+    try {
+      const response = await axios.post(checkPasswordUrl);
+      const checkPassword = response.data;
+      return checkPassword;
+    } catch (error) {
+      console.error("방 비밀번호 일치 확인 중 에러 발생", error);
+      throw error;
+    }
+  };
+
   return {
     getRoomsList,
     getSearchRooms,
@@ -128,7 +140,8 @@ const useLobbyApiCall = () => {
     getRankPerson,
     getRankShout,
     getRankSolo,
-    getMyPageInfo
+    getMyPageInfo,
+    postCheckPassword,
   };
 };
 

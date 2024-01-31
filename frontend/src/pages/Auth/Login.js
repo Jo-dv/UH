@@ -13,13 +13,19 @@ const Login = () => {
   // UserAuthStore의 User를 변경하기 위해
   const setUser = useStore((state) => state.setUser);
 
-  // 카카오 소셜 로그인
-  const REST_API_KEY = "4fffa78521feee5e1eb947c704c08cf2";
-  const REDIRECT_URI = "http://localhost:3000/callback/kakao";
-  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  // 카카오 소셜 로그인 / 로그아웃
+  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+  const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
+  const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const LogoutLink = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`
   const kakaoLoginHandler = () => {
-    window.location.href = link;
+    window.location.href = loginLink;
   };
+  const kakaoLogoutHandler = () => {
+    window.location.href = LogoutLink;
+  };
+
 
   const [form, setForm] = useState({
     userId: "",

@@ -14,6 +14,8 @@ import {
 } from "../../api/roomAPI.js";
 import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import { getGameData, getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
+import Game from "../Game/index.js";
+import AnswerInput from "../Game/AnswerInput.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
@@ -31,15 +33,13 @@ export default function RoomId() {
   const [openLink, setOpenLink] = useState("");
   const [isReady, setIsReady] = useState(false);
   const [isHost, setIsHost] = useState(false);
+  const [isPlay, setIsPlay] = useState(false);
+  const [gameQuiz, setGameQuiz] = useState(undefined);
   const OV = useRef(new OpenVidu());
 
   const location = useLocation();
   const firstRoomInfo = { ...location.state };
   // console.log(roomInfo);
-
-  const handleChangeUserName = useCallback((e) => {
-    setMyUserName(e.target.value);
-  }, []);
 
   const handleMainVideoStream = useCallback(
     (stream) => {
@@ -51,6 +51,16 @@ export default function RoomId() {
   );
 
   const joinSession = useCallback(() => {
+    if (session) {
+      console.log("리브세션", session);
+      exitRoom(session.sessionId, session.connection.connectionId);
+      session.disconnect();
+      // setSession(undefined);
+      // setSubscribers([]);
+      // setMainStreamManager(undefined);
+      // setPublisher(undefined);
+    }
+
     const mySession = OV.current.initSession();
 
     mySession.on("streamCreated", (event) => {
@@ -112,8 +122,6 @@ export default function RoomId() {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
           console.log("플레이어 추가", mySessionId);
-          // addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
-          // addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           if (mySessionId === "create") {
             addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           } else {
@@ -149,10 +157,10 @@ export default function RoomId() {
     OV.current = new OpenVidu();
     setSession(undefined);
     setSubscribers([]);
-    // setMySessionId("create");
-    // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
+    // setMySessionId("create");
+    // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
   }, [session]);
 
   const switchCamera = useCallback(async () => {
@@ -216,6 +224,7 @@ export default function RoomId() {
     const sessionId = await createSession(
       mySessionId,
       firstRoomInfo.roomName,
+      firstRoomInfo.roomPassword,
       firstRoomInfo.roomMax
     );
     console.log("방생성결과", sessionId);
@@ -239,8 +248,8 @@ export default function RoomId() {
       if (isHost) {
         await startPlay(session.sessionId);
         try {
-          const quizs = await getGameData(session.sessionId);
-          console.log(quizs);
+          const quiz = await getGameData(session.sessionId);
+          setGameQuiz(quiz);
         } catch (error) {
           console.error("getGameData Error", error);
         }
@@ -252,20 +261,74 @@ export default function RoomId() {
         }
         setIsReady(!isReady);
       }
-      await getRoomInfo(session.sessionId);
-      // navigate("/game", {
-      //   state: {
-      //     roomName: roomName,
-      //     roomPassword: roomPassword,
-      //     roomMax: roomMax,
-      //     roomGame: roomGame,
-      //   },
-      // });
+      const roomData = await getRoomInfo(session.sessionId);
+      if (roomData.roomData.play) {
+        // navigate("/game", {
+        //   state: {
+        //     roomData: roomData,
+        //     publisher: publisher,
+        //     subscribers: subscribers,
+        //     session: session,
+        //     myUserName: myUserName,
+        //   },
+        // });
+        setIsPlay(true);
+        sendPlay();
+      } else {
+        setIsPlay(false);
+      }
+      // console.log("데이터들", myUserName, roomData, publisher, subscribers, session);
     } catch (error) {
       console.error("set Ready Error:", error);
     }
   };
-  // useEffect(() => {}, [subscribers]);
+  const sendPlay = () => {
+    console.log("플레이 소켓 보냄");
+    if (session !== undefined) {
+      session
+        .signal({
+          data: `${mySessionId} - 게임시작: ${isPlay}`, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: "room-play", // The type of message (optional)
+        })
+        .then(() => {
+          console.log("게임시작 :", isPlay);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+  if (session !== undefined) {
+    session.on("signal:room-play", (event) => {
+      console.log("플레이 소켓 받음", event.data);
+      setIsPlay(true);
+    });
+  }
+  const sendPlayDone = () => {
+    console.log("플레이 소켓 보냄");
+    if (session !== undefined) {
+      session
+        .signal({
+          data: `${mySessionId} - 게임끝: ${isPlay}`, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: "room-playDone", // The type of message (optional)
+        })
+        .then(() => {
+          console.log("게임끝 :", isPlay);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+  if (session !== undefined) {
+    session.on("signal:room-playDone", (event) => {
+      console.log("플레이 소켓 받음", event.data);
+      setIsPlay(false);
+    });
+  }
+
   return (
     <>
       {session === undefined ? (
@@ -279,8 +342,8 @@ export default function RoomId() {
         </div>
       ) : null}
 
-      {session !== undefined ? (
-        <div id="session" className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
+      {session !== undefined && isPlay === false ? (
+        <div className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
           <div id="session-header" className="flex flex-row">
             <h1 id="session-title" className="text-xl">
               {firstRoomInfo.roomName}
@@ -301,10 +364,13 @@ export default function RoomId() {
             <p>초대링크 :</p>
             <p> http://localhost:3000/room/{openLink}</p>
           </div>
-          <div className="grid grid-cols-4 h-screen-40">
-            <div id="video-container" className="col-span-3 grid grid-rows-2 grid-cols-4 gap-2 p-2">
+          <div className="grid grid-rows-3 h-screen-40">
+            <div className="row-span-2 grid grid-cols-4 grid-rows-2">
               {publisher !== undefined ? (
-                <div className="bg-green-500 p-1 " onClick={() => handleMainVideoStream(publisher)}>
+                <div
+                  className="bg-green-500 p-1 overflow-hidden"
+                  onClick={() => handleMainVideoStream(publisher)}
+                >
                   <UserVideoComponent
                     streamManager={publisher}
                     session={session}
@@ -317,7 +383,7 @@ export default function RoomId() {
               {subscribers.map((sub, i) => (
                 <div
                   key={sub.id}
-                  className="bg-teal-500 p-1"
+                  className="bg-teal-500 p-1 overflow-hidden"
                   onClick={() => handleMainVideoStream(sub)}
                 >
                   <span>{sub.id}</span>
@@ -330,12 +396,13 @@ export default function RoomId() {
                 </div>
               ))}
             </div>
-            <div className="grid col-span-1 grid-rows-4 gap-2">
-              <div className="row-span-3">
+
+            <div className="grid col-span-1 grid-cols-4 gap-2 w-full">
+              <div className="col-span-3">
                 <Chat myUserName={myUserName} session={session} />
               </div>
 
-              <div className="row-span-1 grid grid-cols-2 gap-1 w-full">
+              <div className="col-span-1 grid grid-cols-2 gap-1 w-full">
                 <button
                   className="bg-mc1 border rounded-3xl active:bg-mc2"
                   onClick={() => changeTeam("A")}
@@ -355,11 +422,22 @@ export default function RoomId() {
                 >
                   {isHost ? "게임시작" : "준비"}
                 </button>
-                <button onClick={() => getGameData(session.sessionId)}>a</button>
+                <button onClick={sendPlay}>play</button>
               </div>
             </div>
           </div>
         </div>
+      ) : null}
+
+      {isPlay ? (
+        <Game
+          publisher={publisher}
+          subscribers={subscribers}
+          session={session}
+          myUserName={myUserName}
+          quiz={gameQuiz}
+          sendPlayDone={sendPlayDone}
+        />
       ) : null}
     </>
   );
