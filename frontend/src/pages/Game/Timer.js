@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const Timmer = ({ maxT }) => {
+const Timer = ({ maxT }) => {
   const [count, setCount] = useState(0);
   const intervalRef = useRef(null);
   // console.log(maxTime);
@@ -19,21 +19,18 @@ const Timmer = ({ maxT }) => {
   }, []);
 
   return (
-    <>
-      <meter
-        min="0"
-        max={maxTime}
-        optimum={maxTime / 4}
-        low={maxTime / 2}
-        high={(maxTime * 3) / 4}
-        value={count}
-      ></meter>
-      {count}
-    </>
+    <meter
+      min="0"
+      max={maxTime}
+      optimum={maxTime / 4}
+      low={maxTime / 2}
+      high={(maxTime * 3) / 4}
+      value={count}
+    ></meter>
   );
 };
 
-export default Timmer;
+export default Timer;
 
 /*
 meter {
