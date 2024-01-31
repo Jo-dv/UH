@@ -59,12 +59,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		List<String[]> connectors = new ArrayList<>();
 		for (WebSocketSession client : CLIENTS.keySet()) {
 			HttpSession session = (HttpSession)client.getAttributes().get("httpSession");
-			UserDto dto = (UserDto)session.getAttribute("user");
+			UserDto dto = (UserDto)session.getAttribute("loginUser");
 
 			//테스트 코드 - 회원 연결 시 변경
-			// connectors.add(new String[] {client.getId(), "닉네임"});
+			connectors.add(new String[] {client.getId(), "닉네임"});
 			//실제 코드
-			connectors.add(new String[] {client.getId(), dto.getUserNickname()});
+			// connectors.add(new String[]{client.getId(),dto.getUserNickname()});
 		}
 
 		// JSON 형식으로 구성
