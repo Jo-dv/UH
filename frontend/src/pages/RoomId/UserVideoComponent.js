@@ -47,11 +47,11 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady }) => {
     }
   };
   return (
-    <div>
+    <div className="">
       {streamManager !== undefined ? (
-        <div className="streamcomponent ">
+        <div className="streamcomponent">
           <OpenViduVideoComponent streamManager={streamManager} />
-          <div className="bg-white">
+          <div className="absolute">
             <p>
               {getNicknameTag()}
 
@@ -65,9 +65,9 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady }) => {
                 </button>
               )}
             </p>
-            <p>
+            {/* <p>
               isHost : {isHost ? "true" : "false"}, isReady : {isReady ? "true" : "false"}
-            </p>
+            </p> */}
           </div>
         </div>
       ) : null}
