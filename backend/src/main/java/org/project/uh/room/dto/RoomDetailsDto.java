@@ -1,4 +1,4 @@
-package org.project.uh.user.dto;
+package org.project.uh.room.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class UserDto {
-	private int userSeq;
-	private String userId;
-	private String userPassword;
-	private String userNickname;
-	private int rating;
+public class RoomDetailsDto {
+	private RoomDto roomData;
+	private RoomStatusDto roomStatus;
 }
