@@ -41,7 +41,7 @@ const Lobby = () => {
   };
 
   // [RoomList] 게임별 방 보기
-  const [viewGameCategoryRooms, setViewGameCategoryRooms] = useState(0);
+  const [viewGameCategoryRooms, setViewGameCategoryRooms] = useState("");
 
   // [GameRoomSearchPanel] 게임별 방 보기
   const handleGameCategoryView = (viewAll) => {
@@ -55,6 +55,7 @@ const Lobby = () => {
   const handleSearchView = (viewAll) => {
     setViewSearchRooms(viewAll);
   };
+
   return (
     <div className="bg-neutral-200 grid grid-rows-12 grid-cols-6 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
       <UserList />

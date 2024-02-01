@@ -8,6 +8,8 @@ const GameScrollSelector = ({ onGameCategory, extraOptions = [] }) => {
     setSelectedCategory(selectedValue);
     onGameCategory(selectedValue);
   };
+
+  console.log("내가 선택한 값", selectedCategory);
   return (
     <select
       className="bg-whitem-4 mr-2 p-2 border rounded-3xl bg-white"
@@ -15,8 +17,8 @@ const GameScrollSelector = ({ onGameCategory, extraOptions = [] }) => {
       value={selectedCategory}
     >
       <option value="">전체 게임</option>
-      <option value="1">고요 속의 외침</option>
-      <option value="2">인물 맞추기</option>
+      <option value="101">고요 속의 외침</option>
+      <option value="102">인물 맞추기</option>
       {extraOptions.map((option) => (
         <option value={option.value}>{option.label}</option>
       ))}

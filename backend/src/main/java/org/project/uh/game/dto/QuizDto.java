@@ -13,6 +13,5 @@ import lombok.ToString;
 @ToString
 public class QuizDto {
 	private int quizId;
-	private String quizPhoto;
 	private String quizAnswer;
 }

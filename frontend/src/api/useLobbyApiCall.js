@@ -108,9 +108,12 @@ const useLobbyApiCall = () => {
   };
 
   // [방 입장] 방 비밀번호 일치 확인
-  const postCheckPassword = async () => {
+  const postCheckPassword = async (sessionId, roomPassword) => {
     try {
-      const response = await axios.post(checkPasswordUrl);
+      const response = await axios.post(checkPasswordUrl, {
+        sessionId: sessionId,
+        enterPassword: roomPassword,
+      });
       const checkPassword = response.data;
       return checkPassword;
     } catch (error) {

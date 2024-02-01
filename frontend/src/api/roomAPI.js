@@ -10,6 +10,7 @@ const APPLICATION_SERVER_URL =
  * @param {string} sessionId 생성시: 'create'
  * @param {string} roomName
  * @param {string} roomPassword
+ * @param {int} roomGame
  * @returns sessionId
  */
 
@@ -17,10 +18,11 @@ export const createSession = async (
   sessionId,
   roomName = "방이름",
   roomPassword = null,
+  roomGame = 101,
   max = 4
 ) => {
   console.log("333333");
-  console.log("roomPassword", roomPassword);
+  console.log("나 받은 게임 이거임", roomGame);
 
   try {
     const response = await axios.post(
@@ -29,7 +31,7 @@ export const createSession = async (
         sessionId: sessionId,
         roomName: roomName,
         roomPassword: roomPassword,
-        gameCategory: 101,
+        gameCategory: roomGame,
         quizCategory: 201,
         max: max,
       },
