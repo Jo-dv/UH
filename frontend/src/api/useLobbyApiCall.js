@@ -1,6 +1,8 @@
 import axios from "axios";
 
 const useLobbyApiCall = () => {
+  // 추가
+  // const baseUrl = "http://localhost:5000/api/";
   const baseUrl = "http://localhost:5000/";
   const roomsListUrl = `${baseUrl}rooms`;
   const searchRoomsUrl = `${baseUrl}searchrooms`;
