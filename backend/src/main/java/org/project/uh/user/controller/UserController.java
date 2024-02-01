@@ -120,6 +120,9 @@ public class UserController {
 		summary = "로그아웃",
 		description = "카카오 로그아웃이면 2 반환, 일반 로그아웃이면 1 반환"
 	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "로그아웃 성공")
+	})
 	// @PostMapping("/user/logout")
 	// public ResponseEntity<Object> logout(@RequestBody UserDto dto, HttpSession session) {
 	// 	UserDto user = (UserDto)session.getAttribute("user");
