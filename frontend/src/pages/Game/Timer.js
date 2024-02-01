@@ -1,19 +1,41 @@
 import { useEffect, useRef, useState } from "react";
 
-const Timer = ({ maxT, changeTeamTurn }) => {
-  const [count, setCount] = useState(0);
+const Timer = ({ maxTime, time, setTime, changeTeamTurn, isHost, session }) => {
   const intervalRef = useRef(null);
   // console.log(maxTime);
-  let maxTime = maxT;
+  const sendTime = (t) => {
+    if (isHost) {
+      session
+        .signal({
+          data: t, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: "game-time", // The type of message (optional)
+        })
+        .then(() => {
+          // console.log("소켓 시간 보냄", t);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+
+  session.on("signal:game-time", (event) => {
+    // console.log("소켓 시간 받음", time);
+    setTime(Number(event.data));
+  });
+
   useEffect(() => {
     intervalRef.current = setInterval(() => {
-      setCount((prevCount) => {
+      setTime((prevCount) => {
         if (prevCount >= maxTime) {
-          clearInterval(intervalRef.current); // 카운트가 1이면 타이머 정지
+          // clearInterval(intervalRef.current); // 카운트가 1이면 타이머 정지
+          prevCount = 0;
         }
-        return prevCount + 10;
+        sendTime(prevCount + 1);
+        return prevCount + 1;
       });
-    }, 10);
+    }, 1000);
 
     return () => clearInterval(intervalRef.current); // 컴포넌트가 언마운트될 때 타이머 정리
   }, []);
@@ -25,7 +47,8 @@ const Timer = ({ maxT, changeTeamTurn }) => {
       optimum={maxTime / 4}
       low={maxTime / 2}
       high={(maxTime * 3) / 4}
-      value={count}
+      value={time}
+      onClick={() => setTime(0)}
     ></meter>
   );
 };

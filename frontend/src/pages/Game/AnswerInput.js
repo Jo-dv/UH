@@ -1,6 +1,14 @@
 import { useState } from "react";
 
-const AnswerInput = ({ myUserName, session, answer, plusQuizIndex, myTeam, plusScore }) => {
+const AnswerInput = ({
+  myUserName,
+  session,
+  answer,
+  plusQuizIndex,
+  myTeam,
+  plusScore,
+  changeTeamIndex,
+}) => {
   const [answerMsg, setAnswerMsg] = useState("");
 
   const sendAnswer = (e) => {
@@ -29,6 +37,7 @@ const AnswerInput = ({ myUserName, session, answer, plusQuizIndex, myTeam, plusS
       console.log(`${event.data} 정답`);
       plusQuizIndex();
       plusScore(myTeam);
+      changeTeamIndex();
     } else {
       console.log(`${event.data} 오답`);
     }

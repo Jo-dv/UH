@@ -7,27 +7,18 @@ import UserVideoComponent from "../RoomId/UserVideoComponent";
 import AnswerInput from "./AnswerInput";
 import G101Info from "./games/G101Info";
 
-const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone }) => {
-  let maxTime = 60000;
+const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone, isHost }) => {
+  let maxTime = 60;
   const myConnectionId = session.connection.connectionId;
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
   const [myTeam, setMyTeam] = useState(undefined);
   const [ATeamStreamManagers, setATeamStreamManagers] = useState(undefined);
-  const [BTeamStreamManagers, setBTeamStreamManagers] = useState([]);
+  const [BTeamStreamManagers, setBTeamStreamManagers] = useState(undefined);
   const [myTeamStreamManagers, setMyTeamStreamManagers] = useState([]);
   const [otherTeamStreamManagers, setOtherTeamStreamManagers] = useState([]);
   const [TeamTurn, setTeamTurn] = useState("A");
   const [TeamIndex, setTeamIndex] = useState(0);
-  const changeTeamTurn = () => {
-    if (TeamTurn === "A") {
-      setTeamTurn("B");
-      setTurnPlayerId(BTeamStreamManagers[TeamIndex]);
-    } else if (TeamTurn === "B") {
-      setTeamTurn("A");
-      setTurnPlayerId(ATeamStreamManagers[TeamIndex]);
-    }
-  };
   const [turnPlayerId, setTurnPlayerId] = useState(undefined);
   const [quizData, setQuizData] = useState([
     { quizId: 62, quizAnswer: "이덕화" },
@@ -45,12 +36,11 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
     { quizId: 82, quizAnswer: "김희선" },
   ]);
   const [quizIndex, setQuizIndex] = useState(0);
+  const [ATeamScore, setATeamScore] = useState(0);
+  const [BTeamScore, setBTeamScore] = useState(0);
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
   };
-
-  const [ATeamScore, setATeamScore] = useState(0);
-  const [BTeamScore, setBTeamScore] = useState(0);
   const plusScore = (team) => {
     console.log(`plusScore: ${team}`);
     if (team === "A") {
@@ -59,6 +49,40 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
       setBTeamScore(BTeamScore + 1);
     }
   };
+  const changeTeamIndex = () => {
+    if (TeamTurn === "A") {
+      const long = ATeamStreamManagers.length;
+      if (TeamIndex + 1 < long) {
+        setTurnPlayerId(ATeamStreamManagers[TeamIndex + 1]);
+        setTeamIndex(TeamIndex + 1);
+      } else {
+        setTurnPlayerId(ATeamStreamManagers[0]);
+        setTeamIndex(0);
+      }
+    } else if (TeamTurn === "B") {
+      const long = BTeamStreamManagers.length;
+      if (TeamIndex + 1 < long) {
+        setTurnPlayerId(BTeamStreamManagers[TeamIndex + 1]);
+        setTeamIndex(TeamIndex + 1);
+      } else {
+        setTurnPlayerId(BTeamStreamManagers[0]);
+        setTeamIndex(0);
+      }
+    }
+  };
+
+  const changeTeamTurn = () => {
+    if (TeamTurn === "A") {
+      setTeamTurn("B");
+      setTeamIndex(0);
+      setTurnPlayerId(BTeamStreamManagers[TeamIndex]);
+    } else if (TeamTurn === "B") {
+      setTeamTurn("A");
+      setTeamIndex(0);
+      setTurnPlayerId(ATeamStreamManagers[TeamIndex]);
+    }
+  };
+
   useEffect(() => {
     const callData = async () => {
       const roomData = await getRoomInfo(session.sessionId);
@@ -144,7 +168,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
               {myTeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="bg-mc3 p-1 overflow-hidden">
+                    <div key={sub[0]} className="bg-mc3 p-2 overflow-hidden">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -166,19 +190,18 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
             <section className="h-full aspect-[4/5]">
               <div className="flex justify-between">
                 <p>A:{ATeamScore}</p>
+                <p>{time}</p>
                 <p> B:{BTeamScore}</p>
               </div>
               <div className="gameBox relative flex flex-col justify-end">
                 <div className="h-full aspect-[4/3] bg-black text-white absolute flex flex-col">
-                  {turnPlayerId !== undefined ? (
-                    <UserVideoComponent
-                      streamManager={turnPlayerId[1]}
-                      session={session}
-                      gamePlayer={turnPlayerId[0]}
-                    />
-                  ) : null}
-                  {turnPlayerId !== undefined &&
-                  (myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam) ? (
+                  <UserVideoComponent
+                    streamManager={turnPlayerId[1]}
+                    session={session}
+                    gamePlayer={turnPlayerId[0]}
+                  />
+
+                  {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
                     <div className="absolute right-0 w-1/4">
                       <img
                         src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
@@ -189,10 +212,16 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
 
                   <div className="opacity-90 absolute w-full bottom-0">
                     <div className="relative flex justify-center items-center">
-                      <Timer maxT={maxTime} changeTeamTurn={changeTeamTurn} />
+                      <Timer
+                        maxTime={maxTime}
+                        time={time}
+                        setTime={setTime}
+                        changeTeamTurn={changeTeamTurn}
+                        isHost={isHost}
+                        session={session}
+                      />
                       <div className="absolute flex text-black">
-                        {turnPlayerId !== undefined &&
-                        (myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam) ? (
+                        {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
                           <>
                             <p>{quizData[quizIndex].quizAnswer}</p>
                             <div className="hidden">
@@ -203,6 +232,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
                                 plusQuizIndex={plusQuizIndex}
                                 myTeam={turnPlayerId[2]}
                                 plusScore={plusScore}
+                                changeTeamIndex={changeTeamIndex}
                               />
                             </div>
                           </>
@@ -214,6 +244,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
                             plusQuizIndex={plusQuizIndex}
                             myTeam={turnPlayerId[2]}
                             plusScore={plusScore}
+                            changeTeamIndex={changeTeamIndex}
                           />
                         )}
                       </div>
@@ -237,13 +268,11 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
             <section className="cam grid grid-rows-4 gap-1">
               {otherTeamStreamManagers.map((sub, i) => (
                 <div key={sub[0]} className="bg-mc1 p-1 overflow-hidden">
-                  {turnPlayerId !== undefined ? (
-                    <UserVideoComponent
-                      streamManager={sub[1]}
-                      session={session}
-                      gamePlayer={turnPlayerId[0]}
-                    />
-                  ) : null}
+                  <UserVideoComponent
+                    streamManager={sub[1]}
+                    session={session}
+                    gamePlayer={turnPlayerId[0]}
+                  />
                 </div>
               ))}
             </section>

@@ -346,7 +346,7 @@ export default function RoomId() {
       ) : null}
 
       {session !== undefined && isPlay === false ? (
-        <div className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
+        <div className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80 flex flex-col items-center ">
           <div id="session-header" className="flex flex-row">
             <h1 id="session-title" className="text-xl">
               {firstRoomInfo.roomName}
@@ -367,11 +367,11 @@ export default function RoomId() {
             <p>초대링크 :</p>
             <p> http://localhost:3000/room/{openLink}</p>
           </div>
-          <div className="grid grid-rows-3 h-screen-40">
+          <div className="grid grid-rows-3 h-screen-40 aspect-[16/9]">
             <div className="row-span-2 grid grid-cols-4 grid-rows-2">
               {publisher !== undefined ? (
                 <div
-                  className="bg-green-500 p-1 overflow-hidden"
+                  className="bg-green-500 h-full aspect-[4/3] p-1 overflow-hidden"
                   onClick={() => handleMainVideoStream(publisher)}
                 >
                   <UserVideoComponent
@@ -386,7 +386,7 @@ export default function RoomId() {
               {subscribers.map((sub, i) => (
                 <div
                   key={sub.id}
-                  className="bg-teal-500 p-1 overflow-hidden"
+                  className="bg-teal-500 h-full aspect-[4/3] p-1 overflow-hidden"
                   onClick={() => handleMainVideoStream(sub)}
                 >
                   <span>{sub.id}</span>
@@ -444,6 +444,7 @@ export default function RoomId() {
           myUserName={myUserName}
           quiz={gameQuiz}
           sendPlayDone={sendPlayDone}
+          isHost={isHost}
         />
       ) : null}
     </>
