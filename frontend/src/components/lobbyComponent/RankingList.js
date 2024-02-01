@@ -15,7 +15,10 @@ const RankingList = ({ rankingList, viewGameCategoryRanking }) => {
       {rankingList.map((entry, index) => (
         <div key={entry.userSeq} className="flex justify-between items-center m-1 p-2 border rounded-md">
           <span className="flex-1 text-center">{index + 4} 위</span> {/* 등수 */}
-          <span className="flex-2 text-center">{entry.userSeq}</span> {/* 닉네임 */}
+          <span className="flex-2 text-center">{(viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2") 
+                  ? `${entry.user1}, ${entry.user2}, ${entry.user3}, ${entry.user4}`
+                  : `${entry.userNickname}`
+              }</span> {/* 닉네임 */}
           <span className="flex-1 text-center">{entry.score !== undefined ? entry.score : entry.rating}</span> {/* 레이팅 */}
         </div>
       ))}

@@ -124,8 +124,11 @@ const RankingLists = ({ viewGameCategoryRanking }) => {
           case "2":
             data = await getRankPerson(); // "인물 맞추기" 게임 랭킹
             break;
-          default:
+          case "3":
             data = await getRankSolo(); // 개인 랭킹 (예시로 사용, 실제 구현에 맞춰 조정)
+            break;
+          default:
+            data = await getRankShout();
             break;
         }
         console.log(data);
@@ -155,7 +158,10 @@ const RankingLists = ({ viewGameCategoryRanking }) => {
           {reorderedTopThree.map((entry, index) => (
             <div key={entry.userSeq} className={`podium absolute bottom-0 m-4 w-38 border rounded-3xl ${index === 1 ? 'h-44 top-0' : (index === 0 ? 'h-36 top-8' : 'h-28 top-16')}`}>
               <div className="user-info">
-                <div>{entry.user1}, {entry.user2}, {entry.user3}, {entry.user4}</div>
+                <div>{(viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2") 
+                  ? `${entry.user1}, ${entry.user2}, ${entry.user3}, ${entry.user4}`
+                  : `${entry.userNickname}`
+              }</div>
                 <div>{
                 (viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2") 
                 ? entry.score 

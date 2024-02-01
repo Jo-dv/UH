@@ -101,14 +101,14 @@ const Login = () => {
         if (res.userNickname === null) {
           sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
-          setUser({ userSeq: res.userSeq, userNickname: null, userPassword: res.userPassword });
+          setUser({ userSeq: res.userSeq, userNickname: null });
           navigate("/auth/nickname");
           // 닉네임이 있다면
         } else {
           sessionStorage.setItem("userNickname", res.userNickname);
           sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
-          setUser({ userSeq: res.userSeq, userNickname: res.userNickname, userPassword: res.userPassword });
+          setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
           console.log("로그인 성공");
           navigate("/lobby");
         }

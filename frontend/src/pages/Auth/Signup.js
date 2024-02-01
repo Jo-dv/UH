@@ -51,7 +51,7 @@ const Signup = () => {
             setErr({ ...err, userId: "영어, 숫자만 써주세요 (4-20자)"});
         } else {
             try {
-                const response = await axios.post("http://localhost:5000/user/idcheck", {
+                const response = await axios.post("http://localhost:5000/api/user/idcheck", {
                     userId: form.userId,
                 });
                 const res = response.data;
