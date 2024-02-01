@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const Timer = ({ maxT }) => {
+const Timer = ({ maxT, changeTeamTurn }) => {
   const [count, setCount] = useState(0);
   const intervalRef = useRef(null);
   // console.log(maxTime);
@@ -8,7 +8,7 @@ const Timer = ({ maxT }) => {
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       setCount((prevCount) => {
-        if (prevCount === maxTime) {
+        if (prevCount >= maxTime) {
           clearInterval(intervalRef.current); // 카운트가 1이면 타이머 정지
         }
         return prevCount + 10;

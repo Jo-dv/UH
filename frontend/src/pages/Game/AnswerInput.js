@@ -4,7 +4,7 @@ const AnswerInput = ({ myUserName, session, answer, plusQuizIndex, myTeam, plusS
   const [answerMsg, setAnswerMsg] = useState("");
 
   const sendAnswer = (e) => {
-    console.log("a왬노애");
+    console.log("정답제출");
     e.preventDefault();
     setAnswerMsg("");
     // console.log(session);
@@ -15,7 +15,7 @@ const AnswerInput = ({ myUserName, session, answer, plusQuizIndex, myTeam, plusS
         type: "game-answer", // The type of message (optional)
       })
       .then(() => {
-        console.log("보냄 :", answerMsg);
+        console.log("정답제출 보냄 :", answerMsg);
         setAnswerMsg("");
       })
       .catch((error) => {
@@ -24,13 +24,13 @@ const AnswerInput = ({ myUserName, session, answer, plusQuizIndex, myTeam, plusS
   };
 
   session.on("signal:game-answer", (event) => {
-    console.log(`받음 event.data: ${event.data}, answer: ${answer}`); // Message
+    // console.log(`받음 event.data: ${event.data}, answer: ${answer}`); // Message
     if (answer === event.data) {
-      console.log(`${myTeam} ${event.data} 정답`);
+      console.log(`${event.data} 정답`);
       plusQuizIndex();
       plusScore(myTeam);
     } else {
-      console.log(`${myUserName} ${event.data} 오답`);
+      console.log(`${event.data} 오답`);
     }
   });
 
