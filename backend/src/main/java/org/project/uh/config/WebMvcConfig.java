@@ -13,7 +13,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(sessionInterceptor())
-			.excludePathPatterns("/api/login", "/api/user/join", "/api/rooms");
+			.excludePathPatterns("/api/user/login", "/api/user/join", "/api/rooms", "/error", "/swagger-ui/**",
+				"swagger-resources/**", "/v3/api-docs/**");
 	}
 
 	@Bean
@@ -28,7 +29,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins("http://localhost:3000")
+		registry.addMapping("/**").allowedOrigins("http://localhost:8080")
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
 			.allowedHeaders("*")
 			.allowCredentials(true).maxAge(3000);
