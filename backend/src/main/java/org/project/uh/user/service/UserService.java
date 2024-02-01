@@ -30,4 +30,7 @@ public interface UserService {
 
 	// 아이디로 유저 정보 조회
 	public UserDto findById(String userId);
+
+	// 닉네임 중복 체크
+	public int nicknameCheck(UserDto dto);
 }

@@ -91,4 +91,13 @@ public class UserServiceImpl implements UserService {
 	public UserDto findById(String userId) {
 		return dao.findById(userId);
 	}
+
+	// 닉네임 중복 체크
+	@Override
+	public int nicknameCheck(UserDto dto) {
+			if (dao.checkUserNickname(dto.getUserNickname()) > 0) {
+					return 0;
+			}
+			return 1;
+	}
 }

@@ -238,4 +238,18 @@ public class UserController {
 			return new ResponseEntity<>("카카오 로그인 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	// 회원가입 시 닉네임 중복 체크
+	@Operation(
+		summary = "닉네임 중복 체크",
+		description = "중복된 닉네임이 있으면 0, 없으면 1 반환"
+)
+@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "닉네임 생성 성공"),
+		@ApiResponse(responseCode = "400", description = "중복된 닉네임")
+})
+@PostMapping("/user/nicknamecheck")
+public int nicknameCheck(@RequestBody UserDto dto) {
+return service.nicknameCheck(dto);
 }
+}
+
