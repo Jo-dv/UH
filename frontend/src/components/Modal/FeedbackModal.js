@@ -50,7 +50,7 @@ const FeedbackModal = (props) => {
       }
       }}
         className="min-w-100 min-h-96 absolute inset-0
-    flex justify-center items-center"
+    flex justify-center items-center z-50"
       >
         <form
           onClick={(e) => e.stopPropagation()}
