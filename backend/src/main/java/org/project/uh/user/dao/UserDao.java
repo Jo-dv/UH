@@ -42,8 +42,6 @@ public interface UserDao {
 	@Select("select * from user where user_id=#{userId} and user_password=#{userPassword}")
 	public UserDto login(UserDto dto);
 
-	public int getUserId(UserDto dto);
-
 	// 닉네임 생성
 	@Update("UPDATE user SET user_nickname = #{userNickname} WHERE user_seq=#{userSeq}")
 	public int nickname(int userSeq, String userNickname);

@@ -14,12 +14,10 @@ public interface UserService {
 	public int insertSocialUser(SocialUserDto dto);
 
 	// 아이디 중복 체크
-	public int idCheck(UserDto dto);
+	public int idCheck(String userId);
 
 	// 회원 목록조회
 	public List<UserDto> listUser();
-
-	public int getUserId(UserDto dto);
 
 	// 로그인
 	public UserDto login(UserDto dto);
@@ -28,7 +26,7 @@ public interface UserService {
 	public int nickname(int userSeq, String userNickname);
 
 	// 회원가입 시 닉네임 중복 체크
-	public int nicknameCheck(UserDto dto);
+	public int nicknameCheck(String userNickname);
 
 	// 마이페이지
 	public MypageDto mypage(int userSeq);
