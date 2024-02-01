@@ -107,6 +107,18 @@ const useLobbyApiCall = () => {
     }
   };
 
+  // 마이페이지 정보
+  const getMyPageInfo = async (userSeq) => {
+    try {
+      const response = await axios.get(`${baseUrl}mypage/${userSeq}`);
+      const myPageInfo = response.data;
+      return myPageInfo;
+    } catch (error) {
+      console.error("마이페이지 정보 확인 중 에러 발생", error);
+      throw error;
+    }
+  };
+
   // [방 입장] 방 비밀번호 일치 확인
   const postCheckPassword = async (sessionId, roomPassword) => {
     try {
@@ -131,6 +143,7 @@ const useLobbyApiCall = () => {
     getRankPerson,
     getRankShout,
     getRankSolo,
+    getMyPageInfo,
     postCheckPassword,
   };
 };
