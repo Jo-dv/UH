@@ -26,7 +26,7 @@ public interface UserService {
 	public UserDto login(UserDto dto);
 
 	// 닉네임 생성
-	public int nickname(UserDto dto);
+	public int nickname(int userSeq, String userNickname);
 
 
 	// 회원가입 시 닉네임 중복 체크

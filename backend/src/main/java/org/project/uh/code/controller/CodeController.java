@@ -31,7 +31,7 @@ public class CodeController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "정상적으로 로드되었습니다."),
-		@ApiResponse(responseCode = "500", description = "비정상적인 접근.")
+		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@GetMapping("/{groupCode}")
 	public ResponseEntity<List<CodeDto>> listCode(@PathVariable int groupCode) {

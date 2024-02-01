@@ -79,20 +79,14 @@ public class UserServiceImpl implements UserService {
 
 	// 닉네임 생성
 	@Override
-	public int nickname(UserDto dto) {
-		// 닉네임 중복 체크
-		int nicknameCount = dao.checkUserNickname(dto.getUserNickname());
-		if (nicknameCount > 0) {
-			// 닉네임 중복일 때
-			return 0;
-		}
-		// 중복 없으면 닉네임 생성
-		return dao.nickname(dto);
+	public int nickname(int userSeq, String userNickname) {
+		
+		return dao.nickname(userSeq, userNickname);
 	}
 
 	@Override
-	public int getUserNickname(UserDto dto) {
-		return dao.getUserNickname(dto);
+	public int getUserNickname(String userNickname) {
+		return dao.checkUserNickname(userNickname);
 	}
 
 
