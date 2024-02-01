@@ -164,8 +164,9 @@ public class UserController {
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PostMapping("/user/nickname")
-	public ResponseEntity<String> nickname(@RequestBody String userNickname,
+	public ResponseEntity<String> nickname(@RequestBody Map<String, String> params,
 		@SessionAttribute(name = "user") UserDto user) {
+		String userNickname = params.get("userNickname");
 		try {
 			int result = service.nickname(user.getUserSeq(), userNickname);
 			if (result == 0) {
@@ -187,7 +188,8 @@ public class UserController {
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PostMapping("/user/idcheck")
-	public ResponseEntity<Integer> idCheck(@RequestBody String userId) {
+	public ResponseEntity<Integer> idCheck(@RequestBody Map<String, String> params) {
+		String userId = params.get("userId");
 		try {
 			return new ResponseEntity<>(service.idCheck(userId), HttpStatus.OK);
 		} catch (Exception e) {
@@ -205,7 +207,8 @@ public class UserController {
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PostMapping("/user/nicknamecheck")
-	public ResponseEntity<Integer> nicknameCheck(@RequestBody String userNickname) {
+	public ResponseEntity<Integer> nicknameCheck(@RequestBody Map<String, String> params) {
+		String userNickname = params.get("userNickname");
 		try {
 			return new ResponseEntity<>(service.nicknameCheck(userNickname), HttpStatus.OK);
 		} catch (Exception e) {
