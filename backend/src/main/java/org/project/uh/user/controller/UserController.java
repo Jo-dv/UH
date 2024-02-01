@@ -118,31 +118,44 @@ public class UserController {
 	// 로그아웃
 	@Operation(
 		summary = "로그아웃",
-		description = "카카오 로그아웃 또는 일반 로그아웃 진행"
+		description = "카카오 로그아웃이면 2 반환, 일반 로그아웃이면 1 반환"
 	)
+	// @PostMapping("/user/logout")
+	// public ResponseEntity<Object> logout(@RequestBody UserDto dto, HttpSession session) {
+	// 	UserDto user = (UserDto)session.getAttribute("user");
+	// 	UserDto loginUser = service.findBySeq(user.getUserSeq());
+	// 	System.out.println("UserController.logout user 확인 = " + user);
+	// 	System.out.println("UserController.logout loginuser 확인 = " + loginUser);
+	// 	if (loginUser.getUserPassword() == null) {
+	// 		// 비밀번호가 없으면 카카오 계정과 함께 로그아웃
+	// 		RestTemplate template = new RestTemplate();
+	// 		String uri = UriComponentsBuilder.fromHttpUrl(kakaoLogoutUri)
+	// 			.queryParam("client_id", clientId)
+	// 			.queryParam("logout_redirect_uri", "http://localhost:3000/auth/login")
+	// 			.toUriString();
+	// 		ResponseEntity<String> response = template.getForEntity(uri, String.class);
+	// 		System.out.println("카카오 로그아웃 response = " + response);
+	// 		session.invalidate();
+	// 		System.out.println("카카오 로그아웃 세션 = " + session);
+	// 		return new ResponseEntity<>("카카오톡 로그아웃", HttpStatus.OK);
+	// 	}
+	// 	// 비밀번호가 있으면 일반 로그아웃
+	// 	session.invalidate();
+	// 	System.out.println("일반 로그아웃 세션 = " + session);
+	// 	return new ResponseEntity<>("로그아웃", HttpStatus.OK);
+	// }
 	@PostMapping("/user/logout")
 	public ResponseEntity<Object> logout(@RequestBody UserDto dto, HttpSession session) {
 		UserDto user = (UserDto)session.getAttribute("user");
 		UserDto loginUser = service.findBySeq(user.getUserSeq());
-		System.out.println("UserController.logout user 확인 = " + user);
-		System.out.println("UserController.logout loginuser 확인 = " + loginUser);
 		if (loginUser.getUserPassword() == null) {
-			// 비밀번호가 없으면 카카오 계정과 함께 로그아웃
-			RestTemplate template = new RestTemplate();
-			String uri = UriComponentsBuilder.fromHttpUrl(kakaoLogoutUri)
-				.queryParam("client_id", clientId)
-				.queryParam("logout_redirect_uri", "http://localhost:3000/auth/login")
-				.toUriString();
-			ResponseEntity<String> response = template.getForEntity(uri, String.class);
-			System.out.println("카카오 로그아웃 response = " + response);
+			// 비밀번호가 없으면 카카오 계정으로 반환
 			session.invalidate();
-			System.out.println("카카오 로그아웃 세션 = " + session);
-			return new ResponseEntity<>("카카오톡 로그아웃", HttpStatus.OK);
+			return new ResponseEntity<>(2, HttpStatus.OK);
 		}
-		// 비밀번호가 있으면 일반 로그아웃
+		// 비밀번호가 있으면 일반 로그아웃으로 판단
 		session.invalidate();
-		System.out.println("일반 로그아웃 세션 = " + session);
-		return new ResponseEntity<>("로그아웃", HttpStatus.OK);
+		return new ResponseEntity<>(1, HttpStatus.OK);
 	}
 
 	// 닉네임 생성
@@ -209,7 +222,6 @@ public class UserController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-
 
 
 	// 카카오 로그인
