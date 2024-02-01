@@ -151,7 +151,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
     };
 
     callData();
-  }, [subscribers]);
+  }, []);
 
   return (
     <>

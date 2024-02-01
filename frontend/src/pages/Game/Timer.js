@@ -31,6 +31,7 @@ const Timer = ({ maxTime, time, setTime, changeTeamTurn, isHost, session }) => {
         if (prevCount >= maxTime) {
           // clearInterval(intervalRef.current); // 카운트가 1이면 타이머 정지
           prevCount = 0;
+          changeTeamTurn();
         }
         sendTime(prevCount + 1);
         return prevCount + 1;
@@ -48,7 +49,7 @@ const Timer = ({ maxTime, time, setTime, changeTeamTurn, isHost, session }) => {
       low={maxTime / 2}
       high={(maxTime * 3) / 4}
       value={time}
-      onClick={() => setTime(0)}
+      // onClick={() => setTime(0)}
     ></meter>
   );
 };
