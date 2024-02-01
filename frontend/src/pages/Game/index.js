@@ -18,19 +18,19 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
   const [TeamIndex, setTeamIndex] = useState(0);
   const [turnPlayerId, setTurnPlayerId] = useState(undefined);
   const [quizData, setQuizData] = useState([
-    { quizId: 180, quizPhoto: null, quizAnswer: "최주봉" },
-    { quizId: 62, quizPhoto: null, quizAnswer: "이덕화" },
-    { quizId: 12, quizPhoto: null, quizAnswer: "이병헌" },
-    { quizId: 296, quizPhoto: null, quizAnswer: "윤계상" },
-    { quizId: 73, quizPhoto: null, quizAnswer: "정한용" },
-    { quizId: 353, quizPhoto: null, quizAnswer: "최백호" },
-    { quizId: 49, quizPhoto: null, quizAnswer: "정태춘" },
-    { quizId: 12, quizPhoto: null, quizAnswer: "이병헌" },
-    { quizId: 186, quizPhoto: null, quizAnswer: "예지원" },
-    { quizId: 321, quizPhoto: null, quizAnswer: "최덕문" },
-    { quizId: 363, quizPhoto: null, quizAnswer: "김성겸" },
-    { quizId: 107, quizPhoto: null, quizAnswer: "이정길" },
-    { quizId: 82, quizPhoto: null, quizAnswer: "김희선" },
+    { quizId: 180, quizAnswer: "최주봉" },
+    { quizId: 62, quizAnswer: "이덕화" },
+    { quizId: 12, quizAnswer: "이병헌" },
+    { quizId: 296, quizAnswer: "윤계상" },
+    { quizId: 73, quizAnswer: "정한용" },
+    { quizId: 353, quizAnswer: "최백호" },
+    { quizId: 49, quizAnswer: "정태춘" },
+    { quizId: 12, quizAnswer: "이병헌" },
+    { quizId: 186, quizAnswer: "예지원" },
+    { quizId: 321, quizAnswer: "최덕문" },
+    { quizId: 363, quizAnswer: "김성겸" },
+    { quizId: 107, quizAnswer: "이정길" },
+    { quizId: 82, quizAnswer: "김희선" },
   ]);
 
   useEffect(() => {
@@ -147,7 +147,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
               <div className="relative flex justify-center items-center">
                 <Timer maxT={maxTime} />
                 <div className="absolute flex">
-                  {myConnectionId === turnPlayerId[0] ? (
+                  {turnPlayerId !== undefined && myConnectionId === turnPlayerId[0] ? (
                     <p>{answer}</p>
                   ) : (
                     <AnswerInput myUserName={myUserName} session={session} answer={answer} />
@@ -159,22 +159,26 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
 
           {/* <button onClick={sendPlayDone}>playDone</button> */}
           <div className="h-64">
-            <Chat
-              myUserName={myUserName}
-              session={session}
-              myConnectionId={myConnectionId}
-              gamePlayer={turnPlayerId[0]}
-            />
+            {turnPlayerId !== undefined ? (
+              <Chat
+                myUserName={myUserName}
+                session={session}
+                myConnectionId={myConnectionId}
+                gamePlayer={turnPlayerId[0]}
+              />
+            ) : null}
           </div>
         </section>
         <section className="cam grid grid-rows-4 gap-1">
           {otherTeamStreamManagers.map((sub, i) => (
             <div key={sub[0]} className="bg-mc1 p-1 overflow-hidden">
-              <UserVideoComponent
-                streamManager={sub[1]}
-                session={session}
-                gamePlayer={turnPlayerId[0]}
-              />
+              {turnPlayerId !== undefined ? (
+                <UserVideoComponent
+                  streamManager={sub[1]}
+                  session={session}
+                  gamePlayer={turnPlayerId[0]}
+                />
+              ) : null}
             </div>
           ))}
         </section>

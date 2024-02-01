@@ -399,7 +399,11 @@ export default function RoomId() {
 
             <div className="grid col-span-1 grid-cols-4 gap-2 w-full">
               <div className="col-span-3">
-                <Chat myUserName={myUserName} session={session} />
+                <Chat
+                  myUserName={myUserName}
+                  session={session}
+                  myConnectionId={"undefined 방지용 데이터"}
+                />
               </div>
 
               <div className="col-span-1 grid grid-cols-2 gap-1 w-full">
