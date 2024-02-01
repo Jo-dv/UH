@@ -166,9 +166,6 @@ public class UserController {
 	@PostMapping("/user/nickname")
 	public ResponseEntity<String> nickname(@RequestBody String userNickname,
 		@SessionAttribute(name = "user") UserDto user) {
-		if (user == null)
-			return new ResponseEntity<>("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
-
 		try {
 			int result = service.nickname(user.getUserSeq(), userNickname);
 			if (result == 0) {

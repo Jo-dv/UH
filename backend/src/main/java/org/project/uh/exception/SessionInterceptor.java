@@ -1,0 +1,18 @@
+package org.project.uh.exception;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+public class SessionInterceptor implements HandlerInterceptor {
+
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws
+		Exception {
+		if (request.getAttribute("user") == null) {
+			throw new UnauthorizedException("로그인 정보가 없습니다.");
+		}
+		return true;
+	}
+}

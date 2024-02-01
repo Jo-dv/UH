@@ -37,9 +37,6 @@ public class FeedbackController {
 	@PostMapping("/feedback")
 	public ResponseEntity<String> feedback(@RequestBody FeedbackDto dto,
 		@SessionAttribute(name = "user") UserDto user) {
-		if (user == null)
-			return new ResponseEntity<>("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
-
 		try {
 			dto.setUserSeq(user.getUserSeq());
 			if (service.feedback(dto) == 1)

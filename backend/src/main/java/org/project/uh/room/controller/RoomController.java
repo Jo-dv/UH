@@ -103,9 +103,6 @@ public class RoomController {
 	@PostMapping("/rooms")
 	public ResponseEntity<String> initializeSession(@RequestBody RoomDto roomDto,
 		@SessionAttribute(name = "user") UserDto user) {
-		if (user == null)
-			return new ResponseEntity<>("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
-
 		//방 만들기/입장(입장할 방 ID)
 		String sessionId = roomDto.getSessionId();
 
@@ -322,9 +319,6 @@ public class RoomController {
 	@PostMapping("/players")
 	public ResponseEntity<String> addPlayer(@RequestBody AddPlayerDto addDto,
 		@SessionAttribute(name = "user") UserDto user) {
-		if (user == null)
-			return new ResponseEntity<>("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
-
 		boolean isHost = addDto.isHost();
 		String sessionId = addDto.getSessionId();
 
