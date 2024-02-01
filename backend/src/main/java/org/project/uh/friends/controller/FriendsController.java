@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/friends", produces = "application/json; charset=UTF8")
+@RequestMapping(value = "/api/friends", produces = "application/json; charset=UTF8")
 @Tag(name = "친구 api")
 public class FriendsController {
 

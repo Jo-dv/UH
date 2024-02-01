@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/rank", produces = "application/json; charset=UTF8")
+@RequestMapping(value = "/api/rank", produces = "application/json; charset=UTF8")
 @Tag(name = "랭크 api")
 public class RankController {
 
