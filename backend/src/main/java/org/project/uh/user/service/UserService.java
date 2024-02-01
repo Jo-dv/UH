@@ -21,9 +21,9 @@ public interface UserService {
 	public UserDto login(UserDto dto);
 
 	// 닉네임 생성
-	public int nickname(UserDto dto);
+	public int nickname(int userSeq, String userNickname);
 
-	public int getUserNickname(UserDto dto);
+	public int getUserNickname(String userNickname);
 
 	// 마이페이지
 	public MypageDto mypage(int userSeq);

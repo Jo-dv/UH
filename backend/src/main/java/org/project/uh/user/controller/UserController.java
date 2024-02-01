@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -46,9 +47,17 @@ public class UserController {
 	@Operation(
 		summary = "유저 목록"
 	)
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "정상적으로 처리되었습니다."),
+		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
+	})
 	@GetMapping("/user")
-	public List<UserDto> listUser() {
-		return service.listUser();
+	public ResponseEntity<List<UserDto>> listUser() {
+		try {
+			return new ResponseEntity<>(service.listUser(), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@Operation(
@@ -56,16 +65,21 @@ public class UserController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "가입 성공"),
-		@ApiResponse(responseCode = "400", description = "중복된 아이디")
+		@ApiResponse(responseCode = "400", description = "중복된 아이디"),
+		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	// 회원가입
 	@PostMapping("/user/join")
 	public ResponseEntity<String> insertUser(@RequestBody UserDto dto) {
-		int result = service.insertUser(dto);
-		if (result == 0) {
-			return new ResponseEntity<>("중복된 아이디", HttpStatus.BAD_REQUEST);
+		try {
+			int result = service.insertUser(dto);
+			if (result == 0) {
+				return new ResponseEntity<>("중복된 아이디", HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<>("가입 성공", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>("가입 성공", HttpStatus.OK);
 	}
 
 	// 유저 정보 확인
@@ -74,17 +88,14 @@ public class UserController {
 		description = "로그인 상태라면 user정보를 아니라면 null을 반환"
 	)
 	@GetMapping("/user/check")
-	public ResponseEntity<Object> userCheck(HttpSession session) {
-		System.out.println("요청 들어옴");
+	public ResponseEntity<UserDto> userCheck(HttpSession session) {
 		// 세션에서 'user' 속성 가져오기
 		UserDto user = (UserDto)session.getAttribute("user");
 		if (user != null) {
 			// 사용자 정보가 세션에 있으면, 해당 정보 반환
-			System.out.println(user);
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		} else {
 			// 사용자 정보가 세션에 없으면, null 또는 적절한 응답 반환
-			System.out.println("null입니다");
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
 	}
@@ -95,18 +106,23 @@ public class UserController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "로그인 성공"),
-		@ApiResponse(responseCode = "400", description = "로그인 오류")
+		@ApiResponse(responseCode = "400", description = "로그인 오류"),
+		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PostMapping("/user/login")
 	public ResponseEntity<Object> login(@RequestBody UserDto dto, HttpSession session) {
-		UserDto result = service.login(dto);
-		if (result == null) {
-			return new ResponseEntity<>("로그인 오류", HttpStatus.BAD_REQUEST);
+		try {
+			UserDto result = service.login(dto);
+			if (result == null) {
+				return new ResponseEntity<>("로그인 오류", HttpStatus.BAD_REQUEST);
+			}
+			// 로그인 성공
+			result.setUserPassword(null);
+			session.setAttribute("user", result);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		// 로그인 성공
-		result.setUserPassword(null);
-		session.setAttribute("user", result);
-		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
 	// 로그아웃
@@ -126,15 +142,25 @@ public class UserController {
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "닉네임 생성 성공"),
-		@ApiResponse(responseCode = "400", description = "중복된 닉네임")
+		@ApiResponse(responseCode = "400", description = "중복된 닉네임"),
+		@ApiResponse(responseCode = "401", description = "로그인 정보가 없습니다."),
+		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PostMapping("/user/nickname")
-	public ResponseEntity<String> nickname(@RequestBody UserDto dto) {
-		int result = service.nickname(dto);
-		if (result == 0) {
-			return new ResponseEntity<>("중복된 닉네임", HttpStatus.BAD_REQUEST);
+	public ResponseEntity<String> nickname(@RequestBody String userNickname,
+		@SessionAttribute(name = "user") UserDto user) {
+		if (user == null)
+			return new ResponseEntity<>("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
+
+		try {
+			int result = service.nickname(user.getUserSeq(), userNickname);
+			if (result == 0) {
+				return new ResponseEntity<>("중복된 닉네임", HttpStatus.BAD_REQUEST);
+			}
+			return new ResponseEntity<>("닉네임 생성 성공", HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>("닉네임 생성 성공", HttpStatus.OK);
 	}
 
 	// 회원가입 시 아이디 중복 체크
@@ -150,7 +176,7 @@ public class UserController {
 	public int idCheck(@RequestBody UserDto dto) {
 		return service.idCheck(dto);
 	}
-
+	
 	// 마이페이지
 	@Operation(
 		summary = "회원 정보 조회",
