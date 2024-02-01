@@ -8,7 +8,7 @@ import AnswerInput from "./AnswerInput";
 import G101Info from "./games/G101Info";
 
 const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone, isHost }) => {
-  let maxTime = 60;
+  let maxTime = 6000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
   const [loading, setLoading] = useState(true);
@@ -50,9 +50,6 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
     } else if (team === "B") {
       setBTeamScore(BTeamScore + 1);
     }
-  };
-  const plusRound = () => {
-    setRound((r) => r + 1);
   };
   const changeTeamIndex = () => {
     if (TeamTurn === "A") {
@@ -196,16 +193,22 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
             <section className="h-full aspect-[4/5]">
               <div className="flex justify-between">
                 <p>A:{ATeamScore}</p>
+                <p>
+                  {round} {TeamTurn}
+                </p>
+                <button onClick={sendPlayDone}>게임종료</button>
                 <p>{time}</p>
                 <p> B:{BTeamScore}</p>
               </div>
               <div className="gameBox relative flex flex-col justify-end">
                 <div className="h-full aspect-[4/3] bg-black text-white absolute flex flex-col">
-                  <UserVideoComponent
-                    streamManager={turnPlayerId[1]}
-                    session={session}
-                    gamePlayer={turnPlayerId[0]}
-                  />
+                  <div class>
+                    <UserVideoComponent
+                      streamManager={turnPlayerId[1]}
+                      session={session}
+                      gamePlayer={turnPlayerId[0]}
+                    />
+                  </div>
 
                   {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
                     <div className="absolute right-0 w-1/4">
@@ -227,7 +230,9 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
                         session={session}
                         maxRound={maxRound}
                         round={round}
-                        plusRound={plusRound}
+                        setRound={setRound}
+                        TeamTurn={TeamTurn}
+                        setTeamTurn={setTeamTurn}
                       />
                       <div className="absolute flex text-black">
                         {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
