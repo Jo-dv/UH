@@ -14,6 +14,7 @@ import UseRoomSetting from "../../store/UseRoomSetting.js";
 import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
 import Inviting from "../../components/Modal/waiting/Inviting.js";
 import UseInvitingStore from "../../store/UseInvitingStore.js";
+import Person4 from "../../components/waitingComponent/Person4.js";
 
 export default function RoomId() {
   const { id } = useParams();
@@ -44,7 +45,7 @@ export default function RoomId() {
     },
     [mainStreamManager]
   );
-
+  // const max = roomInfo.roomData.max;
   const joinSession = useCallback(() => {
     if (session) {
       console.log("리브세션", session);
@@ -155,37 +156,37 @@ export default function RoomId() {
     // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
   }, [session]);
 
-  const switchCamera = useCallback(async () => {
-    try {
-      const devices = await OV.current.getDevices();
-      const videoDevices = devices.filter((device) => device.kind === "videoinput");
+  // const switchCamera = useCallback(async () => {
+  //   try {
+  //     const devices = await OV.current.getDevices();
+  //     const videoDevices = devices.filter((device) => device.kind === "videoinput");
 
-      if (videoDevices && videoDevices.length > 1) {
-        const newVideoDevice = videoDevices.filter(
-          (device) => device.deviceId !== currentVideoDevice.deviceId
-        );
+  //     if (videoDevices && videoDevices.length > 1) {
+  //       const newVideoDevice = videoDevices.filter(
+  //         (device) => device.deviceId !== currentVideoDevice.deviceId
+  //       );
 
-        if (newVideoDevice.length > 0) {
-          const newPublisher = OV.current.initPublisher(undefined, {
-            videoSource: newVideoDevice[0].deviceId,
-            publishAudio: true,
-            publishVideo: true,
-            mirror: true,
-          });
+  //       if (newVideoDevice.length > 0) {
+  //         const newPublisher = OV.current.initPublisher(undefined, {
+  //           videoSource: newVideoDevice[0].deviceId,
+  //           publishAudio: true,
+  //           publishVideo: true,
+  //           mirror: true,
+  //         });
 
-          if (session) {
-            await session.unpublish(mainStreamManager);
-            await session.publish(newPublisher);
-            setCurrentVideoDevice(newVideoDevice[0]);
-            setMainStreamManager(newPublisher);
-            setPublisher(newPublisher);
-          }
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, [currentVideoDevice, session, mainStreamManager]);
+  //         if (session) {
+  //           await session.unpublish(mainStreamManager);
+  //           await session.publish(newPublisher);
+  //           setCurrentVideoDevice(newVideoDevice[0]);
+  //           setMainStreamManager(newPublisher);
+  //           setPublisher(newPublisher);
+  //         }
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // }, [currentVideoDevice, session, mainStreamManager]);
 
   const deleteSubscriber = useCallback((streamManager) => {
     setSubscribers((prevSubscribers) => {
@@ -256,21 +257,11 @@ export default function RoomId() {
       }
       const roomData = await getRoomInfo(session.sessionId);
       if (roomData.roomData.play) {
-        // navigate("/game", {
-        //   state: {
-        //     roomData: roomData,
-        //     publisher: publisher,
-        //     subscribers: subscribers,
-        //     session: session,
-        //     myUserName: myUserName,
-        //   },
-        // });
         setIsPlay(true);
         sendPlay();
       } else {
         setIsPlay(false);
       }
-      // console.log("데이터들", myUserName, roomData, publisher, subscribers, session);
     } catch (error) {
       console.error("set Ready Error:", error);
     }
@@ -280,9 +271,9 @@ export default function RoomId() {
     if (session !== undefined) {
       session
         .signal({
-          data: `${mySessionId} - 게임시작: ${isPlay}`, // Any string (optional)
-          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-          type: "room-play", // The type of message (optional)
+          data: `${mySessionId} - 게임시작: ${isPlay}`,
+          to: [],
+          type: "room-play",
         })
         .then(() => {
           console.log("게임시작 :", isPlay);
@@ -303,9 +294,9 @@ export default function RoomId() {
     if (session !== undefined) {
       session
         .signal({
-          data: `${mySessionId} - 게임끝: ${isPlay}`, // Any string (optional)
-          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-          type: "room-playDone", // The type of message (optional)
+          data: `${mySessionId} - 게임끝: ${isPlay}`,
+          to: [],
+          type: "room-playDone",
         })
         .then(() => {
           console.log("게임끝 :", isPlay);
@@ -330,82 +321,66 @@ export default function RoomId() {
             {firstRoomInfo.roomName} : JOIN ROOM
           </button>
           <section className="w-1/2">
-            <MyCam></MyCam>
+            <MyCam />
           </section>
         </div>
       ) : null}
 
       {session !== undefined && isPlay === false ? (
-        <div className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
-          <div id="session-header" className="flex flex-row"></div>
-          <div className="grid grid-rows-3 h-screen-40">
-            <div className="row-span-2 grid grid-cols-4 grid-rows-2">
-              {publisher !== undefined ? (
-                <div
-                  className="bg-green-500 p-1 overflow-hidden"
-                  onClick={() => handleMainVideoStream(publisher)}
-                >
-                  <UserVideoComponent
-                    streamManager={publisher}
-                    session={session}
-                    isHost={isHost}
-                    isReady={isReady}
-                  />
-                </div>
-              ) : null}
-              {/* 나말고 */}
-              {subscribers.map((sub, i) => (
-                <div
-                  key={sub.id}
-                  className="bg-teal-500 p-1 overflow-hidden"
-                  onClick={() => handleMainVideoStream(sub)}
-                >
-                  <span>{sub.id}</span>
-                  <UserVideoComponent
-                    streamManager={sub}
-                    session={session}
-                    isHost={isHost}
-                    isReady={isReady}
-                  />
-                </div>
-              ))}
+        <div className="bg-neutral-200 grid grid-rows-9 grid-cols-12 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
+          <div className="col-start-1 col-end-13 row-start-1 row-end-7">
+            <Person4
+              publisher={publisher}
+              handleMainVideoStream={handleMainVideoStream}
+              session={session}
+              isHost={isHost}
+              isReady={isReady}
+              subscribers={subscribers}
+            />
+          </div>
+
+          {/* 하단 채팅, 버튼 */}
+          <div className="grid col-start-1 col-end-13 row-start-7 row-end-10">
+            <div className="col-start-1 col-end-7 row-start-1 row-end-13 mr-2">
+              <Chat
+                myUserName={myUserName}
+                session={session}
+                myConnectionId={"undefined 방지용 데이터"}
+              />
             </div>
-
-            <div className="grid col-span-1 grid-cols-4 gap-2 w-full">
-              <div className="col-span-3">
-                <Chat
-                  myUserName={myUserName}
-                  session={session}
-                  myConnectionId={"undefined 방지용 데이터"}
-                />
-              </div>
-
-              <div className="col-span-1 grid grid-cols-2 gap-1 w-full">
+            <div className="grid col-start-7 col-end-9 row-start-1 row-end-13">
+              <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
-                  className="bg-mc1 border rounded-3xl active:bg-mc2"
+                  className=" bg-mc1 border rounded-3xl active:bg-mc2 w-full h-full flex justify-center items-center"
                   onClick={() => changeTeam("A")}
                 >
                   A팀
                 </button>
+
                 <button
-                  className="bg-mc8 border rounded-3xl active:bg-mc7"
+                  className=" bg-mc8 border rounded-3xl active:bg-mc7 w-full h-full flex justify-center items-center"
                   onClick={() => changeTeam("B")}
                 >
                   B팀
                 </button>
+              </div>
+              <div className="grid col-start-1 col-end-9 row-start-6 row-end-13 mt-2">
                 <button
-                  className="col-span-2 bg-mc3 border rounded-3xl"
-                  // onClick={() => getRoomInfo(session.sessionId)}
-                  onClick={setReady}
+                  onClick={() => {
+                    sendPlay();
+                    setReady();
+                  }}
+                  className="bg-mc3 border rounded-3xl w-full h-full flex justify-center items-center"
                 >
                   {isHost ? "게임시작" : "준비"}
                 </button>
-                <button onClick={sendPlay}>play</button>
               </div>
             </div>
           </div>
         </div>
       ) : null}
+
+      {/* 모달 창 관리 */}
 
       {isPlay ? (
         <Game
@@ -418,6 +393,7 @@ export default function RoomId() {
         />
       ) : null}
       {leaving && <Leaving onClose={() => setLeaving(false)} leaving={leaving} />}
+
       {roomSetting && (
         <RoomSetting
           onClose={() => setRoomSetting(false)}

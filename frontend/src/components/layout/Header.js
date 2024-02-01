@@ -29,7 +29,7 @@ const Header = () => {
     <div>
       <nav>
         <ul className="flex flex-row items-end">
-          <li>
+          <li className="mr-7">
             <Link to="/lobby">
               <img
                 src={logoImg}
