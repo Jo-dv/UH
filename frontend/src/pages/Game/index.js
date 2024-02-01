@@ -147,9 +147,13 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
             </>
           ))}
         </section>
-        <section className="grow h-full">
+        <section className="h-full aspect-[4/5]">
+          <div className="flex justify-between">
+            <p>A:{ATeamScore}</p>
+            <p> B:{BTeamScore}</p>
+          </div>
           <div className="gameBox relative flex flex-col justify-end">
-            <div className="w-full h-full bg-black text-white absolute">
+            <div className="h-full aspect-[4/3] bg-black text-white absolute flex flex-col">
               {turnPlayerId !== undefined ? (
                 <UserVideoComponent
                   streamManager={turnPlayerId[1]}
@@ -166,44 +170,44 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone 
                   />
                 </div>
               ) : null}
-            </div>
-            <div className="opacity-90">
-              <div className="relative flex justify-center items-center">
-                <Timer maxT={maxTime} />
-                <div className="absolute flex">
-                  {turnPlayerId !== undefined &&
-                  (myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam) ? (
-                    <>
-                      <p>{quizData[quizIndex].quizAnswer}</p>
-                      <div className="hidden">
-                        <AnswerInput
-                          myUserName={myUserName}
-                          session={session}
-                          answer={quizData[quizIndex].quizAnswer}
-                          plusQuizIndex={plusQuizIndex}
-                          myTeam={turnPlayerId[2]}
-                          plusScore={plusScore}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <AnswerInput
-                      myUserName={myUserName}
-                      session={session}
-                      answer={quizData[quizIndex].quizAnswer}
-                      plusQuizIndex={plusQuizIndex}
-                      myTeam={turnPlayerId[2]}
-                      plusScore={plusScore}
-                    />
-                  )}
+
+              <div className="opacity-90 absolute w-full bottom-0">
+                <div className="relative flex justify-center items-center">
+                  <Timer maxT={maxTime} />
+                  <div className="absolute flex text-black">
+                    {turnPlayerId !== undefined &&
+                    (myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam) ? (
+                      <>
+                        <p>{quizData[quizIndex].quizAnswer}</p>
+                        <div className="hidden">
+                          <AnswerInput
+                            myUserName={myUserName}
+                            session={session}
+                            answer={quizData[quizIndex].quizAnswer}
+                            plusQuizIndex={plusQuizIndex}
+                            myTeam={turnPlayerId[2]}
+                            plusScore={plusScore}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <AnswerInput
+                        myUserName={myUserName}
+                        session={session}
+                        answer={quizData[quizIndex].quizAnswer}
+                        plusQuizIndex={plusQuizIndex}
+                        myTeam={turnPlayerId[2]}
+                        plusScore={plusScore}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <p>A:{ATeamScore}</p>
-          <p>B:{BTeamScore}</p>
+
           {/* <button onClick={sendPlayDone}>playDone</button> */}
-          <div className="h-64">
+          <div className="h-64 w-full">
             {turnPlayerId !== undefined ? (
               <Chat
                 myUserName={myUserName}
