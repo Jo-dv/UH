@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.project.uh.user.dao.UserDao;
 import org.project.uh.user.dto.MypageDto;
-import org.project.uh.user.dto.ResultDto;
 import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 import org.springframework.stereotype.Service;
@@ -100,14 +99,11 @@ public class UserServiceImpl implements UserService {
 	// 마이페이지
 	@Override
 	public MypageDto mypage(int userSeq) {
-		return dao.mypage(userSeq);
+		MypageDto mypage = dao.mypage(userSeq);
+		mypage.setRecord(dao.userRecord(userSeq));
+		return mypage;
 	}
 
-	// 전적 조회
-	@Override
-	public List<ResultDto> userRecord(int userSeq) {
-		return dao.userRecord(userSeq);
-	}
 
 	// 아이디로 유저 정보 조회
 	@Override

@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.project.uh.user.dto.ResultDto;
+import org.project.uh.game.dto.ResultDto;
 import org.apache.ibatis.annotations.Options;
 import org.project.uh.user.dto.MypageDto;
 import org.project.uh.user.dto.SocialUserDto;

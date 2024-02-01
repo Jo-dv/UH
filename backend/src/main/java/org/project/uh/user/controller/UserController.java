@@ -208,6 +208,7 @@ public class UserController {
 		return service.nicknameCheck(dto);
 	}
 
+
 	// 마이페이지
 	@Operation(
 		summary = "회원 정보 조회",

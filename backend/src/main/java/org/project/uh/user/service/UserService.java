@@ -37,9 +37,6 @@ public interface UserService {
 	// 마이페이지
 	public MypageDto mypage(int userSeq);
 
-	// 전적조회
-	public List<ResultDto> userRecord(int userSeq);
-
 	// 아이디로 유저 정보 조회
 	public UserDto findById(String userId);
 
