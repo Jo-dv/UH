@@ -19,7 +19,13 @@ public interface RankDao {
 	@Select("select * from rank_shout")
 	public List<RankDto> shoutRank();
 
+
 	// 인물 맞추기 랭킹
 	@Select("select * from rank_person")
 	public List<RankDto> personRank();
+
+	// 전체 랭킹
+	@Select("SELECT * FROM game_result"
+		+ "ORDER BY score DESC LIMIT 10")
+	public List<RankDto> rank();
 }

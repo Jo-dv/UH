@@ -50,4 +50,14 @@ public class RankController {
 	public List<RankDto> personRank() {
 		return service.personRank();
 	}
+
+	// 단체 전체 랭킹
+	@Operation(
+		summary = "단체 랭킹",
+		description = "고요속의 외침, 인물맞추기 상위 10팀의 목록을 보태준다."
+	)
+	@GetMapping("/rank")
+	public List<RankDto> rank() {
+		return service.rank();
+	}
 }
