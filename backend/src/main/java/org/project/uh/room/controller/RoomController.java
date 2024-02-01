@@ -12,6 +12,7 @@ import org.project.uh.game.dto.QuizDto;
 import org.project.uh.game.service.GameService;
 import org.project.uh.room.RoomService;
 import org.project.uh.room.dto.AddPlayerDto;
+import org.project.uh.room.dto.CheckPasswordDto;
 import org.project.uh.room.dto.MoveTeamDto;
 import org.project.uh.room.dto.PlayerDto;
 import org.project.uh.room.dto.ReadyDto;
@@ -261,8 +262,8 @@ public class RoomController {
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PostMapping("/password")
-	public ResponseEntity<Boolean> checkPassword(@RequestBody(required = false) Map<String, String> params) {
-		String sessionId = params.get("sessionId");
+	public ResponseEntity<Boolean> checkPassword(@RequestBody CheckPasswordDto checkPasswordDto) {
+		String sessionId = checkPasswordDto.getSessionId();
 		RoomDto room = roomList.get(sessionId);
 
 		//예외처리
@@ -271,7 +272,7 @@ public class RoomController {
 		}
 
 		String roomPassword = room.getRoomPassword();//방 비밀번호
-		String enterPassword = params.get("enterPassword");//입력 비밀번호
+		String enterPassword = checkPasswordDto.getEnterPassword();//입력 비밀번호
 
 		//null이 아니면 비밀번호 해싱 후 비교
 		if (enterPassword != null)
