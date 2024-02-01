@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/game", produces = "application/json; charset=UTF8")
+@RequestMapping(value = "/api/game", produces = "application/json; charset=UTF8")
 @Tag(name = "게임 api")
 public class GameController {
 
@@ -41,7 +41,6 @@ public class GameController {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		//예외처리
 		if (quizList.get(sessionId) == null) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

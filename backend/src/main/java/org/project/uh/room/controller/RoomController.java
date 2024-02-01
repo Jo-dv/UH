@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -48,6 +49,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(allowedHeaders = "*", originPatterns = "*")
+@RequestMapping(value = "/api", produces = "application/json; charset=UTF8")
 @Tag(name = "방 api")
 public class RoomController {
 
@@ -206,7 +208,6 @@ public class RoomController {
 		String roomName = afterRoom.getRoomName();
 		String roomPassword = afterRoom.getRoomPassword();
 		int gameCategory = afterRoom.getGameCategory();
-		int quizCategory = afterRoom.getQuizCategory();
 		int max = afterRoom.getMax();
 		RoomDto beforeRoom = roomList.get(sessionId);
 
@@ -218,7 +219,6 @@ public class RoomController {
 		//방 설정 변경
 		beforeRoom.setRoomName(roomName);
 		beforeRoom.setGameCategory(gameCategory);
-		beforeRoom.setQuizCategory(quizCategory);
 		beforeRoom.setMax(max);
 
 		// 비밀번호 해싱
@@ -570,7 +570,7 @@ public class RoomController {
 			}
 
 			//문제를 불러와서 sessionId별로 저장 후 model에 저장해서 gameController에서 사용
-			quizList.put(sessionId, gameService.listQuiz(room.getGameCategory(), room.getQuizCategory()));
+			quizList.put(sessionId, gameService.listQuiz(room.getGameCategory()));
 			//게임 시작 할 때 전부 준비 취소 처리
 			for (String player : players) {
 				roomStatus.getPlayers().get(player).setReady(false);

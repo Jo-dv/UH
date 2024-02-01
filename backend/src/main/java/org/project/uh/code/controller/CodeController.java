@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/code", produces = "application/json; charset=UTF8")
+@RequestMapping(value = "/api/code", produces = "application/json; charset=UTF8")
 @Tag(name = "공통 코드 api")
 public class CodeController {
 
@@ -30,11 +30,15 @@ public class CodeController {
 		description = "그룹 코드에 맞는 공통 코드 리스트를 보낸다."
 	)
 	@ApiResponses(value = {
-		@ApiResponse(responseCode = "200", description = "정상적으로 로드되었습니다.")
+		@ApiResponse(responseCode = "200", description = "정상적으로 로드되었습니다."),
+		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@GetMapping("/{groupCode}")
 	public ResponseEntity<List<CodeDto>> listCode(@PathVariable int groupCode) {
-
-		return new ResponseEntity<>(codeService.listCode(groupCode), HttpStatus.OK);
+		try {
+			return new ResponseEntity<>(codeService.listCode(groupCode), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }

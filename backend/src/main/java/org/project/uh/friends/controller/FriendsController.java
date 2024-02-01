@@ -5,6 +5,7 @@ import java.util.List;
 import org.project.uh.friends.dto.FriendRequestDto;
 import org.project.uh.friends.dto.FriendRseponseDto;
 import org.project.uh.friends.service.FriendsService;
+import org.project.uh.user.dto.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/friends", produces = "application/json; charset=UTF8")
+@RequestMapping(value = "/api/friends", produces = "application/json; charset=UTF8")
 @Tag(name = "친구 api")
 public class FriendsController {
 
@@ -35,10 +37,21 @@ public class FriendsController {
 		description = "본인이 친구 요청을 보냈을 때는 요청을 수락한 친구 목록을 가져오고<br>"
 			+ "본인이 요청을 받았을 땐 친구 요청과 수락된 친구의 목록을 가져온다."
 	)
-	@GetMapping("/{userSeq}")
-	public ResponseEntity<List<FriendRseponseDto>> listFriends(@PathVariable int userSeq) {
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "정상적으로 친구 목록을 불러왔습니다."),
+		@ApiResponse(responseCode = "401", description = "로그인 정보가 없습니다."),
+		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
+	})
+	@GetMapping
+	public ResponseEntity<List<FriendRseponseDto>> listFriends(@SessionAttribute(name = "user") UserDto user) {
+		if (user == null)
+			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 
-		return new ResponseEntity<>(friendsService.listFriends(userSeq), HttpStatus.OK);
+		try {
+			return new ResponseEntity<>(friendsService.listFriends(user.getUserSeq()), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 	@Operation(
@@ -49,12 +62,18 @@ public class FriendsController {
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "정상적으로 친구 요청을 했습니다."),
 		@ApiResponse(responseCode = "400", description = "이미 요청되었거나 친구 상태입니다."),
+		@ApiResponse(responseCode = "401", description = "로그인 정보가 없습니다."),
 		@ApiResponse(responseCode = "500", description = "비정상적인 요청입니다.")
 	})
 	@PostMapping
-	public ResponseEntity<String> sendRequest(@RequestBody FriendRequestDto friendRequestDto) {
-		ResponseEntity<String> result = friendsService.sendRequest(friendRequestDto);
-		return result;
+	public ResponseEntity<String> sendRequest(@RequestBody FriendRequestDto friendRequestDto,
+		@SessionAttribute(name = "user") UserDto user) {
+		if (user == null)
+			return new ResponseEntity<>("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
+
+		friendRequestDto.setFromUserSeq(user.getUserSeq());
+
+		return friendsService.sendRequest(friendRequestDto);
 	}
 
 	@Operation(
@@ -67,8 +86,7 @@ public class FriendsController {
 	})
 	@PutMapping("/{friendsId}")
 	public ResponseEntity<String> acceptFriends(@PathVariable int friendsId) {
-		ResponseEntity<String> result = friendsService.acceptFriends(friendsId);
-		return result;
+		return friendsService.acceptFriends(friendsId);
 	}
 
 	@Operation(
@@ -81,7 +99,6 @@ public class FriendsController {
 	})
 	@DeleteMapping("/{friendsId}")
 	public ResponseEntity<String> deleteFriends(@PathVariable int friendsId) {
-		ResponseEntity<String> result = friendsService.deleteFriends(friendsId);
-		return result;
+		return friendsService.deleteFriends(friendsId);
 	}
 }
