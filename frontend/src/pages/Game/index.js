@@ -9,9 +9,11 @@ import G101Info from "./games/G101Info";
 
 const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone, isHost }) => {
   let maxTime = 60;
+  let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
+  const [round, setRound] = useState(1);
   const [myTeam, setMyTeam] = useState(undefined);
   const [ATeamStreamManagers, setATeamStreamManagers] = useState(undefined);
   const [BTeamStreamManagers, setBTeamStreamManagers] = useState(undefined);
@@ -49,6 +51,9 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
       setBTeamScore(BTeamScore + 1);
     }
   };
+  const plusRound = () => {
+    setRound((r) => r + 1);
+  };
   const changeTeamIndex = () => {
     if (TeamTurn === "A") {
       const long = ATeamStreamManagers.length;
@@ -76,7 +81,8 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
       setTeamTurn("B");
       setTeamIndex(0);
       setTurnPlayerId(BTeamStreamManagers[TeamIndex]);
-    } else if (TeamTurn === "B") {
+    }
+    if (TeamTurn === "B") {
       setTeamTurn("A");
       setTeamIndex(0);
       setTurnPlayerId(ATeamStreamManagers[TeamIndex]);
@@ -219,6 +225,9 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
                         changeTeamTurn={changeTeamTurn}
                         isHost={isHost}
                         session={session}
+                        maxRound={maxRound}
+                        round={round}
+                        plusRound={plusRound}
                       />
                       <div className="absolute flex text-black">
                         {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (

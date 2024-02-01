@@ -1,6 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 
-const Timer = ({ maxTime, time, setTime, changeTeamTurn, isHost, session }) => {
+const Timer = ({
+  maxTime,
+  time,
+  setTime,
+  changeTeamTurn,
+  isHost,
+  session,
+  maxRound,
+  round,
+  plusRound,
+}) => {
   const intervalRef = useRef(null);
   // console.log(maxTime);
   const sendTime = (t) => {
@@ -22,7 +32,12 @@ const Timer = ({ maxTime, time, setTime, changeTeamTurn, isHost, session }) => {
 
   session.on("signal:game-time", (event) => {
     // console.log("소켓 시간 받음", time);
-    setTime(Number(event.data));
+    const T = Number(event.data);
+    setTime(T);
+    if (T >= maxTime) {
+      changeTeamTurn();
+      plusRound();
+    }
   });
 
   useEffect(() => {
@@ -31,7 +46,9 @@ const Timer = ({ maxTime, time, setTime, changeTeamTurn, isHost, session }) => {
         if (prevCount >= maxTime) {
           // clearInterval(intervalRef.current); // 카운트가 1이면 타이머 정지
           prevCount = 0;
-          changeTeamTurn();
+          if (round > maxRound) {
+            clearInterval(intervalRef.current);
+          }
         }
         sendTime(prevCount + 1);
         return prevCount + 1;
