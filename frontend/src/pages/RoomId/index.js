@@ -301,8 +301,10 @@ export default function RoomId() {
     }
   };
   if (session !== undefined) {
-    session.on("signal:room-play", (event) => {
+    session.on("signal:room-play", async (event) => {
       console.log("플레이 소켓 받음", event.data);
+      const quiz = await getGameData(session.sessionId);
+      setGameQuiz(quiz);
       setIsPlay(true);
     });
   }
