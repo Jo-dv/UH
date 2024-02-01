@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.project.uh.user.dto.MypageDto;
 import org.project.uh.user.dto.RecordDto;
+import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 
 @Mapper
@@ -36,8 +37,6 @@ public interface UserDao {
 	// 회원가입 시 userId 중복 체크
 	@Select("select count(*) from user where user_id = #{userId}")
 	public int checkUserId(String userId);
-
-
 
 	// 로그인 시 userId, userPassword 체크
 	@Select("select * from user where user_id=#{userId} and user_password=#{userPassword}")
@@ -71,7 +70,6 @@ public interface UserDao {
 		+ "WHERE user1 = #{userSeq} OR user2 = #{userSeq} OR user3 = #{userSeq} OR user4 = #{userSeq} "
 		+ "ORDER BY created DESC LIMIT 20")
 	public List<RecordDto> userRecord(int userSeq);
-
 
 	// 아이디 가지고 회원 정보 조회
 	@Select("SELECT * from user WHERE user_id = #{userId}")

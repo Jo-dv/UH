@@ -28,7 +28,6 @@ public class UserServiceImpl implements UserService {
 		return dao.insertUser(dto);
 	}
 
-
 	// 닉네임 중복 체크
 	@Override
 	public int nicknameCheck(UserDto dto) {
@@ -80,15 +79,9 @@ public class UserServiceImpl implements UserService {
 	// 닉네임 생성
 	@Override
 	public int nickname(int userSeq, String userNickname) {
-		
+
 		return dao.nickname(userSeq, userNickname);
 	}
-
-	@Override
-	public int getUserNickname(String userNickname) {
-		return dao.checkUserNickname(userNickname);
-	}
-
 
 	// 마이페이지
 	@Override
@@ -97,7 +90,6 @@ public class UserServiceImpl implements UserService {
 		mypage.setRecord(dao.userRecord(userSeq));
 		return mypage;
 	}
-
 
 	// 아이디로 유저 정보 조회
 	@Override

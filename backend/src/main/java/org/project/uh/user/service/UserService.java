@@ -3,7 +3,6 @@ package org.project.uh.user.service;
 import java.util.List;
 
 import org.project.uh.user.dto.MypageDto;
-import org.project.uh.user.dto.ResultDto;
 import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 
@@ -28,11 +27,8 @@ public interface UserService {
 	// 닉네임 생성
 	public int nickname(int userSeq, String userNickname);
 
-
 	// 회원가입 시 닉네임 중복 체크
 	public int nicknameCheck(UserDto dto);
-
-	public int getUserNickname(UserDto dto);
 
 	// 마이페이지
 	public MypageDto mypage(int userSeq);
