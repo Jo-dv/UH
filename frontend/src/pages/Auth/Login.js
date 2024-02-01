@@ -91,7 +91,7 @@ const Login = () => {
       console.log("로그인 정보 :", { userId, userPassword });
       try {
         const response = await axios.post(
-          "http://localhost:5000/user/login",
+          "http://localhost:5000/api/user/login",
           { userId, userPassword },
           { withCredentials: true }
         );

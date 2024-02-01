@@ -18,7 +18,7 @@ const KakaoRedirectHandler = () => {
       // 요청 보내기
       if (code) {
         try {
-          const response = await axios.post("http://localhost:5000/user/login/kakao", code, {
+          const response = await axios.post("http://localhost:5000/api/user/login/kakao", code, {
             withCredentials: true,
           });
           const res = response.data;
