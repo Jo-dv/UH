@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(produces = "application/json; charset=UTF8")
+@RequestMapping(value = "/api", produces = "application/json; charset=UTF8")
 @Tag(name = "유저 api")
 public class UserController {
 	private final UserService service;

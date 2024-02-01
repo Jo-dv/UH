@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/game", produces = "application/json; charset=UTF8")
+@RequestMapping(value = "/api/game", produces = "application/json; charset=UTF8")
 @Tag(name = "게임 api")
 public class GameController {
 
