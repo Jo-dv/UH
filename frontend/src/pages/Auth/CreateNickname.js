@@ -103,7 +103,7 @@ const CreateNickname = () => {
       console.log("닉네임 :", form);
       const userSeq = sessionStorage.getItem("userSeq");
       try {
-        const response = await axios.post("http://localhost:5000/api/user/nickname", form.userNickname, { withCredentials: true });
+        const response = await axios.post("http://localhost:5000/api/user/nickname", {userNickname: form.userNickname}, { withCredentials: true });
         const res = response.data;
         console.log("서버 응답:", res);
         if (res.status === 400) {

@@ -52,8 +52,8 @@ const Signup = () => {
         } else {
             try {
                 const response = await axios.post("http://localhost:5000/api/user/idcheck", {
-                    userId: form.userId,
-                });
+                    userId: form.userId
+                }, {withCredentials: true});
                 const res = response.data;
                 console.log(res);
                 if (res === 0) {
@@ -125,7 +125,7 @@ const Signup = () => {
             const { userId, userPassword } = form;
             console.log("회원가입 정보:", { userId, userPassword });
             try {
-                const response = await axios.post("http://localhost:5000/api/user/join", { userId, userPassword });
+                const response = await axios.post("http://localhost:5000/api/user/join", { userId, userPassword }, {withCredentials: true});
                 console.log("서버 응답:", response);
                 // 회원가입 성공 후 처리
                 // 예: navigate("/login") 또는 성공 메시지 표시

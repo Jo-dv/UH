@@ -16,14 +16,9 @@ const Login = () => {
   // 카카오 소셜 로그인 / 로그아웃
   const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
   const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
-  const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
   const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-  const LogoutLink = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`
   const kakaoLoginHandler = () => {
     window.location.href = loginLink;
-  };
-  const kakaoLogoutHandler = () => {
-    window.location.href = LogoutLink;
   };
 
 
@@ -117,6 +112,7 @@ const Login = () => {
           setErr({...err, general: "올바른 정보를 입력해주세요."});
         } else {
         console.error("로그인 중 에러 발생", error);
+        setErr({...err, general: "서버가 아파요ㅠㅠ"});
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
       }
@@ -162,12 +158,9 @@ const Login = () => {
 
         <div className="flex flex-row justify-around w-72">
           <img src={googleLogo} alt="google Logo" />
-          <img src={kakaoLogo} alt="google Logo" />
+          <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
           <img src={naverLogo} alt="google Logo" />
         </div>
-        <button type="button" onClick={kakaoLoginHandler}>
-          카카오 로그인
-        </button>
       </form>
     </div>
   );

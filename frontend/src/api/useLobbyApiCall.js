@@ -15,7 +15,7 @@ const useLobbyApiCall = () => {
   // roomList 목록
   const getRoomsList = async () => {
     try {
-      const response = await axios.get(roomsListUrl);
+      const response = await axios.get(roomsListUrl, {withCredentials: true});
       const roomsList = response.data;
       return roomsList;
     } catch (error) {
@@ -27,7 +27,7 @@ const useLobbyApiCall = () => {
   // searchRooms 목록
   const getSearchRooms = async () => {
     try {
-      const response = await axios.get(searchRoomsUrl);
+      const response = await axios.get(searchRoomsUrl, {withCredentials: true});
       const searchRooms = response.data;
       return searchRooms;
     } catch (error) {
@@ -39,7 +39,7 @@ const useLobbyApiCall = () => {
   // 유저 목록
   const getUserList = async () => {
     try {
-      const response = await axios.get(userListUrl);
+      const response = await axios.get(userListUrl, {withCredentials: true});
       const userList = response.data;
       return userList;
     } catch (error) {
@@ -51,7 +51,7 @@ const useLobbyApiCall = () => {
   // user check
   const getUserCheck = async () => {
     try {
-      const response = await axios.get(userCheckUrl);
+      const response = await axios.get(userCheckUrl, {withCredentials: true});
       const userCheck = response.data;
       return userCheck;
     } catch (error) {
@@ -63,7 +63,7 @@ const useLobbyApiCall = () => {
   // [랭킹] 전체 랭킹 목록
   const getRankAllList = async () => {
     try {
-      const response = await axios.get(rankAllUrl);
+      const response = await axios.get(rankAllUrl, {withCredentials: true});
       const rankAllList = response.data;
       return rankAllList;
     } catch (error) {
@@ -75,7 +75,7 @@ const useLobbyApiCall = () => {
   // [랭킹] 인물 맞추기 게임 랭킹 목록
   const getRankPerson = async () => {
     try {
-      const response = await axios.get(rankPersonUrl);
+      const response = await axios.get(rankPersonUrl, {withCredentials: true});
       const rankPersonList = response.data;
       return rankPersonList;
     } catch (error) {
@@ -86,7 +86,7 @@ const useLobbyApiCall = () => {
   // [랭킹] 고요 속의 외침 게임 랭킹 목록
   const getRankShout = async () => {
     try {
-      const response = await axios.get(rankShoutUrl);
+      const response = await axios.get(rankShoutUrl, {withCredentials: true});
       const rankShoutList = response.data;
       return rankShoutList;
     } catch (error) {
@@ -98,7 +98,7 @@ const useLobbyApiCall = () => {
   // [랭킹] 개인 랭킹 목록
   const getRankSolo = async () => {
     try {
-      const response = await axios.get(rankSoloUrl);
+      const response = await axios.get(rankSoloUrl, {withCredentials: true});
       const rankSoloList = response.data;
       return rankSoloList;
     } catch (error) {
@@ -110,7 +110,7 @@ const useLobbyApiCall = () => {
   // 마이페이지 정보
   const getMyPageInfo = async (userSeq) => {
     try {
-      const response = await axios.get(`${baseUrl}mypage/${userSeq}`);
+      const response = await axios.get(`${baseUrl}mypage/${userSeq}`, {withCredentials: true});
       const myPageInfo = response.data;
       return myPageInfo;
     } catch (error) {
@@ -122,7 +122,7 @@ const useLobbyApiCall = () => {
   // [방 입장] 방 비밀번호 일치 확인
   const postCheckPassword = async () => {
     try {
-      const response = await axios.post(checkPasswordUrl);
+      const response = await axios.post(checkPasswordUrl, {withCredentials: true});
       const checkPassword = response.data;
       return checkPassword;
     } catch (error) {
