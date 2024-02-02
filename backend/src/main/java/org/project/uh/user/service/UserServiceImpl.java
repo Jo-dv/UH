@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.project.uh.user.dao.UserDao;
 import org.project.uh.user.dto.MypageDto;
-import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +36,6 @@ public class UserServiceImpl implements UserService {
 		return 1;
 	}
 
-	// 소셜 로그인 회원가입
-	@Override
-	public int insertSocialUser(SocialUserDto dto) {
-		return dao.insertSocialUser(dto);
-	}
 
 	// 아이디 중복 체크
 	@Override
@@ -97,9 +91,4 @@ public class UserServiceImpl implements UserService {
 		return dao.findBySeq(userSeq);
 	}
 
-	// seq로 social token 조회
-	@Override
-	public SocialUserDto findSocial(int userSeq) {
-		return dao.findSocial(userSeq);
-	}
 }
