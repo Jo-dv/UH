@@ -1,9 +1,4 @@
-import axios from "axios";
-
-axios.defaults.headers.post["Content-Type"] = "application/json";
-
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:5000/";
+import axios from "./axios.js";
 
 /**
  * 플레이어의 팀 변경
@@ -14,15 +9,11 @@ const APPLICATION_SERVER_URL =
 export const playerTeam = async (sessionId, connectionId, team) => {
   console.log("플레이어 팀 변경", sessionId, connectionId, team);
   try {
-    const response = await axios.put(
-      APPLICATION_SERVER_URL + "team",
+    const response = await axios.put("team",
       {
         sessionId: sessionId,
         connectionId: connectionId,
         team: team,
-      },
-      {
-        headers: { "Content-Type": "application/json" },
       }
     );
     console.log(response.data); // "팀이 변경 되었습니다."

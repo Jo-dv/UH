@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -51,7 +51,7 @@ const Signup = () => {
             setErr({ ...err, userId: "영어, 숫자만 써주세요 (4-20자)"});
         } else {
             try {
-                const response = await axios.post("http://localhost:5000/api/user/idcheck", {
+                const response = await axios.post("user/idcheck", {
                     userId: form.userId
                 }, {withCredentials: true});
                 const res = response.data;
@@ -125,7 +125,7 @@ const Signup = () => {
             const { userId, userPassword } = form;
             console.log("회원가입 정보:", { userId, userPassword });
             try {
-                const response = await axios.post("http://localhost:5000/api/user/join", { userId, userPassword }, {withCredentials: true});
+                const response = await axios.post("user/join", { userId, userPassword });
                 console.log("서버 응답:", response);
                 // 회원가입 성공 후 처리
                 // 예: navigate("/login") 또는 성공 메시지 표시

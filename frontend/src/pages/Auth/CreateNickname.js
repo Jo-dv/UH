@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 
@@ -58,11 +58,10 @@ const CreateNickname = () => {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/nicknamecheck",
+          "user/nicknamecheck",
           {
             userNickname: form.userNickname,
-          },
-          { withCredentials: true }
+          }
         );
         const res = response.data;
         console.log(res);
@@ -108,9 +107,8 @@ const CreateNickname = () => {
       const userSeq = sessionStorage.getItem("userSeq");
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/nickname",
-          { userNickname: form.userNickname },
-          { withCredentials: true }
+          "user/nickname",
+          { userNickname: form.userNickname }
         );
         const res = response.data;
         console.log("서버 응답:", res);

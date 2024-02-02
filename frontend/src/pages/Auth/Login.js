@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 
@@ -86,9 +86,8 @@ const Login = () => {
       console.log("로그인 정보 :", { userId, userPassword });
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/login",
-          { userId, userPassword },
-          { withCredentials: true }
+          "user/login",
+          { userId, userPassword }
         );
         const res = response.data;
         console.log("서버 응답:", res);

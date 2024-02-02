@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 import useStore from "../../store/UserAuthStore";
 
 const LogOutModal = (props) => {
@@ -16,9 +16,8 @@ const LogOutModal = (props) => {
   // 로그아웃 로직
   const handleLogOut = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/user/logout", 
-      { userSeq: userSeq } ,
-      { withCredentials: true }
+      const response = await axios.post("user/logout", 
+      { userSeq: userSeq }
       );
       const res = response.data
       console.log(res);

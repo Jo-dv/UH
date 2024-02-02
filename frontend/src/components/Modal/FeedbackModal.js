@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../api/axios.js";
 
 const FeedbackModal = (props) => {
   const [feedbackContent, setFeedback] = useState("");
@@ -29,9 +29,8 @@ const FeedbackModal = (props) => {
       return; // 함수 실행 중단
     }
     try {
-      await axios.post("http://localhost:5000/api/feedback", 
-      { userSeq, feedbackContent }, 
-      { withCredentials: true}
+      await axios.post("feedback", 
+      { userSeq, feedbackContent }
       );
       console.log({ userSeq, feedbackContent });
       props.setFeedback(false);
