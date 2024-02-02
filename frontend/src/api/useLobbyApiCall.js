@@ -1,16 +1,15 @@
-import axios from "axios";
+import axios from "./axios.js";
 
 const useLobbyApiCall = () => {
-  const baseUrl = "http://localhost:5000/";
-  const roomsListUrl = `${baseUrl}rooms`;
-  const searchRoomsUrl = `${baseUrl}searchrooms`;
-  const userListUrl = `${baseUrl}user`;
-  const userCheckUrl = `${baseUrl}user/check`;
-  const rankAllUrl = `${baseUrl}rank`;
-  const rankPersonUrl = `${baseUrl}rank/person`;
-  const rankShoutUrl = `${baseUrl}rank/shout`;
-  const rankSoloUrl = `${baseUrl}rank/solo`;
-  const checkPasswordUrl = `${baseUrl}password`;
+  const roomsListUrl = `rooms`;
+  const searchRoomsUrl = `searchrooms`;
+  const userListUrl = `user`;
+  const userCheckUrl = `user/check`;
+  const rankAllUrl = `rank`;
+  const rankPersonUrl = `rank/person`;
+  const rankShoutUrl = `rank/shout`;
+  const rankSoloUrl = `rank/solo`;
+  const checkPasswordUrl = `password`;
 
   // roomList 목록
   const getRoomsList = async () => {
@@ -110,7 +109,7 @@ const useLobbyApiCall = () => {
   // 마이페이지 정보
   const getMyPageInfo = async (userSeq) => {
     try {
-      const response = await axios.get(`${baseUrl}mypage/${userSeq}`);
+      const response = await axios.get(`mypage/${userSeq}`);
       const myPageInfo = response.data;
       return myPageInfo;
     } catch (error) {
@@ -122,10 +121,13 @@ const useLobbyApiCall = () => {
   // [방 입장] 방 비밀번호 일치 확인
   const postCheckPassword = async (sessionId, roomPassword) => {
     try {
-      const response = await axios.post(checkPasswordUrl, {
-        sessionId: sessionId,
-        enterPassword: roomPassword,
-      });
+      const response = await axios.post(
+        checkPasswordUrl,
+        {
+          sessionId: sessionId,
+          enterPassword: roomPassword,
+        }
+      );
       const checkPassword = response.data;
       return checkPassword;
     } catch (error) {

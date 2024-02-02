@@ -29,11 +29,16 @@ const Header = () => {
     <div>
       <nav>
         <ul className="flex flex-row items-end">
-          <li>
+          <li className="mr-7">
             <Link to="/lobby">
-              <img src={logoImg} alt="Logo" className="h-20" onClick={() => {
-        setIsLobby(null);
-      }}/>
+              <img
+                src={logoImg}
+                alt="Logo"
+                className="h-20"
+                onClick={() => {
+                  setIsLobby(null);
+                }}
+              />
             </Link>
           </li>
           {isLobbyPage ? (
@@ -64,9 +69,6 @@ const Header = () => {
               </li>
               <li>
                 <InvitingTab />
-              </li>
-              <li>
-                <SettingTab />
               </li>
               <li>
                 <LeavingTab />

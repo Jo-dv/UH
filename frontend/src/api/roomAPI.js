@@ -1,9 +1,4 @@
-import axios from "axios";
-
-axios.defaults.headers.post["Content-Type"] = "application/json";
-
-const APPLICATION_SERVER_URL =
-  process.env.NODE_ENV === "production" ? "" : "http://localhost:5000/";
+import axios from "./axios.js"
 
 /**
  * 방 생성 & 입장
@@ -25,19 +20,14 @@ export const createSession = async (
   console.log("나 받은 게임 이거임", roomGame);
 
   try {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "rooms",
+    const response = await axios.post("rooms",
       {
         sessionId: sessionId,
         roomName: roomName,
         roomPassword: roomPassword,
         gameCategory: roomGame,
-        quizCategory: 201,
         max: max,
       },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
     );
     console.log("-----------------");
     console.log("roomPassword", roomPassword);
@@ -65,13 +55,7 @@ export const createSession = async (
  * @returns token
  */
 export const createToken = async (sessionId) => {
-  const response = await axios.post(
-    APPLICATION_SERVER_URL + "tokens/" + sessionId,
-    {},
-    {
-      headers: { "Content-Type": "application/json" },
-    }
-  );
+  const response = await axios.post("tokens/" + sessionId);
   return response.data; // The token
 };
 
@@ -81,23 +65,19 @@ export const createToken = async (sessionId) => {
  * @param {string} connectionId
  * @param {number} userSeq
  * @param {string} userNickname
- * @param {boolean} isHost
+ * @param {boolean} host
  */
 export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, isHost) => {
   console.log("플레이어추가 진행함", sessionId, connectionId, userSeq, userNickname, isHost);
   try {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "players",
+    const response = await axios.post("players",
       {
         sessionId: sessionId,
         connectionId: connectionId,
         userSeq: userSeq,
         userNickname: userNickname,
-        isHost: isHost,
+        host: isHost,
       },
-      {
-        headers: { "Content-Type": "application/json" },
-      }
     );
     console.log(response.data); // "방에 입장했습니다."
   } catch (error) {
@@ -115,11 +95,7 @@ export const exitRoom = async (sessionId, connectionId) => {
   console.log("방나가기 sessionId:", sessionId, " connectionId:", connectionId);
   try {
     const response = await axios.delete(
-      APPLICATION_SERVER_URL + "exitrooms/" + sessionId + "/" + connectionId,
-      {},
-      {
-        headers: { "Content-Type": "application/json" },
-      }
+      "exitrooms/" + sessionId + "/" + connectionId
     );
     console.log(response.data);
   } catch (error) {
@@ -135,30 +111,10 @@ export const exitRoom = async (sessionId, connectionId) => {
  */
 export const listRoom = async () => {
   try {
-    const response = await axios.get(APPLICATION_SERVER_URL + "rooms");
+    const response = await axios.get("rooms");
     // console.log("룸 리스트", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching room list:", error);
   }
-};
-
-/**
- *
- * @param {string} sessionId
- * @param {string} enterPassword
- * @returns token
- */
-export const checkPassword = async (sessionId, enterPassword) => {
-  const response = await axios.post(
-    APPLICATION_SERVER_URL + "password",
-    {
-      customSessionId: sessionId,
-      enterPassword: enterPassword,
-    },
-    {
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-  return response.data; // The token
 };

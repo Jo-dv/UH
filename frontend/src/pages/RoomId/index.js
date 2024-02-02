@@ -4,24 +4,19 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import UserVideoComponent from "./UserVideoComponent.js";
 import Chat from "../../components/Chat/index.js";
-import {
-  createSession,
-  createToken,
-  listRoom,
-  checkPassword,
-  addPlayer,
-  exitRoom,
-} from "../../api/roomAPI.js";
+import { createSession, createToken, addPlayer, exitRoom } from "../../api/roomAPI.js";
 import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import { getGameData, getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
 import Game from "../Game/index.js";
-import AnswerInput from "../Game/AnswerInput.js";
-
-// const APPLICATION_SERVER_URL =
-//   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
+import Leaving from "../../components/Modal/waiting/Leaving.js";
+import UseLeavingStore from "../../store/UseLeavingStore";
+import UseRoomSetting from "../../store/UseRoomSetting.js";
+import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
+import Inviting from "../../components/Modal/waiting/Inviting.js";
+import UseInvitingStore from "../../store/UseInvitingStore.js";
+import Person4 from "../../components/waitingComponent/Person4.js";
 
 export default function RoomId() {
-  const navigate = useNavigate();
   const { id } = useParams();
   const [mySessionId, setMySessionId] = useState(id);
   const [myUserName, setMyUserName] = useState(`guest-${Math.floor(Math.random() * 100)}`);
@@ -36,11 +31,12 @@ export default function RoomId() {
   const [isPlay, setIsPlay] = useState(false);
   const [gameQuiz, setGameQuiz] = useState(undefined);
   const OV = useRef(new OpenVidu());
-
+  const { leaving, setLeaving } = UseLeavingStore();
+  const { roomSetting, setRoomSetting } = UseRoomSetting();
+  const { inviting, setInviting } = UseInvitingStore();
   const location = useLocation();
   const firstRoomInfo = { ...location.state };
-  // console.log(roomInfo);
-
+  const [roomInfo, setroomInfo] = useState({});
   const handleMainVideoStream = useCallback(
     (stream) => {
       if (mainStreamManager !== stream) {
@@ -49,16 +45,12 @@ export default function RoomId() {
     },
     [mainStreamManager]
   );
-
+  // const max = roomInfo.roomData.max;
   const joinSession = useCallback(() => {
     if (session) {
       console.log("리브세션", session);
       exitRoom(session.sessionId, session.connection.connectionId);
       session.disconnect();
-      // setSession(undefined);
-      // setSubscribers([]);
-      // setMainStreamManager(undefined);
-      // setPublisher(undefined);
     }
 
     const mySession = OV.current.initSession();
@@ -134,6 +126,7 @@ export default function RoomId() {
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
           await console.log("서버에서 받은 방정보", serverRoomInfo);
+          setroomInfo(serverRoomInfo);
           // console.log("방 호스트 아이디", serverRoomInfo.roomStatus.hostId);
           // console.log("세션 커넥션 아이디", session.connection.connectionId);
           if (mySessionId === "create") {
@@ -266,21 +259,11 @@ export default function RoomId() {
       }
       const roomData = await getRoomInfo(session.sessionId);
       if (roomData.roomData.play) {
-        // navigate("/game", {
-        //   state: {
-        //     roomData: roomData,
-        //     publisher: publisher,
-        //     subscribers: subscribers,
-        //     session: session,
-        //     myUserName: myUserName,
-        //   },
-        // });
         setIsPlay(true);
         sendPlay();
       } else {
         setIsPlay(false);
       }
-      // console.log("데이터들", myUserName, roomData, publisher, subscribers, session);
     } catch (error) {
       console.error("set Ready Error:", error);
     }
@@ -290,9 +273,9 @@ export default function RoomId() {
     if (session !== undefined) {
       session
         .signal({
-          data: `${mySessionId} - 게임시작: ${isPlay}`, // Any string (optional)
-          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-          type: "room-play", // The type of message (optional)
+          data: `${mySessionId} - 게임시작: ${isPlay}`,
+          to: [],
+          type: "room-play",
         })
         .then(() => {
           console.log("게임시작 :", isPlay);
@@ -315,9 +298,9 @@ export default function RoomId() {
     if (session !== undefined) {
       session
         .signal({
-          data: `${mySessionId} - 게임끝: ${isPlay}`, // Any string (optional)
-          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-          type: "room-playDone", // The type of message (optional)
+          data: `${mySessionId} - 게임끝: ${isPlay}`,
+          to: [],
+          type: "room-playDone",
         })
         .then(() => {
           console.log("게임끝 :", isPlay);
@@ -437,6 +420,7 @@ export default function RoomId() {
           </div>
         </div>
       ) : null}
+      {/* 모달 창 관리 */}
 
       {isPlay ? (
         <Game
@@ -449,6 +433,18 @@ export default function RoomId() {
           isHost={isHost}
         />
       ) : null}
+      {leaving && <Leaving onClose={() => setLeaving(false)} leaving={leaving} />}
+
+      {roomSetting && (
+        <RoomSetting
+          onClose={() => setRoomSetting(false)}
+          roomSetting={roomSetting}
+          roomInfo={roomInfo}
+        />
+      )}
+      {inviting && (
+        <Inviting onClose={() => setInviting(false)} inviting={inviting} openLink={openLink} />
+      )}
     </>
   );
 }

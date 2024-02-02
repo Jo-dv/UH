@@ -6,7 +6,7 @@ import org.project.uh.game.dto.QuizDto;
 import org.project.uh.room.dto.RoomStatusDto;
 
 public interface GameService {
-	List<QuizDto> listQuiz(int gameCategory, int quizCategory);
+	List<QuizDto> listQuiz(int gameCategory);
 
 	int saveResult(int gameCategory, RoomStatusDto roomStatus, String winTeam, int winScore, int loseScore);
 }

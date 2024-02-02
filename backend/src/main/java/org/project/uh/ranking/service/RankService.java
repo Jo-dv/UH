@@ -15,4 +15,7 @@ public interface RankService {
 
 	// 인물 맞추기 랭킹
 	public List<RankDto> personRank();
+
+	// 전체 랭킹
+	public List<RankDto> rank();
 }
