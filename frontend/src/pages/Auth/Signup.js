@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -32,6 +32,18 @@ const Signup = () => {
         setShowPassword((showPassword) => !showPassword);
     };
 
+    // 비밀번호 확인 검사
+    const checkPasswordMatch = () => {
+        let newErr = { ...err };
+        if (!form.passwordCheck) {
+            newErr.passwordCheck = "비밀번호를 입력해주세요";
+        } else if (form.userPassword !== form.passwordCheck) {
+            newErr.passwordCheck = "비밀번호가 일치하지 않습니다";
+        } else {
+            newErr.passwordCheck = "";
+        }
+        setErr(newErr);
+    };
     //아이디 중복검사
     const checkUserIdDuplicate = async (e) => {
         const eRegEx = /^[a-z0-9A-Z]{4,20}$/;
@@ -39,9 +51,9 @@ const Signup = () => {
             setErr({ ...err, userId: "영어, 숫자만 써주세요 (4-20자)"});
         } else {
             try {
-                const response = await axios.post("http://localhost:5000/user/idcheck", {
-                    userId: form.userId,
-                });
+                const response = await axios.post("user/idcheck", {
+                    userId: form.userId
+                }, {withCredentials: true});
                 const res = response.data;
                 console.log(res);
                 if (res === 0) {
@@ -113,7 +125,7 @@ const Signup = () => {
             const { userId, userPassword } = form;
             console.log("회원가입 정보:", { userId, userPassword });
             try {
-                const response = await axios.post("http://localhost:5000/user/join", { userId, userPassword });
+                const response = await axios.post("user/join", { userId, userPassword });
                 console.log("서버 응답:", response);
                 // 회원가입 성공 후 처리
                 // 예: navigate("/login") 또는 성공 메시지 표시
@@ -162,6 +174,7 @@ const Signup = () => {
                     type={showPassword ? "text" : "password"}
                     placeholder="비밀번호 확인"
                     onChange={onChange}
+                    onBlur={checkPasswordMatch}
                     name="passwordCheck"
                     value={form.passwordCheck}
                 />

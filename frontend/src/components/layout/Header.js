@@ -3,16 +3,19 @@ import { Link, useLocation } from "react-router-dom";
 import CreateRoomTab from "../HeaderComponent/CreateRoomTab";
 import FastTrackTab from "../HeaderComponent/FastTrackTab";
 import RankingTab from "../HeaderComponent/RankingTab";
-import SettingTab from "../HeaderComponent/SettingTab";
+import SettingTab from "../HeaderComponent/MyPageTab";
 import FeedbackTab from "../HeaderComponent/FeedbackTab";
 import LogOutTab from "../HeaderComponent/LogOutTab";
 import RoomSettingTab from "../HeaderComponent/RoomSettingTab";
 import InvitingTab from "../HeaderComponent/InvitingTab";
 import LeavingTab from "../HeaderComponent/LeavingTab";
+import UseIsLobbyStore from "../../store/UseIsLobbyStore";
+import logoImg from "../../asset/image/LOGO.png";
 
 const Header = () => {
   const location = useLocation();
   const [isLobbyPage, setIsLobbyPage] = useState(true);
+  const { isLobby, setIsLobby } = UseIsLobbyStore();
 
   useEffect(() => {
     if (location.pathname === "/lobby") {
@@ -26,9 +29,16 @@ const Header = () => {
     <div>
       <nav>
         <ul className="flex flex-row items-end">
-          <li>
+          <li className="mr-7">
             <Link to="/lobby">
-              <img src="../../image/logo.png" alt="Logo" className="h-20" />
+              <img
+                src={logoImg}
+                alt="Logo"
+                className="h-20"
+                onClick={() => {
+                  setIsLobby(null);
+                }}
+              />
             </Link>
           </li>
           {isLobbyPage ? (
@@ -59,9 +69,6 @@ const Header = () => {
               </li>
               <li>
                 <InvitingTab />
-              </li>
-              <li>
-                <SettingTab />
               </li>
               <li>
                 <LeavingTab />

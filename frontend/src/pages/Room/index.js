@@ -1,6 +1,5 @@
 import { OpenVidu } from "openvidu-browser";
 
-import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import Chat from "../../components/Chat";
@@ -24,7 +23,6 @@ export default function Room() {
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-  const [roomName, setRoomName] = useState(null);
   const [roomList, setRoomList] = useState([
     {
       sessionId: "세션아이디",

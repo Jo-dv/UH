@@ -15,11 +15,10 @@ import lombok.ToString;
 @ToString
 public class RankDto {
 	private int resultId;
-	private Integer user1;
-	private Integer user2;
-	private Integer user3;
-	private Integer user4;
-	private int gameCategory;
+	private String user1;
+	private String user2;
+	private String user3;
+	private String user4;
 	private int score;
 	private LocalDateTime created;
 }

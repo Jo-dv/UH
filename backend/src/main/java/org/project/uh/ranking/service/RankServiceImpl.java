@@ -30,4 +30,9 @@ public class RankServiceImpl implements RankService {
 		return dao.personRank();
 	}
 
+	@Override
+	public List<RankDto> rank() {
+		return dao.rank();
+	}
+
 }

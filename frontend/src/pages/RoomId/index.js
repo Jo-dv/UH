@@ -1,37 +1,42 @@
 import { OpenVidu } from "openvidu-browser";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import UserVideoComponent from "./UserVideoComponent.js";
 import Chat from "../../components/Chat/index.js";
-import {
-  createSession,
-  createToken,
-  listRoom,
-  checkPassword,
-  addPlayer,
-  exitRoom,
-} from "../../api/roomAPI.js";
-
-// const APPLICATION_SERVER_URL =
-//   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";
+import { createSession, createToken, addPlayer, exitRoom } from "../../api/roomAPI.js";
+import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
+import { getGameData, getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
+import Game from "../Game/index.js";
+import Leaving from "../../components/Modal/waiting/Leaving.js";
+import UseLeavingStore from "../../store/UseLeavingStore";
+import UseRoomSetting from "../../store/UseRoomSetting.js";
+import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
+import Inviting from "../../components/Modal/waiting/Inviting.js";
+import UseInvitingStore from "../../store/UseInvitingStore.js";
+import Person4 from "../../components/waitingComponent/Person4.js";
 
 export default function RoomId() {
   const { id } = useParams();
   const [mySessionId, setMySessionId] = useState(id);
-  const [myUserName, setMyUserName] = useState(`id${Math.floor(Math.random() * 100)}`);
+  const [myUserName, setMyUserName] = useState(`guest-${Math.floor(Math.random() * 100)}`);
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
   const [subscribers, setSubscribers] = useState([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState(null);
-
+  const [openLink, setOpenLink] = useState("");
+  const [isReady, setIsReady] = useState(false);
+  const [isHost, setIsHost] = useState(false);
+  const [isPlay, setIsPlay] = useState(false);
+  const [gameQuiz, setGameQuiz] = useState(undefined);
   const OV = useRef(new OpenVidu());
-
-  const handleChangeUserName = useCallback((e) => {
-    setMyUserName(e.target.value);
-  }, []);
-
+  const { leaving, setLeaving } = UseLeavingStore();
+  const { roomSetting, setRoomSetting } = UseRoomSetting();
+  const { inviting, setInviting } = UseInvitingStore();
+  const location = useLocation();
+  const firstRoomInfo = { ...location.state };
+  const [roomInfo, setroomInfo] = useState({});
   const handleMainVideoStream = useCallback(
     (stream) => {
       if (mainStreamManager !== stream) {
@@ -40,8 +45,14 @@ export default function RoomId() {
     },
     [mainStreamManager]
   );
-
+  // const max = roomInfo.roomData.max;
   const joinSession = useCallback(() => {
+    if (session) {
+      console.log("리브세션", session);
+      exitRoom(session.sessionId, session.connection.connectionId);
+      session.disconnect();
+    }
+
     const mySession = OV.current.initSession();
 
     mySession.on("streamCreated", (event) => {
@@ -58,6 +69,8 @@ export default function RoomId() {
     });
 
     setSession(mySession);
+
+    window.addEventListener("beforeunload", leaveSession);
   }, []);
 
   useEffect(() => {
@@ -98,6 +111,7 @@ export default function RoomId() {
             console.log("There was an error connecting to the session:", error.code, error.message);
           }
         })
+        //플레이어 추가
         .then(() => {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
@@ -106,6 +120,21 @@ export default function RoomId() {
             addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           } else {
             addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
+          }
+        })
+        //방조회
+        .then(async () => {
+          const serverRoomInfo = await getRoomInfo(session.sessionId);
+          await console.log("서버에서 받은 방정보", serverRoomInfo);
+          setroomInfo(serverRoomInfo);
+          // console.log("방 호스트 아이디", serverRoomInfo.roomStatus.hostId);
+          // console.log("세션 커넥션 아이디", session.connection.connectionId);
+          if (mySessionId === "create") {
+            console.log("나는 호스트");
+            setIsHost(true);
+          } else if (serverRoomInfo.roomStatus.hostId === session.connection.connectionId) {
+            console.log("나는 호스트");
+            setIsHost(true);
           }
         });
     }
@@ -123,10 +152,10 @@ export default function RoomId() {
     OV.current = new OpenVidu();
     setSession(undefined);
     setSubscribers([]);
-    // setMySessionId("create");
-    // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
+    // setMySessionId("create");
+    // setMyUserName("나가고 제설정" + Math.floor(Math.random() * 100));
   }, [session]);
 
   const switchCamera = useCallback(async () => {
@@ -185,94 +214,237 @@ export default function RoomId() {
     };
   }, [leaveSession]);
 
-  /**
-   * --------------------------------------------
-   * GETTING A TOKEN FROM YOUR APPLICATION SERVER
-   * --------------------------------------------
-   * The methods below request the creation of a Session and a Token to
-   * your application server. This keeps your OpenVidu deployment secure.
-   *
-   * In this sample code, there is no user control at all. Anybody could
-   * access your application server endpoints! In a real production
-   * environment, your application server must identify the user to allow
-   * access to the endpoints.
-   *
-   * Visit https://docs.openvidu.io/en/stable/application-server to learn
-   * more about the integration of OpenVidu in your application server.
-   */
   const getToken = useCallback(async () => {
     //API import 함수 사용 중
-    const sessionId = await createSession(mySessionId);
+    const sessionId = await createSession(
+      mySessionId,
+      firstRoomInfo.roomName,
+      firstRoomInfo.roomPassword,
+      firstRoomInfo.roomGame,
+      firstRoomInfo.roomMax
+    );
     console.log("방생성결과", sessionId);
     // await createToken(sessionId);
+    setOpenLink(sessionId);
     return await createToken(sessionId);
   }, [mySessionId]);
+
+  const changeTeam = (team) => {
+    console.log(`팀변경 ${team}`, session);
+    try {
+      playerTeam(session.sessionId, session.connection.connectionId, team);
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
+
+  const setReady = async () => {
+    // console.log("준비");
+    try {
+      if (isHost) {
+        await startPlay(session.sessionId);
+        try {
+          const quiz = await getGameData(session.sessionId);
+          setGameQuiz(quiz);
+        } catch (error) {
+          console.error("getGameData Error", error);
+        }
+      } else {
+        if (isReady) {
+          await ready(session.sessionId, session.connection.connectionId, false);
+        } else {
+          await ready(session.sessionId, session.connection.connectionId, true);
+        }
+        setIsReady(!isReady);
+      }
+      const roomData = await getRoomInfo(session.sessionId);
+      if (roomData.roomData.play) {
+        setIsPlay(true);
+        sendPlay();
+      } else {
+        setIsPlay(false);
+      }
+    } catch (error) {
+      console.error("set Ready Error:", error);
+    }
+  };
+  const sendPlay = () => {
+    console.log("플레이 소켓 보냄");
+    if (session !== undefined) {
+      session
+        .signal({
+          data: `${mySessionId} - 게임시작: ${isPlay}`,
+          to: [],
+          type: "room-play",
+        })
+        .then(() => {
+          console.log("게임시작 :", isPlay);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+  if (session !== undefined) {
+    session.on("signal:room-play", async (event) => {
+      console.log("플레이 소켓 받음", event.data);
+      const quiz = await getGameData(session.sessionId);
+      setGameQuiz(quiz);
+      setIsPlay(true);
+    });
+  }
+  const sendPlayDone = () => {
+    console.log("플레이 소켓 보냄");
+    if (session !== undefined) {
+      session
+        .signal({
+          data: `${mySessionId} - 게임끝: ${isPlay}`,
+          to: [],
+          type: "room-playDone",
+        })
+        .then(() => {
+          console.log("게임끝 :", isPlay);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  };
+  if (session !== undefined) {
+    session.on("signal:room-playDone", (event) => {
+      console.log("플레이 소켓 받음", event.data);
+      setIsPlay(false);
+    });
+  }
 
   return (
     <>
       {session === undefined ? (
         <div>
-          {id}
-          <button onClick={joinSession} className="bg-mc1">
-            JOIN SESSION
+          <button onClick={joinSession} className="bg-mc1 p-2">
+            {firstRoomInfo.roomName} : JOIN ROOM
           </button>
+          <section className="w-1/2">
+            <MyCam></MyCam>
+          </section>
         </div>
       ) : null}
 
-      {session !== undefined ? (
-        <div id="session" className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
+      {session !== undefined && isPlay === false ? (
+        <div className="bg-neutral-200 p-2 mx-2 mb-2 border rounded-3xl h-screen-80 flex flex-col items-center ">
           <div id="session-header" className="flex flex-row">
             <h1 id="session-title" className="text-xl">
-              {mySessionId}
+              {firstRoomInfo.roomName}
             </h1>
             <input
-              className="bg-mc1"
+              className="bg-mc1 p-2"
               type="button"
               id="buttonLeaveSession"
               onClick={leaveSession}
               value="Leave session"
             />
             <input
-              className="bg-mc3"
               type="button"
               id="buttonSwitchCamera"
               onClick={switchCamera}
               value="Switch Camera"
             />
+            <p>초대링크 :</p>
+            <p> http://localhost:3000/room/{openLink}</p>
           </div>
-          <div className="grid grid-cols-4 h-screen-40">
-            <div id="video-container" className="col-span-3 grid grid-rows-2 grid-cols-4 gap-2 p-2">
+          <div className="grid grid-rows-3 h-screen-40 aspect-[16/9]">
+            <div className="row-span-2 grid grid-cols-4 grid-rows-2">
               {publisher !== undefined ? (
-                <div className="bg-green-500 p-1 " onClick={() => handleMainVideoStream(publisher)}>
-                  <UserVideoComponent streamManager={publisher} session={session} />
+                <div
+                  className="bg-green-500 h-full aspect-[4/3] p-1 overflow-hidden"
+                  onClick={() => handleMainVideoStream(publisher)}
+                >
+                  <UserVideoComponent
+                    streamManager={publisher}
+                    session={session}
+                    isHost={isHost}
+                    isReady={isReady}
+                  />
                 </div>
               ) : null}
               {/* 나말고 */}
               {subscribers.map((sub, i) => (
                 <div
                   key={sub.id}
-                  className="bg-teal-500 p-1"
+                  className="bg-teal-500 h-full aspect-[4/3] p-1 overflow-hidden"
                   onClick={() => handleMainVideoStream(sub)}
                 >
                   <span>{sub.id}</span>
-                  <UserVideoComponent streamManager={sub} session={session} />
+                  <UserVideoComponent
+                    streamManager={sub}
+                    session={session}
+                    isHost={isHost}
+                    isReady={isReady}
+                  />
                 </div>
               ))}
             </div>
-            <div className="grid col-span-1 grid-rows-4 gap-2">
-              <div className="row-span-3">
-                <Chat myUserName={myUserName} session={session} />
+
+            <div className="grid col-span-1 grid-cols-4 gap-2 w-full">
+              <div className="col-span-3">
+                <Chat
+                  myUserName={myUserName}
+                  session={session}
+                  myConnectionId={"undefined 방지용 데이터"}
+                />
               </div>
 
-              <div className="row-span-1 grid grid-cols-2 gap-1 w-full">
-                <button className="bg-mc1 border rounded-3xl">A팀</button>
-                <button className="bg-mc8 border rounded-3xl">B팀</button>
-                <button className="col-span-2 bg-mc3 border rounded-3xl">준비</button>
+              <div className="col-span-1 grid grid-cols-2 gap-1 w-full">
+                <button
+                  className="bg-mc1 border rounded-3xl active:bg-mc2"
+                  onClick={() => changeTeam("A")}
+                >
+                  A팀
+                </button>
+                <button
+                  className="bg-mc8 border rounded-3xl active:bg-mc7"
+                  onClick={() => changeTeam("B")}
+                >
+                  B팀
+                </button>
+                <button
+                  className="col-span-2 bg-mc3 border rounded-3xl"
+                  // onClick={() => getRoomInfo(session.sessionId)}
+                  onClick={setReady}
+                >
+                  {isHost ? "게임시작" : "준비"}
+                </button>
+                <button onClick={sendPlay}>play</button>
               </div>
             </div>
           </div>
         </div>
       ) : null}
+      {/* 모달 창 관리 */}
+
+      {isPlay ? (
+        <Game
+          publisher={publisher}
+          subscribers={subscribers}
+          session={session}
+          myUserName={myUserName}
+          quiz={gameQuiz}
+          sendPlayDone={sendPlayDone}
+          isHost={isHost}
+        />
+      ) : null}
+      {leaving && <Leaving onClose={() => setLeaving(false)} leaving={leaving} />}
+
+      {roomSetting && (
+        <RoomSetting
+          onClose={() => setRoomSetting(false)}
+          roomSetting={roomSetting}
+          roomInfo={roomInfo}
+        />
+      )}
+      {inviting && (
+        <Inviting onClose={() => setInviting(false)} inviting={inviting} openLink={openLink} />
+      )}
     </>
   );
 }
