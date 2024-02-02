@@ -12,7 +12,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class FeedbackDto {
-	private int feedbackId;
 	private int userSeq;
 	private String feedbackContent;
 }
