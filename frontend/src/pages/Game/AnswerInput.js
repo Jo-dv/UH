@@ -23,7 +23,7 @@ const AnswerInput = ({
         type: "game-answer", // The type of message (optional)
       })
       .then(() => {
-        console.log("정답제출 보냄 :", answerMsg);
+        // console.log("정답제출 보냄 :", answerMsg);
         setAnswerMsg("");
       })
       .catch((error) => {
@@ -36,7 +36,7 @@ const AnswerInput = ({
     if (answer === event.data) {
       console.log(`${event.data} 정답`);
       plusQuizIndex();
-      plusScore(myTeam);
+      plusScore();
       changeTeamIndex();
     } else {
       console.log(`${event.data} 오답`);

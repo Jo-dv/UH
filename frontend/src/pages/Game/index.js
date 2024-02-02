@@ -8,7 +8,7 @@ import AnswerInput from "./AnswerInput";
 import G101Info from "./games/G101Info";
 
 const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone, isHost }) => {
-  let maxTime = 6000;
+  let maxTime = 50000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
   const [loading, setLoading] = useState(true);
@@ -43,11 +43,19 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
   };
-  const plusScore = (team) => {
-    console.log(`plusScore: ${team}`);
-    if (team === "A") {
+  // const plusScore = (team) => {
+  //   console.log(`plusScore: ${team}`);
+  //   if (team === "A") {
+  //     setATeamScore(ATeamScore + 1);
+  //   } else if (team === "B") {
+  //     setBTeamScore(BTeamScore + 1);
+  //   }
+  // };
+  const plusScore = () => {
+    console.log(`plusScore: ${turnPlayerId[2]}`);
+    if (turnPlayerId[2] === "A") {
       setATeamScore(ATeamScore + 1);
-    } else if (team === "B") {
+    } else if (turnPlayerId[2] === "B") {
       setBTeamScore(BTeamScore + 1);
     }
   };
@@ -74,12 +82,12 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
   };
 
   const changeTeamTurn = () => {
+    // console.log(TeamTurn);
     if (TeamTurn === "A") {
       setTeamTurn("B");
       setTeamIndex(0);
       setTurnPlayerId(BTeamStreamManagers[TeamIndex]);
-    }
-    if (TeamTurn === "B") {
+    } else if (TeamTurn === "B") {
       setTeamTurn("A");
       setTeamIndex(0);
       setTurnPlayerId(ATeamStreamManagers[TeamIndex]);
@@ -89,16 +97,16 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
   useEffect(() => {
     const callData = async () => {
       const roomData = await getRoomInfo(session.sessionId);
-      console.log(
-        //   "게임 데이터 : ",
-        //   myConnectionId,
-        //   roomData,
-        //   publisher,
-        //   subscribers,
-        //   session,
-        quiz
-        //   myUserName
-      );
+      // console.log(
+      //   //   "게임 데이터 : ",
+      //   //   myConnectionId,
+      //   //   roomData,
+      //   //   publisher,
+      //   //   subscribers,
+      //   //   session,
+      //   // quiz
+      //   //   myUserName
+      // );
 
       const players = roomData.roomStatus.players;
       const myTeamCNT = roomData.roomStatus.players[myConnectionId].team; //A or B
@@ -194,7 +202,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
               <div className="flex justify-between">
                 <p>A:{ATeamScore}</p>
                 <p>
-                  {round} {TeamTurn}
+                  round:{round} Team: {TeamTurn}
                 </p>
                 <button onClick={sendPlayDone}>게임종료</button>
                 <p>{time}</p>

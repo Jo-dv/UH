@@ -112,14 +112,14 @@ export default function RoomId() {
           }
         })
         //플레이어 추가
-        .then(() => {
+        .then(async () => {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
           console.log("플레이어 추가", mySessionId);
           if (mySessionId === "create") {
-            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
+            await addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           } else {
-            addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
+            await addPlayer(playerSessionId, playerConnectionId, 1, myUserName, false);
           }
         })
         //방조회

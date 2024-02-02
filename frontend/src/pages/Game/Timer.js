@@ -13,34 +13,11 @@ const Timer = ({
   isHost,
   session,
 }) => {
-  const intervalRef = useRef(null);
-  // console.log(maxTime);
-  // const sendTime = (t) => {
-  //   if (isHost) {
-  //     session
-  //       .signal({
-  //         data: t, // Any string (optional)
-  //         to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-  //         type: "game-time", // The type of message (optional)
-  //       })
-  //       .then(() => {
-  //         // console.log("소켓 시간 보냄", t);
-  //       })
-  //       .catch((error) => {
-  //         console.error(error);
-  //       });
-  //   }
-  // };
+  const startTime = useRef(null);
+  const nowTime = useRef(null);
+  const [delay, setDelay] = useState(1000);
+  const [isRunning, setIsRunning] = useState(true);
 
-  // session.on("signal:game-time", (event) => {
-  //   // console.log("소켓 시간 받음", time);
-  //   const T = Number(event.data);
-  //   setTime(T);
-  //   // if (T >= maxTime) {
-  //   //   changeTeamTurn();
-  //   //   plusRound();
-  //   // }
-  // });
   function useInterval(callback, delay) {
     const savedCallback = useRef();
 
@@ -61,34 +38,32 @@ const Timer = ({
     }, [delay]);
   }
 
-  useInterval(() => {
-    setTime(time + 10);
-  }, 1000);
+  const timePlay = () => {
+    if (startTime.current === null) {
+      startTime.current = Date.now();
+    } else {
+      nowTime.current = Date.now() - startTime.current;
+      setTime(nowTime.current);
+    }
 
-  if (time > maxTime) {
-    // alert("a");
-    setTime(0);
-  }
-  // useEffect(() => {
-  //   intervalRef.current = setInterval(() => {
-  //     setTime((prevCount) => {
-  //       if (prevCount >= maxTime) {
-  //         // clearInterval(intervalRef.current); // 카운트가 1이면 타이머 정지
-  //         prevCount = 0;
-  //         changeTeamTurn();
-  //         console.log(TeamTurn);
-  //         setRound((r) => {
-  //           if (r > maxRound) {
-  //             clearInterval(intervalRef.current);
-  //           }
-  //           return r + 1;
-  //         });
-  //       }
-  //       return prevCount + 1000;
-  //     });
-  //   }, 1000);
-  //   return () => clearInterval(intervalRef.current); // 컴포넌트가 언마운트될 때 타이머 정리
-  // }, []);
+    if (time > maxTime) {
+      console.log(nowTime.current, time);
+      changeTeamTurn();
+      startTime.current = Date.now();
+      setTime(0);
+      setRound((r) => r + 1);
+    }
+  };
+  useInterval(
+    () => {
+      timePlay();
+    },
+    isRunning ? delay : null
+  );
+
+  // if (round > maxRound) {
+  //   setIsRunning(false);
+  // }
 
   return (
     <meter
@@ -98,7 +73,6 @@ const Timer = ({
       low={maxTime / 2}
       high={(maxTime * 3) / 4}
       value={time}
-      // onClick={() => setTime(0)}
     ></meter>
   );
 };
