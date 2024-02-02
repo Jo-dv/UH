@@ -62,7 +62,7 @@ public class FeedbackController {
 	@GetMapping("/feedback")
 	public ResponseEntity<List<FeedbackDto>> feedback() {
 		try {
-			return new ResponseEntity<>(service.listFeedback, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(service.listFeedback(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
