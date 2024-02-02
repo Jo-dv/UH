@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.project.uh.user.dao.UserDao;
 import org.project.uh.user.dto.MypageDto;
+import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +28,26 @@ public class UserServiceImpl implements UserService {
 		return dao.insertUser(dto);
 	}
 
+	// 닉네임 중복 체크
+	@Override
+	public int nicknameCheck(String userNickname) {
+		if (dao.checkUserNickname(userNickname) > 0) {
+			return 0;
+		}
+		return 1;
+	}
+
+	// 소셜 로그인 회원가입
+	@Override
+	public int insertSocialUser(SocialUserDto dto) {
+		return dao.insertSocialUser(dto);
+	}
+
 	// 아이디 중복 체크
 	@Override
-	public int idCheck(UserDto dto) {
+	public int idCheck(String userId) {
 		// 회원가입 시 userId 중복 체크
-		if (dao.checkUserId(dto.getUserId()) > 0) {
+		if (dao.checkUserId(userId) > 0) {
 			// 존재하는 userId, 회원가입 불가
 			return 0;
 		}
@@ -55,27 +71,10 @@ public class UserServiceImpl implements UserService {
 		return user;
 	}
 
-	@Override
-	public int getUserId(UserDto dto) {
-		return dao.getUserId(dto);
-	}
-
 	// 닉네임 생성
 	@Override
-	public int nickname(UserDto dto) {
-		// 닉네임 중복 체크
-		int nicknameCount = dao.checkUserNickname(dto.getUserNickname());
-		if (nicknameCount > 0) {
-			// 닉네임 중복일 때
-			return 0;
-		}
-		// 중복 없으면 닉네임 생성
-		return dao.nickname(dto);
-	}
-
-	@Override
-	public int getUserNickname(UserDto dto) {
-		return dao.getUserNickname(dto);
+	public int nickname(int userSeq, String userNickname) {
+		return dao.nickname(userSeq, userNickname);
 	}
 
 	// 마이페이지
@@ -92,12 +91,15 @@ public class UserServiceImpl implements UserService {
 		return dao.findById(userId);
 	}
 
-	// 닉네임 중복 체크
+	// seq로 유저 정보 조회
 	@Override
-	public int nicknameCheck(UserDto dto) {
-			if (dao.checkUserNickname(dto.getUserNickname()) > 0) {
-					return 0;
-			}
-			return 1;
+	public UserDto findBySeq(int userSeq) {
+		return dao.findBySeq(userSeq);
+	}
+
+	// seq로 social token 조회
+	@Override
+	public SocialUserDto findSocial(int userSeq) {
+		return dao.findSocial(userSeq);
 	}
 }

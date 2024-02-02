@@ -18,10 +18,10 @@ public class GameServiceImpl implements GameService {
 	private final GameDao dao;
 
 	@Override
-	public List<QuizDto> listQuiz(int gameCategory, int quizCategory) {
+	public List<QuizDto> listQuiz(int gameCategory) {
 		//고요 속의 외침
 		if (gameCategory == 101) {
-			return dao.shoutList(quizCategory);
+			return dao.shoutList();
 		}
 		//인물 맞추기
 		else if (gameCategory == 102) {

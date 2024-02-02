@@ -1,4 +1,4 @@
-package org.project.uh.ranking.dto;
+package org.project.uh.user.dto;
 
 import java.time.LocalDateTime;
 
@@ -13,12 +13,14 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RankDto {
+public class ResultDto {
 	private int resultId;
-	private String user1;
-	private String user2;
-	private String user3;
-	private String user4;
+	private Integer user1;
+	private Integer user2;
+	private Integer user3;
+	private Integer user4;
+	private int gameCategory;
 	private int score;
 	private LocalDateTime created;
+	private boolean win;
 }
