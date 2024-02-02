@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OpenViduVideoComponent from "../Room/OvVideo";
 import "./UserVideo.css";
 import Mic from "@mui/icons-material/Mic";
@@ -38,9 +38,7 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
 
   const muteMic = () => {
     // console.log("스트림메니저", streamManager);
-    if (gamePlayer === streamManager.stream.connection.connectionId) {
-      alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    if (streamManager.constructor.name === "Publisher") {
       streamManager.publishAudio(false);
       socketSend();
     }
@@ -63,26 +61,22 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
     }
   };
   const onVideo = () => {
-    if (gamePlayer === streamManager.stream.connection.connectionId) {
-      alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    if (streamManager.constructor.name === "Publisher") {
       streamManager.publishVideo(true);
       socketSend();
     }
   };
-  // console.log(
-  //   "gamePlayer : ",
-  //   gamePlayer,
-  //   "connectionId : ",
-  //   streamManager.stream.connection.connectionId
-  // );
-  if (gamePlayer === streamManager.stream.connection.connectionId) {
-    if (streamManager.constructor.name === "Publisher") {
-      streamManager.publishAudio(false);
-      streamManager.publishVideo(true);
-      socketSend();
+
+  useEffect(() => {
+    if (gamePlayer === streamManager.stream.connection.connectionId) {
+      if (streamManager.constructor.name === "Publisher") {
+        streamManager.publishAudio(false);
+        streamManager.publishVideo(true);
+        socketSend(); //cpu 메모리 잡아먹는 범인
+      }
     }
-  }
+  }, [gamePlayer]);
+
   return (
     <div className="">
       {streamManager !== undefined ? (
