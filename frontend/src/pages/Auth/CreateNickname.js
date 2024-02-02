@@ -57,7 +57,7 @@ const CreateNickname = () => {
           setErr({ ...err, userNickname: "한글, 영어, 숫자만 써주세요 (4-20자)"});
       } else {
           try {
-              const response = await axios.post("http://localhost:5000/user/nicknamecheck", {
+              const response = await axios.post("http://localhost:5000/api/user/nicknamecheck", {
                   userNickname: form.userNickname,
               });
               const res = response.data;
@@ -103,10 +103,7 @@ const CreateNickname = () => {
       console.log("닉네임 :", form);
       const userSeq = sessionStorage.getItem("userSeq");
       try {
-        const response = await axios.post("http://localhost:5000/user/nickname", {
-          userSeq,
-          userNickname: form.userNickname,
-        }, { withCredentials: true });
+        const response = await axios.post("http://localhost:5000/api/user/nickname", {userNickname: form.userNickname}, { withCredentials: true });
         const res = response.data;
         console.log("서버 응답:", res);
         if (res.status === 400) {

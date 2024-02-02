@@ -16,14 +16,9 @@ const Login = () => {
   // 카카오 소셜 로그인 / 로그아웃
   const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
   const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
-  const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
   const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
-  const LogoutLink = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`
   const kakaoLoginHandler = () => {
     window.location.href = loginLink;
-  };
-  const kakaoLogoutHandler = () => {
-    window.location.href = LogoutLink;
   };
 
 
@@ -91,7 +86,7 @@ const Login = () => {
       console.log("로그인 정보 :", { userId, userPassword });
       try {
         const response = await axios.post(
-          "http://localhost:5000/user/login",
+          "http://localhost:5000/api/user/login",
           { userId, userPassword },
           { withCredentials: true }
         );
@@ -101,14 +96,14 @@ const Login = () => {
         if (res.userNickname === null) {
           sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
-          setUser({ userSeq: res.userSeq, userNickname: null, userPassword: res.userPassword });
+          setUser({ userSeq: res.userSeq, userNickname: null });
           navigate("/auth/nickname");
           // 닉네임이 있다면
         } else {
           sessionStorage.setItem("userNickname", res.userNickname);
           sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
-          setUser({ userSeq: res.userSeq, userNickname: res.userNickname, userPassword: res.userPassword });
+          setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
           console.log("로그인 성공");
           navigate("/lobby");
         }
@@ -117,6 +112,7 @@ const Login = () => {
           setErr({...err, general: "올바른 정보를 입력해주세요."});
         } else {
         console.error("로그인 중 에러 발생", error);
+        setErr({...err, general: "서버가 아파요ㅠㅠ"});
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
       }
@@ -162,12 +158,9 @@ const Login = () => {
 
         <div className="flex flex-row justify-around w-72">
           <img src={googleLogo} alt="google Logo" />
-          <img src={kakaoLogo} alt="google Logo" />
+          <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
           <img src={naverLogo} alt="google Logo" />
         </div>
-        <button type="button" onClick={kakaoLoginHandler}>
-          카카오 로그인
-        </button>
       </form>
     </div>
   );

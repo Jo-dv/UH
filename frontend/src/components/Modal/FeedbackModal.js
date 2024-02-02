@@ -29,7 +29,7 @@ const FeedbackModal = (props) => {
       return; // 함수 실행 중단
     }
     try {
-      await axios.post("http://localhost:5000/feedback", 
+      await axios.post("http://localhost:5000/api/feedback", 
       { userSeq, feedbackContent }, 
       { withCredentials: true}
       );
