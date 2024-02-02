@@ -69,6 +69,8 @@ export default function RoomId() {
     });
 
     setSession(mySession);
+
+    window.addEventListener("beforeunload", leaveSession);
   }, []);
 
   useEffect(() => {
