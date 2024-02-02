@@ -20,12 +20,15 @@ module.exports = {
         mc8: "#4361EE",
         mc9: "#4895EF",
         mc10: "#4CC9F0",
+        bg1: "#f0f9ff",
+        bd1: "#bae6fd"
       },
       height: {
         "screen-80": "calc(100vh - 96px)",
         "screen-40": "calc(100% - 40px)",
         "screen-16": "calc(100% - 16px)",
       },
+      
     },
   },
   plugins: [require("tailwindcss-animated")],

@@ -1,116 +1,10 @@
-// import { useEffect, useState } from "react";
-// import RankingList from "./RankingList";
-// import useLobbyApiCall from "../../api/useLobbyApiCall";
-// import '../lobbyComponent/RankingLists.css';
-
-// const RankingLists = ({ viewGameCategoryRanking }) => {
-//   const { getRankAllList, getRankPerson, getRankShout, getRankSolo } = useLobbyApiCall();
-//   const [allRank, setAllRank] = useState([]);
-//   const [personRank, setPersonRank] = useState([]);
-//   const [shoutRank, setShoutRank] = useState([]);
-//   const [soloRank, setSoloRank] = useState([]);
-
-//   // api data 비동기로 받아오기
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const data = await getRankAllList();
-//         setAllRank(data);
-//       } catch (error) {
-//         console.error("Error AllRank data:", error);
-//       }
-//     };
-//     fetchData();
-//   }, []);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const data = await getRankPerson();
-//         setPersonRank(data);
-//       } catch (error) {
-//         console.error("Error AllRank data:", error);
-//       }
-//     };
-//     fetchData();
-//   }, []);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const data = await getRankShout();
-//         setShoutRank(data);
-//       } catch (error) {
-//         console.error("Error AllRank data:", error);
-//       }
-//     };
-//     fetchData();
-//   }, []);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const data = await getRankSolo();
-//         setSoloRank(data);
-//       } catch (error) {
-//         console.error("Error AllRank data:", error);
-//       }
-//     };
-//     fetchData();
-//   }, []);
-//   let rankingData;
-//   switch (viewGameCategoryRanking) {
-//     case "1":
-//       rankingData = shoutRank;
-//       break;
-//     case "2":
-//       rankingData = personRank;
-//       break;
-//     case "3":
-//       rankingData = soloRank;
-//       break;
-//     default:
-//       rankingData = allRank;
-//   }
-//   let reorderedTopThree = [];
-//   let rest = [];
-
-//   if (rankingData.length >= 3) {
-//     const topThree = rankingData.slice(0, 3);
-//     reorderedTopThree = [topThree[1], topThree[0], topThree[2]];
-//     rest = rankingData.slice(3);
-//   }
-
-//   return (
-//     <>
-//       <div className="ranking-container relative">
-//         {/* 포디움들을 포함하는 div */}
-//         <div className="flex justify-center mt-20">
-//           {reorderedTopThree.map((user, index) => (
-//             <div key={user.userSeq} className={`podium absolute bottom-0 m-4 w-38 border rounded-3xl ${index === 1 ? 'h-44 top-0' : (index === 0 ? 'h-36 top-8' : 'h-28 top-16')}`}>
-//               <div className="user-info">
-//                 <div>{user.userNickname || '익명'}</div>
-//                 <div>{user.rating}</div>
-//               </div>
-//               <div className={`position bg-formButton p-14`}>{index === 1 ? 1 : (index === 0 ? 2 : 3)}</div>
-//             </div>
-//           ))}
-//         </div>
-//         {/* 나머지 랭킹 리스트 */}
-//         {rest.length > 0 && <div className="mt-48"><RankingList rankingList={rest} /></div>}
-//       </div>
-//     </>
-//   );
-// };
-
-// export default RankingLists;
 import React, { useEffect, useState } from "react";
 import RankingList from "./RankingList";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
-import '../lobbyComponent/RankingLists.css';
+import "../lobbyComponent/RankingLists.css";
 
 const RankingLists = ({ viewGameCategoryRanking }) => {
-  const {  getRankPerson, getRankShout, getRankSolo } = useLobbyApiCall();
+  const { getRankPerson, getRankShout, getRankSolo } = useLobbyApiCall();
   const [rankingData, setRankingData] = useState([]);
 
   useEffect(() => {
@@ -125,10 +19,10 @@ const RankingLists = ({ viewGameCategoryRanking }) => {
             data = await getRankPerson(); // "인물 맞추기" 게임 랭킹
             break;
           case "3":
-            data = await getRankSolo(); // 개인 랭킹 (예시로 사용, 실제 구현에 맞춰 조정)
+            data = await getRankSolo();
             break;
           default:
-            data = await getRankShout();
+            data = await getRankSolo(); // 개인 랭킹 (예시로 사용, 실제 구현에 맞춰 조정)
             break;
         }
         console.log(data);
@@ -153,27 +47,92 @@ const RankingLists = ({ viewGameCategoryRanking }) => {
 
   return (
     <>
-      <div className="ranking-container relative">
-        <div className="flex justify-center mt-20">
-          {reorderedTopThree.map((entry, index) => (
-            <div key={entry.userSeq} className={`podium absolute bottom-0 m-4 w-38 border rounded-3xl ${index === 1 ? 'h-44 top-0' : (index === 0 ? 'h-36 top-8' : 'h-28 top-16')}`}>
-              <div className="user-info">
-                <div>{(viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2") 
-                  ? `${entry.user1}, ${entry.user2}, ${entry.user3}, ${entry.user4}`
-                  : `${entry.userNickname}`
-              }</div>
-                <div>{
-                (viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2") 
-                ? entry.score 
-                : entry.rating
-              }</div>
+      <div className="ranking-container relative flex-col mt-3">
+        <div className="flex justify-center items-end relative">
+          {/* 2등 포디움 */}
+          {reorderedTopThree[0] && (
+            <div>
+              <div className="text-center mt-2">
+                {viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2" ? (
+                  <>
+                    <p>{reorderedTopThree[0].user1}</p>
+                    <p>{reorderedTopThree[0].user2}</p>
+                    <p>{reorderedTopThree[0].user3}</p>
+                    <p>{reorderedTopThree[0].user4}</p>
+                  </>
+                ) : (
+                  <p>{reorderedTopThree[0].userNickname}</p>
+                )}
+                <div>{reorderedTopThree[0].score || reorderedTopThree[0].rating}</div>
               </div>
-              <div className={`position bg-formButton p-14`}>{index === 1 ? 1 : (index === 0 ? 2 : 3)}</div>
+              <div className="m-4 w-32 border rounded-3xl h-24 bg-formButton flex flex-col items-center justify-center">
+                <div className="text-white text-2xl">2</div>
+              </div>
             </div>
-          ))}
+          )}
+
+          {/* 1등 포디움 */}
+          {reorderedTopThree[1] && (
+            <div>
+              <div className="text-center mt-2">
+                {viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2" ? (
+                  <>
+                    <p>{reorderedTopThree[1].user1}</p>
+                    <p>{reorderedTopThree[1].user2}</p>
+                    <p>{reorderedTopThree[1].user3}</p>
+                    <p>{reorderedTopThree[1].user4}</p>
+                  </>
+                ) : (
+                  <p>{reorderedTopThree[1].userNickname}</p>
+                )}
+                <div>{reorderedTopThree[1].score || reorderedTopThree[1].rating}</div>
+              </div>
+              <div className="m-4 w-32 border rounded-3xl h-32 bg-formButton flex flex-col items-center justify-center">
+                <div className="text-white text-2xl">1</div>
+              </div>
+            </div>
+          )}
+
+          {/* 3등 포디움 */}
+          {reorderedTopThree[2] && (
+            <div>
+              <div className="text-center mt-2">
+                {viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2" ? (
+                  <>
+                    <p>{reorderedTopThree[2].user1}</p>
+                    <p>{reorderedTopThree[2].user2}</p>
+                    <p>{reorderedTopThree[2].user3}</p>
+                    <p>{reorderedTopThree[2].user4}</p>
+                  </>
+                ) : (
+                  <p>{reorderedTopThree[2].userNickname}</p>
+                )}
+                <div>{reorderedTopThree[2].score || reorderedTopThree[2].rating}</div>
+              </div>
+              <div className="m-4 w-32 border rounded-3xl h-16 bg-formButton flex flex-col items-center justify-center">
+                <div className="text-white text-2xl">3</div>
+              </div>
+            </div>
+          )}
         </div>
-        {/* 나머지 랭킹 리스트 */}
-        {rest.length > 0 && <div className="mt-48"><RankingList rankingList={rest} /></div>}
+        {/* 나머지 랭킹 리스트 구역 */}
+        <div className="ranking-list-container mt-1">
+          {rest.length > 0 &&
+            rest.map((entry, index) => (
+              <div
+                key={entry.userSeq}
+                className="flex justify-between items-center m-1 p-2 border rounded-md"
+              >
+                <span className="flex-2 text-center mx-4">{index + 4} 위</span>
+                <span className="flex-2 text-center mx-4">
+                  {viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2"
+                    ? `${entry.user1}, ${entry.user2}, ${entry.user3}, ${entry.user4}`
+                    : `${entry.userNickname}`}
+                </span>
+                <span className="flex-1 text-center mx-4">{entry.score || entry.rating}</span>
+              </div>
+            ))}
+        </div>
       </div>
     </>
   );
