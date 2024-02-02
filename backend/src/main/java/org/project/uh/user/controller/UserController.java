@@ -315,4 +315,6 @@ public class UserController {
 			return new ResponseEntity<>("카카오 로그인 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 }
+

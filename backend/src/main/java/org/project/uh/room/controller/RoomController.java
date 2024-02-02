@@ -418,11 +418,11 @@ public class RoomController {
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@PutMapping("/ready")
-	public ResponseEntity<String> updateReady(ReadyDto readyDto) {
+	public ResponseEntity<String> updateReady(@RequestBody ReadyDto readyDto) {
 		String sessionId = readyDto.getSessionId();
 		String connectionId = readyDto.getConnectionId();
 		boolean isReady = readyDto.isReady();
-
+		System.out.println(readyDto);
 		RoomStatusDto roomStatus = roomStatusList.get(sessionId);
 		if (roomStatus == null) {
 			return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);

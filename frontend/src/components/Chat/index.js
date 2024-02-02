@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./chat.css";
 
-const Chat = ({ session, myUserName }) => {
+const Chat = ({ session, myUserName, myConnectionId, gamePlayer }) => {
   const [chat, setChat] = useState("");
   const [receiveMsg, setReceiveMsg] = useState(`${myUserName}님 환영합니다`);
   const [messageList, setMessageList] = useState([]);
@@ -9,7 +9,7 @@ const Chat = ({ session, myUserName }) => {
 
   const sendMsg = (e) => {
     e.preventDefault();
-    console.log(session);
+    // console.log(session);
     session
       .signal({
         data: `${myUserName}: ${chat}`, // Any string (optional)
@@ -61,25 +61,27 @@ const Chat = ({ session, myUserName }) => {
           })}
           <li className="">{receiveMsg}</li>
         </ul>
-
-        <form
-          className="px-2 h-8 
+        {myConnectionId !== gamePlayer ? (
+          <form
+            className="px-2 h-8 
           border rounded-3xl bg-white
           flex flex-row overflow-hidden"
-          onSubmit={sendMsg}
-        >
-          <input
-            type="text"
-            placeholder="채팅을 입력해 주세요!"
-            className="grow"
-            maxLength="50"
-            value={chat}
-            onChange={(e) => setChat(e.target.value)}
-          />
-          <button className="w-11 m-1 pl-2 border-l-2 border-solid" type="submit">
-            채팅
-          </button>
-        </form>
+            onSubmit={sendMsg}
+          >
+            <input
+              type="text"
+              placeholder="채팅을 입력해 주세요!"
+              className="grow"
+              maxLength="50"
+              value={chat}
+              required
+              onChange={(e) => setChat(e.target.value)}
+            />
+            <button className="w-11 m-1 pl-2 border-l-2 border-solid" type="submit">
+              채팅
+            </button>
+          </form>
+        ) : null}
       </div>
     </section>
   );
