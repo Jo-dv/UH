@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import UseIsLobbyStore from "../../../store/UseIsLobbyStore";
 
-const Leaving = ({ leaving, onClose }) => {
+const Leaving = ({ leaveSession,leaving, onClose }) => {
   const { setIsLobby } = UseIsLobbyStore();
   return (
     <>
