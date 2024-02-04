@@ -14,7 +14,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(sessionInterceptor())
 			.excludePathPatterns("/api/user/**", "/error", "/api/swagger-ui/**",
-				"swagger-resources/**", "/v3/api-docs/**", "/api/docs");
+				"swagger-resources/**", "/api/docs/**", "/api/api-docs/**");
 	}
 
 	@Bean
