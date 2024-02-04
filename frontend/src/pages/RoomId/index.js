@@ -396,13 +396,13 @@ export default function RoomId() {
 
               <div className="col-span-1 grid grid-cols-2 gap-1 w-full">
                 <button
-                  className="bg-mc1 border rounded-3xl active:bg-mc2"
+                  className="bg-mc8 border rounded-3xl active:bg-mc2"
                   onClick={() => changeTeam("A")}
                 >
                   A팀
                 </button>
                 <button
-                  className="bg-mc8 border rounded-3xl active:bg-mc7"
+                  className="bg-mc1 border rounded-3xl active:bg-mc7"
                   onClick={() => changeTeam("B")}
                 >
                   B팀

@@ -8,10 +8,7 @@ const Timer = ({
   round,
   setRound,
   changeTeamTurn,
-  TeamTurn,
-  setTeamTurn,
-  isHost,
-  session,
+  setIsGameEnd,
 }) => {
   const startTime = useRef(null);
   const nowTime = useRef(null);
@@ -54,16 +51,19 @@ const Timer = ({
       setRound((r) => r + 1);
     }
   };
+  useEffect(() => {
+    if (round > maxRound) {
+      setIsRunning(false);
+      setIsGameEnd(true);
+    }
+  }, [round, maxRound]);
+
   useInterval(
     () => {
       timePlay();
     },
     isRunning ? delay : null
   );
-
-  // if (round > maxRound) {
-  //   setIsRunning(false);
-  // }
 
   return (
     <meter
