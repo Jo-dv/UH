@@ -4,6 +4,7 @@ import axios from "axios";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 
+import startBackImg from "../../asset/image/startBackGround.png";
 import googleLogo from "./img/googleLogo.png";
 import kakaoLogo from "./img/kakaoLogoB.png";
 import naverLogo from "./img/naverLogo.png";
@@ -20,7 +21,6 @@ const Login = () => {
   const kakaoLoginHandler = () => {
     window.location.href = loginLink;
   };
-
 
   const [form, setForm] = useState({
     userId: "",
@@ -108,14 +108,14 @@ const Login = () => {
           navigate("/lobby");
         }
       } catch (error) {
-        if (error.response && error.response.status === 400){
-          setErr({...err, general: "올바른 정보를 입력해주세요."});
+        if (error.response && error.response.status === 400) {
+          setErr({ ...err, general: "올바른 정보를 입력해주세요." });
         } else {
-        console.error("로그인 중 에러 발생", error);
-        setErr({...err, general: "서버가 아파요ㅠㅠ"});
-        // 에러 처리
-        // 예: 사용자에게 에러 메시지 표시
-      }
+          console.error("로그인 중 에러 발생", error);
+          setErr({ ...err, general: "서버가 아파요ㅠㅠ" });
+          // 에러 처리
+          // 예: 사용자에게 에러 메시지 표시
+        }
       }
     }
   };
@@ -162,6 +162,9 @@ const Login = () => {
           <img src={naverLogo} alt="google Logo" />
         </div>
       </form>
+      <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
+
+      <div className="absolute w-full h-screen bg-black opacity-50"></div>
     </div>
   );
 };

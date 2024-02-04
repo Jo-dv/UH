@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
+import startBackImg from "../../asset/image/startBackGround.png";
 
 const CreateNickname = () => {
   const navigate = useNavigate();
@@ -147,6 +148,9 @@ const CreateNickname = () => {
 
         <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">입장하기</button>
       </form>
+      <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
+
+      <div className="absolute w-full h-screen bg-black opacity-50"></div>
     </div>
   );
 };

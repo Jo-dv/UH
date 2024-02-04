@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import RankingList from "./RankingList";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import "../lobbyComponent/RankingLists.css";
 
