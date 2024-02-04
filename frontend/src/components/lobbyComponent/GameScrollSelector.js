@@ -9,7 +9,6 @@ const GameScrollSelector = ({ onGameCategory, extraOptions = [] }) => {
     onGameCategory(selectedValue);
   };
 
-  console.log("내가 선택한 값", selectedCategory);
   return (
     <select
       className="bg-whitem-4 mr-2 p-2 border rounded-3xl bg-white"

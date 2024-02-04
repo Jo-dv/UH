@@ -1,6 +1,5 @@
 import { OpenVidu } from "openvidu-browser";
 
-import axios from "axios";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import Chat from "../../components/Chat";

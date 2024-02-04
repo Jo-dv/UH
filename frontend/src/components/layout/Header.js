@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import CreateRoomTab from "../HeaderComponent/CreateRoomTab";
 import FastTrackTab from "../HeaderComponent/FastTrackTab";
 import RankingTab from "../HeaderComponent/RankingTab";
@@ -16,6 +16,7 @@ const Header = () => {
   const location = useLocation();
   const [isLobbyPage, setIsLobbyPage] = useState(true);
   const { isLobby, setIsLobby } = UseIsLobbyStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.pathname === "/lobby") {
@@ -25,21 +26,25 @@ const Header = () => {
     }
   }, [location]);
 
+  const handleLogoClick = () => {
+    if (location.pathname.startsWith("/room")) {
+      // 현재 '/room' 경로일 때는 아무 동작도 하지 않음
+      console.log("Room 페이지에서 로비로 이동할 수 없습니다.");
+    } else {
+      // 그 외의 경우에는 로비 페이지로 이동
+      setIsLobby(null);
+      navigate("/lobby");
+    }
+  };
+
   return (
     <div>
       <nav>
         <ul className="flex flex-row items-end">
           <li className="mr-7">
-            <Link to="/lobby">
-              <img
-                src={logoImg}
-                alt="Logo"
-                className="h-20"
-                onClick={() => {
-                  setIsLobby(null);
-                }}
-              />
-            </Link>
+            <button onClick={handleLogoClick}>
+              <img src={logoImg} alt="Logo" className="h-20 ml-3" />
+            </button>
           </li>
           {isLobbyPage ? (
             <>

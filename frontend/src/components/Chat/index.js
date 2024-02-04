@@ -1,18 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import "./chat.css";
+import useStore from "../../store/UserAuthStore";
 
-const Chat = ({ session, myUserName, myConnectionId, gamePlayer }) => {
+const Chat = ({ session, myConnectionId, gamePlayer }) => {
   const [chat, setChat] = useState("");
-  const [receiveMsg, setReceiveMsg] = useState(`${myUserName}님 환영합니다`);
+
   const [messageList, setMessageList] = useState([]);
   const ulRef = useRef(null);
-
+  // 닉네임 가져오기
+  const nickname = useStore((state) => state.user.userNickname);
+  const [receiveMsg, setReceiveMsg] = useState(`${nickname}님 환영합니다`);
   const sendMsg = (e) => {
     e.preventDefault();
     // console.log(session);
     session
       .signal({
-        data: `${myUserName}: ${chat}`, // Any string (optional)
+        data: `${nickname}: ${chat}`, // Any string (optional)
         to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
         type: "room-chat", // The type of message (optional)
       })

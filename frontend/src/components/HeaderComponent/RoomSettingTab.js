@@ -4,14 +4,14 @@ const RoomSettingTab = () => {
   const { setRoomSetting } = UseRoomSetting();
 
   return (
-    <h3
+    <button
       className="w-24 text-center rounded-t-lg bg-mc1 p-2"
       onClick={() => {
         setRoomSetting(true);
       }}
     >
       방 설정
-    </h3>
+    </button>
   );
 };
 

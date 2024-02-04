@@ -8,14 +8,14 @@ const CreateRoomTab = () => {
   };
   return (
     <>
-      <h3
+      <button
         className="w-24 text-center rounded-t-lg bg-mc1 p-2"
         onClick={() => {
           setCreateRoom(!createRoom);
         }}
       >
         방 만들기
-      </h3>
+      </button>
       {createRoom === true ? <CreateRoom modalOnOff={modalOnOff} /> : null}
     </>
   );

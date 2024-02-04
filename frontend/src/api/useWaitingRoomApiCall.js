@@ -1,8 +1,7 @@
-import axios from "axios";
+import axios from "./axios.js";
 
 const useWaitingRoomApiCall = () => {
-  const baseUrl = "http://localhost:5000/";
-  const roomUpdateUrl = `${baseUrl}rooms`;
+  const roomUpdateUrl = `rooms`;
 
   // roomList 목록 수정
   const putRoomsList = async (roomInfo) => {
