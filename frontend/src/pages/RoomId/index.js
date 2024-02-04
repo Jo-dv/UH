@@ -15,11 +15,13 @@ import Inviting from "../../components/Modal/waiting/Inviting.js";
 import UseInvitingStore from "../../store/UseInvitingStore.js";
 import Person from "../../components/waitingComponent/Person.js";
 import { useWebSocket } from "../../webSocket/UseWebSocket.js";
+import useStore from "../../store/UserAuthStore";
 
 export default function RoomId() {
   const { id } = useParams();
   const [mySessionId, setMySessionId] = useState(id);
-  const [myUserName, setMyUserName] = useState(`guest-${Math.floor(Math.random() * 100)}`);
+  const nickname = useStore((state) => state.user.userNickname);
+  const [myUserName, setMyUserName] = useState(nickname);
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -38,6 +40,8 @@ export default function RoomId() {
   const firstRoomInfo = { ...location.state };
   const [roomInfo, setroomInfo] = useState({});
   const { send } = useWebSocket();
+  const [teamA, setTeamA] = useState([]);
+  const [teamB, setTeamB] = useState([]);
   const handleMainVideoStream = useCallback(
     (stream) => {
       if (mainStreamManager !== stream) {
@@ -48,12 +52,12 @@ export default function RoomId() {
   );
   // const [roomMax, setRoomMax] = useState(4);
 
-  console.log("방 최대 인원 수", roomInfo);
+  // console.log("방 최대 인원 수", roomInfo);
   // setRoomMax(roomInfo.roomData.max);
   // console.log(roomMax);
   const joinSession = useCallback(() => {
     if (session) {
-      console.log("리브세션", session);
+      // console.log("리브세션", session);
       exitRoom(session.sessionId, session.connection.connectionId);
       session.disconnect();
     }
@@ -118,7 +122,7 @@ export default function RoomId() {
         .then(() => {
           const playerSessionId = session.sessionId;
           const playerConnectionId = session.connection.connectionId;
-          console.log("플레이어 추가", mySessionId);
+          // console.log("플레이어 추가", mySessionId);
           if (mySessionId === "create") {
             addPlayer(playerSessionId, playerConnectionId, 1, myUserName, true);
           } else {
@@ -128,13 +132,13 @@ export default function RoomId() {
         //방조회
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
-          await console.log("서버에서 받은 방정보", serverRoomInfo);
+          // await console.log("서버에서 받은 방정보", serverRoomInfo);
           setroomInfo(serverRoomInfo);
           if (mySessionId === "create") {
-            console.log("나는 호스트");
+            // console.log("나는 호스트");
             setIsHost(true);
           } else if (serverRoomInfo.roomStatus.hostId === session.connection.connectionId) {
-            console.log("나는 호스트");
+            // console.log("나는 호스트");
             setIsHost(true);
           }
         });
@@ -144,7 +148,7 @@ export default function RoomId() {
   const leaveSession = useCallback(() => {
     // Leave the session
     if (session) {
-      console.log("리브세션", session);
+      // console.log("리브세션", session);
       exitRoom(session.sessionId, session.connection.connectionId);
       session.disconnect();
     }
@@ -179,7 +183,7 @@ export default function RoomId() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [leaveSession]);
-
+  console.log("1111111111111111111111111", isReady);
   const getToken = useCallback(async () => {
     //API import 함수 사용 중
     const sessionId = await createSession(
@@ -189,7 +193,7 @@ export default function RoomId() {
       firstRoomInfo.roomGame,
       firstRoomInfo.roomMax
     );
-    console.log("방생성결과", sessionId);
+    // console.log("방생성결과", sessionId);
     // await createToken(sessionId);
     setOpenLink(sessionId);
     return await createToken(sessionId);
@@ -199,10 +203,56 @@ export default function RoomId() {
     console.log(`팀변경 ${team}`, session);
     try {
       playerTeam(session.sessionId, session.connection.connectionId, team);
+
+      const connectionId = session.connection.connectionId; // connectionId를 추출
+      sendTeamChangeSignal(connectionId, team);
+      if (team === "A") {
+        setTeamA((prev) => [...prev, connectionId]);
+        setTeamB((prev) => prev.filter((id) => id !== connectionId));
+      } else if (team === "B") {
+        setTeamB((prev) => [...prev, connectionId]);
+        setTeamA((prev) => prev.filter((id) => id !== connectionId));
+      }
+
+      console.log(nickname, team);
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
+
+  // 팀 변경 시그널 보내기
+  const sendTeamChangeSignal = (connectionId, team) => {
+    session
+      .signal({
+        data: JSON.stringify({ connectionId, team }), // connectionId와 team 정보를 JSON 문자열로 변환
+        to: [], // 모든 참가자에게 전송
+        type: "team-change",
+      })
+      .then(() => {
+        console.log("팀 변경 시그널 전송 성공");
+      })
+      .catch((error) => {
+        console.error("팀 변경 시그널 전송 실패:", error);
+      });
+  };
+
+  useEffect(() => {
+    // session 객체가 존재하는지 확인
+    if (session) {
+      // 팀 변경 시그널 수신 리스너 설정
+      session.on("signal:team-change", (event) => {
+        const { connectionId, team } = JSON.parse(event.data);
+
+        if (team === "A") {
+          setTeamA((prev) => [...prev, connectionId]);
+          setTeamB((prev) => prev.filter((id) => id !== connectionId));
+        } else if (team === "B") {
+          setTeamB((prev) => [...prev, connectionId]);
+          setTeamA((prev) => prev.filter((id) => id !== connectionId));
+        }
+      });
+    }
+  }, [session]); // session 객체를 의존성 배열에 추가
 
   const setReady = async () => {
     // console.log("준비");
@@ -244,7 +294,7 @@ export default function RoomId() {
           type: "room-play",
         })
         .then(() => {
-          console.log("게임시작 :", isPlay);
+          // console.log("게임시작 :", isPlay);
         })
         .catch((error) => {
           console.error(error);
@@ -253,12 +303,12 @@ export default function RoomId() {
   };
   if (session !== undefined) {
     session.on("signal:room-play", (event) => {
-      console.log("플레이 소켓 받음", event.data);
+      // console.log("플레이 소켓 받음", event.data);
       setIsPlay(true);
     });
   }
   const sendPlayDone = () => {
-    console.log("플레이 소켓 보냄");
+    // console.log("플레이 소켓 보냄");
     if (session !== undefined) {
       session
         .signal({
@@ -267,7 +317,7 @@ export default function RoomId() {
           type: "room-playDone",
         })
         .then(() => {
-          console.log("게임끝 :", isPlay);
+          // console.log("게임끝 :", isPlay);
         })
         .catch((error) => {
           console.error(error);
@@ -280,7 +330,8 @@ export default function RoomId() {
       setIsPlay(false);
     });
   }
-
+  console.log("나 A팀", teamA);
+  console.log("나 B팀", teamB);
   return (
     <>
       {session === undefined ? (
@@ -312,7 +363,7 @@ export default function RoomId() {
               </div>
             )}
           </div>
-          <div className="col-start-3 col-end-13 row-start-2 row-end-8">
+          <div className="col-start-3 col-end-13 row-start-2 row-end-8  mb-2">
             {
               <Person
                 publisher={publisher}
@@ -321,6 +372,8 @@ export default function RoomId() {
                 isHost={isHost}
                 isReady={isReady}
                 subscribers={subscribers}
+                teamA={teamA}
+                teamB={teamB}
               />
             }
           </div>
@@ -353,12 +406,15 @@ export default function RoomId() {
               <div className="grid col-start-1 col-end-9 row-start-6 row-end-13 mt-2">
                 <button
                   onClick={() => {
-                    sendPlay();
-                    setReady();
+                    if (isHost) {
+                      sendPlay(); // 호스트인 경우 sendPlay 실행
+                    } else {
+                      setReady(); // 호스트가 아닌 경우 setReady 실행
+                    }
                   }}
-                  className="bg-mc3 border rounded-3xl w-full h-full flex justify-center items-center"
+                  className="bg-mc3 border rounded-3xl h-full flex justify-center items-center w-full"
                 >
-                  {isHost ? "게임시작" : "준비"}
+                  {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
               </div>
             </div>

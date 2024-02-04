@@ -9,7 +9,10 @@ import useStore from "../../store/UserAuthStore";
 const UserVideo = ({ streamManager, session, isHost, isReady, gamePlayer }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
-
+  const getNicknameTag = () => {
+    // Gets the nickName of the user
+    return JSON.parse(streamManager.stream.connection.data).clientData;
+  };
   const nickname = useStore((state) => state.user.userNickname);
   const socketSend = () => {
     session
@@ -74,27 +77,31 @@ const UserVideo = ({ streamManager, session, isHost, isReady, gamePlayer }) => {
         <div className="">
           <div className="absolute ml-7 mt-2">
             <p>
-              {nickname}
+              {/* {nickname} */}
+              {getNicknameTag()}
+              {nickname === getNicknameTag() ? (
+                <>
+                  {audioActive === false ? (
+                    <button onClick={onMic}>
+                      <MicOff />
+                    </button>
+                  ) : (
+                    <button onClick={muteMic}>
+                      <Mic />
+                    </button>
+                  )}
 
-              {audioActive === false ? (
-                <button onClick={onMic}>
-                  <MicOff />
-                </button>
-              ) : (
-                <button onClick={muteMic}>
-                  <Mic />
-                </button>
-              )}
-
-              {videoActive === false ? (
-                <button onClick={onVideo}>
-                  <VideocamOffIcon />
-                </button>
-              ) : (
-                <button onClick={muteVideo}>
-                  <VideocamIcon />
-                </button>
-              )}
+                  {videoActive === false ? (
+                    <button onClick={onVideo}>
+                      <VideocamOffIcon />
+                    </button>
+                  ) : (
+                    <button onClick={muteVideo}>
+                      <VideocamIcon />
+                    </button>
+                  )}
+                </>
+              ) : null}
             </p>
           </div>
           <div className="pt-9">

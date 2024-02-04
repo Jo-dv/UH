@@ -5,7 +5,8 @@ import useWaitingRoomApiCall from "../../../api/useWaitingRoomApiCall";
 const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
-  const originalRoomInfo = roomInfo.roomData;
+  console.log(roomInfo);
+  const originalRoomInfo = roomInfo;
   console.log("받은 방정보", originalRoomInfo);
   // 원래 방 정보 모달에 기입
   const [roomName, setRoomName] = useState(originalRoomInfo.roomName);
