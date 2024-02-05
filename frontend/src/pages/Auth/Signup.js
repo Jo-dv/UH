@@ -73,13 +73,6 @@ const Signup = () => {
     }
   };
 
-  // const onBlurUserId = async (e) => {
-  //     if(!form.userId) {
-  //         setErr({ ...err, userId: "아이디를 입력해주세요"});
-  //     } else {
-  //         await checkUserIdDuplicate(form.userId);
-  //     }
-  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();
