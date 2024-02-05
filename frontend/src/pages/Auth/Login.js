@@ -8,6 +8,7 @@ import startBackImg from "../../asset/image/startBackGround.png";
 import googleLogo from "./img/googleLogo.png";
 import kakaoLogo from "./img/kakaoLogoB.png";
 import naverLogo from "./img/naverLogo.png";
+import kakaologinimg from "./img/kakao_login.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -176,16 +177,20 @@ const Login = () => {
 
         <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">로그인</button>
         <p className="font-['pixel'] text-red-500 mb-1">{err.general}</p>
+        {/* <h3 className="p-2 m-2">
+          <Link to="/auth/signup">회원가입</Link>
+        </h3> */}
+        {/* <h3 className="p-2 ">소셜로그인</h3> */}
+
+        <div className="flex flex-row justify-around w-72 mb-3">
+          {/* <img src={googleLogo} alt="google Logo" />
+          <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
+          <img src={naverLogo} alt="google Logo" /> */}
+          <img src={kakaologinimg} alt="카카오로그인버튼" type="button" onClick={kakaoLoginHandler} />
+        </div>
         <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3>
-        <h3 className="p-2 ">소셜로그인</h3>
-
-        <div className="flex flex-row justify-around w-72">
-          <img src={googleLogo} alt="google Logo" />
-          <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
-          <img src={naverLogo} alt="google Logo" />
-        </div>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
 
