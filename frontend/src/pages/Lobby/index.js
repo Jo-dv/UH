@@ -37,7 +37,7 @@ const Lobby = () => {
     //   }
     // };
     // fetchUserAuth();
-  }, [navigate]);
+  }, []);
 
   // [RoomList] 전체방, 대기방만 보기
   const [viewAllRooms, setViewAllRooms] = useState(true);

@@ -8,6 +8,7 @@ const MyPage = () => {
   const [myPageInfo, setMyPageInfo] = useState(null);
 
   useEffect(() => {
+    console.log(userSeq)
     if (userSeq) {
       getMyPageInfo(userSeq).then((data) => {
         console.log("myPageInfo:", data); // 여기에서 myPageInfo 값을 콘솔에 출력

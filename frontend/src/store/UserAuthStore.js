@@ -4,10 +4,10 @@ import { persist } from "zustand/middleware";
 const useStore = create(
   persist(
     (set) => ({
-      user: { userSeq: null, userNickname: null, userPassword: null },
+      user: { userSeq: null, userNickname: null },
       setUser: (user) => set({ user }),
       // 유저 정보 초기화 함수를 여기에 추가
-      resetUser: () => set({ user: { userSeq: null, userNickname: null, userPassword: null } }),
+      resetUser: () => set({ user: { userSeq: null, userNickname: null } }),
     }),
     {
       name: "user-storage", // 로컬 스토리지에 저장될 때 사용할 키
