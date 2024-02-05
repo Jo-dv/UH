@@ -13,6 +13,7 @@ const Login = () => {
   const navigate = useNavigate();
   // UserAuthStore의 User를 변경하기 위해
   const setUser = useStore((state) => state.setUser);
+  const resetUser = useStore((state) => state.resetUser);
 
   // 카카오 소셜 로그인 / 로그아웃
   const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
@@ -39,9 +40,10 @@ const Login = () => {
   const userState = useStore();
 
   useEffect(() => {
+    resetUser();
     // useEffect 내에서 상태를 로그로 출력
-    // console.log("userInfo:", userState);
-  }, [userState]); // userState가 변경될 때마다 실행
+    console.log("userInfo:", userState);
+  }, []); // userState가 변경될 때마다 실행
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -93,14 +95,11 @@ const Login = () => {
         console.log("서버 응답:", res);
         // 닉네임이 없다면
         if (res.userNickname === null) {
-          sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
           setUser({ userSeq: res.userSeq, userNickname: null });
           navigate("/auth/nickname");
           // 닉네임이 있다면
         } else {
-          sessionStorage.setItem("userNickname", res.userNickname);
-          sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
           setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
           console.log("로그인 성공");
