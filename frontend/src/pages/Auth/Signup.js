@@ -88,7 +88,7 @@ const Signup = () => {
     } else {
       try {
         const response = await axios.post(
-          "http://i10e201.p.ssafy.io:8000/api/user/idcheck",
+          "https://i10e201.p.ssafy.io/api/user/idcheck",
           {
             userId: form.userId,
           },
@@ -163,7 +163,7 @@ const Signup = () => {
       console.log("회원가입 정보:", { userId, userPassword });
       try {
         const response = await axios.post(
-          "http://i10e201.p.ssafy.io:8000/api/user/join",
+          "https://i10e201.p.ssafy.io/api/user/join",
           { userId, userPassword },
           { withCredentials: true }
         );
