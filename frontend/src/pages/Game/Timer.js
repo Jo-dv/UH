@@ -1,22 +1,69 @@
 import { useEffect, useRef, useState } from "react";
 
-const Timer = ({ maxT }) => {
-  const [count, setCount] = useState(0);
-  const intervalRef = useRef(null);
-  // console.log(maxTime);
-  let maxTime = maxT;
-  useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setCount((prevCount) => {
-        if (prevCount === maxTime) {
-          clearInterval(intervalRef.current); // 카운트가 1이면 타이머 정지
-        }
-        return prevCount + 10;
-      });
-    }, 10);
+const Timer = ({
+  maxTime,
+  time,
+  setTime,
+  maxRound,
+  round,
+  setRound,
+  changeTeamTurn,
+  TeamTurn,
+  setTeamTurn,
+  isHost,
+  session,
+}) => {
+  const startTime = useRef(null);
+  const nowTime = useRef(null);
+  const [delay, setDelay] = useState(1000);
+  const [isRunning, setIsRunning] = useState(true);
 
-    return () => clearInterval(intervalRef.current); // 컴포넌트가 언마운트될 때 타이머 정리
-  }, []);
+  function useInterval(callback, delay) {
+    const savedCallback = useRef();
+
+    // Remember the latest callback.
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval.
+    useEffect(() => {
+      function tick() {
+        savedCallback.current();
+      }
+      if (delay !== null) {
+        let id = setInterval(tick, delay);
+        return () => clearInterval(id);
+      }
+    }, [delay]);
+  }
+
+  const timePlay = () => {
+    if (startTime.current === null) {
+      startTime.current = Date.now();
+    } else {
+      nowTime.current = Date.now() - startTime.current;
+      setTime(nowTime.current);
+    }
+
+    if (time > maxTime) {
+      console.log(nowTime.current, time);
+      changeTeamTurn();
+      startTime.current = Date.now();
+      setTime(0);
+      setRound((r) => r + 1);
+    }
+  };
+  useInterval(
+    () => {
+      timePlay();
+    },
+    isRunning ? delay : null
+  );
+
+  // if (round > maxRound) {
+  //   setIsRunning(false);
+  // }
 
   return (
     <meter
@@ -25,7 +72,7 @@ const Timer = ({ maxT }) => {
       optimum={maxTime / 4}
       low={maxTime / 2}
       high={(maxTime * 3) / 4}
-      value={count}
+      value={time}
     ></meter>
   );
 };

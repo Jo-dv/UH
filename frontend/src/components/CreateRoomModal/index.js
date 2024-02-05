@@ -6,7 +6,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
   const [roomName, setRoomName] = useState(`P-${Math.floor(Math.random() * 1000)}`);
   const [roomPassword, setRoomPassword] = useState(null);
   const [roomMax, setRoomMax] = useState(4);
-  const [roomGame, setRoomGame] = useState(100);
+  const [roomGame, setRoomGame] = useState(101);
   const [lock, setLock] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -17,14 +17,21 @@ const CreateRoomModal = ({ modalOnOff }) => {
     setRoomName(e.target.value);
   }, []);
 
+  console.log("1111111111");
+  console.log("roomPassword", roomPassword);
+
   const handleChangeRoomPassword = useCallback((e) => {
     setRoomPassword(e.target.value);
   }, []);
 
+  console.log("22222222222");
+  console.log("roomPassword", roomPassword);
   const handleChangeRoomMax = useCallback((e) => {
     setRoomMax(e.target.value);
   }, []);
 
+  console.log("!!!!!!!!!!!!!!!!!");
+  console.log("나 게임 이거하고 싶음", roomGame);
   const handleChangeRoomGame = useCallback((e) => {
     setRoomGame(e.target.value);
   }, []);
@@ -35,6 +42,8 @@ const CreateRoomModal = ({ modalOnOff }) => {
     return rooms.some((room) => room.roomName === name);
   };
 
+  console.log("Before calling createSession, roomPassword:", roomPassword);
+
   const submitHandler = (e) => {
     e.preventDefault();
     if (checkRoomNameExists(roomName)) {
@@ -42,14 +51,15 @@ const CreateRoomModal = ({ modalOnOff }) => {
       return;
     }
 
-    navigate("/room/create", {
-      state: {
-        roomName: roomName,
-        roomPassword: roomPassword,
-        roomMax: roomMax,
-        roomGame: roomGame,
-      },
-    });
+    // 비밀번호 입력란이 활성화되었고, 비밀번호가 입력되었을 때만 비밀번호 값을 전달합니다.
+    const roomInfo = {
+      roomName: roomName,
+      roomPassword: lock && roomPassword ? roomPassword : null,
+      roomGame: roomGame,
+      roomMax: roomMax,
+    };
+
+    navigate("/room/create", { state: roomInfo });
   };
 
   useEffect(() => {
@@ -69,7 +79,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
       <div
         onClick={modalOnOff}
         className="min-w-100 min-h-96 absolute inset-0
-    flex justify-center items-center"
+    flex justify-center items-center z-50"
       >
         <form
           onSubmit={submitHandler}

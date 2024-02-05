@@ -1,7 +1,7 @@
-import create from "zustand";
+import { create } from "zustand";
 
 const UseIsLobbyStore = create((set) => ({
-  isLobby: true,
+  isLobby: null,
   setIsLobby: (isLobby) => set({ isLobby }),
 }));
 

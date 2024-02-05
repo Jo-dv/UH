@@ -44,9 +44,6 @@ public class FriendsController {
 	})
 	@GetMapping
 	public ResponseEntity<List<FriendRseponseDto>> listFriends(@SessionAttribute(name = "user") UserDto user) {
-		if (user == null)
-			return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-
 		try {
 			return new ResponseEntity<>(friendsService.listFriends(user.getUserSeq()), HttpStatus.OK);
 		} catch (Exception e) {
@@ -68,9 +65,6 @@ public class FriendsController {
 	@PostMapping
 	public ResponseEntity<String> sendRequest(@RequestBody FriendRequestDto friendRequestDto,
 		@SessionAttribute(name = "user") UserDto user) {
-		if (user == null)
-			return new ResponseEntity<>("로그인 정보가 없습니다.", HttpStatus.UNAUTHORIZED);
-
 		friendRequestDto.setFromUserSeq(user.getUserSeq());
 
 		return friendsService.sendRequest(friendRequestDto);

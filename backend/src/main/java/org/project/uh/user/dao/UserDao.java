@@ -9,7 +9,6 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.project.uh.user.dto.MypageDto;
 import org.project.uh.user.dto.RecordDto;
-import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 
 @Mapper
@@ -20,15 +19,6 @@ public interface UserDao {
 	@Options(useGeneratedKeys = true, keyProperty = "userSeq")
 	public int insertUser(UserDto dto);
 
-	// 소셜 로그인 토큰 추가
-	@Insert("INSERT INTO social_token (user_seq, social_provider, social_user_id, access_token, expires_in) "
-		+ "VALUES (#{userSeq}, #{socialProvider}, #{socialUserId}, #{accessToken}, #{expiresIn}) "
-		+ "ON DUPLICATE KEY UPDATE "
-		+ "social_provider = #{socialProvider}, "
-		+ "social_user_id = #{socialUserId}, "
-		+ "access_token = #{accessToken}, "
-		+ "expires_in = #{expiresIn}")
-	public int insertSocialUser(SocialUserDto dto);
 
 	// 회원 목록조회
 	@Select("select * from user")
@@ -41,8 +31,6 @@ public interface UserDao {
 	// 로그인 시 userId, userPassword 체크
 	@Select("select * from user where user_id=#{userId} and user_password=#{userPassword}")
 	public UserDto login(UserDto dto);
-
-	public int getUserId(UserDto dto);
 
 	// 닉네임 생성
 	@Update("UPDATE user SET user_nickname = #{userNickname} WHERE user_seq=#{userSeq}")
@@ -79,8 +67,5 @@ public interface UserDao {
 	@Select("SELECT * FROM user WHERE user_seq = #{userSeq}")
 	public UserDto findBySeq(int userSeq);
 
-	// seq로 social token 조회
-	@Select("SELECT * FROM social_token WHERE user_seq = #{userSeq}")
-	public SocialUserDto findSocial(int userSeq);
 
 }

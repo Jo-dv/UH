@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 
@@ -18,9 +18,7 @@ const KakaoRedirectHandler = () => {
       // 요청 보내기
       if (code) {
         try {
-          const response = await axios.post("http://localhost:5000/user/login/kakao", code, {
-            withCredentials: true,
-          });
+          const response = await axios.post("user/login/kakao", code);
           const res = response.data;
           // 닉네임이 있다면
           if (res.userNickname) {

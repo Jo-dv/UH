@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 
@@ -13,13 +13,14 @@ const Login = () => {
   // UserAuthStore의 User를 변경하기 위해
   const setUser = useStore((state) => state.setUser);
 
-  // 카카오 소셜 로그인
-  const REST_API_KEY = "4fffa78521feee5e1eb947c704c08cf2";
-  const REDIRECT_URI = "http://localhost:3000/callback/kakao";
-  const link = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  // 카카오 소셜 로그인 / 로그아웃
+  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
+  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+  const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   const kakaoLoginHandler = () => {
-    window.location.href = link;
+    window.location.href = loginLink;
   };
+
 
   const [form, setForm] = useState({
     userId: "",
@@ -85,9 +86,8 @@ const Login = () => {
       console.log("로그인 정보 :", { userId, userPassword });
       try {
         const response = await axios.post(
-          "http://localhost:5000/user/login",
-          { userId, userPassword },
-          { withCredentials: true }
+          "user/login",
+          { userId, userPassword }
         );
         const res = response.data;
         console.log("서버 응답:", res);
@@ -95,14 +95,14 @@ const Login = () => {
         if (res.userNickname === null) {
           sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
-          setUser({ userSeq: res.userSeq, userPassword: res.userPassword });
+          setUser({ userSeq: res.userSeq, userNickname: null });
           navigate("/auth/nickname");
           // 닉네임이 있다면
         } else {
           sessionStorage.setItem("userNickname", res.userNickname);
           sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
-          setUser({ userSeq: res.userSeq, userNickname: res.userNickname, userPassword: res.userPassword });
+          setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
           console.log("로그인 성공");
           navigate("/lobby");
         }
@@ -111,6 +111,7 @@ const Login = () => {
           setErr({...err, general: "올바른 정보를 입력해주세요."});
         } else {
         console.error("로그인 중 에러 발생", error);
+        setErr({...err, general: "서버가 아파요ㅠㅠ"});
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
       }
@@ -156,12 +157,9 @@ const Login = () => {
 
         <div className="flex flex-row justify-around w-72">
           <img src={googleLogo} alt="google Logo" />
-          <img src={kakaoLogo} alt="google Logo" />
+          <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
           <img src={naverLogo} alt="google Logo" />
         </div>
-        <button type="button" onClick={kakaoLoginHandler}>
-          카카오 로그인
-        </button>
       </form>
     </div>
   );

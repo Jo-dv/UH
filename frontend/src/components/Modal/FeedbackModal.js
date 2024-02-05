@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios from "../../api/axios.js";
 
 const FeedbackModal = (props) => {
   const [feedbackContent, setFeedback] = useState("");
   const userSeq = sessionStorage.getItem("userSeq");
+  const [feedbackError, setFeedbackError] = useState("");
   const [ModalOpen, setModalOpen] = useState(false);
   const modalOnOff = () => {
     setModalOpen(!ModalOpen);
@@ -11,6 +12,7 @@ const FeedbackModal = (props) => {
 
   const onChange = (e) => {
     setFeedback(e.currentTarget.value);
+    setFeedbackError(""); // 입력 시 에러 메시지 초기화
   };
   // sendFeedback console 버전
   const sendFeedbackConsole = () => {
@@ -19,9 +21,17 @@ const FeedbackModal = (props) => {
   };
 
   // 피드백 내용을 가지고 axios 요청
-  const sendFeedback = async () => {
+  const sendFeedback = async (e) => {
+    e.preventDefault();
+    if (!feedbackContent.trim()) {
+      // feedbackContent가 빈 문자열이거나 공백만 있는 경우
+      setFeedbackError("뭐라도 써주세요ㅠㅠ"); // 에러 메시지 설정
+      return; // 함수 실행 중단
+    }
     try {
-      await axios.post("http://localhost:5000/feedback", { userSeq, feedbackContent });
+      await axios.post("feedback", 
+      { userSeq, feedbackContent }
+      );
       console.log({ userSeq, feedbackContent });
       props.setFeedback(false);
     } catch (error) {
@@ -31,9 +41,15 @@ const FeedbackModal = (props) => {
   return (
     <>
       <div
-        onClick={modalOnOff}
+      onClick={() => {
+        if ( feedbackContent === "" ) {
+        props.setFeedback(!props.feedback);
+      } else {
+        setFeedbackError("피드백 전송해주세요ㅠㅠ");
+      }
+      }}
         className="min-w-100 min-h-96 absolute inset-0
-    flex justify-center items-center"
+    flex justify-center items-center z-50"
       >
         <form
           onClick={(e) => e.stopPropagation()}
@@ -49,6 +65,7 @@ const FeedbackModal = (props) => {
                 value={feedbackContent}
                 onChange={onChange}
               />
+              {feedbackError && <div className="text-red-500">{feedbackError}</div>}
             </div>
             <button onClick={sendFeedback} className="bg-formButton py-2 px-4 m-2 rounded">
               보내기
