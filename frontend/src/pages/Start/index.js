@@ -18,6 +18,7 @@ function Start() {
         className="w-full h-screen bg-black
       text-9xl text-white
       flex justify-center items-center"
+      onClick={()=>navigate("/auth/login")}
       >
         {/* <h1>abc 가나다</h1>
         <h2 className="font-['pixel']">abc 가나다</h2> */}

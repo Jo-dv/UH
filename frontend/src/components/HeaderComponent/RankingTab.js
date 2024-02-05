@@ -7,7 +7,7 @@ const RankingTab = () => {
     <h3
       className="w-16 text-center rounded-t-lg bg-mc4 p-2"
       onClick={() => {
-        setIsLobby(false);
+        setIsLobby("SelectedRanking");
       }}
     >
       랭킹

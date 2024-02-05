@@ -26,21 +26,24 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
     };
     fetchData();
   }, []);
+  console.log("룸 객체", rooms);
 
   const filteredRooms = rooms.filter((room) => {
+    // viewAllRooms가 false이고, room.play가 true인 경우 필터링
     if (!viewAllRooms && room.play) {
       return false;
     }
-    if (viewGameCategoryRooms === "" && room.gameCategory !== viewGameCategoryRooms) {
-      return false;
-    }
+
+    // viewSearchRooms에 값이 있고, room.roomName이 해당 문자열을 포함하지 않는 경우 필터링
     if (
       viewSearchRooms !== "" &&
       !room.roomName.toLowerCase().includes(viewSearchRooms.toLowerCase())
     ) {
       return false;
     }
-    return true;
+
+    // viewGameCategoryRooms에 따른 필터링
+    return viewGameCategoryRooms === "" || viewGameCategoryRooms == room.gameCategory;
   });
 
   return (

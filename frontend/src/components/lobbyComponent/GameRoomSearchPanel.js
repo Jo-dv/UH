@@ -10,14 +10,14 @@ const GameRoomSearchPanel = ({ onToggleView, onGameCategoryView, onSearchView })
 
   const { getSearchRooms } = useLobbyApiCall();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getSearchRooms();
-      setSearchRooms(data);
-      console.log(data); // 데이터 확인
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const data = await getSearchRooms();
+  //     setSearchRooms(data);
+  //     console.log(data); // 데이터 확인
+  //   };
+  //   fetchData();
+  // }, []);
 
   return (
     <div className="col-start-2 col-end-7 row-start-1 row-end-2">

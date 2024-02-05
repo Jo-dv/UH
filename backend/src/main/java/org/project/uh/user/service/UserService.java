@@ -3,15 +3,11 @@ package org.project.uh.user.service;
 import java.util.List;
 
 import org.project.uh.user.dto.MypageDto;
-import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 
 public interface UserService {
 	// 회원가입
 	public int insertUser(UserDto dto);
-
-	// 소셜 로그인 회원가입
-	public int insertSocialUser(SocialUserDto dto);
 
 	// 아이디 중복 체크
 	public int idCheck(String userId);
@@ -37,6 +33,4 @@ public interface UserService {
 	// 유저 Seq 값으로 유저 정보 조회
 	public UserDto findBySeq(int userSeq);
 
-	// seq로 social token 조회
-	public SocialUserDto findSocial(int userSeq);
 }

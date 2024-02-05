@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.project.uh.user.dto.MypageDto;
-import org.project.uh.user.dto.SocialUserDto;
 import org.project.uh.user.dto.UserDto;
 import org.project.uh.user.service.UserService;
 import org.springframework.http.HttpEntity;
@@ -265,8 +264,6 @@ public class UserController {
 			JsonNode rootNode = objectMapper.readTree(responseBody);
 			// System.out.println("rootNode = " + rootNode);
 			JsonNode accessTokenNode = rootNode.path("access_token");
-			JsonNode expiresInNode = rootNode.path("expires_in");
-			int expiresIn = expiresInNode.asInt();
 			String accessToken = accessTokenNode.asText();
 
 			// 카카오에 사용자 정보 요청
@@ -289,21 +286,6 @@ public class UserController {
 				// 이미 회원가입 된 회원, 카카오 로그인 진행
 				// userId 가지고 DB 조회해서 정보값 가져오기
 				Object kakaoUserInfo = service.findById("K" + kakaoId);
-
-				// 소셜 토큰 테이블에 토큰 삽입
-				SocialUserDto socialDto = new SocialUserDto();
-				socialDto.setAccessToken(accessToken);
-				socialDto.setSocialProvider(1);
-				socialDto.setSocialUserId(kakaoDto.getUserId());
-				// 만료 시간 삽입
-				LocalDateTime now = LocalDateTime.now();
-				LocalDateTime expireTime = now.plusSeconds(expiresIn);
-				socialDto.setExpiresIn(expireTime);
-
-				UserDto socialUserInfo = service.findById(kakaoDto.getUserId());
-				socialDto.setUserSeq(socialUserInfo.getUserSeq());
-
-				int kakaoResult = service.insertSocialUser(socialDto);
 				session.setAttribute("user", kakaoUserInfo);
 				return new ResponseEntity<>(kakaoUserInfo, HttpStatus.OK);
 			}
@@ -315,4 +297,6 @@ public class UserController {
 			return new ResponseEntity<>("카카오 로그인 실패", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+
 }
+

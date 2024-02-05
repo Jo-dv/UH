@@ -1,0 +1,45 @@
+.podium {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100px; /* 단상의 너비 설정 */
+  }
+  
+  /* 각 단상의 수평 위치를 설정 */
+  .podium:first-child { /* 2등 */
+    left: 20%; /* 적절한 위치로 조정 */
+  }
+  
+  .podium:nth-child(2) { /* 1등 */
+    left: 40%; /* 적절한 위치로 조정 */
+  }
+  
+  .podium:nth-child(3) { /* 3등 */
+    left: 60%; /* 적절한 위치로 조정 */
+  }
+  
+  .user-info {
+    position: absolute;
+    top: -60px; /* 사용자 정보를 단상 위에 표시 */
+    text-align: center;
+  }
+  
+  .user-info div {
+    margin: 2px 0; /* 닉네임과 레이팅 사이의 간격 */
+  }
+  
+  .position {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+  .ranking-container {
+    position: relative;
+    height: 600px; /* 단상이 위치할 전체 높이 */
+  }
+  

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 
@@ -50,6 +50,33 @@ const CreateNickname = () => {
 
   // };
 
+  //닉네임 중복검사
+  const checkUserNicknameDuplicate = async (e) => {
+    const eRegEx = /^[a-z0-9A-Z가-힣ㄱ-ㅎ]{2,10}$/;
+    if (!eRegEx.test(form.userNickname)) {
+      setErr({ ...err, userNickname: "한글, 영어, 숫자만 써주세요 (4-20자)" });
+    } else {
+      try {
+        const response = await axios.post(
+          "user/nicknamecheck",
+          {
+            userNickname: form.userNickname,
+          }
+        );
+        const res = response.data;
+        console.log(res);
+        if (res === 0) {
+          setErr({ ...err, userNickname: "중복된 닉네임입니다" }); // 중복된 경우 에러 메시지 설정
+        } else {
+          setErr({ ...err, userNickname: "사용 가능한 아이디입니다" }); // 중복되지 않은 경우 에러 메시지 초기화
+        }
+      } catch (error) {
+        console.error("에러 발생", error);
+        setErr({ ...err, userNickname: "닉네임 중복 검사 중 오류 발생" }); // 에러 발생 시 에러 메시지 설정
+      }
+    }
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -79,10 +106,10 @@ const CreateNickname = () => {
       console.log("닉네임 :", form);
       const userSeq = sessionStorage.getItem("userSeq");
       try {
-        const response = await axios.post("http://localhost:5000/user/nickname", {
-          userSeq,
-          userNickname: form.userNickname,
-        }, { withCredentials: true });
+        const response = await axios.post(
+          "user/nickname",
+          { userNickname: form.userNickname }
+        );
         const res = response.data;
         console.log("서버 응답:", res);
         if (res.status === 400) {
@@ -90,12 +117,13 @@ const CreateNickname = () => {
         } else {
           sessionStorage.setItem("userNickname", form.userNickname);
           // zustand 사용해보기
-          setUser({ userNickname: form.userNickname });
+          setUser({ userSeq, userNickname: form.userNickname });
+          console.log("닉네임 생성 성공");
           navigate("/lobby");
         }
       } catch (error) {
         console.error("닉네임 생성 중 에러 발생", error);
-        setErr({ ...err, userNickname: "중복된 닉네임입니다."});
+        setErr({ ...err, userNickname: "중복된 닉네임입니다." });
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
       }
@@ -116,7 +144,7 @@ const CreateNickname = () => {
           type="text"
           placeholder="닉네임"
           onChange={onChange}
-          // onBlur={checkUserNicknameDuplicate}
+          onBlur={checkUserNicknameDuplicate}
           name="userNickname"
           value={form.userNickname}
         />
