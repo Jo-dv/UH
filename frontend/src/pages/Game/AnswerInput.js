@@ -5,7 +5,7 @@ const AnswerInput = ({
   session,
   answer,
   plusQuizIndex,
-  myTeam,
+  Team,
   plusScore,
   changeTeamIndex,
 }) => {
@@ -36,7 +36,7 @@ const AnswerInput = ({
     if (answer === event.data) {
       console.log(`${event.data} 정답`);
       plusQuizIndex();
-      plusScore();
+      plusScore(Team);
       changeTeamIndex();
     } else {
       console.log(`${event.data} 오답`);
@@ -45,9 +45,7 @@ const AnswerInput = ({
 
   return (
     <form
-      className="px-2
-          border rounded-3xl bg-white
-          flex flex-row"
+      className="px-2 border rounded-3xl bg-white flex flex-row overflow-hidden"
       onSubmit={sendAnswer}
     >
       <input
