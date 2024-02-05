@@ -149,7 +149,7 @@ const Login = () => {
     <div className="w-full h-screen p-5 flex justify-center items-center z-10">
       <form
         onSubmit={onSubmit}
-        className="bg-opacity-50 bg-formBG w-96 border-2 border-purple3
+        className="bg-opacity-50 bg-formBG w-96 border-2 rounded-md
                 flex flex-col justify-center items-center z-20"
       >
         <h2 className="font-['pixel'] text-7xl">로그인</h2>
