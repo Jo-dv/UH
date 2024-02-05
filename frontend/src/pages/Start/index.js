@@ -2,10 +2,13 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logoImg from "../../asset/image/LOGO.png";
 import startBackImg from "../../asset/image/startBackGround.png";
+import useStore from "../../store/UserAuthStore";
 function Start() {
   const navigate = useNavigate();
+  const resetUser = useStore((state) => state.resetUser);
 
   useEffect(() => {
+    resetUser();
     const timer = setTimeout(() => {
       navigate("/auth/login"); // '/login'은 로그인 페이지의 경로
     }, 5000); // 5000ms(5초) 후에 페이지 이동

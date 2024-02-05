@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import startBackImg from "../../asset/image/startBackGround.png";
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const Signup = () => {
   const navigate = useNavigate();
   const onClick = (path) => navigate(`/${path}`);
+
+  // 에러 메시지 애니메이션 트리거 상태관리
+  const [animate, setAnimate] = useState(false);
 
   const [form, setForm] = useState({
     userId: "",
@@ -16,6 +21,10 @@ const Signup = () => {
     userId: "",
     userPassword: "",
     passwordCheck: "",
+  });
+  // 아이디 중복 검사 통과 메시지
+  const [idDupMsg, setIdDupMsg] = useState({
+    userId: "",
   });
 
   const [checkUserId, setCheckUserId] = useState("");
@@ -32,14 +41,37 @@ const Signup = () => {
     e.preventDefault();
     setShowPassword((showPassword) => !showPassword);
   };
+  // 애니메이션 트리거 로직
+  const triggerAnimate = () => {
+    setAnimate(false);
+    setTimeout(() => setAnimate(true), 10);
+  };
+
+  // 비밀번호 양식 검사
+  const checkPassword = (e) => {
+    e.preventDefault();
+    const eRegEx = /^[a-z0-9A-Z]{4,20}$/;
+    if (!form.userPassword) {
+      setErr({ ...err, userPassword: "비밀번호를 입력해주세요" });
+      triggerAnimate();
+      // 입력 기준 충족하지 못한다면
+    } else if (!eRegEx.test(form.userPassword)) {
+      setErr({ ...err, userPassword: "영어, 숫자만 써주세요 (4-20자)" });
+      triggerAnimate();
+    } else {
+      setErr({ ...err, userPassword: "" });
+    }
+  }
 
   // 비밀번호 확인 검사
   const checkPasswordMatch = () => {
     let newErr = { ...err };
     if (!form.passwordCheck) {
       newErr.passwordCheck = "비밀번호를 입력해주세요";
+      triggerAnimate();
     } else if (form.userPassword !== form.passwordCheck) {
       newErr.passwordCheck = "비밀번호가 일치하지 않습니다";
+      triggerAnimate();
     } else {
       newErr.passwordCheck = "";
     }
@@ -47,9 +79,12 @@ const Signup = () => {
   };
   //아이디 중복검사
   const checkUserIdDuplicate = async (e) => {
+    e.preventDefault();
     const eRegEx = /^[a-z0-9A-Z]{4,20}$/;
     if (!eRegEx.test(form.userId)) {
       setErr({ ...err, userId: "영어, 숫자만 써주세요 (4-20자)" });
+      triggerAnimate();
+      setIdDupMsg({ ...idDupMsg, userId: "" }); // 성공 메시지 초기화
     } else {
       try {
         const response = await axios.post(
@@ -63,23 +98,19 @@ const Signup = () => {
         console.log(res);
         if (res === 0) {
           setErr({ ...err, userId: "중복된 아이디입니다" }); // 중복된 경우 에러 메시지 설정
+          triggerAnimate();
+          setIdDupMsg({ ...idDupMsg, userId: "" }); // 성공 메시지 초기화
         } else {
-          setErr({ ...err, userId: "사용 가능한 아이디입니다" }); // 중복되지 않은 경우 에러 메시지 초기화
+          setIdDupMsg({ ...idDupMsg, userId: "사용 가능한 아이디입니다" }); // 성공 메시지 설정
+          setErr({ ...err, userId: "" }); // 에러 메시지 초기화
         }
       } catch (error) {
         console.error("에러 발생", error);
         setErr({ ...err, userId: "아이디 중복 검사 중 오류 발생" }); // 에러 발생 시 에러 메시지 설정
+        setIdDupMsg({ ...idDupMsg, userId: "" }); // 성공 메시지 초기화
       }
     }
   };
-
-  // const onBlurUserId = async (e) => {
-  //     if(!form.userId) {
-  //         setErr({ ...err, userId: "아이디를 입력해주세요"});
-  //     } else {
-  //         await checkUserIdDuplicate(form.userId);
-  //     }
-  // };
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -124,6 +155,7 @@ const Signup = () => {
 
     // 에러 상태 업데이트
     setErr(newErr);
+    triggerAnimate();
 
     // 모든 유효성 검사를 통과하면 서버로 데이터 전송
     if (newErr.userId === "" && newErr.userPassword === "" && newErr.passwordCheck === "") {
@@ -164,18 +196,43 @@ const Signup = () => {
           onBlur={checkUserIdDuplicate}
           name="userId"
           value={form.userId}
+          className={`font-['pixel'] p-2 m-1 border-2 rounded ${
+            err.userId
+              ? animate
+                ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                : ""
+              : ""
+          }`}
         />
-        <p className="font-['pixel'] text-red-500 mb-1">{err.userId}</p>
+        {/* 성공 메시지 표시 */}
+        {idDupMsg.userId && <p className="text-emerald-600">{idDupMsg.userId}</p>}
+        {/* 에러 메시지 표시 */}
+        {err.userId && <p className="text-red-500">{err.userId}</p>}
 
         {/* 비밀번호 입력창 */}
+        <div className="relative">
         <input
           type={showPassword ? "text" : "password"}
-          placeholder="비밀번호 (영문, 숫자 4-20자)"
+          placeholder="비밀번호(영문, 숫자 4-20자)"
           onChange={onChange}
           name="userPassword"
           value={form.userPassword}
-        />
-        <button onClick={togglePassword}>{showPassword ? "숨기기" : "보이기"}</button>
+          onBlur={checkPassword}
+          className={`w-full p-2 border-2 rounded-md ${
+            err.passwordCheck
+              ? animate
+                ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                : ""
+              : ""
+          }`}
+  />
+  <button
+    onClick={togglePassword}
+    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+  >
+    {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+  </button>
+        </div>
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
 
         {/* 비밀번호 확인 입력창 */}
@@ -186,6 +243,13 @@ const Signup = () => {
           onBlur={checkPasswordMatch}
           name="passwordCheck"
           value={form.passwordCheck}
+          className={`font-['pixel'] p-2 m-1 border-2 rounded ${
+            err.userPassword
+              ? animate
+                ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                : ""
+              : ""
+          }`}
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.passwordCheck}</p>
 

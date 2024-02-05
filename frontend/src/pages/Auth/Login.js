@@ -13,11 +13,16 @@ const Login = () => {
   const navigate = useNavigate();
   // UserAuthStore의 User를 변경하기 위해
   const setUser = useStore((state) => state.setUser);
+  const resetUser = useStore((state) => state.resetUser);
+  // 에러 메시지 애니메이션 트리거 상태관리
+  const [animate, setAnimate] = useState(false);
 
   // 카카오 소셜 로그인 / 로그아웃
   const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
   const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
+  const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
   const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+  const LogoutLink = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`;
   const kakaoLoginHandler = () => {
     window.location.href = loginLink;
   };
@@ -38,10 +43,35 @@ const Login = () => {
   // useStore를 통해 스토어의 상태를 가져오는 함수
   const userState = useStore();
 
+  const userSeq = useStore((state) => state.user.userSeq);
+
+  const handleLogOut = async () => {
+    try {
+      const response = await axios.post(
+        "user/logout",
+        { userSeq: userSeq },
+        { withCredentials: true }
+      );
+      const res = response.data;
+      console.log(res);
+      // store의 유저 정보 초기화
+      if (res === 1) {
+        resetUser();
+        console.log("로그아웃 완료");
+        navigate("/auth/login");
+      } else if (res === 2) {
+        resetUser();
+        console.log("카카오 로그아웃 완료");
+        window.location.href = LogoutLink;
+      }
+    } catch (error) {
+      console.error("로그아웃 에러", error);
+    }
+  };
+
   useEffect(() => {
-    // useEffect 내에서 상태를 로그로 출력
-    console.log("userInfo:", userState);
-  }, [userState]); // userState가 변경될 때마다 실행
+    handleLogOut();
+  }, []); // userState가 변경될 때마다 실행
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -81,26 +111,22 @@ const Login = () => {
     // }
     setErr(newErr);
 
+    setAnimate(false);
+    setTimeout(() => setAnimate(true), 10);
+
     if (newErr.userId === "" && newErr.userPassword === "") {
       const { userId, userPassword } = form;
-      console.log("로그인 정보 :", { userId, userPassword });
       try {
-        const response = await axios.post(
-          "user/login",
-          { userId, userPassword }
-        );
+        const response = await axios.post("user/login", { userId, userPassword });
         const res = response.data;
         console.log("서버 응답:", res);
         // 닉네임이 없다면
         if (res.userNickname === null) {
-          sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
           setUser({ userSeq: res.userSeq, userNickname: null });
           navigate("/auth/nickname");
           // 닉네임이 있다면
         } else {
-          sessionStorage.setItem("userNickname", res.userNickname);
-          sessionStorage.setItem("userSeq", res.userSeq);
           // zustand 사용해보기
           setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
           console.log("로그인 성공");
@@ -108,7 +134,7 @@ const Login = () => {
         }
       } catch (error) {
         if (error.response && error.response.status === 400) {
-          setErr({ ...err, general: "올바른 정보를 입력해주세요." });
+          setErr({ userId: "", userPassword: "", general: "올바른 정보를 입력해주세요." });
         } else {
           console.error("로그인 중 에러 발생", error);
           setErr({ ...err, general: "서버가 아파요ㅠㅠ" });
@@ -133,7 +159,7 @@ const Login = () => {
           onChange={onChange}
           name="userId"
           value={form.userId}
-          className="font-['pixel'] p-2 m-1 border-2 rounded border-purple5 bg-input w-72"
+          className={`font-['pixel'] p-2 m-1 border-2 rounded w-72 ${err.userId || err.general ? (animate ? 'animate-shake animate-twice animate-duration-150 border-red-500' : '') : ''}`}
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.userId}</p>
         {/* {!err.userId && <p>{err.userId}</p>} */}
@@ -144,7 +170,7 @@ const Login = () => {
           onChange={onChange}
           name="userPassword"
           value={form.userPassword}
-          className="font-['pixel'] p-2 m-1 border-2 rounded border-purple5 bg-input w-72"
+          className={`font-['pixel'] p-2 m-1 border-2 rounded border-purple5 bg-input w-72 ${err.userPassword || err.general ? (animate ? 'animate-shake animate-twice animate-duration-150 border-red-500' : '') : ''}`}
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
 
