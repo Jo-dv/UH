@@ -17,21 +17,14 @@ const CreateRoomModal = ({ modalOnOff }) => {
     setRoomName(e.target.value);
   }, []);
 
-  console.log("1111111111");
-  console.log("roomPassword", roomPassword);
-
   const handleChangeRoomPassword = useCallback((e) => {
     setRoomPassword(e.target.value);
   }, []);
 
-  console.log("22222222222");
-  console.log("roomPassword", roomPassword);
   const handleChangeRoomMax = useCallback((e) => {
     setRoomMax(e.target.value);
   }, []);
 
-  console.log("!!!!!!!!!!!!!!!!!");
-  console.log("나 게임 이거하고 싶음", roomGame);
   const handleChangeRoomGame = useCallback((e) => {
     setRoomGame(e.target.value);
   }, []);
@@ -41,8 +34,6 @@ const CreateRoomModal = ({ modalOnOff }) => {
   const checkRoomNameExists = (name) => {
     return rooms.some((room) => room.roomName === name);
   };
-
-  console.log("Before calling createSession, roomPassword:", roomPassword);
 
   const submitHandler = (e) => {
     e.preventDefault();

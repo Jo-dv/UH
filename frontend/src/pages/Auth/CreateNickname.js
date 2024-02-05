@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
+import startBackImg from "../../asset/image/startBackGround.png";
 
 const CreateNickname = () => {
   const navigate = useNavigate();
@@ -10,6 +11,13 @@ const CreateNickname = () => {
   // UserAuthStore의 User를 변경하기 위해
   const setUser = useStore((state) => state.setUser);
   const userState = useStore((state) => state.user);
+  const [animate, setAnimate] = useState(false);
+
+  // 애니메이션 트리거 로직
+  const triggerAnimate = () => {
+    setAnimate(false);
+    setTimeout(() => setAnimate(true), 10);
+  };
 
   useEffect(() => {
     console.log("userInfo:", userState);
@@ -22,6 +30,10 @@ const CreateNickname = () => {
   const [err, setErr] = useState({
     userNickname: "",
   });
+  // 닉네임 중복 검사 통과 메시지
+  const [nicknameDupMsg, setNicknameDupMsg] = useState({
+    userNickname: "",
+  });
 
   const [checkUserNickname, setCheckUserNickname] = useState("");
 
@@ -31,30 +43,14 @@ const CreateNickname = () => {
     setErr({ ...err, [name]: "" });
   };
 
-  // const checkNickname = async () => {
-  //     console.log("ㄱㄱ")
-  //     try {
-  //         const response = await axios.post("/user/nickname-check", {
-  //             userNickname: form.userNickname,
-  //         });
-  //         const res = response.data;
-  //         console.log(res);
-  //         if (res === "가능") {
-  //             setCheckUserNickname("사용가능한 닉네임");
-  //         } else {
-  //             setCheckUserNickname("중복된 닉네임");
-  //         }
-  //     } catch (error) {
-  //         console.error("에러 발생", error);
-  //     }
-
-  // };
 
   //닉네임 중복검사
   const checkUserNicknameDuplicate = async (e) => {
     const eRegEx = /^[a-z0-9A-Z가-힣ㄱ-ㅎ]{2,10}$/;
     if (!eRegEx.test(form.userNickname)) {
       setErr({ ...err, userNickname: "한글, 영어, 숫자만 써주세요 (4-20자)" });
+      triggerAnimate();
+      setNicknameDupMsg({ ...nicknameDupMsg, userNickname: ""}); // 성공 메시지 초기화
     } else {
       try {
         const response = await axios.post(
@@ -67,12 +63,16 @@ const CreateNickname = () => {
         console.log(res);
         if (res === 0) {
           setErr({ ...err, userNickname: "중복된 닉네임입니다" }); // 중복된 경우 에러 메시지 설정
+          triggerAnimate();
+          setNicknameDupMsg({ ...nicknameDupMsg, userNickname: ""}); // 성공 메시지 초기화
         } else {
-          setErr({ ...err, userNickname: "사용 가능한 아이디입니다" }); // 중복되지 않은 경우 에러 메시지 초기화
+          setNicknameDupMsg({ ...nicknameDupMsg, userNickname: "사용 가능한 닉네임입니다"}); // 성공 메시지 초기화
+          setErr({ ...err, userNickname: ""}); // 에러 메시지 초기화
         }
       } catch (error) {
         console.error("에러 발생", error);
         setErr({ ...err, userNickname: "닉네임 중복 검사 중 오류 발생" }); // 에러 발생 시 에러 메시지 설정
+        setNicknameDupMsg({ ...nicknameDupMsg, userNickname: ""}); // 성공 메시지 초기화
       }
     }
   };
@@ -88,9 +88,11 @@ const CreateNickname = () => {
     // 닉네임 input에 입력하지 않았다면
     if (!form.userNickname) {
       newErr.userNickname = "닉네임을 입력해주세요";
+      triggerAnimate();
       // 입력 기준을 충족하지 못했다면
     } else if (!eRegEx.test(form.userNickname)) {
       newErr.userNickname = "한글, 영어, 숫자만 써주세요 (2-10자)";
+      triggerAnimate();
       // 닉네임 중복 검사
       // } else if (checkUserNickname !== "사용가능한 닉네임") {
       //     newErr.userNickname = "중복된 닉네임입니다";
@@ -114,6 +116,7 @@ const CreateNickname = () => {
         console.log("서버 응답:", res);
         if (res.status === 400) {
           setErr({ ...err, userNickname: "중복된 닉네임입니다" });
+          triggerAnimate();
         } else {
           sessionStorage.setItem("userNickname", form.userNickname);
           // zustand 사용해보기
@@ -124,6 +127,7 @@ const CreateNickname = () => {
       } catch (error) {
         console.error("닉네임 생성 중 에러 발생", error);
         setErr({ ...err, userNickname: "중복된 닉네임입니다." });
+        triggerAnimate();
         // 에러 처리
         // 예: 사용자에게 에러 메시지 표시
       }
@@ -147,12 +151,24 @@ const CreateNickname = () => {
           onBlur={checkUserNicknameDuplicate}
           name="userNickname"
           value={form.userNickname}
+          className={`${
+            err.userNickname
+              ? animate
+                ? "animate-shake animate-twice animate-duration-150"
+                : ""
+              : ""
+          }`}
         />
-        <p className="font-['pixel'] text-red-500 mb-1">{err.userNickname}</p>
-        <span>{checkUserNickname}</span>
+        {/* 성공 메시지 표시 */}
+        {nicknameDupMsg.userNickname && <p className="text-emerald-600">{nicknameDupMsg.userNickname}</p>}
+        {/* 에러 메시지 표시 */}
+        {err.userNickname && <p className="text-red-500">{err.userNickname}</p>}
 
         <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">입장하기</button>
       </form>
+      <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
+
+      <div className="absolute w-full h-screen bg-black opacity-50"></div>
     </div>
   );
 };

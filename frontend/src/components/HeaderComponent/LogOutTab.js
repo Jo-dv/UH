@@ -6,14 +6,14 @@ const LogOutTab = () => {
 
   return (
     <>
-      <h3
-        className="w-24 text-center rounded-t-lg bg-mc7 p-2"
+      <button
+        className="w-24 text-center rounded-t-lg bg-tab6 p-2 transform origin-bottom transition duration-200 hover:scale-y-125"
         onClick={() => {
           setLogout(!logout);
         }}
       >
         로그아웃
-      </h3>
+      </button>
       {logout === true ? <LogOutModal logout={logout} setLogout={setLogout} /> : null}
     </>
   );
