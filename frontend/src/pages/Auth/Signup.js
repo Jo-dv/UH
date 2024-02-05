@@ -163,7 +163,7 @@ const Signup = () => {
       console.log("회원가입 정보:", { userId, userPassword });
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/join",
+          "http://i10e201.p.ssafy.io:8000/api/user/join",
           { userId, userPassword },
           { withCredentials: true }
         );
