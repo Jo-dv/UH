@@ -36,7 +36,7 @@ const AnswerInput = ({
     if (answer === event.data) {
       console.log(`${event.data} 정답`);
       plusQuizIndex();
-      plusScore(myTeam);
+      plusScore();
       changeTeamIndex();
     } else {
       console.log(`${event.data} 오답`);

@@ -185,7 +185,17 @@ export default function RoomId() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [leaveSession]);
-  console.log("1111111111111111111111111", isReady);
+
+  useEffect(() => {
+    const cleanup = () => {
+      if (window.location.pathname === "/lobby") {
+        leaveSession();
+      }
+    };
+
+    return cleanup;
+  }, [leaveSession]);
+
   const getToken = useCallback(async () => {
     //API import 함수 사용 중
     const sessionId = await createSession(
