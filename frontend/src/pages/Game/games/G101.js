@@ -57,7 +57,9 @@ const G101 = (props) => {
                 props.turnPlayerId[2] !== props.myTeam ? (
                   <div className="absolute right-0 w-1/4">
                     <img
-                      src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
+                      src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${
+                        props.quizData[props.quizIndex].quizId
+                      }.jpg`}
                       alt="정답사진"
                     />
                   </div>
