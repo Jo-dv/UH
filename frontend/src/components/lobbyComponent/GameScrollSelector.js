@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const GameScrollSelector = ({ onGameCategory, extraOptions = [] }) => {
+const GameScrollSelector = ({ onGameCategory, extraOptions = [], showAllOption = true }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const handleCategoryChange = (event) => {
@@ -15,12 +15,14 @@ const GameScrollSelector = ({ onGameCategory, extraOptions = [] }) => {
       onChange={handleCategoryChange}
       value={selectedCategory}
     >
-      <option value="">전체 게임</option>
-      <option value="101">고요 속의 외침</option>
-      <option value="102">인물 맞추기</option>
+      {showAllOption && <option value="0">전체 게임</option>}
       {extraOptions.map((option) => (
-        <option value={option.value}>{option.label}</option>
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
       ))}
+      <option value="1">고요 속의 외침</option>
+      <option value="2">인물 맞추기</option>
     </select>
   );
 };

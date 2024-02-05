@@ -5,7 +5,7 @@ const RankingTab = () => {
 
   return (
     <button
-      className="w-16 text-center rounded-t-lg bg-mc4 p-2"
+      className="w-16 text-center rounded-t-lg bg-tab3 p-2 transform origin-bottom transition duration-200 hover:scale-y-125"
       onClick={() => {
         setIsLobby("SelectedRanking");
       }}

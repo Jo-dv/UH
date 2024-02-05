@@ -135,7 +135,7 @@ export default function RoomId() {
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
           // await console.log("서버에서 받은 방정보", serverRoomInfo);
-          setroomInfo(serverRoomInfo);
+          await setroomInfo(serverRoomInfo);
           if (mySessionId === "create") {
             // console.log("나는 호스트");
             setIsHost(true);

@@ -5,7 +5,7 @@ const MyPageTab = () => {
 
   return (
     <button
-      className="w-25 text-center rounded-t-lg bg-mc5 p-2"
+      className="w-25 text-center rounded-t-lg bg-tab4 p-2 transform origin-bottom transition duration-200 hover:scale-y-125"
       onClick={() => {
         setIsLobby("MyPage");
       }}
