@@ -132,7 +132,7 @@ public class UserController {
 	// 로그아웃
 	@Operation(
 		summary = "로그아웃",
-		description = "카카오 로그아웃이면 2 반환, 일반 로그아웃이면 1 반환"
+		description = "카카오 로그아웃이면 2 반환, 일반 로그아웃이면 1 반환, 로그인 정보 없으면 0 반환"
 	)
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "200", description = "로그아웃 성공")
@@ -140,15 +140,18 @@ public class UserController {
 	@PostMapping("/user/logout")
 	public ResponseEntity<Object> logout(@RequestBody UserDto dto, HttpSession session) {
 		UserDto user = (UserDto)session.getAttribute("user");
-		UserDto loginUser = service.findBySeq(user.getUserSeq());
-		if (loginUser.getUserPassword() == null) {
-			// 비밀번호가 없으면 카카오 계정으로 반환
+		if (user != null) {
+			UserDto loginUser = service.findBySeq(user.getUserSeq());
+			if (loginUser.getUserPassword() == null) {
+				// 비밀번호가 없으면 카카오 계정으로 반환
+				session.invalidate();
+				return new ResponseEntity<>(2, HttpStatus.OK);
+			}
+			// 비밀번호가 있으면 일반 로그아웃으로 판단
 			session.invalidate();
-			return new ResponseEntity<>(2, HttpStatus.OK);
+			return new ResponseEntity<>(1, HttpStatus.OK);
 		}
-		// 비밀번호가 있으면 일반 로그아웃으로 판단
-		session.invalidate();
-		return new ResponseEntity<>(1, HttpStatus.OK);
+		return new ResponseEntity<>(0, HttpStatus.OK);
 	}
 
 	// 닉네임 생성
