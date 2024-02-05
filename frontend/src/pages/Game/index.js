@@ -109,16 +109,17 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
   useEffect(() => {
     const callData = async () => {
       const roomData = await getRoomInfo(session.sessionId);
-      console.log(
-        //   //   "게임 데이터 : ",
-        //   //   myConnectionId,
-        //   //   roomData,
-        //   //   publisher,
-        //   //   subscribers,
-        session
-        //   // quiz
-        //   //   myUserName
-      );
+      // console.log(
+      //   "게임 데이터 : ",
+      //   myConnectionId,
+      //   roomData,
+      //   `게임카테고리 : ${roomData.roomData.gameCategory}`,
+      //   publisher,
+      //   subscribers,
+      //   session,
+      //   quiz,
+      //   myUserName
+      // );
 
       const players = roomData.roomStatus.players;
       const myTeamCNT = roomData.roomStatus.players[myConnectionId].team; //A or B
@@ -212,7 +213,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
               ))}
             </section>
             <section className="h-full aspect-[4/5]">
-              <div className="gameBox relative flex flex-col bg-black text-white ">
+              <div className="gameBox relative flex flex-col bg-black text-white px-1">
                 {gameLoading ? (
                   <G101Info
                     maxTime={maxTime}
