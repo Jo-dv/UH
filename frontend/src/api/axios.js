@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://i10e201.p.ssafy.io/api/',
+  baseURL: 'http://localhost:5000/api/',
   headers: {
     'Content-Type': 'application/json'
   },
@@ -18,8 +18,16 @@ axiosInstance.interceptors.response.use(
       sessionStorage.clear();
       alert("로그인하세용")
       
-   // 로그인 페이지로 리다이렉트
-   window.location.href = '/auth/login';
+      // 로그인 페이지로 리다이렉트
+      window.location.href = '/auth/login';
+    }
+    else if (error.response.status === 403) {
+      // 401 에러가 발생하면 로그인 페이지 처리, 클라이언트 세션 초기화
+      console.log('403 에러가 발생했습니다. 닉네임 설정 페이지로 이동합니다.');
+      alert("닉네임이없어용")
+      
+      // 로그인 페이지로 리다이렉트
+      window.location.href = '/auth/nickname';
     }
     return Promise.reject(error);
   }
