@@ -9,13 +9,11 @@ import axios from "./axios.js";
 export const playerTeam = async (sessionId, connectionId, team) => {
   console.log("플레이어 팀 변경", sessionId, connectionId, team);
   try {
-    const response = await axios.put("team",
-      {
-        sessionId: sessionId,
-        connectionId: connectionId,
-        team: team,
-      }
-    );
+    const response = await axios.put("team", {
+      sessionId: sessionId,
+      connectionId: connectionId,
+      team: team,
+    });
     console.log(response.data); // "팀이 변경 되었습니다."
   } catch (error) {
     console.log("플레이어 팀 변경 에러");
@@ -38,12 +36,10 @@ export const getRoomInfo = async (sessionId) => {
 export const passHost = async (sessionId, connectionId) => {
   console.log("반장 변경", sessionId, connectionId);
   try {
-    const response = await axios.put("host",
-      {
-        sessionId: sessionId,
-        connectionId: connectionId,
-      }
-    );
+    const response = await axios.put("host", {
+      sessionId: sessionId,
+      connectionId: connectionId,
+    });
     console.log(response.data); // "방장 권한을 전달했습니다."
   } catch (error) {
     console.log("반장 변경 에러");
@@ -60,13 +56,11 @@ export const passHost = async (sessionId, connectionId) => {
 export const ready = async (sessionId, connectionId, isReady) => {
   console.log("준비", sessionId, connectionId);
   try {
-    const response = await axios.put("ready",
-      {
-        sessionId: sessionId,
-        connectionId: connectionId,
-        ready: isReady,
-      }
-    );
+    const response = await axios.put("ready", {
+      sessionId: sessionId,
+      connectionId: connectionId,
+      ready: isReady,
+    });
     console.log(response.data); // "준비 상태를 변경했습니다"
   } catch (error) {
     console.log("준비 에러");
@@ -77,12 +71,10 @@ export const ready = async (sessionId, connectionId, isReady) => {
 export const startPlay = async (sessionId) => {
   console.log("게임시작 api", sessionId);
   try {
-    const response = await axios.put("play",
-      {
-        sessionId: sessionId,
-        play: true
-      }
-    );
+    const response = await axios.put("play", {
+      sessionId: sessionId,
+      play: true,
+    });
     console.log(response.data);
   } catch (error) {
     console.log("게임시작 에러");
@@ -105,15 +97,13 @@ export const getGameData = async (sessionId) => {
 export const endPlay = async (sessionId, winTeam, winScore, loseScore) => {
   console.log("게임종료", sessionId);
   try {
-    const response = await axios.put("play",
-      {
-        sessionId: sessionId,
-        play: false,
-        winTeam,
-        winScore,
-        loseScore,
-      }
-    );
+    const response = await axios.put("play", {
+      sessionId: sessionId,
+      play: false,
+      winTeam,
+      winScore,
+      loseScore,
+    });
     console.log(response.data);
   } catch (error) {
     console.log("게임종료");

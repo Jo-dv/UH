@@ -3,46 +3,53 @@ import { useEffect, useState } from "react";
 import Room from "./Room";
 import useLobby from "../../hooks/useLobby";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
+import { useWebSocket } from "../../webSocket/UseWebSocket";
 
 const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
   const { getRoomsList } = useLobbyApiCall();
   const { roomRefs } = useLobby();
   const [rooms, setRooms] = useState([]);
-  // 로딩 상태 추가
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+  const { refreshRequested, setRefreshRequested } = useWebSocket(); // WebSocket으로부터 새로고침 요청 상태 가져오기
 
-  // api data 비동기로 받아오기
+  // API를 통해 방 목록 데이터를 비동기적으로 가져오기
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getRoomsList();
+      setRooms(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 초기 방 목록 로드
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true); // 데이터 로딩 시작
-      try {
-        const data = await getRoomsList();
-        setRooms(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false); // 데이터 로딩 완료
-      }
-    };
     fetchData();
   }, []);
-  console.log("룸 객체", rooms);
 
+  // WebSocket을 통한 새로고침 요청에 대한 처리
+  useEffect(() => {
+    if (refreshRequested) {
+      console.log("새로고침 요청 받음");
+      fetchData();
+      setRefreshRequested(false);
+    }
+  }, [refreshRequested]);
+
+  // 필터링 조건에 따른 방 목록 필터링
   const filteredRooms = rooms.filter((room) => {
-    // viewAllRooms가 false이고, room.play가 true인 경우 필터링
     if (!viewAllRooms && room.play) {
       return false;
     }
-
-    // viewSearchRooms에 값이 있고, room.roomName이 해당 문자열을 포함하지 않는 경우 필터링
     if (
       viewSearchRooms !== "" &&
       !room.roomName.toLowerCase().includes(viewSearchRooms.toLowerCase())
     ) {
       return false;
     }
-
-    // viewGameCategoryRooms에 따른 필터링
     return viewGameCategoryRooms === "" || viewGameCategoryRooms == room.gameCategory;
   });
 

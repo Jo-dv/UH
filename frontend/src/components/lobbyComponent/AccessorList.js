@@ -7,7 +7,6 @@ const AccessorsList = () => {
   const { accessorRefs } = useAccessors();
   const { accessors } = UseAccessorsStore();
   const nickname = useStore((state) => state.user.userNickname);
-
   // accessorRefs를 업데이트합니다.
   useEffect(() => {
     accessorRefs.current = accessors.map((_, i) => accessorRefs.current[i] || React.createRef());

@@ -5,8 +5,9 @@ import useWaitingRoomApiCall from "../../../api/useWaitingRoomApiCall";
 const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
-  const originalRoomInfo = roomInfo.roomData;
-
+  console.log(roomInfo);
+  const originalRoomInfo = roomInfo;
+  console.log("받은 방정보", originalRoomInfo);
   // 원래 방 정보 모달에 기입
   const [roomName, setRoomName] = useState(originalRoomInfo.roomName);
   const [roomPassword, setRoomPassword] = useState(roomInfo.roomPassword);
@@ -18,25 +19,34 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   // 비밀 번호 활성화 변수
   const [lock, setLock] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   // 방 제목 중복 검사
   const { getRoomsList } = useLobbyApiCall();
   const [rooms, setRooms] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const data = await getRoomsList();
         setRooms(data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchData();
   }, []);
 
   const checkRoomNameExists = (name) => {
-    return rooms.some((room) => room.roomName === name);
+    if (name === originalRoomInfo.roomName) {
+      return false;
+    } else {
+      const isNameExists = rooms.some((room) => room.roomName === name);
+      console.log("중복 검사 결과:", isNameExists); // 중복 검사 결과 확인
+      return isNameExists;
+    }
   };
 
   const handleChangeRoomName = useCallback((e) => {
@@ -59,11 +69,12 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   // 방 정보 바꾸는 Handler
   const handleUpdateRoom = (e) => {
     e.preventDefault();
+
+    console.log("방 이름 중복 검사 시작"); // 로그 추가
     if (checkRoomNameExists(roomName)) {
       setErrorMessage("이미 사용 중인 방 제목입니다.");
       return;
     }
-
     // 비밀번호 입력란이 활성화되었고, 비밀번호가 입력되었을 때만 비밀번호 값을 전달합니다.
     const roomInfo = {
       sessionId: originalRoomInfo.sessionId,
@@ -183,7 +194,12 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
                 인물 맞추기
               </label>
             </div>
-            <button type="submit" className="p-2 m-1 rounded w-72 bg-formButton self-center">
+            <button
+              type="submit"
+              className="p-2 m-1 rounded w-72 bg-formButton self-center"
+              onClick={onClose}
+              disabled={isLoading}
+            >
               방 설정 바꾸기
             </button>
           </form>
