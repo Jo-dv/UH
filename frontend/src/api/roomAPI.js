@@ -1,4 +1,4 @@
-import axios from "./axios.js"
+import axios from "./axios.js";
 
 /**
  * 방 생성 & 입장
@@ -20,15 +20,13 @@ export const createSession = async (
   console.log("나 받은 게임 이거임", roomGame);
 
   try {
-    const response = await axios.post("rooms",
-      {
-        sessionId: sessionId,
-        roomName: roomName,
-        roomPassword: roomPassword,
-        gameCategory: roomGame,
-        max: max,
-      },
-    );
+    const response = await axios.post("rooms", {
+      sessionId: sessionId,
+      roomName: roomName,
+      roomPassword: roomPassword,
+      gameCategory: roomGame,
+      max: max,
+    });
     console.log("-----------------");
     console.log("roomPassword", roomPassword);
     // console.log("방만들기", response.data);
@@ -41,7 +39,7 @@ export const createSession = async (
       alert("비밀번호를 확인해주세요.");
     } else {
       // 그 외의 경우에 대한 일반적인 에러 처리
-      console.error("Error:", error.message);
+      console.error("Error:", error);
     }
 
     // 실패한 경우 null 반환 또는 다른 방식으로 처리
@@ -70,15 +68,13 @@ export const createToken = async (sessionId) => {
 export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, isHost) => {
   console.log("플레이어추가 진행함", sessionId, connectionId, userSeq, userNickname, isHost);
   try {
-    const response = await axios.post("players",
-      {
-        sessionId: sessionId,
-        connectionId: connectionId,
-        userSeq: userSeq,
-        userNickname: userNickname,
-        host: isHost,
-      },
-    );
+    const response = await axios.post("players", {
+      sessionId: sessionId,
+      connectionId: connectionId,
+      userSeq: userSeq,
+      userNickname: userNickname,
+      host: isHost,
+    });
     console.log(response.data); // "방에 입장했습니다."
   } catch (error) {
     console.log("플레이어 추가 에러");
@@ -94,9 +90,7 @@ export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, 
 export const exitRoom = async (sessionId, connectionId) => {
   console.log("방나가기 sessionId:", sessionId, " connectionId:", connectionId);
   try {
-    const response = await axios.delete(
-      "exitrooms/" + sessionId + "/" + connectionId
-    );
+    const response = await axios.delete("exitrooms/" + sessionId + "/" + connectionId);
     console.log(response.data);
   } catch (error) {
     console.log("방나가기 에러");

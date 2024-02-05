@@ -12,7 +12,7 @@ const AnswerInput = ({
   const [answerMsg, setAnswerMsg] = useState("");
 
   const sendAnswer = (e) => {
-    console.log("정답제출");
+    // console.log("정답제출");
     e.preventDefault();
     setAnswerMsg("");
     // console.log(session);
@@ -24,7 +24,7 @@ const AnswerInput = ({
       })
       .then(() => {
         // console.log("정답제출 보냄 :", answerMsg);
-        setAnswerMsg("");
+        // setAnswerMsg("");
       })
       .catch((error) => {
         console.error(error);

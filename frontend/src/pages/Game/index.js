@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Chat from "../../components/Chat";
 import "./Game.css";
 import Timer from "./Timer";
-import { getRoomInfo } from "../../api/waitRoom";
+import { endPlay, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "../RoomId/UserVideoComponent";
 import AnswerInput from "./AnswerInput";
 import G101Info from "./games/G101Info";
@@ -14,6 +14,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
   const [loading, setLoading] = useState(true);
   const [time, setTime] = useState(0);
   const [round, setRound] = useState(1);
+  const [isGameEnd, setIsGameEnd] = useState(false);
   const [myTeam, setMyTeam] = useState(undefined);
   const [ATeamStreamManagers, setATeamStreamManagers] = useState(undefined);
   const [BTeamStreamManagers, setBTeamStreamManagers] = useState(undefined);
@@ -51,11 +52,11 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
   //     setBTeamScore(BTeamScore + 1);
   //   }
   // };
-  const plusScore = () => {
-    console.log(`plusScore: ${turnPlayerId[2]}`);
-    if (turnPlayerId[2] === "A") {
+  const plusScore = (Team) => {
+    console.log(`plusScore: ${Team}`);
+    if (Team === "A") {
       setATeamScore(ATeamScore + 1);
-    } else if (turnPlayerId[2] === "B") {
+    } else if (Team === "B") {
       setBTeamScore(BTeamScore + 1);
     }
   };
@@ -97,16 +98,16 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
   useEffect(() => {
     const callData = async () => {
       const roomData = await getRoomInfo(session.sessionId);
-      // console.log(
-      //   //   "게임 데이터 : ",
-      //   //   myConnectionId,
-      //   //   roomData,
-      //   //   publisher,
-      //   //   subscribers,
-      //   //   session,
-      //   // quiz
-      //   //   myUserName
-      // );
+      console.log(
+        //   //   "게임 데이터 : ",
+        //   //   myConnectionId,
+        //   //   roomData,
+        //   //   publisher,
+        //   //   subscribers,
+        session
+        //   // quiz
+        //   //   myUserName
+      );
 
       const players = roomData.roomStatus.players;
       const myTeamCNT = roomData.roomStatus.players[myConnectionId].team; //A or B
@@ -164,6 +165,14 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
     callData();
   }, []);
 
+  const goWaitRoom = () => {
+    sendPlayDone();
+    if (ATeamScore > BTeamScore) {
+      endPlay(session.sessionId, "A", ATeamScore, BTeamScore);
+    } else if (ATeamScore < BTeamScore) {
+      endPlay(session.sessionId, "B", BTeamScore, ATeamScore);
+    }
+  };
   return (
     <>
       {loading ? (
@@ -176,7 +185,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
             <span>{publisher.id}</span>
             <UserVideoComponent streamManager={publisher} session={session} />
           </div> */}
-              {myTeamStreamManagers.map((sub, i) => (
+              {ATeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
                     <div key={sub[0]} className="bg-mc3 p-2 overflow-hidden">
@@ -204,49 +213,72 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
                 <p>
                   round:{round} Team: {TeamTurn}
                 </p>
-                <button onClick={sendPlayDone}>게임종료</button>
                 <p>{time}</p>
                 <p> B:{BTeamScore}</p>
               </div>
+
               <div className="gameBox relative flex flex-col justify-end">
                 <div className="h-full aspect-[4/3] bg-black text-white absolute flex flex-col">
-                  <div class>
-                    <UserVideoComponent
-                      streamManager={turnPlayerId[1]}
-                      session={session}
-                      gamePlayer={turnPlayerId[0]}
-                    />
-                  </div>
-
-                  {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
-                    <div className="absolute right-0 w-1/4">
-                      <img
-                        src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
-                        alt="정답사진"
-                      />
+                  {isGameEnd ? (
+                    <div className="bg-mc5 text-white w-full h-full flex flex-col justify-center items-center">
+                      <div>
+                        {ATeamScore > BTeamScore ? (
+                          <p className="text-3xl">A Team Win</p>
+                        ) : (
+                          <>{ATeamScore === BTeamScore ? <p>무승부</p> : <p>B Team Win</p>}</>
+                        )}
+                      </div>
+                      <br></br>
+                      <button onClick={goWaitRoom}>로비로</button>
                     </div>
-                  ) : null}
+                  ) : (
+                    <>
+                      <div class>
+                        <UserVideoComponent
+                          streamManager={turnPlayerId[1]}
+                          session={session}
+                          gamePlayer={turnPlayerId[0]}
+                        />
+                      </div>
 
-                  <div className="opacity-90 absolute w-full bottom-0">
-                    <div className="relative flex justify-center items-center">
-                      <Timer
-                        maxTime={maxTime}
-                        time={time}
-                        setTime={setTime}
-                        changeTeamTurn={changeTeamTurn}
-                        isHost={isHost}
-                        session={session}
-                        maxRound={maxRound}
-                        round={round}
-                        setRound={setRound}
-                        TeamTurn={TeamTurn}
-                        setTeamTurn={setTeamTurn}
-                      />
-                      <div className="absolute flex text-black">
-                        {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
-                          <>
-                            <p>{quizData[quizIndex].quizAnswer}</p>
-                            <div className="hidden">
+                      {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
+                        <div className="absolute right-0 w-1/4">
+                          <img
+                            src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
+                            alt="정답사진"
+                          />
+                        </div>
+                      ) : null}
+
+                      <div className="opacity-90 absolute w-full bottom-0">
+                        <div className="relative flex justify-center items-center">
+                          <Timer
+                            maxTime={maxTime}
+                            time={time}
+                            setTime={setTime}
+                            maxRound={maxRound}
+                            round={round}
+                            setRound={setRound}
+                            changeTeamTurn={changeTeamTurn}
+                            setIsGameEnd={setIsGameEnd}
+                          />
+                          <div className="absolute flex text-black">
+                            {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
+                              <>
+                                <p>{quizData[quizIndex].quizAnswer}</p>
+                                <div className="hidden">
+                                  <AnswerInput
+                                    myUserName={myUserName}
+                                    session={session}
+                                    answer={quizData[quizIndex].quizAnswer}
+                                    plusQuizIndex={plusQuizIndex}
+                                    myTeam={turnPlayerId[2]}
+                                    plusScore={plusScore}
+                                    changeTeamIndex={changeTeamIndex}
+                                  />
+                                </div>
+                              </>
+                            ) : (
                               <AnswerInput
                                 myUserName={myUserName}
                                 session={session}
@@ -256,25 +288,14 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
                                 plusScore={plusScore}
                                 changeTeamIndex={changeTeamIndex}
                               />
-                            </div>
-                          </>
-                        ) : (
-                          <AnswerInput
-                            myUserName={myUserName}
-                            session={session}
-                            answer={quizData[quizIndex].quizAnswer}
-                            plusQuizIndex={plusQuizIndex}
-                            myTeam={turnPlayerId[2]}
-                            plusScore={plusScore}
-                            changeTeamIndex={changeTeamIndex}
-                          />
-                        )}
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
               </div>
-
               {/* <button onClick={sendPlayDone}>playDone</button> */}
               <div className="h-64 w-full">
                 {turnPlayerId !== undefined ? (
@@ -288,14 +309,26 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
               </div>
             </section>
             <section className="cam grid grid-rows-4 gap-1">
-              {otherTeamStreamManagers.map((sub, i) => (
-                <div key={sub[0]} className="bg-mc1 p-1 overflow-hidden">
-                  <UserVideoComponent
-                    streamManager={sub[1]}
-                    session={session}
-                    gamePlayer={turnPlayerId[0]}
-                  />
-                </div>
+              {BTeamStreamManagers.map((sub, i) => (
+                <>
+                  {myConnectionId === sub[0] ? (
+                    <div key={sub[0]} className="bg-mc3 p-2 overflow-hidden">
+                      <UserVideoComponent
+                        streamManager={sub[1]}
+                        session={session}
+                        gamePlayer={turnPlayerId[0]}
+                      />
+                    </div>
+                  ) : (
+                    <div key={sub[0]} className="bg-mc1 p-1 overflow-hidden">
+                      <UserVideoComponent
+                        streamManager={sub[1]}
+                        session={session}
+                        gamePlayer={turnPlayerId[0]}
+                      />
+                    </div>
+                  )}
+                </>
               ))}
             </section>
           </div>

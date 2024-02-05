@@ -6,7 +6,6 @@ import AccessorsList from "../../components/lobbyComponent/AccessorList";
 const UserList = () => {
   // [친구 목록, 접속자 목록] 2개 토글
   const [toggleFriend, setToggleFriend] = useState(true);
-  console.log("---------");
 
   return (
     <>
