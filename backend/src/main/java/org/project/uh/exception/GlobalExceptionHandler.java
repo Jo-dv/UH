@@ -16,4 +16,10 @@ public class GlobalExceptionHandler {
 	public void handleUnauthorizedException(HttpServletRequest request, HttpServletResponse response,
 		UnauthorizedException ex) {
 	}
+
+	@ExceptionHandler(NullNicknameException.class)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public void handleNullNicknameException(HttpServletRequest request, HttpServletResponse response,
+		NullNicknameException ex) {
+	}
 }

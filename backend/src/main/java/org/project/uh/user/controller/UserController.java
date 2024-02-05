@@ -1,6 +1,5 @@
 package org.project.uh.user.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -82,6 +81,7 @@ public class UserController {
 			}
 			return new ResponseEntity<>("가입 성공", HttpStatus.OK);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -171,6 +171,7 @@ public class UserController {
 			if (result == 0) {
 				return new ResponseEntity<>("중복된 닉네임", HttpStatus.BAD_REQUEST);
 			}
+			user.setUserNickname(userNickname);
 			return new ResponseEntity<>("닉네임 생성 성공", HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);

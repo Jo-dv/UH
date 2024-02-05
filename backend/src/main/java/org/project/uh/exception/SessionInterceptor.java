@@ -1,5 +1,6 @@
 package org.project.uh.exception;
 
+import org.project.uh.user.dto.UserDto;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,8 +16,11 @@ public class SessionInterceptor implements HandlerInterceptor {
 			return true;
 
 		HttpSession session = request.getSession();
-		if (session.getAttribute("user") == null) {
+		UserDto data = (UserDto)session.getAttribute("user");
+		if (data == null) {
 			throw new UnauthorizedException("로그인 정보가 없습니다.");
+		} else if (data.getUserNickname() == null) {
+			throw new NullNicknameException("닉네임 정보가 없습니다.");
 		}
 		return true;
 	}
