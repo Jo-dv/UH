@@ -88,7 +88,7 @@ const Signup = () => {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/idcheck",
+          "http://i10e201.p.ssafy.io:8000/api/user/idcheck",
           {
             userId: form.userId,
           },
