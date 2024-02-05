@@ -7,7 +7,7 @@ const SelectedRanking = ({ onGameCategoryView }) => {
   const extraOptions = [{ value: "3", label: "개인 랭킹" }];
 
   // [RankingList] 게임별 랭킹 보기
-  const [viewGameCategoryRanking, setViewGameCategoryRanking] = useState(1);
+  const [viewGameCategoryRanking, setViewGameCategoryRanking] = useState(3);
 
   // [GameRoomSearchPanel] 게임별 방 보기
   const handleGameCategoryView = (viewAll) => {
@@ -18,9 +18,9 @@ const SelectedRanking = ({ onGameCategoryView }) => {
   return (
     <div className="col-start-2 col-end-7 row-start-1 row-end-13 m-5">
       <div className="col-start-2 col-end-7 row-start-1 row-end-2">
-        <GameScrollSelector extraOptions={extraOptions} onGameCategory={handleGameCategoryView} />
+        <GameScrollSelector extraOptions={extraOptions} onGameCategory={handleGameCategoryView} showAllOption={false} />
       </div>
-      <div className="col-start-2 col-end-7 row-start-2 row-end-13">
+      <div className="col-start-2 col-end-7 row-start-2 row-end-13 z-40">
         <RankingLists viewGameCategoryRanking={viewGameCategoryRanking} />
       </div>
     </div>

@@ -12,10 +12,12 @@ import MyPage from "../../components/lobbyComponent/MyPage";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
+import useStore from "../../store/UserAuthStore";
 
 const Lobby = () => {
   // currentComponent 설정
   const { isLobby, setIsLobby } = UseIsLobbyStore();
+  const resetUser = useStore((state) => state.resetUser);
 
   // [userAuth] 페이지가 이동할 때 사용
   const navigate = useNavigate();
@@ -26,14 +28,16 @@ const Lobby = () => {
   useEffect(() => {
     // 로비로 들어올 때마다 isLobby의 값을 null로
     setIsLobby(null);
-    const fetchUserAuth = async () => {
-      const data = await getUserCheck();
-      if (data === 0) {
-        navigate("/auth/login");
-      }
-    };
-    fetchUserAuth();
-  }, [navigate]);
+    // const fetchUserAuth = async () => {
+    //   const data = await getUserCheck();
+    //   console.log("유저체크 데이터:", data.type);
+    //   if (data.type === undefined) {
+    //     resetUser();
+    //     navigate("/auth/login");
+    //   }
+    // };
+    // fetchUserAuth();
+  }, []);
 
   // [RoomList] 전체방, 대기방만 보기
   const [viewAllRooms, setViewAllRooms] = useState(true);

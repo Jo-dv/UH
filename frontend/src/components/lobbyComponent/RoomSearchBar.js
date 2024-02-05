@@ -8,7 +8,7 @@ const RoomSearchBar = ({ onSearch }) => {
     setSearchRoomTitle(RoomTitleValue);
     onSearch(RoomTitleValue);
   };
-  console.log(searchRoomTittle);
+
   return (
     <div
       className="flex flex-grow items-center space-x-2 bg-whitem-4 mr-2 border rounded-3xl bg-white"

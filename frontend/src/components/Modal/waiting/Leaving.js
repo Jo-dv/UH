@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import UseIsLobbyStore from "../../../store/UseIsLobbyStore";
+import { useWebSocket } from "../../../webSocket/UseWebSocket";
+import UseLeavingStore from "../../../store/UseLeavingStore";
 
-const Leaving = ({ leaveSession,leaving, onClose }) => {
+const Leaving = ({ leaving, onClose, leaveSession }) => {
   const { setIsLobby } = UseIsLobbyStore();
+  const { setLeaving } = UseLeavingStore();
+  const { send } = useWebSocket();
   return (
     <>
       {leaving && (
@@ -25,6 +29,9 @@ flex justify-center items-center"
                 <button
                   onClick={() => {
                     setIsLobby(null);
+                    leaveSession();
+                    send({ type: "refresh" });
+                    setLeaving(false);
                   }}
                   className="bg-formButton py-2 px-4 m-2 rounded"
                 >

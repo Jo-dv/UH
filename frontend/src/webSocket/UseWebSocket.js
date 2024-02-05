@@ -1,5 +1,4 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
-import WebSocketManager from "./WebSocketManager";
 import useAccessorsStore from "../store/UseAccessorsStore";
 
 const WebSocketContext = createContext(null);
@@ -13,27 +12,60 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider = ({ children }) => {
-  // 함수로 정의된 WebSocketManager를 사용하도록 변경
-  const { connect, send, close } = WebSocketManager();
+  const [socket, setSocket] = useState(null);
   const [sessionIds, setSessionIds] = useState([]);
   const [notificationMessage, setNotificationMessage] = useState(null);
   const { setAccessors } = useAccessorsStore();
+  const [refreshRequested, setRefreshRequested] = useState(false);
 
   useEffect(() => {
+    const connect = (url, onOpen, onMessage, onClose) => {
+      const newSocket = new WebSocket(url);
+      setSocket(newSocket);
+
+      newSocket.onopen = () => {
+        console.log("웹 소켓 연결됨");
+        if (onOpen) onOpen();
+      };
+
+      newSocket.onmessage = (event) => {
+        console.log("WebSocket 메시지 수신:", event.data);
+        if (onMessage) onMessage(event);
+      };
+
+      newSocket.onclose = () => {
+        console.log("웹 소캣 연결 종료");
+        if (onClose) onClose();
+      };
+    };
+
     connect(
       "ws://localhost:5000/ws",
-      () => {
-        console.log("--------------------");
-        /* 연결 성공 시 처리 */
-      },
+      null,
       (event) => {
+        console.log("WebSocket 메시지 수신:", event.data);
         const parsedMessage = JSON.parse(event.data);
         if (parsedMessage.connectors) {
           setSessionIds(parsedMessage.connectors);
           setAccessors(parsedMessage.connectors);
         }
-        if (parsedMessage.content) {
-          setNotificationMessage(parsedMessage.content);
+
+        if (parsedMessage.type === "refresh") {
+          handleRefresh(); // 새로고침 처리 로직 호출
+        }
+
+        if (parsedMessage.type) {
+          switch (parsedMessage.type) {
+            case "invite":
+              handleInvite(parsedMessage);
+              break;
+            case "follow":
+              handleFollow(parsedMessage);
+              break;
+            default:
+              // 기타 메시지 처리
+              break;
+          }
         }
       },
       () => {
@@ -41,13 +73,40 @@ export const WebSocketProvider = ({ children }) => {
       }
     );
 
-    return () => close();
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
   }, []);
+
+  const handleInvite = (message) => {
+    console.log("Invite received", message);
+    setNotificationMessage(`You are invited to join room ${message.roomId}`);
+  };
+
+  const handleFollow = (message) => {
+    console.log("Follow received", message);
+    // 따라가기 메시지 처리 로직
+  };
+
+  const handleRefresh = () => {
+    // console.log("Follow received", message);
+    setRefreshRequested(true);
+  };
+
+  const send = (message) => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      socket.send(JSON.stringify(message));
+    }
+  };
 
   const contextValue = {
     send,
     sessionIds,
     notificationMessage,
+    refreshRequested,
+    setRefreshRequested,
   };
 
   return <WebSocketContext.Provider value={contextValue}>{children}</WebSocketContext.Provider>;
