@@ -1,27 +1,38 @@
 import { OpenVidu } from "openvidu-browser";
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
-import Chat from "../../components/Chat/index.js";
+import { useParams, useLocation } from "react-router-dom";
+
+// api, store
+import { useWebSocket } from "../../webSocket/UseWebSocket.js";
 import { createSession, createToken, addPlayer, exitRoom } from "../../api/roomAPI.js";
-import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import { getGameData, getRoomInfo, playerTeam, ready, startPlay } from "../../api/waitRoom.js";
+import useWaitingRoomApiCall from "../../api/useWaitingRoomApiCall.js";
+import UseRoomSetting from "../../store/UseRoomSetting.js";
+import UseInvitingStore from "../../store/UseInvitingStore.js";
+import useStore from "../../store/UserAuthStore";
+import UseLeavingStore from "../../store/UseLeavingStore.js";
+
+// component, modal
+import Chat from "../../components/Chat/index.js";
+import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import Game from "../Game/index.js";
 import Leaving from "../../components/Modal/waiting/Leaving.js";
-import UseLeavingStore from "../../store/UseLeavingStore";
-import UseRoomSetting from "../../store/UseRoomSetting.js";
 import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
 import Inviting from "../../components/Modal/waiting/Inviting.js";
-import UseInvitingStore from "../../store/UseInvitingStore.js";
 import Person from "../../components/waitingComponent/Person.js";
-import { useWebSocket } from "../../webSocket/UseWebSocket.js";
-import useStore from "../../store/UserAuthStore";
 
 export default function RoomId() {
+  const OV = useRef(new OpenVidu());
+  const { getRoomInfo } = useWaitingRoomApiCall();
+  const nickname = useStore((state) => state.user.userNickname);
+  const { inviting, setInviting } = UseInvitingStore();
+  const { send } = useWebSocket();
+  const { roomSetting, setRoomSetting } = UseRoomSetting();
+  const { leaving, setLeaving } = UseLeavingStore();
+
+  const [myUserName, setMyUserName] = useState(nickname);
   const { id } = useParams();
   const [mySessionId, setMySessionId] = useState(id);
-  const nickname = useStore((state) => state.user.userNickname);
-  const [myUserName, setMyUserName] = useState(nickname);
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
   const [publisher, setPublisher] = useState(undefined);
@@ -31,16 +42,15 @@ export default function RoomId() {
   const [isReady, setIsReady] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [isPlay, setIsPlay] = useState(false);
-  const OV = useRef(new OpenVidu());
-  const { leaving, setLeaving } = UseLeavingStore();
-  const { roomSetting, setRoomSetting } = UseRoomSetting();
-  const { inviting, setInviting } = UseInvitingStore();
+  const [gameQuiz, setGameQuiz] = useState(undefined);
   const location = useLocation();
   const firstRoomInfo = { ...location.state };
   const [roomInfo, setroomInfo] = useState({});
-  const { send } = useWebSocket();
+  const [sessionID, setSessionID] = useState("");
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
+
+  // 함수 정의
   const handleMainVideoStream = useCallback(
     (stream) => {
       if (mainStreamManager !== stream) {
@@ -49,36 +59,48 @@ export default function RoomId() {
     },
     [mainStreamManager]
   );
-  // const [roomMax, setRoomMax] = useState(4);
-
-  // console.log("방 최대 인원 수", roomInfo);
-  // setRoomMax(roomInfo.roomData.max);
-  // console.log(roomMax);
+  console.log(mySessionId);
   const joinSession = useCallback(() => {
+    console.log("joinSession 함수 시작");
     if (session) {
-      // console.log("리브세션", session);
-      exitRoom(session.sessionId, session.connection.connectionId);
       session.disconnect();
     }
-
+    console.log("OpenVidu 세션 초기화 시도");
     const mySession = OV.current.initSession();
-
+    console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
+      console.log(teamA);
+      handleNewUserJoined(mySession.sessionId);
+      console.log("hhhhhhhh", mySession);
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
 
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
+      alert("당신은 강퇴되었습니다.");
+      window.location.href = "/lobby";
     });
 
     mySession.on("exception", (exception) => {
       console.warn(exception);
     });
 
+    mySession.on("signal:team-change", (event) => {
+      const { connectionId, team } = JSON.parse(event.data);
+      // teamA와 teamB 상태 업데이트
+      if (team === "A") {
+        setTeamA((prev) => [...prev, connectionId]);
+        setTeamB((prev) => prev.filter((id) => id !== connectionId));
+      } else if (team === "B") {
+        setTeamB((prev) => [...prev, connectionId]);
+        setTeamA((prev) => prev.filter((id) => id !== connectionId));
+      }
+    });
     setSession(mySession);
-
+    console.log("111111111111111111", mySession);
     window.addEventListener("beforeunload", leaveSession);
+    console.log("세션 설정 완료");
   }, []);
 
   useEffect(() => {
@@ -133,7 +155,7 @@ export default function RoomId() {
         //방조회
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
-          // await console.log("서버에서 받은 방정보", serverRoomInfo);
+          await console.log("서버에서 받은 방정보", serverRoomInfo);
           await setroomInfo(serverRoomInfo);
           if (mySessionId === "create") {
             // console.log("나는 호스트");
@@ -149,7 +171,6 @@ export default function RoomId() {
   const leaveSession = useCallback(() => {
     // Leave the session
     if (session) {
-      // console.log("리브세션", session);
       exitRoom(session.sessionId, session.connection.connectionId);
       session.disconnect();
     }
@@ -173,17 +194,6 @@ export default function RoomId() {
       }
     });
   }, []);
-
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      leaveSession();
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [leaveSession]);
 
   useEffect(() => {
     const cleanup = () => {
@@ -266,7 +276,7 @@ export default function RoomId() {
   }, [session]); // session 객체를 의존성 배열에 추가
 
   const setReady = async () => {
-    // console.log("준비");
+    console.log("준비");
     try {
       if (isHost) {
         await startPlay(session.sessionId);
@@ -335,8 +345,62 @@ export default function RoomId() {
       setIsPlay(false);
     });
   }
-  console.log("나 A팀", teamA);
-  console.log("나 B팀", teamB);
+  // 새 사용자가 접속할 때 실행되는 함수
+  const handleNewUserJoined = async (sessionId) => {
+    try {
+      console.log("새 사용자가 접속할 때 실행되는 함수 아싸!");
+      console.log(sessionId);
+      const roomData = await getRoomInfo(sessionId);
+      const players = roomData.roomStatus.players;
+      console.log("1212121212", roomData);
+      setroomInfo(roomData);
+      // 플레이어 객체를 순회하며 teamA와 teamB 배열 생성
+      const teamAData = [];
+      const teamBData = [];
+      Object.entries(players).forEach(([connectionId, playerData]) => {
+        if (playerData.team === "A") {
+          teamAData.push(connectionId);
+        } else if (playerData.team === "B") {
+          teamBData.push(connectionId);
+        }
+      });
+      setTeamA(teamAData);
+      setTeamB(teamBData);
+      // setTeamA((prevTeamA) => {
+      //   const newUsers = teamAData.filter((user) => !prevTeamA.includes(user));
+      //   return [...prevTeamA, ...newUsers];
+      // });
+      // setTeamB((prevTeamB) => {
+      //   const newUsers = teamBData.filter((user) => !prevTeamB.includes(user));
+      //   return [...prevTeamB, ...newUsers];
+      // });
+      console.log(teamA);
+      console.log(teamB);
+    } catch (error) {
+      console.error("Error fetching room info:", error);
+    }
+  };
+
+  const kickOutUser = async (sessionId, connectionId) => {
+    if (isHost) {
+      try {
+        console.log("너 강퇴함", sessionId, connectionId);
+        const userToKick = subscribers.find(
+          (subscriber) => subscriber.stream.connection.connectionId === connectionId
+        );
+        if (userToKick) {
+          deleteSubscriber(userToKick);
+        } else {
+          console.error("강퇴할 사용자를 찾을 수 없습니다.");
+        }
+      } catch (error) {
+        console.error("강퇴 중 오류 발생:", error);
+      }
+    } else {
+      console.error("호스트만 강퇴할 수 있습니다.");
+    }
+  };
+
   return (
     <>
       {session === undefined ? (
@@ -379,6 +443,8 @@ export default function RoomId() {
                 subscribers={subscribers}
                 teamA={teamA}
                 teamB={teamB}
+                deleteSubscriber={deleteSubscriber}
+                kickOutUser={kickOutUser}
               />
             }
           </div>

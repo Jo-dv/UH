@@ -23,7 +23,7 @@ module.exports = {
         bg1: "#f0f9ff",
         bd1: "#bae6fd",
         tab1: "#EF476F",
-        tab2:"#F78C6B",
+        tab2: "#F78C6B",
         tab3: "#FFD166",
         tab4: "#06D6A0",
         tab5: "#118AB2",
@@ -35,7 +35,7 @@ module.exports = {
         "screen-16": "calc(100% - 16px)",
       },
       transformOrigin: {
-        bottom: 'bottom',
+        bottom: "bottom",
       },
     },
   },
