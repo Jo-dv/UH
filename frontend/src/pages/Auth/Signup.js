@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../../api/axios.js";
+import axios from "axios";
 import startBackImg from "../../asset/image/startBackGround.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -88,10 +88,11 @@ const Signup = () => {
     } else {
       try {
         const response = await axios.post(
-          "user/idcheck",
+          "http://localhost:5000/api/user/idcheck",
           {
             userId: form.userId,
-          }
+          },
+          { withCredentials: true }
         );
         const res = response.data;
         console.log(res);
@@ -162,8 +163,9 @@ const Signup = () => {
       console.log("회원가입 정보:", { userId, userPassword });
       try {
         const response = await axios.post(
-          "user/join",
-          { userId, userPassword }
+          "http://localhost:5000/api/user/join",
+          { userId, userPassword },
+          { withCredentials: true }
         );
         console.log("서버 응답:", response);
         // 회원가입 성공 후 처리
