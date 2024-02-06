@@ -13,11 +13,11 @@ const AccessorsList = () => {
   }, [accessors]);
 
   return (
-    <div className="m-1 overflow-y-scroll h-[34vh]">
-      <div className="w-1/2 stretch m-3 ">
+    <div className="p-4 overflow-y-scroll h-full scroll-smooth">
+      <div className="w-1/2">
         {accessors.map((accessor, i) =>
           nickname === accessor.nickname ? null : (
-            <div className="ml-3 mb-1" ref={accessorRefs.current[i]} key={i}>
+            <div className="ml-3 mb-1 text-l" ref={accessorRefs.current[i]} key={i}>
               {accessor.nickname}
             </div>
           )

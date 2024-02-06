@@ -11,10 +11,10 @@ const FriendList = () => {
   }, [friends]);
 
   return (
-    <div className="m-1 overflow-y-scroll h-[34vh]">
-      <div className="w-1/2 stretch m-3 ">
+    <div className="p-4 overflow-y-scroll h-full scroll-smooth">
+      <div className="w-1/2">
         {friends.map((friend, i) => (
-          <div className="ml-3 mb-1" ref={(el) => (friendRefs.current[i] = el)} key={i}>
+          <div className="ml-3 mb-1 text-l" ref={(el) => (friendRefs.current[i] = el)} key={i}>
             {friend}
           </div>
         ))}

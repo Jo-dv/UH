@@ -13,10 +13,10 @@ const UserMediaProfile = () => {
   const nickname = useStore((state) => state.user.userNickname);
 
   return (
-    <div className="col-start-1 col-end-4 row-start-8 row-end-13 m-2 p-2 rounded-3xl border border-7 border-modalBorder ">
-      <div className="m-2">
+    <div className="col-start-1 col-end-4 row-start-8 row-end-13 m-2 p-2 rounded-2xl bg-tab11">
+      <div className="">
         {/* 닉네임 명시 */}
-        <div className="ml-1 mr-1 mb-1">{nickname}</div>
+        <div className="ml-1 mr-1 mb-1 text-xl">{nickname}</div>
 
         {/* webcam 상태 명시 */}
         {play === true ? (
@@ -29,7 +29,7 @@ const UserMediaProfile = () => {
           />
         ) : (
           <img
-            className="rounded-3xl h-[135px] w-[300px] mb-1 animate-fade"
+            className="rounded-l h-full w-full mb-1 animate-fade"
             src={alternativeImage}
             alt="alternativeImage"
           />
@@ -37,7 +37,7 @@ const UserMediaProfile = () => {
 
         {/* webcam 상태 조절 */}
         <span
-          className="m-2"
+          className="flex flex-col justify-center items-center text-l"
           onClick={() => {
             setPlay(!play);
           }}

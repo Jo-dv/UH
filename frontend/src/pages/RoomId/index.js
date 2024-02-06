@@ -11,6 +11,7 @@ import UseRoomSetting from "../../store/UseRoomSetting.js";
 import UseInvitingStore from "../../store/UseInvitingStore.js";
 import useStore from "../../store/UserAuthStore";
 import UseLeavingStore from "../../store/UseLeavingStore.js";
+import { usePreventGoBack } from "../../hooks/usePreventGoBack.js";
 
 // component, modal
 import Chat from "../../components/Chat/index.js";
@@ -22,6 +23,7 @@ import Inviting from "../../components/Modal/waiting/Inviting.js";
 import Person from "../../components/waitingComponent/Person.js";
 
 export default function RoomId() {
+  // usePreventGoBack();
   const OV = useRef(new OpenVidu());
   const { getRoomInfo } = useWaitingRoomApiCall();
   const nickname = useStore((state) => state.user.userNickname);
