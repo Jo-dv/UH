@@ -20,7 +20,13 @@ const UserMediaProfile = () => {
 
         {/* webcam 상태 명시 */}
         {play === true ? (
-          <WebcamComponent audio={audio} setAudio={setAudio} play={play} setPlay={setPlay} />
+          <WebcamComponent
+            audio={audio}
+            setAudio={setAudio}
+            play={play}
+            setPlay={setPlay}
+            className="contain"
+          />
         ) : (
           <img
             className="rounded-3xl h-[135px] w-[300px] mb-1 animate-fade"
