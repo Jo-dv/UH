@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext, useRef } from "react";
 import useAccessorsStore from "../store/UseAccessorsStore";
 
 const WebSocketContext = createContext(null);
@@ -12,7 +12,7 @@ export const useWebSocket = () => {
 };
 
 export const WebSocketProvider = ({ children }) => {
-  const [socket, setSocket] = useState(null);
+  const socket = useRef(null);
   const [sessionIds, setSessionIds] = useState([]);
   const [notificationMessage, setNotificationMessage] = useState(null);
   const { setAccessors } = useAccessorsStore();
@@ -20,26 +20,26 @@ export const WebSocketProvider = ({ children }) => {
 
   useEffect(() => {
     const connect = (url, onOpen, onMessage, onClose) => {
-      const newSocket = new WebSocket(url);
-      setSocket(newSocket);
-
-      newSocket.onopen = () => {
+      socket.current = new WebSocket(url);
+ 
+      socket.current .onopen = () => {
         console.log("웹 소켓 연결됨");
         if (onOpen) onOpen();
       };
 
-      newSocket.onmessage = (event) => {
+      socket.current .onmessage = (event) => {
         console.log("WebSocket 메시지 수신:", event.data);
         if (onMessage) onMessage(event);
       };
 
-      newSocket.onclose = () => {
+      socket.current .onclose = () => {
         if (onClose) onClose();
       };
     };
 
     connect(
-      "wss://i10e201.p.ssafy.io/ws",
+      // "wss://i10e201.p.ssafy.io/ws",
+      "ws://localhost:5000/ws",
       null,
       (event) => {
         console.log("WebSocket 메시지 수신:", event.data);
@@ -74,7 +74,7 @@ export const WebSocketProvider = ({ children }) => {
 
     return () => {
       if (socket) {
-        socket.close();
+        socket.current .close();
         console.log("웹 소캣 연결 종료");
       }
     };
