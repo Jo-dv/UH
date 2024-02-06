@@ -96,8 +96,8 @@ export const WebSocketProvider = ({ children }) => {
   };
 
   const send = (message) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      socket.send(JSON.stringify(message));
+    if (socket.current && socket.current.readyState === WebSocket.OPEN) {
+      socket.current.send(JSON.stringify(message));
     }
   };
 

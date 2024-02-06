@@ -87,7 +87,6 @@ export default function RoomId() {
     );
 
     mySession.on("signal:team-change", (event) => {
-      console.log("test" + event)
       const { connectionId, team } = JSON.parse(event.data);
       // teamA와 teamB 상태 업데이트
       if (team === "A") {
@@ -101,12 +100,12 @@ export default function RoomId() {
 
     //강퇴 처리(event로 보낸 connectionId와 같은 아이디를 찾아 방나가기 처리)
     mySession.on("signal:disconnect", async (event) => {
-        const { connectionId } = JSON.parse(event.data);
-        if (mySession.connection.connectionId === connectionId) {
-          alert("강퇴")
-          await leaveSession();
-          navigate("/lobby")
-        }
+      const { connectionId } = JSON.parse(event.data);
+      if (mySession.connection.connectionId === connectionId) {
+        alert("강퇴")
+        await leaveSession();
+        navigate("/lobby")
+      }
     });
 
 
@@ -115,6 +114,7 @@ export default function RoomId() {
     window.addEventListener("beforeunload", leaveSession);
     console.log("세션 설정 완료");
   }, []);
+  
 
   useEffect(() => {
     if (session) {
@@ -176,13 +176,13 @@ export default function RoomId() {
             // console.log("나는 호스트");
             setIsHost(true);
           }
+
+          send({ type: "refresh" });
         });
-        
-        send({ type: "refresh" });
     }
   }, [session, myUserName]);
 
-  const leaveSession = useCallback(async() => {
+  const leaveSession = useCallback(async () => {
     // Leave the session
     if (session) {
       await exitRoom(session.sessionId, session.connection.connectionId);
@@ -196,6 +196,18 @@ export default function RoomId() {
     setMainStreamManager(undefined);
     setPublisher(undefined);
   }, [session]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      leaveSession();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [leaveSession]);
+
 
   const deleteSubscriber = useCallback((streamManager) => {
     setSubscribers((prevSubscribers) => {
@@ -331,9 +343,9 @@ export default function RoomId() {
         .catch((error) => {
           console.error(error);
         });
-    
-        send({ type: "refresh" });
-      }
+
+      send({ type: "refresh" });
+    }
   };
   if (session !== undefined) {
     session.on("signal:room-play", (event) => {
@@ -356,9 +368,9 @@ export default function RoomId() {
         .catch((error) => {
           console.error(error);
         });
-    
-        send({ type: "refresh" });
-      }
+
+      send({ type: "refresh" });
+    }
   };
   if (session !== undefined) {
     session.on("signal:room-playDone", (event) => {
