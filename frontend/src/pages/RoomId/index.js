@@ -411,11 +411,7 @@ export default function RoomId() {
               <div className="grid col-start-1 col-end-9 row-start-6 row-end-13 mt-2">
                 <button
                   onClick={() => {
-                    if (isHost) {
-                      sendPlay(); // 호스트인 경우 sendPlay 실행
-                    } else {
-                      setReady(); // 호스트가 아닌 경우 setReady 실행
-                    }
+                    setReady();
                   }}
                   className="bg-mc3 border rounded-3xl h-full flex justify-center items-center w-full"
                 >
