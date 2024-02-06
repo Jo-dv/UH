@@ -15,8 +15,8 @@ const Person = (props) => {
       // streamManager가 존재할 때만 팀 확인
       if (streamManager) {
         const connectionId = streamManager.stream.connection.connectionId;
-        const isTeamA = props.teamA && props.teamA.includes(connectionId);
-        const isTeamB = props.teamB && props.teamB.includes(connectionId);
+        const isTeamA = props.teamA.includes(connectionId);
+        const isTeamB = props.teamB.includes(connectionId);
         const backgroundClass = isTeamA ? "bg-mc1" : isTeamB ? "bg-mc7" : "formBG";
 
         return (
@@ -30,9 +30,6 @@ const Person = (props) => {
                 session={props.session}
                 isHost={props.isHost}
                 isReady={props.isReady}
-                deleteSubscriber={props.deleteSubscriber}
-                subscribers={props.subscribers}
-                kickOutUser={props.kickOutUser}
               />
             </div>
           </div>

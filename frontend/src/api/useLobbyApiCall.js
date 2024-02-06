@@ -16,7 +16,6 @@ const useLobbyApiCall = () => {
     try {
       const response = await axios.get(roomsListUrl);
       const roomsList = response.data;
-      console.log(roomsList);
       return roomsList;
     } catch (error) {
       console.error("roomsList 확인 중 에러 발생", error);

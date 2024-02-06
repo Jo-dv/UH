@@ -3,7 +3,14 @@ import { OpenVidu } from "openvidu-browser";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import Chat from "../../components/Chat";
-import { createSession, createToken, listRoom, addPlayer, exitRoom } from "../../api/roomAPI.js";
+import {
+  createSession,
+  createToken,
+  listRoom,
+  checkPassword,
+  addPlayer,
+  exitRoom,
+} from "../../api/roomAPI.js";
 
 // const APPLICATION_SERVER_URL =
 //   process.env.NODE_ENV === "production" ? "" : "https://demos.openvidu.io/";

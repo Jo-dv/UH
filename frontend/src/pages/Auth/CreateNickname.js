@@ -106,7 +106,7 @@ const CreateNickname = () => {
 
     if (newErr.userNickname === "") {
       console.log("닉네임 :", form);
-      // const userSeq = sessionStorage.getItem("userSeq");
+      const userSeq = sessionStorage.getItem("userSeq");
       try {
         const response = await axios.post(
           "user/nickname",
@@ -118,9 +118,9 @@ const CreateNickname = () => {
           setErr({ ...err, userNickname: "중복된 닉네임입니다" });
           triggerAnimate();
         } else {
-          // sessionStorage.setItem("userNickname", form.userNickname);
+          sessionStorage.setItem("userNickname", form.userNickname);
           // zustand 사용해보기
-          setUser({ userSeq: userState.userSeq, userNickname: form.userNickname });
+          setUser({ userSeq, userNickname: form.userNickname });
           console.log("닉네임 생성 성공");
           navigate("/lobby");
         }
