@@ -39,7 +39,7 @@ export const WebSocketProvider = ({ children }) => {
     };
 
     connect(
-      "wss://i10e201.p.ssafy.io/api/ws",
+      "ws://i10e201.p.ssafy.io/api/ws",
       null,
       (event) => {
         console.log("WebSocket 메시지 수신:", event.data);
