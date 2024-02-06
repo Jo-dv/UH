@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios.js";
 import startBackImg from "../../asset/image/startBackGround.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -88,11 +88,10 @@ const Signup = () => {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/idcheck",
+          "user/idcheck",
           {
             userId: form.userId,
-          },
-          { withCredentials: true }
+          }
         );
         const res = response.data;
         console.log(res);
@@ -147,10 +146,8 @@ const Signup = () => {
     // 비밀번호 확인 검사
     if (!form.passwordCheck) {
       newErr.passwordCheck = "비밀번호를 입력해주세요";
-      triggerAnimate();
     } else if (form.userPassword !== form.passwordCheck) {
       newErr.passwordCheck = "비밀번호가 일치하지 않습니다";
-      triggerAnimate();
     } else {
       newErr.passwordCheck = "";
     }
@@ -165,9 +162,8 @@ const Signup = () => {
       console.log("회원가입 정보:", { userId, userPassword });
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/join",
-          { userId, userPassword },
-          { withCredentials: true }
+          "user/join",
+          { userId, userPassword }
         );
         console.log("서버 응답:", response);
         // 회원가입 성공 후 처리
@@ -186,19 +182,19 @@ const Signup = () => {
       <form
         onSubmit={onSubmit}
         className="bg-opacity-50 bg-formBG w-96 border-2 border-purple3
-        flex flex-col justify-center rounded-md items-center z-20"
+        flex flex-col justify-center items-center z-20"
       >
         <h1 className="font-['pixel'] text-7xl">회원가입</h1>
 
         {/* 아이디 입력창 */}
         <input
           type="text"
-          placeholder="아이디(영문, 숫자 4-20자)"
+          placeholder="아이디"
           onChange={onChange}
           onBlur={checkUserIdDuplicate}
           name="userId"
           value={form.userId}
-          className={`font-['pixel'] p-2 m-1 border-2 rounded-md ${
+          className={`font-['pixel'] p-2 m-1 border-2 rounded ${
             err.userId
               ? animate
                 ? "animate-shake animate-twice animate-duration-150 border-red-500"
@@ -221,7 +217,7 @@ const Signup = () => {
             value={form.userPassword}
             onBlur={checkPassword}
             className={`w-full p-2 border-2 rounded-md ${
-              err.passwordCheck
+              err.userPassword
                 ? animate
                   ? "animate-shake animate-twice animate-duration-150 border-red-500"
                   : ""
@@ -232,11 +228,7 @@ const Signup = () => {
             onClick={togglePassword}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
           >
-            {showPassword ? (
-              <VisibilityOffIcon color="disabled" />
-            ) : (
-              <VisibilityIcon color="disabled" />
-            )}
+            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
           </button>
         </div>
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
@@ -249,7 +241,7 @@ const Signup = () => {
           onBlur={checkPasswordMatch}
           name="passwordCheck"
           value={form.passwordCheck}
-          className={`p-2 m-1 border-2 rounded-md ${
+          className={`font-['pixel'] p-2 m-1 border-2 rounded ${
             err.passwordCheck
               ? animate
                 ? "animate-shake animate-twice animate-duration-150 border-red-500"

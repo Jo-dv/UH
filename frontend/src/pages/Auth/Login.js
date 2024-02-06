@@ -8,7 +8,6 @@ import startBackImg from "../../asset/image/startBackGround.png";
 import googleLogo from "./img/googleLogo.png";
 import kakaoLogo from "./img/kakaoLogoB.png";
 import naverLogo from "./img/naverLogo.png";
-import kakaologinimg from "./img/kakao_login.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -50,8 +49,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         "user/logout",
-        { userSeq: userSeq },
-        { withCredentials: true }
+        { userSeq: userSeq }
       );
       const res = response.data;
       console.log(res);
@@ -65,14 +63,34 @@ const Login = () => {
         console.log("카카오 로그아웃 완료");
         window.location.href = LogoutLink;
       }
+      else {
+        console.log("로그인 유저 없음")
+      }
     } catch (error) {
       console.error("로그아웃 에러", error);
     }
   };
 
   useEffect(() => {
-    handleLogOut();
-  }, []);
+    const checkLogin = async () => {
+      try {
+        const response = await axios.get("user/check");
+        const res = response.data;
+        //세션에 로그인된 유저가 없다면 클라이언트의 유저 정보 로그아웃 처리
+        if (res == "") {
+          handleLogOut();
+        }//로그인된 정보가 있다면 클라이언트의 스토어에 유저 정보를 담고 로비로 보냄
+        else {
+          setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
+          navigate("/lobby");
+        }
+      } catch {
+        setErr({ ...err, general: "서버가 아파요ㅠㅠ" });
+      }
+    }
+    checkLogin();
+  }, []); // userState가 변경될 때마다 실행
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -87,6 +105,28 @@ const Login = () => {
     } else {
       newErr.userPassword = "";
     }
+    // if (!form.userId && !form.password) {
+    //     return setErr({
+    //         userId: "아이디를 입력해주세요",
+    //         password: "비밀번호를 입력해주세요",
+    //     });
+    // }
+    // if (!form.userId) {
+    //     setErr({ ...err, userId: "아이디를 입력해주세요", password: "" });
+    // }
+    // if (!form.password) {
+    //     setErr({
+    //         ...err,
+    //         userId: "",
+    //         password: "비밀번호를 입력해주세요",
+    //     });
+    // }
+    // if (!!form.userId && !!form.password) {
+    //     return setErr({
+    //         userId: "",
+    //         password: "",
+    //     });
+    // }
     setErr(newErr);
 
     setAnimate(false);
@@ -127,7 +167,7 @@ const Login = () => {
     <div className="w-full h-screen p-5 flex justify-center items-center z-10">
       <form
         onSubmit={onSubmit}
-        className="bg-opacity-50 bg-formBG w-96 border-2 rounded-md
+        className="bg-opacity-50 bg-formBG w-96 border-2 border-purple3
                 flex flex-col justify-center items-center z-20"
       >
         <h2 className="font-['pixel'] text-7xl">로그인</h2>
@@ -154,20 +194,16 @@ const Login = () => {
 
         <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">로그인</button>
         <p className="font-['pixel'] text-red-500 mb-1">{err.general}</p>
-        {/* <h3 className="p-2 m-2">
-          <Link to="/auth/signup">회원가입</Link>
-        </h3> */}
-        {/* <h3 className="p-2 ">소셜로그인</h3> */}
-
-        <div className="flex flex-row justify-around w-72 mb-3">
-          {/* <img src={googleLogo} alt="google Logo" />
-          <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
-          <img src={naverLogo} alt="google Logo" /> */}
-          <img src={kakaologinimg} alt="카카오로그인버튼" type="button" onClick={kakaoLoginHandler} />
-        </div>
         <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3>
+        <h3 className="p-2 ">소셜로그인</h3>
+
+        <div className="flex flex-row justify-around w-72">
+          <img src={googleLogo} alt="google Logo" />
+          <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
+          <img src={naverLogo} alt="google Logo" />
+        </div>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
 

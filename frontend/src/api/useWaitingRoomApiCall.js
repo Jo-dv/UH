@@ -2,7 +2,6 @@ import axios from "./axios.js";
 
 const useWaitingRoomApiCall = () => {
   const roomUpdateUrl = `rooms`;
-  const roomInfoUrl = `rooms/`;
 
   // roomList 목록 수정
   const putRoomsList = async (roomInfo) => {
@@ -15,20 +14,8 @@ const useWaitingRoomApiCall = () => {
       throw error;
     }
   };
-  // 방정보 조회
-  const getRoomInfo = async (sessionId) => {
-    try {
-      const response = await axios.get(roomInfoUrl + sessionId);
-      const roomInfo = response.data;
-      return roomInfo;
-    } catch (error) {
-      console.log("방 정보 조회 중 에러 발생", error);
-      throw error;
-    }
-  };
   return {
     putRoomsList,
-    getRoomInfo,
   };
 };
 

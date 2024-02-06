@@ -6,16 +6,7 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import useStore from "../../store/UserAuthStore";
 
-const UserVideo = ({
-  streamManager,
-  session,
-  isHost,
-  isReady,
-  gamePlayer,
-  deleteSubscriber,
-  subscribers,
-  kickOutUser,
-}) => {
+const UserVideo = ({ streamManager, session, isHost, isReady, gamePlayer }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
   const getNicknameTag = () => {
@@ -80,19 +71,6 @@ const UserVideo = ({
       socketSend();
     }
   }
-  // console.log("그만하고 싶어", subscribers[0].stream.connection.connectionId);
-
-  // const handleButtonClick = (event) => {
-  //   // 선택한 버튼의 data-connectionId 값을 가져옵니다.
-  //   const selectedConnectionId = event.target.getAttribute("data-connectionId");
-
-  //   // selectedConnectionId를 활용하여 kickOutUser 함수를 호출하거나 다른 작업을 수행합니다.
-  //   if (selectedConnectionId) {
-  //     kickOutUser(selectedConnectionId);
-  //   }
-  // };
-
-  console.log("ㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅ", session);
   return (
     <div className="">
       {streamManager !== undefined ? (
@@ -123,14 +101,6 @@ const UserVideo = ({
                     </button>
                   )}
                 </>
-              ) : isHost === true ? (
-                <button
-                  onClick={() => {
-                    kickOutUser(session.sessionId, streamManager.stream.connection.connectionId);
-                  }}
-                >
-                  X
-                </button>
               ) : null}
             </p>
           </div>
