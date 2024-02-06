@@ -415,7 +415,7 @@ export default function RoomId() {
       ) : null}
 
       {session !== undefined && isPlay === false ? (
-        <div className="bg-neutral-200 grid grid-rows-10 grid-cols-12 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
+        <div className="container-box bg-[#FFFBF7] grid grid-rows-10 grid-cols-12 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
           {/* 방 정보 출력 */}
           <div className="flex flex-wrap col-start-1 col-end-13 row-start-1 row-end-2 ml-10 items-center">
             {roomInfo && roomInfo.roomData && (

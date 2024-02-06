@@ -4,7 +4,7 @@ import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 
-import startBackImg from "../../asset/image/startBackGround.png";
+import startBackImg from "../../asset/image/BG.png";
 import googleLogo from "./img/googleLogo.png";
 import kakaoLogo from "./img/kakaoLogoB.png";
 import naverLogo from "./img/naverLogo.png";
@@ -137,7 +137,13 @@ const Login = () => {
           onChange={onChange}
           name="userId"
           value={form.userId}
-          className={`font-['pixel'] p-2 m-1 border-2 rounded w-72 ${err.userId || err.general ? (animate ? 'animate-shake animate-twice animate-duration-150 border-red-500' : '') : ''}`}
+          className={`font-['pixel'] p-2 m-1 border-2 rounded w-72 ${
+            err.userId || err.general
+              ? animate
+                ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                : ""
+              : ""
+          }`}
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.userId}</p>
         {/* {!err.userId && <p>{err.userId}</p>} */}
@@ -148,7 +154,13 @@ const Login = () => {
           onChange={onChange}
           name="userPassword"
           value={form.userPassword}
-          className={`font-['pixel'] p-2 m-1 border-2 rounded border-purple5 bg-input w-72 ${err.userPassword || err.general ? (animate ? 'animate-shake animate-twice animate-duration-150 border-red-500' : '') : ''}`}
+          className={`font-['pixel'] p-2 m-1 border-2 rounded border-purple5 bg-input w-72 ${
+            err.userPassword || err.general
+              ? animate
+                ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                : ""
+              : ""
+          }`}
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
 
@@ -163,7 +175,12 @@ const Login = () => {
           {/* <img src={googleLogo} alt="google Logo" />
           <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
           <img src={naverLogo} alt="google Logo" /> */}
-          <img src={kakaologinimg} alt="카카오로그인버튼" type="button" onClick={kakaoLoginHandler} />
+          <img
+            src={kakaologinimg}
+            alt="카카오로그인버튼"
+            type="button"
+            onClick={kakaoLoginHandler}
+          />
         </div>
         <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>

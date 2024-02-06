@@ -8,7 +8,7 @@
 }
 
 body {
-  background-image: url("./asset/image/background.png");
+  background-image: url("./asset/image/BG.png");
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
@@ -18,6 +18,6 @@ body {
 
 .container-box {
   width: 1280px;
-  margin: auto;
   height: calc(100vh - 160px);
+  margin: auto;
 }

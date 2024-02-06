@@ -13,7 +13,7 @@ const UserMediaProfile = () => {
   const nickname = useStore((state) => state.user.userNickname);
 
   return (
-    <div className="col-start-1 col-end-2 row-start-8 row-end-13 m-2 p-2 rounded-3xl border border-7 border-modalBorder ">
+    <div className="col-start-1 col-end-4 row-start-8 row-end-13 m-2 p-2 rounded-3xl border border-7 border-modalBorder ">
       <div className="m-2">
         {/* 닉네임 명시 */}
         <div className="ml-1 mr-1 mb-1">{nickname}</div>

@@ -54,7 +54,7 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
   });
 
   return (
-    <section className="border-7 border-modalBorder mt-4 col-start-2 col-end-7 row-start-2 row-end-13">
+    <section className="border-7 border-modalBorder mt-4 col-start-4 col-end-13 row-start-2 row-end-13">
       <div className="flex flex-wrap overflow-y-scroll h-[72vh] mx-2">
         {isLoading ? (
           <div>로딩중</div>
