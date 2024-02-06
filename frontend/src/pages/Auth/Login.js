@@ -64,6 +64,9 @@ const Login = () => {
         console.log("카카오 로그아웃 완료");
         window.location.href = LogoutLink;
       }
+      else {
+        console.log("로그인 유저 없음")
+      }
     } catch (error) {
       console.error("로그아웃 에러", error);
     }
