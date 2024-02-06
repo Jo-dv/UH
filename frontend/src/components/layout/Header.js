@@ -40,12 +40,12 @@ const Header = () => {
   return (
     <div>
       <nav>
-        <ul className="flex flex-row items-end">
+        <ul className="flex flex-row items-end mx-32 pt-10">
           {isLobbyPage ? (
             <>
               <li className="mr-7">
                 <button onClick={handleLogoClick}>
-                  <img src={logoImg} alt="Logo" className="h-20 ml-3" />
+                  <img src={logoImg} alt="Logo" className="h-20 ml-3 " />
                 </button>
               </li>
               <li>

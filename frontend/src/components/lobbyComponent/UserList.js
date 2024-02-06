@@ -9,7 +9,7 @@ const UserList = () => {
 
   return (
     <>
-      <div className="col-start-1 col-end-2 row-start-1 row-end-2 m-2 p-2">
+      <div className="col-start-1 col-end-4 row-start-1 row-end-2 m-2 p-2">
         <div className="flex items-center">
           <div
             className="mr-3"
@@ -28,7 +28,7 @@ const UserList = () => {
           </div>
         </div>
       </div>
-      <div className="border-7 border-modalBorder col-start-1 col-end-2 row-start-2 row-end-8 m-2 p-2 divide-gray-500 rounded-3xl border">
+      <div className="border-7 border-modalBorder col-start-1 col-end-4 row-start-2 row-end-8 m-2 p-2 divide-gray-500 rounded-3xl border">
         {toggleFriend === true ? <FriendList /> : <AccessorsList />}
       </div>
     </>

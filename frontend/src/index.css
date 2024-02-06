@@ -8,10 +8,16 @@
 }
 
 body {
-  background-image: url("./asset/image/background.png");
+  background-image: url("./asset/image/BG.png");
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
   background-attachment: fixed;
   font-family: "pixel";
+}
+
+.container-box {
+  width: 1280px;
+  height: calc(100vh - 160px);
+  margin: auto;
 }
