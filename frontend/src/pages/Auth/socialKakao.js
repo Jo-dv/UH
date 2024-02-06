@@ -22,14 +22,14 @@ const KakaoRedirectHandler = () => {
           const res = response.data;
           // 닉네임이 있다면
           if (res.userNickname) {
-            sessionStorage.setItem("userSeq", res.userSeq);
-            sessionStorage.setItem("userNickname", res.userNickname);
+            // sessionStorage.setItem("userSeq", res.userSeq);
+            // sessionStorage.setItem("userNickname", res.userNickname);
             // zustand 사용해보기
             setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
             navigate("/lobby");
             // 닉네임이 없다면
           } else {
-            sessionStorage.setItem("userSeq", res.userSeq);
+            // sessionStorage.setItem("userSeq", res.userSeq);
             // zustand 사용해보기
             setUser({ userSeq: res.userSeq });
             navigate("/auth/nickname");

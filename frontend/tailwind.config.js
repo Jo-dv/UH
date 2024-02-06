@@ -28,6 +28,12 @@ module.exports = {
         tab4: "#06D6A0",
         tab5: "#118AB2",
         tab6: "#073B4C",
+        tab7: "#eb6d54",
+        tab8: "#99b7db",
+        tab9: "#f8d44c",
+        tab10: "#a8d572",
+        tab11: "#f6ecc9",
+        tab12: "#f2ac3c",
       },
       height: {
         "screen-80": "calc(100vh - 96px)",
