@@ -72,8 +72,7 @@ const Login = () => {
 
   useEffect(() => {
     handleLogOut();
-  }, []); // userState가 변경될 때마다 실행
-
+  }, []);
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -88,28 +87,6 @@ const Login = () => {
     } else {
       newErr.userPassword = "";
     }
-    // if (!form.userId && !form.password) {
-    //     return setErr({
-    //         userId: "아이디를 입력해주세요",
-    //         password: "비밀번호를 입력해주세요",
-    //     });
-    // }
-    // if (!form.userId) {
-    //     setErr({ ...err, userId: "아이디를 입력해주세요", password: "" });
-    // }
-    // if (!form.password) {
-    //     setErr({
-    //         ...err,
-    //         userId: "",
-    //         password: "비밀번호를 입력해주세요",
-    //     });
-    // }
-    // if (!!form.userId && !!form.password) {
-    //     return setErr({
-    //         userId: "",
-    //         password: "",
-    //     });
-    // }
     setErr(newErr);
 
     setAnimate(false);
