@@ -44,7 +44,7 @@ const Timer = ({
     }
 
     if (time > maxTime) {
-      console.log(nowTime.current, time);
+      // console.log(nowTime.current, time);
       changeTeamTurn();
       startTime.current = Date.now();
       setTime(0);

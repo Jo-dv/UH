@@ -9,8 +9,6 @@ import UserMediaProfile from "../../components/lobbyComponent/UserMediaProfile";
 import GameRoomSearchPanel from "../../components/lobbyComponent/GameRoomSearchPanel";
 import MyPage from "../../components/lobbyComponent/MyPage";
 
-import useLobbyApiCall from "../../api/useLobbyApiCall";
-
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import useStore from "../../store/UserAuthStore";
 
@@ -21,9 +19,6 @@ const Lobby = () => {
 
   // [userAuth] 페이지가 이동할 때 사용
   const navigate = useNavigate();
-
-  // 로비가 새로고침 될 때마다 유저정보 체크
-  const { getUserCheck } = useLobbyApiCall();
 
   useEffect(() => {
     // 로비로 들어올 때마다 isLobby의 값을 null로
@@ -61,32 +56,33 @@ const Lobby = () => {
   // [GameRoomSearchPanel] 검색별 방 보기
   const handleSearchView = (viewAll) => {
     setViewSearchRooms(viewAll);
-
   };
 
   return (
-    <div className="bg-neutral-200 grid grid-rows-12 grid-cols-6 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
-      <UserList />
-      <UserMediaProfile />
-      {isLobby === null ? (
-        <>
-          <GameRoomSearchPanel
-            onToggleView={handleToggleView}
-            onGameCategoryView={handleGameCategoryView}
-            onSearchView={handleSearchView}
-          />
-          <RoomList
-            viewAllRooms={viewAllRooms}
-            viewGameCategoryRooms={viewGameCategoryRooms}
-            viewSearchRooms={viewSearchRooms}
-          />
-        </>
-      ) : isLobby === "SelectedRanking" ? (
-        <SelectedRanking />
-      ) : isLobby === "MyPage" ? (
-        <MyPage />
-      ) : null}
-    </div>
+    <>
+      <div className="container-box bg-[#FFFBF7]  grid grid-rows-12 grid-cols-12 p-2 border rounded-3xl h-screen-80">
+        <UserList />
+        <UserMediaProfile />
+        {isLobby === null ? (
+          <>
+            <GameRoomSearchPanel
+              onToggleView={handleToggleView}
+              onGameCategoryView={handleGameCategoryView}
+              onSearchView={handleSearchView}
+            />
+            <RoomList
+              viewAllRooms={viewAllRooms}
+              viewGameCategoryRooms={viewGameCategoryRooms}
+              viewSearchRooms={viewSearchRooms}
+            />
+          </>
+        ) : isLobby === "SelectedRanking" ? (
+          <SelectedRanking />
+        ) : isLobby === "MyPage" ? (
+          <MyPage />
+        ) : null}
+      </div>
+    </>
   );
 };
 

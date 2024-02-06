@@ -10,10 +10,10 @@ const UserMediaProfile = () => {
   // 캠 상태 조절
   const [play, setPlay] = useState(true);
   // 닉네임 가져오기
-  const nickname = useStore(state => state.user.userNickname);
+  const nickname = useStore((state) => state.user.userNickname);
 
   return (
-    <div className="col-start-1 col-end-2 row-start-8 row-end-13 m-2 p-2 rounded-3xl border border-7 border-modalBorder ">
+    <div className="col-start-1 col-end-4 row-start-8 row-end-13 m-2 p-2 rounded-3xl border border-7 border-modalBorder ">
       <div className="m-2">
         {/* 닉네임 명시 */}
         <div className="ml-1 mr-1 mb-1">{nickname}</div>
@@ -38,13 +38,13 @@ const UserMediaProfile = () => {
         >
           {play === true ? "카메라 On" : "카메라 off"}
         </span>
-        <span
+        {/* <span
           onClick={() => {
             setAudio(!audio);
           }}
         >
           {audio === true ? "마이크 On" : "마이크 off"}
-        </span>
+        </span> */}
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ const AnswerInput = ({
   session,
   answer,
   plusQuizIndex,
-  myTeam,
+  Team,
   plusScore,
   changeTeamIndex,
 }) => {
@@ -33,10 +33,12 @@ const AnswerInput = ({
 
   session.on("signal:game-answer", (event) => {
     // console.log(`받음 event.data: ${event.data}, answer: ${answer}`); // Message
+    // console.log(typeof plusQuizIndex);
+    console.log("정답", answer);
     if (answer === event.data) {
-      console.log(`${event.data} 정답`);
+      // console.log(`${event.data} 정답`);
       plusQuizIndex();
-      plusScore();
+      plusScore(Team);
       changeTeamIndex();
     } else {
       console.log(`${event.data} 오답`);
@@ -45,9 +47,7 @@ const AnswerInput = ({
 
   return (
     <form
-      className="px-2
-          border rounded-3xl bg-white
-          flex flex-row"
+      className="px-2 border rounded-3xl bg-white flex flex-row overflow-hidden"
       onSubmit={sendAnswer}
     >
       <input

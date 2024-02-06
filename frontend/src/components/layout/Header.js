@@ -40,14 +40,14 @@ const Header = () => {
   return (
     <div>
       <nav>
-        <ul className="flex flex-row items-end">
-          <li className="mr-7">
-            <button onClick={handleLogoClick}>
-              <img src={logoImg} alt="Logo" className="h-20 ml-3" />
-            </button>
-          </li>
+        <ul className="flex flex-row items-end mx-32 pt-10">
           {isLobbyPage ? (
             <>
+              <li className="mr-7">
+                <button onClick={handleLogoClick}>
+                  <img src={logoImg} alt="Logo" className="h-20 ml-3 " />
+                </button>
+              </li>
               <li>
                 <CreateRoomTab />
               </li>
@@ -69,6 +69,9 @@ const Header = () => {
             </>
           ) : (
             <>
+              <li className="mr-7">
+                <img src={logoImg} alt="Logo" className="h-20 ml-3" />
+              </li>
               <li>
                 <RoomSettingTab />
               </li>

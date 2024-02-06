@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
+const G102Info = ({ maxTime, maxRound, setGameLoading, session }) => {
   const sendGameStart = (e) => {
     e.preventDefault();
     session
@@ -35,12 +35,12 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
   }, []);
   return (
     <div>
-      고요 속의 외침
+      인물 맞추기
       <br />
       <br /> 제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.
       <br />
-      <br /> 팀에서 한명이 발화자로 지정이 되며, 발화자는 마이크가 꺼지고, 채팅을 칠 수 없습니다.
-      <br /> 다른 팀원이 발화자의 제시어를 맞추면 점수를 획득하고 발화자가 변경 됩니다.
+      <br /> 사진을 보고 인물을 맞추면 됩니다
+      <br />
       <br />
       <br /> 팀당 {maxTime / 1000}초 동안 진행합니다.
       <br /> 총 {maxRound}라운드 진행합니다.
@@ -61,4 +61,4 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
     </div>
   );
 };
-export default G101Info;
+export default G102Info;

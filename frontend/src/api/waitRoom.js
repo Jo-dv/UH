@@ -47,6 +47,19 @@ export const passHost = async (sessionId, connectionId) => {
   }
 };
 
+export const exitRoom = async (sessionId, connectionId) => {
+  console.log("방나가기", sessionId, connectionId);
+  try {
+    const response = await axios.delete("exitrooms", {
+      sessionId: sessionId,
+      connectionId: connectionId,
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.log("방나가기 에러");
+    console.error("Error:", error.message);
+  }
+};
 /**
  *
  * @param {string} sessionId

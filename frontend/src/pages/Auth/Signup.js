@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import startBackImg from "../../asset/image/startBackGround.png";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import startBackImg from "../../asset/image/BG.png";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ const Signup = () => {
     } else {
       setErr({ ...err, userPassword: "" });
     }
-  }
+  };
 
   // 비밀번호 확인 검사
   const checkPasswordMatch = () => {
@@ -213,27 +213,31 @@ const Signup = () => {
 
         {/* 비밀번호 입력창 */}
         <div className="relative">
-        <input
-          type={showPassword ? "text" : "password"}
-          placeholder="비밀번호(영문, 숫자 4-20자)"
-          onChange={onChange}
-          name="userPassword"
-          value={form.userPassword}
-          onBlur={checkPassword}
-          className={`w-full p-2 border-2 rounded-md ${
-            err.userPassword
-              ? animate
-                ? "animate-shake animate-twice animate-duration-150 border-red-500"
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="비밀번호(영문, 숫자 4-20자)"
+            onChange={onChange}
+            name="userPassword"
+            value={form.userPassword}
+            onBlur={checkPassword}
+            className={`w-full p-2 border-2 rounded-md ${
+              err.passwordCheck
+                ? animate
+                  ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                  : ""
                 : ""
-              : ""
-          }`}
-  />
-  <button
-    onClick={togglePassword}
-    className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-  >
-    {showPassword ? <VisibilityOffIcon color="disabled" /> : <VisibilityIcon color="disabled" />}
-  </button>
+            }`}
+          />
+          <button
+            onClick={togglePassword}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+          >
+            {showPassword ? (
+              <VisibilityOffIcon color="disabled" />
+            ) : (
+              <VisibilityIcon color="disabled" />
+            )}
+          </button>
         </div>
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
 
