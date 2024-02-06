@@ -130,7 +130,7 @@ const Login = () => {
         className="bg-opacity-50 bg-formBG w-96 border-2 rounded-md
                 flex flex-col justify-center items-center z-20"
       >
-        <h2 className="font-['pixel'] text-7xl mt-3 mb-2">로그인</h2>
+        <h2 className="font-['pixel'] text-5xl mt-3 mb-2">로그인</h2>
         <input
           type="text"
           placeholder="아이디"

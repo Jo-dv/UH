@@ -53,7 +53,7 @@ const FeedbackModal = (props) => {
       >
         <form
           onClick={(e) => e.stopPropagation()}
-          className=" bg-formBG rounded-2xl border-2 border-modalBorder justify-center items-center p-2 flex flex-col"
+          className=" bg-formBG rounded-md border-2 border-modalBorder justify-center items-center p-2 flex flex-col"
         >
           <div className="text-center">
             <label>피드백</label>
@@ -61,13 +61,13 @@ const FeedbackModal = (props) => {
               <textarea
                 placeholder="피드백을 입력해주세요!"
                 className="m-1 px-2 
-          border rounded-3xl bg-white"
+          border rounded-md bg-white"
                 value={feedbackContent}
                 onChange={onChange}
               />
               {feedbackError && <div className="text-red-500">{feedbackError}</div>}
             </div>
-            <button onClick={sendFeedback} className="bg-formButton py-2 px-4 m-2 rounded">
+            <button onClick={sendFeedback} className="bg-tab10 py-2 px-4 m-2 rounded">
               보내기
             </button>
           </div>

@@ -188,7 +188,7 @@ const Signup = () => {
         className="bg-opacity-50 bg-formBG w-96 border-2 border-purple3
         flex flex-col justify-center rounded-md items-center z-20"
       >
-        <h1 className="font-['pixel'] text-7xl">회원가입</h1>
+        <h1 className="text-5xl m-3">회원가입</h1>
 
         {/* 아이디 입력창 */}
         <input
@@ -198,7 +198,7 @@ const Signup = () => {
           onBlur={checkUserIdDuplicate}
           name="userId"
           value={form.userId}
-          className={`font-['pixel'] p-2 m-1 border-2 rounded-md ${
+          className={`w-60 p-2 m-2 border-2 rounded-md ${
             err.userId
               ? animate
                 ? "animate-shake animate-twice animate-duration-150 border-red-500"
@@ -220,8 +220,8 @@ const Signup = () => {
             name="userPassword"
             value={form.userPassword}
             onBlur={checkPassword}
-            className={`w-full p-2 border-2 rounded-md ${
-              err.passwordCheck
+            className={`p-2 w-60 border-2 rounded-md ${
+              err.userPassword
                 ? animate
                   ? "animate-shake animate-twice animate-duration-150 border-red-500"
                   : ""
@@ -232,11 +232,7 @@ const Signup = () => {
             onClick={togglePassword}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
           >
-            {showPassword ? (
-              <VisibilityOffIcon color="disabled" />
-            ) : (
-              <VisibilityIcon color="disabled" />
-            )}
+            {form.userPassword && (showPassword ? <VisibilityOffIcon color="disabled" /> : <VisibilityIcon color="disabled" />)}
           </button>
         </div>
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
@@ -249,7 +245,7 @@ const Signup = () => {
           onBlur={checkPasswordMatch}
           name="passwordCheck"
           value={form.passwordCheck}
-          className={`p-2 m-1 border-2 rounded-md ${
+          className={`p-2 m-1 w-60 border-2 rounded-md ${
             err.passwordCheck
               ? animate
                 ? "animate-shake animate-twice animate-duration-150 border-red-500"
@@ -259,7 +255,7 @@ const Signup = () => {
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.passwordCheck}</p>
 
-        <button className="font-['pixel'] p-2 m-1 rounded w-60 bg-formButton">회원가입</button>
+        <button className="font-['pixel'] p-2 m-1 rounded w-60 bg-tab10 hover:bg-[#95c75a]">회원가입</button>
         <h3>
           <Link to="/auth/Login">Back</Link>
         </h3>
