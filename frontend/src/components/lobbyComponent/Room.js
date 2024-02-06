@@ -38,7 +38,10 @@ const Room = (props) => {
   return (
     <div className="px-2">
       {props.isPlaying === false ? (
-        <div onClick={handleClick} className="h-full m-4 p-4 border rounded-3xl bg-formButton">
+        <div
+          onClick={handleClick}
+          className="hover:animate-jump-in hover:animate-once hover:animate-duration-[5000ms] h-full m-4 p-4 border rounded-3xl bg-tab2"
+        >
           <div className="flex justify-start items-center space-x-2">
             <p>{props.isLocked === null ? "안잠금" : "잠금"}</p>
             <h4>{props.roomTitle}</h4>
@@ -52,7 +55,10 @@ const Room = (props) => {
           </div>
         </div>
       ) : (
-        <div onClick={handleClick} className="m-4 px-4 border rounded-3xl bg-white">
+        <div
+          onClick={handleClick}
+          className="hover:animate-jump-in hover:animate-once hover:animate-duration-[5000ms] h-full m-4 p-4 border rounded-3xl bg-tab11"
+        >
           <div className="flex justify-start items-center space-x-2">
             <p>{props.isLocked === null ? "안잠금" : "잠금"}</p>
             <h4>{props.roomTitle}</h4>

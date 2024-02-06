@@ -11,13 +11,13 @@ body {
   background-image: url("./asset/image/BG.png");
   background-repeat: no-repeat;
   background-position: top center;
-  background-size: cover;
+  background-size: 1800px 1100px;
   background-attachment: fixed;
   font-family: "pixel";
 }
 
 .container-box {
   width: 1280px;
-  height: calc(100vh - 160px);
+  height: calc(1000px - 300px);
   margin: auto;
 }

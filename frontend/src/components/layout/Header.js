@@ -40,12 +40,12 @@ const Header = () => {
   return (
     <div>
       <nav>
-        <ul className="flex flex-row items-end mx-32 pt-10">
+        <ul className="flex flex-row items-end mx-[128px] pt-[40px]">
           {isLobbyPage ? (
             <>
-              <li className="mr-7">
+              <li className="">
                 <button onClick={handleLogoClick}>
-                  <img src={logoImg} alt="Logo" className="h-20 ml-3 " />
+                  <img src={logoImg} alt="Logo" className="h-[80px]" />
                 </button>
               </li>
               <li>
@@ -69,8 +69,8 @@ const Header = () => {
             </>
           ) : (
             <>
-              <li className="mr-7">
-                <img src={logoImg} alt="Logo" className="h-20 ml-3" />
+              <li className="">
+                <img src={logoImg} alt="Logo" className="h-[80px]" />
               </li>
               <li>
                 <RoomSettingTab />

@@ -11,7 +11,7 @@ const GameScrollSelector = ({ onGameCategory, extraOptions = [], showAllOption =
 
   return (
     <select
-      className="bg-whitem-4 mr-2 p-2 border rounded-3xl bg-white"
+      className="basis-1/6 m-2 border rounded-3xl bg-white hover:bg-tab9"
       onChange={handleCategoryChange}
       value={selectedCategory}
     >

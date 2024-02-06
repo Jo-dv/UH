@@ -463,14 +463,14 @@ export default function RoomId() {
             <div className="grid col-start-7 col-end-9 row-start-1 row-end-13">
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
-                  className=" bg-mc1 border rounded-3xl active:bg-mc2 w-full h-full flex justify-center items-center"
+                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center"
                   onClick={() => changeTeam("A")}
                 >
                   A팀
                 </button>
 
                 <button
-                  className=" bg-mc8 border rounded-3xl active:bg-mc7 w-full h-full flex justify-center items-center"
+                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center"
                   onClick={() => changeTeam("B")}
                 >
                   B팀
@@ -481,7 +481,7 @@ export default function RoomId() {
                   onClick={() => {
                     setReady();
                   }}
-                  className="bg-mc3 border rounded-3xl h-full flex justify-center items-center w-full"
+                  className="bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full"
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
