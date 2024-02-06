@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Chat from "../../components/Chat";
 import "./Game.css";
-import Timer from "./Timer";
+
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "../RoomId/UserVideoComponent";
-import AnswerInput from "./AnswerInput";
-import G101Info from "./games/G101Info";
+
 import G101 from "./games/G101";
+import G102 from "./games/G102";
 
 const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHost }) => {
   let maxTime = 50000;
@@ -42,7 +42,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
   const [ATeamScore, setATeamScore] = useState(0);
   const [BTeamScore, setBTeamScore] = useState(0);
   const [teamChangeLoading, setTeamChangeLoading] = useState(false);
-
+  const [gameCategory, setGameCategory] = useState(undefined);
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
   };
@@ -121,7 +121,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
       //   quiz,
       //   myUserName
       // );
-
+      setGameCategory(roomData.roomData.gameCategory);
       const players = roomData.roomStatus.players;
       const myTeamCNT = roomData.roomStatus.players[myConnectionId].team; //A or B
 
@@ -161,7 +161,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
       setBTeamStreamManagers(BTeamStreamManagersCNT);
 
       const quiz = await getGameData(session.sessionId);
-      if (quiz !== undefined) {
+      if (quiz !== undefined && !quiz) {
         setQuizData(quiz);
       }
 
@@ -216,33 +216,64 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
               ))}
             </section>
             <section className="h-full aspect-[4/5]">
-              <G101
-                gameLoading={gameLoading}
-                maxTime={maxTime}
-                setTime={setTime}
-                time={time}
-                maxRound={maxRound}
-                setRound={setRound}
-                round={round}
-                session={session}
-                setGameLoading={setGameLoading}
-                ATeamScore={ATeamScore}
-                BTeamScore={BTeamScore}
-                isGameEnd={isGameEnd}
-                goWaitRoom={goWaitRoom}
-                turnPlayerId={turnPlayerId}
-                myConnectionId={myConnectionId}
-                myUserName={myUserName}
-                myTeam={myTeam}
-                quizData={quizData}
-                quizIndex={quizIndex}
-                teamChangeLoading={teamChangeLoading}
-                changeTeamTurn={changeTeamTurn}
-                setIsGameEnd={setIsGameEnd}
-                plusScore={plusScore}
-                changeTeamIndex={changeTeamIndex}
-                plusQuizIndex={plusQuizIndex}
-              />
+              {gameCategory === 101 ? (
+                <G101
+                  gameLoading={gameLoading}
+                  maxTime={maxTime}
+                  setTime={setTime}
+                  time={time}
+                  maxRound={maxRound}
+                  setRound={setRound}
+                  round={round}
+                  session={session}
+                  setGameLoading={setGameLoading}
+                  ATeamScore={ATeamScore}
+                  BTeamScore={BTeamScore}
+                  isGameEnd={isGameEnd}
+                  goWaitRoom={goWaitRoom}
+                  turnPlayerId={turnPlayerId}
+                  myConnectionId={myConnectionId}
+                  myUserName={myUserName}
+                  myTeam={myTeam}
+                  quizData={quizData}
+                  quizIndex={quizIndex}
+                  teamChangeLoading={teamChangeLoading}
+                  changeTeamTurn={changeTeamTurn}
+                  setIsGameEnd={setIsGameEnd}
+                  plusScore={plusScore}
+                  changeTeamIndex={changeTeamIndex}
+                  plusQuizIndex={plusQuizIndex}
+                />
+              ) : null}
+              {gameCategory === 102 ? (
+                <G102
+                  gameLoading={gameLoading}
+                  maxTime={maxTime}
+                  setTime={setTime}
+                  time={time}
+                  maxRound={maxRound}
+                  setRound={setRound}
+                  round={round}
+                  session={session}
+                  setGameLoading={setGameLoading}
+                  ATeamScore={ATeamScore}
+                  BTeamScore={BTeamScore}
+                  isGameEnd={isGameEnd}
+                  goWaitRoom={goWaitRoom}
+                  turnPlayerId={turnPlayerId}
+                  myConnectionId={myConnectionId}
+                  myUserName={myUserName}
+                  myTeam={myTeam}
+                  quizData={quizData}
+                  quizIndex={quizIndex}
+                  teamChangeLoading={teamChangeLoading}
+                  changeTeamTurn={changeTeamTurn}
+                  setIsGameEnd={setIsGameEnd}
+                  plusScore={plusScore}
+                  changeTeamIndex={changeTeamIndex}
+                  plusQuizIndex={plusQuizIndex}
+                />
+              ) : null}
               {/* <button onClick={sendPlayDone}>playDone</button> */}
               <div className="h-64 w-full">
                 {turnPlayerId !== undefined ? (
