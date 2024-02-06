@@ -1,7 +1,5 @@
 video {
-  object-fit: cover;
-  float: left;
-  cursor: pointer;
+  object-fit: contain;
 }
 
 .streamcomponent div {

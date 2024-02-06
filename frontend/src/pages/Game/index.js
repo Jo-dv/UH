@@ -187,8 +187,8 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
         <p>loading</p>
       ) : (
         <main className="container-box bg-stone-100 p-2  h-screen-80 border rounded-3xl">
-          <div className="flex flex-row justify-around h-full">
-            <section className="cam grid grid-rows-4 gap-2">
+          <div className="flex flex-row justify-center h-full">
+            <section className="cam grid grid-rows-4 gap-2 mr-2">
               {/* <div className="bg-mc6 p-1 overflow-hidden">
             <span>{publisher.id}</span>
             <UserVideoComponent streamManager={publisher} session={session} />
@@ -286,7 +286,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                 ) : null}
               </div>
             </section>
-            <section className="cam grid grid-rows-4 gap-1">
+            <section className="cam grid grid-rows-4 gap-2 ml-2">
               {BTeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (

@@ -10,15 +10,10 @@ meter {
   height: 80px;
 }
 
-video {
-  object-fit: contain;
-}
-
 .cam {
-  width: calc((100vh - 96px) / 3);
-  overflow: hidden;
+  width: 176px;
 }
-
+/* 
 .gameBox {
   height: calc(100% - 256px);
-}
+} */
