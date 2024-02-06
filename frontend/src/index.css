@@ -15,3 +15,9 @@ body {
   background-attachment: fixed;
   font-family: "pixel";
 }
+
+.container-box {
+  width: 1280px;
+  margin: auto;
+  height: calc(100vh - 160px);
+}

@@ -186,9 +186,9 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
       {loading ? (
         <p>loading</p>
       ) : (
-        <main className="bg-neutral-200 p-2 mx-2 mb-2  h-screen-80 border rounded-3xl">
-          <div className="flex flex-row justify-center h-full">
-            <section className="cam grid grid-rows-4 gap-1">
+        <main className="container-box bg-stone-100 p-2  h-screen-80 border rounded-3xl">
+          <div className="flex flex-row justify-around h-full">
+            <section className="cam grid grid-rows-4 gap-2">
               {/* <div className="bg-mc6 p-1 overflow-hidden">
             <span>{publisher.id}</span>
             <UserVideoComponent streamManager={publisher} session={session} />
@@ -196,7 +196,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
               {ATeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="bg-mc3 p-2 overflow-hidden">
+                    <div key={sub[0]} className="bg-[#9F5280] p-1  overflow-hidden">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -204,7 +204,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                       />
                     </div>
                   ) : (
-                    <div key={sub[0]} className="bg-mc1 p-1 overflow-hidden">
+                    <div key={sub[0]} className="bg-[#D67187] p-1 overflow-hidden">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -290,7 +290,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
               {BTeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="bg-mc3 p-2 overflow-hidden">
+                    <div key={sub[0]} className="bg-[#5D9CF6] p-1 overflow-hidden">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -298,7 +298,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                       />
                     </div>
                   ) : (
-                    <div key={sub[0]} className="bg-mc8 p-1 overflow-hidden">
+                    <div key={sub[0]} className="bg-[#67AEFE] p-1 overflow-hidden">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
