@@ -130,7 +130,7 @@ const Login = () => {
         className="bg-opacity-50 bg-formBG w-96 border-2 rounded-md
                 flex flex-col justify-center items-center z-20"
       >
-        <h2 className="font-['pixel'] text-7xl">로그인</h2>
+        <h2 className="font-['pixel'] text-7xl mt-3 mb-2">로그인</h2>
         <input
           type="text"
           placeholder="아이디"
@@ -164,14 +164,14 @@ const Login = () => {
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
 
-        <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">로그인</button>
+        <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-tab10 hover:bg-[#95c75a]">로그인</button>
         <p className="font-['pixel'] text-red-500 mb-1">{err.general}</p>
         {/* <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3> */}
         {/* <h3 className="p-2 ">소셜로그인</h3> */}
 
-        <div className="flex flex-row justify-around w-72 mb-3">
+        <div className="flex flex-row justify-around w-72">
           {/* <img src={googleLogo} alt="google Logo" />
           <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
           <img src={naverLogo} alt="google Logo" /> */}

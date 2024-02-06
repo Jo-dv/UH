@@ -259,7 +259,7 @@ const Signup = () => {
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.passwordCheck}</p>
 
-        <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">회원가입</button>
+        <button className="font-['pixel'] p-2 m-1 rounded w-60 bg-formButton">회원가입</button>
         <h3>
           <Link to="/auth/Login">Back</Link>
         </h3>
