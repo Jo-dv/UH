@@ -34,7 +34,6 @@ export const WebSocketProvider = ({ children }) => {
       };
 
       newSocket.onclose = () => {
-        console.log("웹 소캣 연결 종료");
         if (onClose) onClose();
       };
     };
@@ -76,6 +75,7 @@ export const WebSocketProvider = ({ children }) => {
     return () => {
       if (socket) {
         socket.close();
+        console.log("웹 소캣 연결 종료");
       }
     };
   }, []);
