@@ -90,10 +90,10 @@ export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, 
 export const exitRoom = async (sessionId, connectionId) => {
   console.log("방나가기 sessionId:", sessionId, " connectionId:", connectionId);
   try {
-    const response = await axios.delete("exitrooms/" + sessionId + "/" + connectionId);
-    console.log(response.data);
+    const response = await axios.delete(`exitrooms/${sessionId}/${connectionId}`);
+    console.log("방 나가기 완료", response.data);
   } catch (error) {
-    console.log("방나가기 에러");
+    console.log("방나가기 에러", error.message);
     console.error("Error:", error.message);
   }
 };

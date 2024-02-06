@@ -3,7 +3,7 @@ import UseIsLobbyStore from "../../../store/UseIsLobbyStore";
 import { useWebSocket } from "../../../webSocket/UseWebSocket";
 import UseLeavingStore from "../../../store/UseLeavingStore";
 
-const Leaving = ({ leaving, onClose, leaveSession }) => {
+const Leaving = ({ leaving, onClose, leaveSession, exitRoom }) => {
   const { setIsLobby } = UseIsLobbyStore();
   const { setLeaving } = UseLeavingStore();
   const { send } = useWebSocket();
@@ -29,9 +29,8 @@ flex justify-center items-center"
                 <button
                   onClick={() => {
                     setIsLobby(null);
-                    leaveSession();
                     send({ type: "refresh" });
-                    setLeaving(false);
+                    leaveSession();
                   }}
                   className="bg-formButton py-2 px-4 m-2 rounded"
                 >
