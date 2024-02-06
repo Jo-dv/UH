@@ -62,6 +62,9 @@ const Login = () => {
         resetUser();
         console.log("카카오 로그아웃 완료");
         window.location.href = LogoutLink;
+      } else {
+        // 나중에 else만 나두기
+        console.log("로그아웃 대상 없음");
       }
     } catch (error) {
       console.error("로그아웃 에러", error);
