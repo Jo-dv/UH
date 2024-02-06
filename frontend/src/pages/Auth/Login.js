@@ -49,7 +49,8 @@ const Login = () => {
   const handleLogOut = async () => {
     try {
       const response = await axios.post(
-        "user/logout"
+        "user/logout",
+        { userSeq: userSeq }
       );
       const res = response.data;
       console.log(res);
