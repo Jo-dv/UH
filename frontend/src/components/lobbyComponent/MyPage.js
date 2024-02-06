@@ -8,7 +8,7 @@ const MyPage = () => {
   const [myPageInfo, setMyPageInfo] = useState(null);
 
   useEffect(() => {
-    console.log(userSeq)
+    console.log(userSeq);
     if (userSeq) {
       getMyPageInfo(userSeq).then((data) => {
         console.log("myPageInfo:", data); // 여기에서 myPageInfo 값을 콘솔에 출력
@@ -18,7 +18,7 @@ const MyPage = () => {
   }, []);
 
   return (
-    <section className="rounded-lg bg-bg1 mt-4 col-start-2 col-end-7 row-start-1 row-end-13 overflow-auto p-4">
+    <section className="rounded-lg bg-bg1 mt-4 col-start-4 col-end-13 row-start-1 row-end-13 overflow-auto p-4">
       <div className="ml-10 mt-6">
         <h1 className="text-5xl border-b-2 border-gray-300 pb-2">MyPage</h1>
         {myPageInfo && ( // myPageInfo가 null이 아닐 때만 아래 내용 렌더링

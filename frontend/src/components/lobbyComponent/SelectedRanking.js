@@ -16,9 +16,13 @@ const SelectedRanking = ({ onGameCategoryView }) => {
 
   console.log(viewGameCategoryRanking);
   return (
-    <div className="col-start-2 col-end-7 row-start-1 row-end-13 m-5">
+    <div className="col-start-4 col-end-13 row-start-1 row-end-13 m-5">
       <div className="col-start-2 col-end-7 row-start-1 row-end-2">
-        <GameScrollSelector extraOptions={extraOptions} onGameCategory={handleGameCategoryView} showAllOption={false} />
+        <GameScrollSelector
+          extraOptions={extraOptions}
+          onGameCategory={handleGameCategoryView}
+          showAllOption={false}
+        />
       </div>
       <div className="col-start-2 col-end-7 row-start-2 row-end-13 z-40">
         <RankingLists viewGameCategoryRanking={viewGameCategoryRanking} />
