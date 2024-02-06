@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import Chat from "../../components/Chat";
 import "./Game.css";
 import Timer from "./Timer";
-import { endPlay, getRoomInfo } from "../../api/waitRoom";
+import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "../RoomId/UserVideoComponent";
 import AnswerInput from "./AnswerInput";
 import G101Info from "./games/G101Info";
 import G101 from "./games/G101";
 
-const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone, isHost }) => {
+const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHost }) => {
   let maxTime = 50000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -160,6 +160,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
       setATeamStreamManagers(ATeamStreamManagersCNT);
       setBTeamStreamManagers(BTeamStreamManagersCNT);
 
+      const quiz = await getGameData(session.sessionId);
       if (quiz !== undefined) {
         setQuizData(quiz);
       }
@@ -179,6 +180,7 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
       endPlay(session.sessionId, "B", BTeamScore, ATeamScore);
     }
   };
+  // console.log(quizData);
   return (
     <>
       {loading ? (
@@ -238,8 +240,8 @@ const Game = ({ publisher, subscribers, session, myUserName, quiz, sendPlayDone,
                 changeTeamTurn={changeTeamTurn}
                 setIsGameEnd={setIsGameEnd}
                 plusScore={plusScore}
-                plusQuizIndex={plusQuizIndex}
                 changeTeamIndex={changeTeamIndex}
+                plusQuizIndex={plusQuizIndex}
               />
               {/* <button onClick={sendPlayDone}>playDone</button> */}
               <div className="h-64 w-full">

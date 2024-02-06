@@ -31,7 +31,6 @@ export default function RoomId() {
   const [isReady, setIsReady] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [isPlay, setIsPlay] = useState(false);
-  const [gameQuiz, setGameQuiz] = useState(undefined);
   const OV = useRef(new OpenVidu());
   const { leaving, setLeaving } = UseLeavingStore();
   const { roomSetting, setRoomSetting } = UseRoomSetting();
@@ -271,12 +270,6 @@ export default function RoomId() {
     try {
       if (isHost) {
         await startPlay(session.sessionId);
-        try {
-          const quiz = await getGameData(session.sessionId);
-          setGameQuiz(quiz);
-        } catch (error) {
-          console.error("getGameData Error", error);
-        }
       } else {
         if (isReady) {
           await ready(session.sessionId, session.connection.connectionId, false);
@@ -442,7 +435,6 @@ export default function RoomId() {
           subscribers={subscribers}
           session={session}
           myUserName={myUserName}
-          quiz={gameQuiz}
           sendPlayDone={sendPlayDone}
         />
       ) : null}
