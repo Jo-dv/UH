@@ -26,8 +26,7 @@ function Start() {
         {/* <h1>abc 가나다</h1>
         <h2 className="font-['pixel']">abc 가나다</h2> */}
         <img
-          className="w-4/5 max-w-2xl
-      animate-jump-in animate-duration-[2000ms] z-10"
+          className="w-4/5 max-w-2xl z-10"
           alt="Logo"
           src={logoImg}
         />
