@@ -49,8 +49,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         "user/logout",
-        { userSeq: userSeq },
-        { withCredentials: true }
+        { userSeq: userSeq }
       );
       const res = response.data;
       console.log(res);
@@ -73,7 +72,23 @@ const Login = () => {
   };
 
   useEffect(() => {
-    handleLogOut();
+    const checkLogin = async () => {
+      try {
+        const response = await axios.get("user/check");
+        const res = response.data;
+        //세션에 로그인된 유저가 없다면 클라이언트의 유저 정보 로그아웃 처리
+        if (res == "") {
+          handleLogOut();
+        }//로그인된 정보가 있다면 클라이언트의 스토어에 유저 정보를 담고 로비로 보냄
+        else {
+          setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
+          navigate("/lobby");
+        }
+      } catch {
+        setErr({ ...err, general: "서버가 아파요ㅠㅠ" });
+      }
+    }
+    checkLogin();
   }, []); // userState가 변경될 때마다 실행
 
   const onSubmit = async (e) => {
