@@ -164,7 +164,7 @@ const Login = () => {
         />
         <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
 
-        <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-violet-400 hover:bg-violet-500">로그인</button>
+        <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-tab10 hover:bg-[#95c75a]">로그인</button>
         <p className="font-['pixel'] text-red-500 mb-1">{err.general}</p>
         {/* <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
