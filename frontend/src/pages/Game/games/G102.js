@@ -35,7 +35,7 @@ const G102 = ({
     console.log("G102 퀴즈데이터", quizData);
   }, []);
   return (
-    <div className="gameBox relative flex flex-col bg-black text-white px-1">
+    <div className="w-full aspect-[4/3] relative flex flex-col ">
       {gameLoading ? (
         <G102Info
           maxTime={maxTime}
@@ -46,36 +46,41 @@ const G102 = ({
       ) : (
         <>
           <div className="h-full aspect-[4/3] absolute flex flex-col">
-            <div className="absolute bottom-0 w-full flex justify-around bg-black">
-              <p>A: {ATeamScore}</p>
-              {/* <p> Team: {TeamTurn}</p> */}
-              <p>round: {round}</p>
-              {/* <p>{time}</p> */}
-              <p> B: {BTeamScore}</p>
-            </div>
             {isGameEnd ? (
-              <div className="bg-mc5 text-white w-full h-full flex flex-col justify-center items-center">
-                <div>
-                  {ATeamScore > BTeamScore ? (
+              <>
+                {ATeamScore > BTeamScore ? (
+                  <div className="w-full h-full flex flex-col justify-center items-center bg-mc1">
                     <p className="text-3xl animate-shake animate-thrice">A Team Win</p>
-                  ) : (
-                    <>
-                      {ATeamScore === BTeamScore ? (
+                    <br />
+                    <button onClick={goWaitRoom} className="text-xl">
+                      로비로
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    {ATeamScore === BTeamScore ? (
+                      <div className="w-full h-full flex flex-col justify-center items-center bg-mc10">
                         <p className="text-3xl animate-shake animate-thrice">무승부</p>
-                      ) : (
-                        <p className="text-3xl animate-shake animate-thrice">B Team Win</p>
-                      )}
-                    </>
-                  )}
-                </div>
-                <br></br>
-                <button onClick={goWaitRoom} className="animate-bounce">
-                  로비로
-                </button>
-              </div>
+                        <br />
+                        <button onClick={goWaitRoom} className="text-xl">
+                          로비로
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="w-full h-full flex flex-col justify-center items-center bg-mc5">
+                        <p className="text-3xl animate-bounce">B Team Win</p>
+                        <br />
+                        <button onClick={goWaitRoom} className="text-xl">
+                          로비로
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </>
             ) : (
               <>
-                <div className="absolute right-0 w-full flex justify-center">
+                <div className="w-full h-full flex justify-center">
                   <img
                     src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
                     alt="정답사진"
@@ -98,7 +103,7 @@ const G102 = ({
                     )}
                   </div>
                 ) : (
-                  <div className="opacity-90 absolute w-full bottom-0">
+                  <div className="opacity-90 absolute w-full bottom-[-20px]">
                     <div className="relative flex justify-center items-center">
                       <Timer
                         maxTime={maxTime}

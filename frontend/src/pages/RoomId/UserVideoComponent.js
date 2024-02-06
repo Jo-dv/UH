@@ -80,9 +80,9 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
   return (
     <div className="">
       {streamManager !== undefined ? (
-        <div className="streamcomponent">
+        <div className="relative">
           <OpenViduVideoComponent streamManager={streamManager} />
-          <div className="absolute">
+          <div className="streamcomponentInfo">
             <p>
               {getNicknameTag()}
 

@@ -38,9 +38,9 @@ const Header = () => {
   };
 
   return (
-    <div>
+    <header className="w-[1280px] mx-auto">
       <nav>
-        <ul className="flex flex-row items-end mx-32 pt-10">
+        <ul className="flex flex-row items-end pt-10">
           {isLobbyPage ? (
             <>
               <li className="mr-7">
@@ -85,7 +85,7 @@ const Header = () => {
           )}
         </ul>
       </nav>
-    </div>
+    </header>
   );
 };
 

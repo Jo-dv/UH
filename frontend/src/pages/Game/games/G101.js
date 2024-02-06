@@ -35,7 +35,7 @@ const G101 = ({
     console.log("G101 퀴즈데이터", quizData);
   }, []);
   return (
-    <div className="gameBox relative flex flex-col bg-black text-white px-1">
+    <div className="w-full aspect-[4/3] relative flex flex-col ">
       {gameLoading ? (
         <G101Info
           maxTime={maxTime}
@@ -46,15 +46,8 @@ const G101 = ({
       ) : (
         <>
           <div className="h-full aspect-[4/3] absolute flex flex-col">
-            <div className="absolute bottom-0 w-full flex justify-around bg-black">
-              <p>A: {ATeamScore}</p>
-              {/* <p> Team: {TeamTurn}</p> */}
-              <p>round: {round}</p>
-              {/* <p>{time}</p> */}
-              <p> B: {BTeamScore}</p>
-            </div>
             {isGameEnd ? (
-              <div className="bg-mc5 text-white w-full h-full flex flex-col justify-center items-center">
+              <div className="bg-mc5 w-full h-full flex flex-col justify-center items-center">
                 <div>
                   {ATeamScore > BTeamScore ? (
                     <p className="text-3xl animate-shake animate-thrice">A Team Win</p>
@@ -75,7 +68,7 @@ const G101 = ({
               </div>
             ) : (
               <>
-                <div>
+                <div className="w-full">
                   <UserVideoComponent
                     streamManager={turnPlayerId[1]}
                     session={session}

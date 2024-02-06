@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Chat from "../../components/Chat";
+import Chat from "./Chat";
 import "./Game.css";
 
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
@@ -186,9 +186,9 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
       {loading ? (
         <p>loading</p>
       ) : (
-        <main className="container-box bg-stone-100 p-2  h-screen-80 border rounded-3xl">
+        <main className="container-box bg-stone-100 p-4 border rounded-3xl">
           <div className="flex flex-row justify-center h-full">
-            <section className="cam grid grid-rows-4 gap-2 mr-2">
+            <section className="grid grid-rows-4 gap-2 mr-2">
               {/* <div className="bg-mc6 p-1 overflow-hidden">
             <span>{publisher.id}</span>
             <UserVideoComponent streamManager={publisher} session={session} />
@@ -196,7 +196,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
               {ATeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="bg-[#9F5280] p-1  overflow-hidden">
+                    <div key={sub[0]} className="cam bg-mc2">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -204,7 +204,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                       />
                     </div>
                   ) : (
-                    <div key={sub[0]} className="bg-[#D67187] p-1 overflow-hidden">
+                    <div key={sub[0]} className="cam bg-mc1">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -215,67 +215,75 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                 </>
               ))}
             </section>
-            <section className="h-full aspect-[4/5]">
-              {gameCategory === 101 ? (
-                <G101
-                  gameLoading={gameLoading}
-                  maxTime={maxTime}
-                  setTime={setTime}
-                  time={time}
-                  maxRound={maxRound}
-                  setRound={setRound}
-                  round={round}
-                  session={session}
-                  setGameLoading={setGameLoading}
-                  ATeamScore={ATeamScore}
-                  BTeamScore={BTeamScore}
-                  isGameEnd={isGameEnd}
-                  goWaitRoom={goWaitRoom}
-                  turnPlayerId={turnPlayerId}
-                  myConnectionId={myConnectionId}
-                  myUserName={myUserName}
-                  myTeam={myTeam}
-                  quizData={quizData}
-                  quizIndex={quizIndex}
-                  teamChangeLoading={teamChangeLoading}
-                  changeTeamTurn={changeTeamTurn}
-                  setIsGameEnd={setIsGameEnd}
-                  plusScore={plusScore}
-                  changeTeamIndex={changeTeamIndex}
-                  plusQuizIndex={plusQuizIndex}
-                />
-              ) : null}
-              {gameCategory === 102 ? (
-                <G102
-                  gameLoading={gameLoading}
-                  maxTime={maxTime}
-                  setTime={setTime}
-                  time={time}
-                  maxRound={maxRound}
-                  setRound={setRound}
-                  round={round}
-                  session={session}
-                  setGameLoading={setGameLoading}
-                  ATeamScore={ATeamScore}
-                  BTeamScore={BTeamScore}
-                  isGameEnd={isGameEnd}
-                  goWaitRoom={goWaitRoom}
-                  turnPlayerId={turnPlayerId}
-                  myConnectionId={myConnectionId}
-                  myUserName={myUserName}
-                  myTeam={myTeam}
-                  quizData={quizData}
-                  quizIndex={quizIndex}
-                  teamChangeLoading={teamChangeLoading}
-                  changeTeamTurn={changeTeamTurn}
-                  setIsGameEnd={setIsGameEnd}
-                  plusScore={plusScore}
-                  changeTeamIndex={changeTeamIndex}
-                  plusQuizIndex={plusQuizIndex}
-                />
-              ) : null}
-              {/* <button onClick={sendPlayDone}>playDone</button> */}
-              <div className="h-64 w-full">
+            <article className="w-full relative flex flex-col">
+              <div className="w-full flex justify-around items-end bg-tab10 text-xl rounded-t-[17px]">
+                <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-xl"}>A: {ATeamScore}</p>
+                {/* <p> Team: {TeamTurn}</p> */}
+                <p className="text-3xl">round: {round}</p>
+                {/* <p>{time}</p> */}
+                <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-xl"}> B: {BTeamScore}</p>
+              </div>
+              <section className="w-full aspect-[4/3] relative rounded-b-[17px] overflow-hidden">
+                {gameCategory === 101 ? (
+                  <G101
+                    gameLoading={gameLoading}
+                    maxTime={maxTime}
+                    setTime={setTime}
+                    time={time}
+                    maxRound={maxRound}
+                    setRound={setRound}
+                    round={round}
+                    session={session}
+                    setGameLoading={setGameLoading}
+                    ATeamScore={ATeamScore}
+                    BTeamScore={BTeamScore}
+                    isGameEnd={isGameEnd}
+                    goWaitRoom={goWaitRoom}
+                    turnPlayerId={turnPlayerId}
+                    myConnectionId={myConnectionId}
+                    myUserName={myUserName}
+                    myTeam={myTeam}
+                    quizData={quizData}
+                    quizIndex={quizIndex}
+                    teamChangeLoading={teamChangeLoading}
+                    changeTeamTurn={changeTeamTurn}
+                    setIsGameEnd={setIsGameEnd}
+                    plusScore={plusScore}
+                    changeTeamIndex={changeTeamIndex}
+                    plusQuizIndex={plusQuizIndex}
+                  />
+                ) : null}
+                {gameCategory === 102 ? (
+                  <G102
+                    gameLoading={gameLoading}
+                    maxTime={maxTime}
+                    setTime={setTime}
+                    time={time}
+                    maxRound={maxRound}
+                    setRound={setRound}
+                    round={round}
+                    session={session}
+                    setGameLoading={setGameLoading}
+                    ATeamScore={ATeamScore}
+                    BTeamScore={BTeamScore}
+                    isGameEnd={isGameEnd}
+                    goWaitRoom={goWaitRoom}
+                    turnPlayerId={turnPlayerId}
+                    myConnectionId={myConnectionId}
+                    myUserName={myUserName}
+                    myTeam={myTeam}
+                    quizData={quizData}
+                    quizIndex={quizIndex}
+                    teamChangeLoading={teamChangeLoading}
+                    changeTeamTurn={changeTeamTurn}
+                    setIsGameEnd={setIsGameEnd}
+                    plusScore={plusScore}
+                    changeTeamIndex={changeTeamIndex}
+                    plusQuizIndex={plusQuizIndex}
+                  />
+                ) : null}
+                {/* <button onClick={sendPlayDone}>playDone</button> */}
+
                 {turnPlayerId !== undefined ? (
                   <Chat
                     myUserName={myUserName}
@@ -284,13 +292,13 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                     gamePlayer={turnPlayerId[0]}
                   />
                 ) : null}
-              </div>
-            </section>
-            <section className="cam grid grid-rows-4 gap-2 ml-2">
+              </section>
+            </article>
+            <section className="grid grid-rows-4 gap-2 ml-2">
               {BTeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="bg-[#5D9CF6] p-1 overflow-hidden">
+                    <div key={sub[0]} className="cam bg-mc6">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -298,7 +306,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                       />
                     </div>
                   ) : (
-                    <div key={sub[0]} className="bg-[#67AEFE] p-1 overflow-hidden">
+                    <div key={sub[0]} className="cam bg-mc5">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}

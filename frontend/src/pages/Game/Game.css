@@ -11,9 +11,13 @@ meter {
 }
 
 .cam {
-  width: 176px;
+  padding: 8px;
+  overflow: hidden;
+  width: calc((100vh - 160px - 16px - 56px) / 3);
+  border-radius: 16px;
 }
-/* 
-.gameBox {
-  height: calc(100% - 256px);
-} */
+
+.openviduCam {
+  border-radius: 8px;
+  position: relative;
+}
