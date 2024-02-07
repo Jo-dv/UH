@@ -12,7 +12,13 @@ const WebcamComponent = ({ play, audio }) => {
     }
   }, [play]);
 
-  return <Webcam className="rounded-3xl mb-1 animate-fade" ref={webcamRef} audio={audio} />;
+  return (
+    <Webcam
+      className="rounded-3xl animate-fade object-contain h-[172px] p-2"
+      ref={webcamRef}
+      audio={false}
+    />
+  );
 };
 
 export default WebcamComponent;

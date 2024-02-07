@@ -49,22 +49,22 @@ const LogOutModal = (props) => {
   return (
     <>
       <div
-        className="min-w-100 min-h-96 absolute inset-0
-      flex justify-center items-center"
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        onClick={() => {
+          props.setLogout(false);
+        }}
       >
-        <div className=" bg-formBG rounded-2xl border-2 border-modalBorder justify-center items-center p-2 flex flex-col z-50">
-          <div className="text-center">
-            <label>로그아웃하시겠습니까?</label>
-            <div>
-              <button onClick={props.setLogout} className="bg-cancelButton py-2 px-4 m-2 rounded">
-                취소
-              </button>
+        <div className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2"
+        onClick={(e) => e.stopPropagation()}>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">로그아웃하시겠습니까?</h2>
+          <div className="flex justify-center items-center space-x-4">
+            <button onClick={props.setLogout} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-xl">
+              취소
+            </button>
 
-              <button onClick={handleLogOut} className="bg-formButton py-2 px-4 m-2 rounded">
-                로그아웃
-              </button>
-              {/* <button onClick={kakaoLogoutHandler} className="bg-formButton py-2 px-4 m-2 rounded">plz</button> */}
-            </div>
+            <button onClick={handleLogOut} className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl">
+              로그아웃
+            </button>
           </div>
         </div>
       </div>

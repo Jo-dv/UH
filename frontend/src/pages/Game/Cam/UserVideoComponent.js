@@ -78,9 +78,9 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
   }, [gamePlayer]);
 
   return (
-    <div className="">
+    <div className="w-full h-full">
       {streamManager !== undefined ? (
-        <div className="relative">
+        <div className="relative w-full h-full">
           <OpenViduVideoComponent streamManager={streamManager} />
           <div className="streamcomponentInfo">
             <p>

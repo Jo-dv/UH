@@ -60,7 +60,7 @@ const Lobby = () => {
 
   return (
     <>
-      <div className="bg-neutral-200 grid grid-rows-12 grid-cols-6 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
+      <div className="container-box bg-[#FFFBF7]  grid grid-rows-12 grid-cols-12 p-2 border rounded-3xl">
         <UserList />
         <UserMediaProfile />
         {isLobby === null ? (

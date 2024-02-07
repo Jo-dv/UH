@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
-import startBackImg from "../../asset/image/startBackGround.png";
+import startBackImg from "../../asset/image/BG.png";
 
 const CreateNickname = () => {
   const navigate = useNavigate();
@@ -43,36 +43,32 @@ const CreateNickname = () => {
     setErr({ ...err, [name]: "" });
   };
 
-
   //닉네임 중복검사
   const checkUserNicknameDuplicate = async (e) => {
     const eRegEx = /^[a-z0-9A-Z가-힣ㄱ-ㅎ]{2,10}$/;
     if (!eRegEx.test(form.userNickname)) {
       setErr({ ...err, userNickname: "한글, 영어, 숫자만 써주세요 (4-20자)" });
       triggerAnimate();
-      setNicknameDupMsg({ ...nicknameDupMsg, userNickname: ""}); // 성공 메시지 초기화
+      setNicknameDupMsg({ ...nicknameDupMsg, userNickname: "" }); // 성공 메시지 초기화
     } else {
       try {
-        const response = await axios.post(
-          "user/nicknamecheck",
-          {
-            userNickname: form.userNickname,
-          }
-        );
+        const response = await axios.post("user/nicknamecheck", {
+          userNickname: form.userNickname,
+        });
         const res = response.data;
         console.log(res);
         if (res === 0) {
           setErr({ ...err, userNickname: "중복된 닉네임입니다" }); // 중복된 경우 에러 메시지 설정
           triggerAnimate();
-          setNicknameDupMsg({ ...nicknameDupMsg, userNickname: ""}); // 성공 메시지 초기화
+          setNicknameDupMsg({ ...nicknameDupMsg, userNickname: "" }); // 성공 메시지 초기화
         } else {
-          setNicknameDupMsg({ ...nicknameDupMsg, userNickname: "사용 가능한 닉네임입니다"}); // 성공 메시지 초기화
-          setErr({ ...err, userNickname: ""}); // 에러 메시지 초기화
+          setNicknameDupMsg({ ...nicknameDupMsg, userNickname: "사용 가능한 닉네임입니다" }); // 성공 메시지 초기화
+          setErr({ ...err, userNickname: "" }); // 에러 메시지 초기화
         }
       } catch (error) {
         console.error("에러 발생", error);
         setErr({ ...err, userNickname: "닉네임 중복 검사 중 오류 발생" }); // 에러 발생 시 에러 메시지 설정
-        setNicknameDupMsg({ ...nicknameDupMsg, userNickname: ""}); // 성공 메시지 초기화
+        setNicknameDupMsg({ ...nicknameDupMsg, userNickname: "" }); // 성공 메시지 초기화
       }
     }
   };
@@ -108,10 +104,7 @@ const CreateNickname = () => {
       console.log("닉네임 :", form);
       // const userSeq = sessionStorage.getItem("userSeq");
       try {
-        const response = await axios.post(
-          "user/nickname",
-          { userNickname: form.userNickname }
-        );
+        const response = await axios.post("user/nickname", { userNickname: form.userNickname });
         const res = response.data;
         console.log("서버 응답:", res);
         if (res.status === 400) {
@@ -138,20 +131,20 @@ const CreateNickname = () => {
     <div className="w-full h-screen p-5 flex justify-center items-center z-10">
       <form
         onSubmit={onSubmit}
-        className="bg-opacity-50 bg-formBG w-96 border-2 border-purple3
+        className="bg-opacity-50 bg-formBG w-96 border-2 rounded-3xl
         flex flex-col justify-center items-center z-20"
       >
-        <h1 className="font-['pixel'] text-5xl">닉네임 생성</h1>
+        <h1 className="text-5xl m-5">닉네임 생성</h1>
 
         {/* 닉네임 입력창 */}
         <input
           type="text"
-          placeholder="닉네임"
+          placeholder="닉네임(한글, 영어, 숫자 4-20자)"
           onChange={onChange}
           onBlur={checkUserNicknameDuplicate}
           name="userNickname"
           value={form.userNickname}
-          className={`${
+          className={`p-2 m-1 w-72 border-2 rounded-xl text-center ${
             err.userNickname
               ? animate
                 ? "animate-shake animate-twice animate-duration-150"
@@ -160,11 +153,13 @@ const CreateNickname = () => {
           }`}
         />
         {/* 성공 메시지 표시 */}
-        {nicknameDupMsg.userNickname && <p className="text-emerald-600">{nicknameDupMsg.userNickname}</p>}
+        {nicknameDupMsg.userNickname && (
+          <p className="text-emerald-600">{nicknameDupMsg.userNickname}</p>
+        )}
         {/* 에러 메시지 표시 */}
         {err.userNickname && <p className="text-red-500">{err.userNickname}</p>}
 
-        <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">입장하기</button>
+        <button className="font-['pixel'] p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-[#95c75a]">입장하기</button>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
 

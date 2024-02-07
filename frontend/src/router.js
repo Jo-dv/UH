@@ -1,7 +1,7 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 
 import Start from "./pages/Start";
-import Room from "./pages/Room";
+
 import Lobby from "./pages/Lobby";
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
@@ -16,7 +16,6 @@ const route = (
     <Route path="/" element={<Start />}></Route>
     <Route path="game" element={<Game />}></Route>
     <Route element={<Layout />}>
-      <Route path="room" element={<Room />}></Route>
       <Route path="room/:id" element={<RoomId />}></Route>
       <Route path="lobby" element={<Lobby />}></Route>
     </Route>

@@ -48,26 +48,25 @@ const FeedbackModal = (props) => {
         setFeedbackError("피드백 전송해주세요ㅠㅠ");
       }
       }}
-        className="min-w-100 min-h-96 absolute inset-0
-    flex justify-center items-center z-50"
+        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       >
         <form
           onClick={(e) => e.stopPropagation()}
-          className=" bg-formBG rounded-2xl border-2 border-modalBorder justify-center items-center p-2 flex flex-col"
+          className=" bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-4 mx-2"
         >
-          <div className="text-center">
+          <div className=" text-center text-lg font-medium text-gray-900">
             <label>피드백</label>
-            <div>
+            <div className="mt-2">
               <textarea
                 placeholder="피드백을 입력해주세요!"
                 className="m-1 px-2 
-          border rounded-3xl bg-white"
+          border border-gray-400 rounded-xl bg-white text-center resize-none"
                 value={feedbackContent}
                 onChange={onChange}
               />
               {feedbackError && <div className="text-red-500">{feedbackError}</div>}
             </div>
-            <button onClick={sendFeedback} className="bg-formButton py-2 px-4 m-2 rounded">
+            <button onClick={sendFeedback} className="bg-tab10 py-2 px-3 m-2 rounded-xl hover:bg-[#95c75a]">
               보내기
             </button>
           </div>
