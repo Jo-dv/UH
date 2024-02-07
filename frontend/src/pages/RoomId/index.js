@@ -71,7 +71,7 @@ export default function RoomId() {
     console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
       console.log(teamA);
-      handleNewUserJoined(mySession.sessionId);
+      handleNewRoomInfo(mySession);
       console.log("hhhhhhhh", mySession);
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((subscribers) => [...subscribers, subscriber]);
@@ -79,6 +79,7 @@ export default function RoomId() {
 
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
+      handleNewRoomInfo(mySession);
     });
 
     mySession.on("exception", (exception) => {
@@ -114,7 +115,6 @@ export default function RoomId() {
     window.addEventListener("beforeunload", leaveSession);
     console.log("세션 설정 완료");
   }, []);
-  
 
   useEffect(() => {
     if (session) {
@@ -168,16 +168,10 @@ export default function RoomId() {
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
           console.log("서버에서 받은 방정보", serverRoomInfo);
-          setroomInfo(serverRoomInfo);
-          if (mySessionId === "create") {
-            // console.log("나는 호스트");
-            setIsHost(true);
-          } else if (serverRoomInfo.roomStatus.hostId === session.connection.connectionId) {
-            // console.log("나는 호스트");
-            setIsHost(true);
-          }
 
+          setroomInfo(serverRoomInfo);
           send({ type: "refresh" });
+          handleNewRoomInfo(session)
         });
     }
   }, [session, myUserName]);
@@ -195,6 +189,8 @@ export default function RoomId() {
     setSubscribers([]);
     setMainStreamManager(undefined);
     setPublisher(undefined);
+
+
   }, [session]);
 
   useEffect(() => {
@@ -379,14 +375,17 @@ export default function RoomId() {
     });
   }
   // 새 사용자가 접속할 때 실행되는 함수
-  const handleNewUserJoined = async (sessionId) => {
+  const handleNewRoomInfo = async (session) => {
     try {
       console.log("새 사용자가 접속할 때 실행되는 함수 아싸!");
-      console.log(sessionId);
-      const roomData = await getRoomInfo(sessionId);
+      console.log(session.sessionId);
+      const roomData = await getRoomInfo(session.sessionId);
       const players = roomData.roomStatus.players;
       console.log("1212121212", roomData);
       setroomInfo(roomData);
+      if (roomData.roomStatus.hostId === session.connection.connectionId) {
+        setIsHost(true);
+      }
       // 플레이어 객체를 순회하며 teamA와 teamB 배열 생성
       const teamAData = [];
       const teamBData = [];

@@ -45,18 +45,22 @@ public class GameServiceImpl implements GameService {
 			if (roomStatus.getPlayers().get(player).getTeam().equals(winTeam)) {
 				if (winResult.getUser1() == null) {
 					winResult.setUser1(roomStatus.getPlayers().get(player).getUserSeq());
+					dao.upRating(winResult.getUser1());
 					break;
 				}
 				if (winResult.getUser2() == null) {
 					winResult.setUser2(roomStatus.getPlayers().get(player).getUserSeq());
+					dao.upRating(winResult.getUser2());
 					break;
 				}
 				if (winResult.getUser3() == null) {
 					winResult.setUser3(roomStatus.getPlayers().get(player).getUserSeq());
+					dao.upRating(winResult.getUser3());
 					break;
 				}
 				if (winResult.getUser4() == null) {
 					winResult.setUser4(roomStatus.getPlayers().get(player).getUserSeq());
+					dao.upRating(winResult.getUser4());
 					break;
 				}
 			}
@@ -69,18 +73,22 @@ public class GameServiceImpl implements GameService {
 			if (!roomStatus.getPlayers().get(player).getTeam().equals(winTeam)) {
 				if (loseResult.getUser1() == null) {
 					loseResult.setUser1(roomStatus.getPlayers().get(player).getUserSeq());
+					dao.downRating(loseResult.getUser1());
 					break;
 				}
 				if (loseResult.getUser2() == null) {
 					loseResult.setUser2(roomStatus.getPlayers().get(player).getUserSeq());
+					dao.downRating(loseResult.getUser2());
 					break;
 				}
 				if (loseResult.getUser3() == null) {
 					loseResult.setUser3(roomStatus.getPlayers().get(player).getUserSeq());
+					dao.downRating(loseResult.getUser3());
 					break;
 				}
 				if (loseResult.getUser4() == null) {
 					loseResult.setUser4(roomStatus.getPlayers().get(player).getUserSeq());
+					dao.downRating(loseResult.getUser4());
 					break;
 				}
 			}
