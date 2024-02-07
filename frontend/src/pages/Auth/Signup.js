@@ -89,11 +89,10 @@ const Signup = () => {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/idcheck",
+          "user/idcheck",
           {
             userId: form.userId,
-          },
-          { withCredentials: true }
+          }
         );
         const res = response.data;
         console.log(res);
@@ -148,10 +147,8 @@ const Signup = () => {
     // 비밀번호 확인 검사
     if (!form.passwordCheck) {
       newErr.passwordCheck = "비밀번호를 입력해주세요";
-      triggerAnimate();
     } else if (form.userPassword !== form.passwordCheck) {
       newErr.passwordCheck = "비밀번호가 일치하지 않습니다";
-      triggerAnimate();
     } else {
       newErr.passwordCheck = "";
     }
@@ -166,9 +163,8 @@ const Signup = () => {
       console.log("회원가입 정보:", { userId, userPassword });
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/user/join",
-          { userId, userPassword },
-          { withCredentials: true }
+          "user/join",
+          { userId, userPassword }
         );
         console.log("서버 응답:", response);
         // 회원가입 성공 후 처리
@@ -194,7 +190,7 @@ const Signup = () => {
         {/* 아이디 입력창 */}
         <input
           type="text"
-          placeholder="아이디(영문, 숫자 4-20자)"
+          placeholder="아이디"
           onChange={onChange}
           onBlur={checkUserIdDuplicate}
           name="userId"
@@ -233,11 +229,7 @@ const Signup = () => {
             onClick={togglePassword}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
           >
-            {showPassword ? (
-              <VisibilityOffIcon color="disabled" />
-            ) : (
-              <VisibilityIcon color="disabled" />
-            )}
+            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
           </button>
         </div>
         <p className=" text-red-500 mb-1">{err.userPassword}</p>

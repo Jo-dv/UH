@@ -1,6 +1,6 @@
 import { OpenVidu } from "openvidu-browser";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 
 // api, store
 import { useWebSocket } from "../../webSocket/UseWebSocket.js";
@@ -51,6 +51,7 @@ export default function RoomId() {
   const [sessionID, setSessionID] = useState("");
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
+  const navigate = useNavigate();
 
   // 함수 정의
   const handleMainVideoStream = useCallback(
@@ -80,13 +81,12 @@ export default function RoomId() {
 
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
-      alert("당신은 강퇴되었습니다.");
-      window.location.href = "/lobby";
     });
 
     mySession.on("exception", (exception) => {
       console.warn(exception);
-    });
+    }
+    );
 
     mySession.on("signal:team-change", (event) => {
       const { connectionId, team } = JSON.parse(event.data);
@@ -99,11 +99,24 @@ export default function RoomId() {
         setTeamA((prev) => prev.filter((id) => id !== connectionId));
       }
     });
+
+    //강퇴 처리(event로 보낸 connectionId와 같은 아이디를 찾아 방나가기 처리)
+    mySession.on("signal:disconnect", async (event) => {
+      const { connectionId } = JSON.parse(event.data);
+      if (mySession.connection.connectionId === connectionId) {
+        alert("강퇴")
+        await leaveSession();
+        navigate("/lobby")
+      }
+    });
+
+
     setSession(mySession);
     console.log("111111111111111111", mySession);
     window.addEventListener("beforeunload", leaveSession);
     console.log("세션 설정 완료");
   }, []);
+  
 
   useEffect(() => {
     if (session) {
@@ -112,7 +125,6 @@ export default function RoomId() {
         .then(async (token) => {
           try {
             await session.connect(token, { clientData: myUserName });
-            send({ type: "refresh" });
             let publisher = await OV.current.initPublisherAsync(undefined, {
               audioSource: undefined,
               videoSource: undefined,
@@ -157,8 +169,8 @@ export default function RoomId() {
         //방조회
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
-          await console.log("서버에서 받은 방정보", serverRoomInfo);
-          await setroomInfo(serverRoomInfo);
+          console.log("서버에서 받은 방정보", serverRoomInfo);
+          setroomInfo(serverRoomInfo);
           if (mySessionId === "create") {
             // console.log("나는 호스트");
             setIsHost(true);
@@ -166,15 +178,18 @@ export default function RoomId() {
             // console.log("나는 호스트");
             setIsHost(true);
           }
+
+          send({ type: "refresh" });
         });
     }
   }, [session, myUserName]);
 
-  const leaveSession = useCallback(() => {
+  const leaveSession = useCallback(async () => {
     // Leave the session
     if (session) {
-      exitRoom(session.sessionId, session.connection.connectionId);
-      session.disconnect();
+      await exitRoom(session.sessionId, session.connection.connectionId);
+      await session.disconnect();
+      await send({ type: "refresh" });
     }
 
     OV.current = new OpenVidu();
@@ -183,6 +198,18 @@ export default function RoomId() {
     setMainStreamManager(undefined);
     setPublisher(undefined);
   }, [session]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      leaveSession();
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [leaveSession]);
+
 
   const deleteSubscriber = useCallback((streamManager) => {
     setSubscribers((prevSubscribers) => {
@@ -197,6 +224,8 @@ export default function RoomId() {
     });
   }, []);
 
+
+  //로비로 나갔을 때 (로고,방 나가기) 세션 종료 처리
   useEffect(() => {
     const cleanup = () => {
       if (window.location.pathname === "/lobby") {
@@ -316,6 +345,8 @@ export default function RoomId() {
         .catch((error) => {
           console.error(error);
         });
+
+      send({ type: "refresh" });
     }
   };
   if (session !== undefined) {
@@ -339,6 +370,8 @@ export default function RoomId() {
         .catch((error) => {
           console.error(error);
         });
+
+      send({ type: "refresh" });
     }
   };
   if (session !== undefined) {
@@ -383,18 +416,16 @@ export default function RoomId() {
     }
   };
 
-  const kickOutUser = async (sessionId, connectionId) => {
+  const kickOutUser = async (connectionId) => {
     if (isHost) {
       try {
-        console.log("너 강퇴함", sessionId, connectionId);
-        const userToKick = subscribers.find(
-          (subscriber) => subscriber.stream.connection.connectionId === connectionId
-        );
-        if (userToKick) {
-          deleteSubscriber(userToKick);
-        } else {
-          console.error("강퇴할 사용자를 찾을 수 없습니다.");
-        }
+        session.signal({
+          type: "disconnect",
+          data: JSON.stringify({
+            connectionId: connectionId
+          }),
+        })
+
       } catch (error) {
         console.error("강퇴 중 오류 발생:", error);
       }

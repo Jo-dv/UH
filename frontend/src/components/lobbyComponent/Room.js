@@ -3,9 +3,11 @@ import { useState } from "react";
 import EnterPassword from "../Modal/Lobby/EnterPassword";
 import NoEnter from "../Modal/Lobby/NoEnter";
 import IsPlaying from "../Modal/Lobby/IsPlaying";
+import { useWebSocket } from "../../webSocket/UseWebSocket.js";
 
 // 개별 방 컴포넌트
 const Room = (props) => {
+  const { send } = useWebSocket();
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   // 게임 실행중이라서 못들어감
@@ -28,6 +30,7 @@ const Room = (props) => {
   };
 
   const handleClick = () => {
+    send({ type: "refresh" });
     if (props.isPlaying === true) {
       setIsPlaying(true);
     } else {
