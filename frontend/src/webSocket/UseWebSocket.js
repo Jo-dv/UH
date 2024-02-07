@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useContext, useRef } from "react";
 import useAccessorsStore from "../store/UseAccessorsStore";
-
+import useStore from "../store/UserAuthStore";
 const WebSocketContext = createContext(null);
 
 export const useWebSocket = () => {
@@ -17,6 +17,7 @@ export const WebSocketProvider = ({ children }) => {
   const [notificationMessage, setNotificationMessage] = useState(null);
   const { setAccessors } = useAccessorsStore();
   const [refreshRequested, setRefreshRequested] = useState(false);
+  const nickname = useStore((state) => state.user.userNickname);
 
   useEffect(() => {
     const connect = (url, onOpen, onMessage, onClose) => {
@@ -28,7 +29,7 @@ export const WebSocketProvider = ({ children }) => {
         setTimeout(() => {
           socket.current.close();
           console.log("웹 소캣 연결 종료");
-        }, 60000);
+        }, 5000);
       };
 
       socket.current.onmessage = (event) => {
@@ -37,7 +38,6 @@ export const WebSocketProvider = ({ children }) => {
       };
 
       socket.current.onclose = () => {
-        if (onClose) onClose();
         con();
       };
     };
@@ -52,6 +52,7 @@ export const WebSocketProvider = ({ children }) => {
           const parsedMessage = JSON.parse(event.data);
           if (parsedMessage.connectors) {
             setSessionIds(parsedMessage.connectors);
+            console.log(parsedMessage.connectors);
             setAccessors(parsedMessage.connectors);
           }
 
@@ -78,15 +79,19 @@ export const WebSocketProvider = ({ children }) => {
         }
       );
     }
-    con();
+    if (nickname!=null) {
+      con();
+    }
 
     return () => {
-      if (socket) {
+      if (socket.current) {
         socket.current.close();
+        if (!nickname)
+          socket.current.onclose = null;
         console.log("웹 소캣 연결 종료");
       }
     };
-  }, []);
+  }, [nickname]);
 
   const handleInvite = (message) => {
     console.log("Invite received", message);
