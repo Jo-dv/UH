@@ -34,7 +34,9 @@ export const WebSocketProvider = ({ children }) => {
 
       socket.current .onclose = () => {
         if (onClose) onClose();
-        socket.current = new WebSocket(url);
+        setTimeout(() => {
+          socket.current = new WebSocket(url);
+        }, 1000);
       };
     };
 
