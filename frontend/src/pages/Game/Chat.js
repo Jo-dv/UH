@@ -51,7 +51,7 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
     <section className="w-full flex flex-col absolute bottom-[40px] opacity-70">
       {/* <h2 className="bg-neutral-400 px-8 h-6">채팅</h2> */}
 
-      <ul ref={ulRef} className="mb-2 px-2 h-40 overflow-auto flex flex-col justify-end">
+      <ul ref={ulRef} className="mb-2 px-2 h-[140px] overflow-auto flex flex-col justify-end">
         {messageList.map((item, index) => {
           return <li key={index}>{item}</li>;
         })}

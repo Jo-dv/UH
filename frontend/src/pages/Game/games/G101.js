@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import UserVideoComponent from "../../RoomId/UserVideoComponent";
+import UserVideoComponent from "../Cam/UserVideoComponent";
 import AnswerInput from "../AnswerInput";
 import Timer from "../Timer";
 import G101Info from "./G101Info";
@@ -45,7 +45,7 @@ const G101 = ({
         />
       ) : (
         <>
-          <div className="h-full aspect-[4/3] absolute flex flex-col">
+          <div className="w-full h-full absolute flex flex-col">
             {isGameEnd ? (
               <div className="bg-mc5 w-full h-full flex flex-col justify-center items-center">
                 <div>
@@ -68,13 +68,11 @@ const G101 = ({
               </div>
             ) : (
               <>
-                <div className="w-full">
-                  <UserVideoComponent
-                    streamManager={turnPlayerId[1]}
-                    session={session}
-                    gamePlayer={turnPlayerId[0]}
-                  />
-                </div>
+                <UserVideoComponent
+                  streamManager={turnPlayerId[1]}
+                  session={session}
+                  gamePlayer={turnPlayerId[0]}
+                />
 
                 {/* {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
                   <div className="absolute right-0 w-1/4">
@@ -102,7 +100,7 @@ const G101 = ({
                     )}
                   </div>
                 ) : (
-                  <div className="opacity-90 absolute w-full bottom-0">
+                  <div className="opacity-90 absolute w-full bottom-[-24px]">
                     <div className="relative flex justify-center items-center">
                       <Timer
                         maxTime={maxTime}

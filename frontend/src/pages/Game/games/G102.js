@@ -45,7 +45,7 @@ const G102 = ({
         />
       ) : (
         <>
-          <div className="h-full aspect-[4/3] absolute flex flex-col">
+          <div className="w-full h-full absolute flex flex-col">
             {isGameEnd ? (
               <>
                 {ATeamScore > BTeamScore ? (
@@ -103,7 +103,7 @@ const G102 = ({
                     )}
                   </div>
                 ) : (
-                  <div className="opacity-90 absolute w-full bottom-[-20px]">
+                  <div className="opacity-90 absolute w-full  bottom-[-24px]">
                     <div className="relative flex justify-center items-center">
                       <Timer
                         maxTime={maxTime}

@@ -3,7 +3,7 @@ import Chat from "./Chat";
 import "./Game.css";
 
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
-import UserVideoComponent from "../RoomId/UserVideoComponent";
+import UserVideoComponent from "./Cam/UserVideoComponent";
 
 import G101 from "./games/G101";
 import G102 from "./games/G102";
@@ -187,16 +187,12 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
         <p>loading</p>
       ) : (
         <main className="container-box bg-stone-100 p-4 border rounded-3xl">
-          <div className="flex flex-row justify-center h-full">
+          <div className="flex flex-row justify-around h-full">
             <section className="grid grid-rows-4 gap-2 mr-2">
-              {/* <div className="bg-mc6 p-1 overflow-hidden">
-            <span>{publisher.id}</span>
-            <UserVideoComponent streamManager={publisher} session={session} />
-          </div> */}
               {ATeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="cam bg-mc2">
+                    <div key={sub[0]} className="cam bg-tab10">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -204,7 +200,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                       />
                     </div>
                   ) : (
-                    <div key={sub[0]} className="cam bg-mc1">
+                    <div key={sub[0]} className="cam bg-tab1">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -215,7 +211,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                 </>
               ))}
             </section>
-            <article className="w-full relative flex flex-col">
+            <article className="h-full aspect-[12/10] relative flex flex-col">
               <div className="w-full flex justify-around items-end bg-tab10 text-xl rounded-t-[17px]">
                 <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-xl"}>A: {ATeamScore}</p>
                 {/* <p> Team: {TeamTurn}</p> */}
@@ -223,7 +219,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                 {/* <p>{time}</p> */}
                 <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-xl"}> B: {BTeamScore}</p>
               </div>
-              <section className="h-full aspect-[4/3] relative rounded-b-[17px] overflow-hidden">
+              <section className="relative rounded-b-[17px] overflow-hidden">
                 {gameCategory === 101 ? (
                   <G101
                     gameLoading={gameLoading}
@@ -298,7 +294,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
               {BTeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="cam bg-mc6">
+                    <div key={sub[0]} className="cam bg-tab10">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -306,7 +302,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                       />
                     </div>
                   ) : (
-                    <div key={sub[0]} className="cam bg-mc5">
+                    <div key={sub[0]} className="cam bg-tab12">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}

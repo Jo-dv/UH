@@ -35,6 +35,7 @@ flex justify-center items-center"
                     setIsLobby(null);
                     send({ type: "refresh" });
                     leaveSession();
+                    setLeaving(false);
                   }}
                   className="bg-formButton py-2 px-4 m-2 rounded"
                 >
