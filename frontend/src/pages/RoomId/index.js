@@ -85,8 +85,7 @@ export default function RoomId() {
 
     mySession.on("exception", (exception) => {
       console.warn(exception);
-    }
-    );
+    });
 
     mySession.on("signal:team-change", (event) => {
       const { connectionId, team } = JSON.parse(event.data);
@@ -104,19 +103,17 @@ export default function RoomId() {
     mySession.on("signal:disconnect", async (event) => {
       const { connectionId } = JSON.parse(event.data);
       if (mySession.connection.connectionId === connectionId) {
-        alert("강퇴")
+        alert("강퇴");
         await leaveSession();
-        navigate("/lobby")
+        navigate("/lobby");
       }
     });
-
 
     setSession(mySession);
     console.log("111111111111111111", mySession);
     window.addEventListener("beforeunload", leaveSession);
     console.log("세션 설정 완료");
   }, []);
-  
 
   useEffect(() => {
     if (session) {
@@ -210,7 +207,6 @@ export default function RoomId() {
     };
   }, [leaveSession]);
 
-
   const deleteSubscriber = useCallback((streamManager) => {
     setSubscribers((prevSubscribers) => {
       const index = prevSubscribers.indexOf(streamManager);
@@ -223,7 +219,6 @@ export default function RoomId() {
       }
     });
   }, []);
-
 
   //로비로 나갔을 때 (로고,방 나가기) 세션 종료 처리
   useEffect(() => {
@@ -401,14 +396,7 @@ export default function RoomId() {
       });
       setTeamA(teamAData);
       setTeamB(teamBData);
-      // setTeamA((prevTeamA) => {
-      //   const newUsers = teamAData.filter((user) => !prevTeamA.includes(user));
-      //   return [...prevTeamA, ...newUsers];
-      // });
-      // setTeamB((prevTeamB) => {
-      //   const newUsers = teamBData.filter((user) => !prevTeamB.includes(user));
-      //   return [...prevTeamB, ...newUsers];
-      // });
+
       console.log(teamA);
       console.log(teamB);
     } catch (error) {
@@ -422,10 +410,9 @@ export default function RoomId() {
         session.signal({
           type: "disconnect",
           data: JSON.stringify({
-            connectionId: connectionId
+            connectionId: connectionId,
           }),
-        })
-
+        });
       } catch (error) {
         console.error("강퇴 중 오류 발생:", error);
       }
