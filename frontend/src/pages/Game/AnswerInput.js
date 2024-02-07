@@ -17,9 +17,11 @@ const AnswerInput = ({
     setAnswerMsg("");
     // console.log(session);
     if (answer === answerMsg) {
+      const data = JSON.stringify({ ans: answerMsg, team: Team });
+      // console.log("정답창에서 보냄", data);
       session
         .signal({
-          data: answerMsg, // Any string (optional)
+          data: data, // Any string (optional)
           to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
           type: "game-answer", // The type of message (optional)
         })
@@ -34,16 +36,13 @@ const AnswerInput = ({
   };
 
   session.on("signal:game-answer", (event) => {
-    // console.log(`받음 event.data: ${event.data}, answer: ${answer}`); // Message
-    // console.log(typeof plusQuizIndex);
-    // console.log("정답", answer);
-    if (answer === event.data) {
-      // console.log(`${event.data} 정답`);
+    // if (answer === event.data) {}
+    const dataObj = JSON.parse(event.data);
+    // console.log("정답창에서 받음", dataObj);
+    if (dataObj.ans === answer && dataObj.team === Team) {
       plusQuizIndex();
       plusScore(Team);
       changeTeamIndex();
-    } else {
-      // console.log(`${event.data} 오답`);
     }
   });
 

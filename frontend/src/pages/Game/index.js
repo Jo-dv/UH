@@ -48,7 +48,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
   };
 
   const plusScore = (Team) => {
-    console.log(`plusScore: ${Team}`);
+    // console.log(`plusScore: ${Team}`);
     if (Team === "A") {
       setATeamScore(ATeamScore + 1);
     } else if (Team === "B") {
