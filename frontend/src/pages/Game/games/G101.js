@@ -62,7 +62,7 @@ const G101 = ({
                   )}
                 </div>
                 <br></br>
-                <button onClick={goWaitRoom} className="animate-bounce">
+                <button onClick={goWaitRoom} className="animate-bounce z-10">
                   로비로
                 </button>
               </div>

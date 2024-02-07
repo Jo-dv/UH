@@ -8,7 +8,7 @@ import UserVideoComponent from "./Cam/UserVideoComponent";
 import G101 from "./games/G101";
 import G102 from "./games/G102";
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHost }) => {
+const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => {
   let maxTime = 50000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -48,7 +48,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
   };
 
   const plusScore = (Team) => {
-    console.log(`plusScore: ${Team}`);
+    // console.log(`plusScore: ${Team}`);
     if (Team === "A") {
       setATeamScore(ATeamScore + 1);
     } else if (Team === "B") {
@@ -161,7 +161,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
       setBTeamStreamManagers(BTeamStreamManagersCNT);
 
       const quiz = await getGameData(session.sessionId);
-      if (quiz !== undefined) {
+      if (quiz !== undefined && quiz.length !== 0) {
         setQuizData(quiz);
       }
 
@@ -286,6 +286,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                     session={session}
                     myConnectionId={myConnectionId}
                     gamePlayer={turnPlayerId[0]}
+                    gameCategory={gameCategory}
                   />
                 ) : null}
               </section>
