@@ -126,7 +126,7 @@ const UserVideo = ({
               ) : isHost === true ? (
                 <button
                   onClick={() => {
-                    kickOutUser(session.sessionId, streamManager.stream.connection.connectionId);
+                    kickOutUser(streamManager.stream.connection.connectionId);
                   }}
                 >
                   X

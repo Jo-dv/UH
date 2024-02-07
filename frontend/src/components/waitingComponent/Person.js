@@ -21,8 +21,7 @@ const Person = (props) => {
 
         return (
           <div
-            key={index}
-            onClick={() => streamManager && props.handleMainVideoStream(streamManager)}
+            key={connectionId}
           >
             <div className={`${backgroundClass} grid rounded-xl m-1 pb-2`}>
               <UserVideo
@@ -33,6 +32,7 @@ const Person = (props) => {
                 deleteSubscriber={props.deleteSubscriber}
                 subscribers={props.subscribers}
                 kickOutUser={props.kickOutUser}
+                connectionId={connectionId}
               />
             </div>
           </div>
