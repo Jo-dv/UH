@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 const CreateRoomModal = ({ modalOnOff }) => {
   const [roomName, setRoomName] = useState(`P-${Math.floor(Math.random() * 1000)}`);
@@ -22,7 +24,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
 
   const togglePassword = (e) => {
     e.preventDefault();
-    setShowPassword((showPassword) => !showPassword);
+    setLock((lock) => !lock);
   };
   const handleChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
@@ -91,7 +93,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
           >
             <div className="flex flex-wrap">
               <label className="mt-3 mr-4">방제목</label>
-              <div className="rounded-2xl text-center ml-3 p-2 mb-3 border flex-auto">
+              <div className="rounded-2xl item-center ml-3 p-2 mb-3 border flex-auto">
                 <input
                   type="text"
                   placeholder="방 제목을 입력해주세요!"
@@ -106,13 +108,10 @@ const CreateRoomModal = ({ modalOnOff }) => {
             {errorMessage && <div className="error-message ml-12 text-red-500">{errorMessage}</div>}
             <div className="flex flex-wrap">
               <label className="mt-3 mr-3">비밀번호</label>
-              <div className="rounded-2xl p-3 mb-3 border flex-auto">
-                <input
-                  type="checkbox"
-                  onClick={() => {
-                    setLock(!lock);
-                  }}
-                />
+              <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto">
+                <button onClick={togglePassword}>
+                  {lock ? <LockIcon /> : <LockOpenIcon />}
+                </button>
                 {lock && (
                   <input
                     type="text"
@@ -120,15 +119,15 @@ const CreateRoomModal = ({ modalOnOff }) => {
                     value={roomPassword}
                     onChange={handleChangeRoomPassword}
                     maxLength={15}
-                    className="ml-3"
+                    className="text-center"
                   />
                 )}
-                <button
+                {/* <button
                   onClick={togglePassword}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
                 >
                   {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                </button>
+                </button> */}
               </div>
             </div>
 
@@ -136,27 +135,28 @@ const CreateRoomModal = ({ modalOnOff }) => {
               <label className="mt-5 mr-7">인원수</label>
               <div className="rounded-2xl p-2 mb-3 border flex-auto flex justify-center">
                 <label className="p-1 m-1">
-                  4명
                   <input
                     type="radio"
                     value={4}
                     name="num"
                     onChange={handleChangeRoomMax}
                     defaultChecked
+                    className="mr-2"
                   />
+                  4명
                 </label>
                 <label className="p-1 m-1">
+                  <input type="radio" value={6} name="num" onChange={handleChangeRoomMax} className="mr-2" />
                   6명
-                  <input type="radio" value={6} name="num" onChange={handleChangeRoomMax} />
                 </label>
                 <label className="p-1 m-1">
+                  <input type="radio" value={8} name="num" onChange={handleChangeRoomMax} className="mr-2" />
                   8명
-                  <input type="radio" value={8} name="num" onChange={handleChangeRoomMax} />
                 </label>
               </div>
             </div>
             <div className="flex flex-wrap">
-              <label className="mt-4 mr-3">게임 선택</label>
+              <label className="mt-7 mr-3">게임 선택</label>
               <div className="rounded-2xl p-4 mb-3 border flex flex-col flex-auto justify-center">
                 <label>
                   <input
@@ -165,11 +165,12 @@ const CreateRoomModal = ({ modalOnOff }) => {
                     name="game"
                     onChange={handleChangeRoomGame}
                     defaultChecked
+                    className="mr-2"
                   />
                   고요 속의 외침
                 </label>
                 <label>
-                  <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} />
+                  <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} className="mr-2" />
                   인물 맞추기
                 </label>
               </div>
