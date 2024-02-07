@@ -21,22 +21,24 @@ export const WebSocketProvider = ({ children }) => {
   useEffect(() => {
     const connect = (url, onOpen, onMessage, onClose) => {
       socket.current = new WebSocket(url);
- 
-      socket.current .onopen = () => {
+
+      socket.current.onopen = () => {
         console.log("웹 소켓 연결됨");
         if (onOpen) onOpen();
+        setTimeout(async () => {
+          await socket.current.close();
+          console.log("웹 소캣 연결 종료");
+          setTimeout(() => { socket.current = new WebSocket(url); }, 1000)
+        }, 60000);
       };
 
-      socket.current .onmessage = (event) => {
+      socket.current.onmessage = (event) => {
         console.log("WebSocket 메시지 수신:", event.data);
         if (onMessage) onMessage(event);
       };
 
-      socket.current .onclose = () => {
+      socket.current.onclose = () => {
         if (onClose) onClose();
-        setTimeout(() => {
-          socket.current = new WebSocket(url);
-        }, 1000);
       };
     };
 
@@ -77,7 +79,7 @@ export const WebSocketProvider = ({ children }) => {
 
     return () => {
       if (socket) {
-        socket.current .close();
+        socket.current.close();
         console.log("웹 소캣 연결 종료");
       }
     };
