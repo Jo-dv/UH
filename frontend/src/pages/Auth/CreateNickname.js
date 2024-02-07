@@ -131,20 +131,20 @@ const CreateNickname = () => {
     <div className="w-full h-screen p-5 flex justify-center items-center z-10">
       <form
         onSubmit={onSubmit}
-        className="bg-opacity-50 bg-formBG w-96 border-2 border-purple3
+        className="bg-opacity-50 bg-formBG w-96 border-2 rounded-md
         flex flex-col justify-center items-center z-20"
       >
-        <h1 className="font-['pixel'] text-5xl">닉네임 생성</h1>
+        <h1 className="font-['pixel'] text-5xl m-3">닉네임 생성</h1>
 
         {/* 닉네임 입력창 */}
         <input
           type="text"
-          placeholder="닉네임"
+          placeholder="닉네임(한글, 영어, 숫자 4-20자)"
           onChange={onChange}
           onBlur={checkUserNicknameDuplicate}
           name="userNickname"
           value={form.userNickname}
-          className={`${
+          className={`p-2 m-1 w-60 border-2 rounded-md ${
             err.userNickname
               ? animate
                 ? "animate-shake animate-twice animate-duration-150"
@@ -159,7 +159,7 @@ const CreateNickname = () => {
         {/* 에러 메시지 표시 */}
         {err.userNickname && <p className="text-red-500">{err.userNickname}</p>}
 
-        <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-formButton">입장하기</button>
+        <button className="font-['pixel'] p-2 m-1 rounded-md w-60 mb-3 bg-tab10 hover:bg-[#95c75a]">입장하기</button>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
 
