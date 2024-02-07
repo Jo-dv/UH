@@ -55,7 +55,7 @@ const AnimatedCircle = styled.circle`
 
 const Percent = styled.span`
   position: absolute;
-  top: 30%;
+  top: 45%;
   left: 50%;
   transform: translateX(-50%);
   font-size: 20px;
@@ -101,8 +101,9 @@ const MyPage = () => {
   return (
     <section className="rounded-lg mt-4 col-start-4 col-end-13 row-start-1 row-end-13 overflow-auto p-4">
       <h1 className="text-5xl ml-5" style={{ fontFamily: "var(--font-bold)" }}>
-        {myPageInfo.userNickname}님 마이페이지
+        {myPageInfo && myPageInfo.userNickname}님 마이페이지
       </h1>
+      <p className="text-2xl ml-5 mt-5">레이팅 : {myPageInfo && myPageInfo.rating}</p>
       <div className="grid grid-cols-3 col-start-1 col-end-2">
         <div className="mt-5">
           {myPageInfo && (
@@ -115,37 +116,43 @@ const MyPage = () => {
               <br></br> */}
               <div className="mt-10">
                 <p className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>경기 승률</p>
-                <div className="flex justify-center items-center content-center h-full">
-                  <DonutChart color="#3498db" percent={winPercent} size="250px" />
-                </div>
+                  {myPageInfo?.record?.length !== 0 && (
+                    <div className="flex justify-center items-center content-center h-full">
+                      <DonutChart color="#3498db" percent={winPercent} size="250px" />
+                    </div>
+                  )}
+                  {myPageInfo?.record?.length === 0 && (
+                    <div className="record-entry border-2 rounded-md border-cancelButton pb-2 pt-2 mt-4">
+                      <p className="ml-2 text-center">경기 승률이 없습니다.</p>
+                    </div>
+                  )}
               </div>
             </div>
           )}
         </div>
 
-        <div className="col-start-2 col-end-4 relative mt-7 h-90">
-          <div className="bordel-l-4"></div>
-          <div className="ml-5 mt-7">
+        <div className="col-start-2 col-end-4 relative mt-7">
+          <div className="ml-5 mt-8">
             <h2 className="text-2xl" style={{ fontFamily: "var(--font-bold)" }}>
               경기 기록
             </h2>
-            <div className="record-container overflow-auto h-96 mt-4">
+            <div className="record-container overflow-auto h-100 mt-4">
               {myPageInfo?.record?.map((record, index) => (
                 <div
                   key={index}
-                  className={`record-entry rounded-md border-cancelButton pb-2 pt-2 ${
+                  className={`record-entry rounded-md border-cancelButton pb-2 pt-2 mb-2 ${
                     record.win ? "bg-blue-100" : "bg-red-100"
                   }`}
                 >
                   <div className="grid grid-cols-3 gap-4 text-center">
-                    <div>
+                    <div className="my-auto">
                       <p className="text-2xl ml-2" style={{ fontFamily: "var(--font-bold)" }}>
                         {record.gameCategory === 101 ? "고요속의 외침" : "인물 퀴즈"}
                       </p>
                       <p className="ml-2">점수: {record.score}</p>
                       <p className="ml-2">{new Date(record.created).toLocaleString()}</p>
                     </div>
-                    <div>
+                    <div className="my-auto">
                       <p className="ml-2">
                         {[record.user1, record.user2, record.user3, record.user4]
                           .filter(Boolean)
@@ -161,7 +168,7 @@ const MyPage = () => {
               ))}
               {myPageInfo?.record?.length === 0 && (
                 <div className="record-entry border-2 rounded-md border-cancelButton pb-2 pt-2">
-                  <p className="ml-2">등록된 경기 기록이 없습니다.</p>
+                  <p className="ml-2 text-center">경기 기록이 없습니다.</p>
                 </div>
               )}
             </div>
