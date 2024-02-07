@@ -161,7 +161,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
       setBTeamStreamManagers(BTeamStreamManagersCNT);
 
       const quiz = await getGameData(session.sessionId);
-      if (quiz !== undefined && !quiz) {
+      if (quiz !== undefined && !!quiz) {
         setQuizData(quiz);
       }
 
@@ -286,6 +286,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                     session={session}
                     myConnectionId={myConnectionId}
                     gamePlayer={turnPlayerId[0]}
+                    gameCategory={gameCategory}
                   />
                 ) : null}
               </section>

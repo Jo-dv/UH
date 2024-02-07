@@ -16,32 +16,34 @@ const AnswerInput = ({
     e.preventDefault();
     setAnswerMsg("");
     // console.log(session);
-    session
-      .signal({
-        data: answerMsg, // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: "game-answer", // The type of message (optional)
-      })
-      .then(() => {
-        // console.log("정답제출 보냄 :", answerMsg);
-        // setAnswerMsg("");
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    if (answer === answerMsg) {
+      session
+        .signal({
+          data: answerMsg, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: "game-answer", // The type of message (optional)
+        })
+        .then(() => {
+          // console.log("정답제출 보냄 :", answerMsg);
+          // setAnswerMsg("");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   };
 
   session.on("signal:game-answer", (event) => {
     // console.log(`받음 event.data: ${event.data}, answer: ${answer}`); // Message
     // console.log(typeof plusQuizIndex);
-    console.log("정답", answer);
+    // console.log("정답", answer);
     if (answer === event.data) {
       // console.log(`${event.data} 정답`);
       plusQuizIndex();
       plusScore(Team);
       changeTeamIndex();
     } else {
-      console.log(`${event.data} 오답`);
+      // console.log(`${event.data} 오답`);
     }
   });
 
