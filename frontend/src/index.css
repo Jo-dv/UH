@@ -7,17 +7,41 @@
   src: url(./asset/font/DungGeunMo.woff);
 }
 
+@font-face {
+  font-family: "round";
+  src: url(./asset/font/NPSfont_regular.woff);
+}
+
+@font-face {
+  font-family: "round-bold";
+  src: url(./asset/font/NPSfont_bold.woff);;
+}
+
+@font-face {
+  font-family: "test1";
+  src: url(./asset/font/KCC-Ganpan.woff);
+}
+
+@font-face {
+  font-family: "test2";
+  src: url(./asset/font/Sejong\ hospital\ Bold.woff);
+}
+
 body {
   background-image: url("./asset/image/BG.png");
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
   background-attachment: fixed;
-  font-family: "pixel";
+  font-family: "round";
 }
 
 .container-box {
   width: 1280px;
   height: calc(100vh - 160px);
   margin: auto;
+}
+
+:root {
+  --font-bold : "round-bold";
 }
