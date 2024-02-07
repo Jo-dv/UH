@@ -6,7 +6,7 @@ import UseLeavingStore from "../../../store/UseLeavingStore";
 const Leaving = ({ leaving, onClose, leaveSession, exitRoom }) => {
   const { setIsLobby } = UseIsLobbyStore();
   const { setLeaving } = UseLeavingStore();
-  const { send } = useWebSocket();
+
   return (
     <>
       {leaving && (
@@ -29,8 +29,6 @@ flex justify-center items-center"
                 <button
                   onClick={() => {
                     setIsLobby(null);
-                    send({ type: "refresh" });
-                    leaveSession();
                   }}
                   className="bg-formButton py-2 px-4 m-2 rounded"
                 >
