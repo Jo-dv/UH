@@ -29,7 +29,7 @@ export const WebSocketProvider = ({ children }) => {
         setTimeout(() => {
           socket.current.close();
           console.log("웹 소캣 연결 종료");
-        }, 5000);
+        }, 60000);
       };
 
       socket.current.onmessage = (event) => {
