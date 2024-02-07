@@ -1,18 +1,70 @@
 import React, { useEffect, useState } from "react";
+// import DonutChart from "react-donut-chart";
+import styled, { keyframes } from "styled-components";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import useStore from "../../store/UserAuthStore";
+
+function DonutChart({ color, percent, size }) {
+  return (
+    <Chart size={size}>
+      <AniSvg viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="90" fill="none" stroke="#F88585" strokeWidth="20" />
+        <AnimatedCircle
+          cx="100"
+          cy="100"
+          r="90"
+          fill="none"
+          stroke={color}
+          strokeWidth="20"
+          strokeDasharray={`${2 * Math.PI * 90 * percent} ${2 * Math.PI * 90 * (1 - percent)}`}
+          strokeDashoffset={2 * Math.PI * 90 * 0.25}
+        />
+      </AniSvg>
+      <Percent color={color}>{percent * 100}%</Percent>
+    </Chart>
+  );
+}
+
+const Chart = styled.div`
+  width: ${(props) => props.size};
+  height: ${(props) => props.size};
+  position: relative;
+  padding: 10px;
+`;
+
+const AniSvg = styled.svg`
+  position: relative;
+`;
+
+const circleFill = keyframes`
+    0%{
+        stroke-dasharray:0 ${2 * Math.PI * 90};
+    }
+`;
+
+const AnimatedCircle = styled.circle`
+  animation: ${circleFill} 2s ease;
+`;
+
+const Percent = styled.span`
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 20px;
+  color: ${(props) => props.color};
+`;
 
 const MyPage = () => {
   const { getMyPageInfo } = useLobbyApiCall();
   const userSeq = useStore((state) => state.user.userSeq);
   const [myPageInfo, setMyPageInfo] = useState(null);
   const [recordPercent, setRecordPercent] = useState(null); // recordPercent 상태 추가
+  const [winPercent, setWinPercent] = useState(0); // winPercent 상태 추가
 
   useEffect(() => {
-    // console.log(userSeq);
     if (userSeq) {
       getMyPageInfo(userSeq).then((data) => {
-        // console.log("myPageInfo:", data); // 여기에서 myPageInfo 값을 콘솔에 출력
         setMyPageInfo(data);
         let winCount = 0;
         let loseCount = 0;
@@ -22,32 +74,51 @@ const MyPage = () => {
           } else {
             loseCount++;
           }
-        })
+        });
         const totalCount = winCount + loseCount;
-        const winPercent = (winCount / totalCount) * 100;
-        const losePercent = (loseCount / totalCount) * 100;
-        
+        const winPercent = Math.round((winCount / totalCount) * 100) / 100;
+        const losePercent = Math.round((loseCount / totalCount) * 100) / 100;
+        // console.log("카운트",winCount, loseCount)
+        // console.log("퍼센트",winPercent, losePercent );
+
         setRecordPercent({
           winPercent,
           losePercent,
-          totalCount
+          totalCount,
         });
-        });
-  }
-}, [userSeq]);
+        setWinPercent(winPercent);
+      });
+    }
+  }, [userSeq]);
 
   return (
-    <section className="rounded-lg bg-bg1 mt-4 col-start-4 col-end-13 row-start-1 row-end-13 overflow-auto p-4">
-      <div className="ml-10 mt-6">
-        <h1 className="text-5xl border-b-2 border-gray-300 pb-2" style={{ fontFamily: "var(--font-bold)" }}>MyPage</h1>
-        {myPageInfo && ( // myPageInfo가 null이 아닐 때만 아래 내용 렌더링
-          <>
-          <br></br>
-            <p className="text-2xl">닉네임: {myPageInfo.userNickname}</p>
-            <p className="text-2xl">레이팅: {myPageInfo.rating}</p>
-            <br></br>
+    <section className="rounded-lg mt-4 col-start-4 col-end-13 row-start-1 row-end-13 overflow-auto p-4">
+      <h1 className="text-5xl border-b-4" style={{ fontFamily: "var(--font-bold)" }}>
+        MyPage
+      </h1>
+      <div className="grid grid-cols-3 col-start-1 col-end-2">
+        <div>
+          {myPageInfo && (
+            <div className="mt-7">
+              <p className="text-2xl">닉네임: {myPageInfo.userNickname}</p>
+              <p className="text-2xl">레이팅: {myPageInfo.rating}</p>
+              <br></br>
+              <div className="">
+                <p className="text-2xl">경기 승률</p>
+                <div className="flex justify-center items-center content-center h-full">
+                  <DonutChart color="#86EFAC" percent={winPercent} size="200px" />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
 
-            <h2 className="text-2xl border-t-2 border-gray-300 pb-2" style={{ fontFamily: "var(--font-bold)" }}>경기 기록</h2>
+        <div className="col-start-2 col-end-4 relative border-l-4">
+          {/* <div className="absolute left-0 top-0 h-full border-r-2 border-gray-300"></div> */}
+          <div className="ml-5 mt-6">
+            <h2 className="text-2xl" style={{ fontFamily: "var(--font-bold)" }}>
+              경기 기록
+            </h2>
             <div className="record-container overflow-auto h-96 border-t-2">
               {myPageInfo?.record?.map((record, index) => (
                 <div
@@ -60,10 +131,15 @@ const MyPage = () => {
                     {record.gameCategory === 101 ? "고요속의 외침" : "인물 퀴즈"}
                   </p>
                   <p className="ml-2">
-                    팀원 : 
-                    {[record.user1, record.user2, record.user3, record.user4].filter(Boolean).map((user, index, array) => (
-                      <span key={user}>{user}{index !== array.length - 1 && ', '}</span>
-                    ))}
+                    팀원 :
+                    {[record.user1, record.user2, record.user3, record.user4]
+                      .filter(Boolean)
+                      .map((user, index, array) => (
+                        <span key={user}>
+                          {user}
+                          {index !== array.length - 1 && ", "}
+                        </span>
+                      ))}
                   </p>
                   <p className="ml-2">점수: {record.score}</p>
                   <p className="ml-2">승리: {record.win ? "승리" : "패배"}</p>
@@ -76,8 +152,8 @@ const MyPage = () => {
                 </div>
               )}
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </section>
   );
