@@ -67,103 +67,101 @@ const CreateRoomModal = ({ modalOnOff }) => {
 
   return (
     <>
-      <div
-        onClick={modalOnOff}
-        className="min-w-100 min-h-96 absolute inset-0
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div
+          onClick={modalOnOff}
+          className="min-w-100 min-h-96 absolute inset-0
     flex justify-center items-center z-50"
-      >
-        <form
-          onSubmit={submitHandler}
-          onClick={(e) => e.stopPropagation()}
-          className=" rounded-2xl border-2 border-modalBorder 
-          justify-center  p-2 flex flex-col bg-formBG"
         >
-          <div
-            className="m-1 px-2 
-          border rounded-3xl bg-white"
+          <form
+            onSubmit={submitHandler}
+            onClick={(e) => e.stopPropagation()}
+            className="justify-center rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2 flex flex-col bg-formBG"
           >
-            <label>
-              방제목:
+            <div className="m-1 p-2 border rounded-3xl bg-white">
+              <label className="ml-3">
+                방제목 :
+                <input
+                  type="text"
+                  placeholder="방 제목을 입력해주세요!"
+                  value={roomName}
+                  maxLength={12}
+                  onChange={handleChangeRoomName}
+                  required
+                />
+              </label>
+            </div>
+            {errorMessage && <div className="error-message ml-12 text-red-500">{errorMessage}</div>}
+            <div
+              className="m-1 p-2 
+          border rounded-xl bg-white"
+            >
+              <label className="ml-3">비밀번호 : </label>
               <input
-                type="text"
-                placeholder="방 제목을 입력해주세요!"
-                value={roomName}
-                maxLength={12}
-                onChange={handleChangeRoomName}
-                required
+                type="checkbox"
+                onClick={() => {
+                  setLock(!lock);
+                }}
               />
-            </label>
-          </div>
-          {errorMessage && <div className="error-message ml-12 text-red-500">{errorMessage}</div>}
-          <div
-            className="m-1 px-2 
-          border rounded-3xl bg-white"
-          >
-            <label className="mr-2">비밀번호:</label>
-            <input
-              type="checkbox"
-              onClick={() => {
-                setLock(!lock);
-              }}
-            />
-            {lock && (
-              <input
-                type="text"
-                placeholder="비밀번호를 입력해주세요!"
-                value={roomPassword}
-                onChange={handleChangeRoomPassword}
-                maxLength={15}
-              />
-            )}
-          </div>
-          <div
-            className="m-1 px-2 
-          border rounded-3xl bg-white"
-          >
-            참가인원:
-            <label className="p-1 m-1">
-              4명
-              <input
-                type="radio"
-                value={4}
-                name="num"
-                onChange={handleChangeRoomMax}
-                defaultChecked
-              />
-            </label>
-            <label className="p-1 m-1">
-              6명
-              <input type="radio" value={6} name="num" onChange={handleChangeRoomMax} />
-            </label>
-            <label className="p-1 m-1">
-              8명
-              <input type="radio" value={8} name="num" onChange={handleChangeRoomMax} />
-            </label>
-          </div>
-          <div
-            className="m-1 px-2 
-          border rounded-3xl bg-white flex flex-col"
-          >
-            <p>게임선택:</p>
-            <label>
-              <input
-                type="radio"
-                value={101}
-                name="game"
-                onChange={handleChangeRoomGame}
-                defaultChecked
-              />
-              고요 속의 외침
-            </label>
-            <label>
-              <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} />
-              인물 맞추기
-            </label>
-          </div>
-          <button type="submit" className="p-2 m-1 rounded w-72 bg-formButton self-center">
-            방 만들기
-          </button>
-        </form>
+              {lock && (
+                <input
+                  type="text"
+                  placeholder="비밀번호를 입력해주세요!"
+                  value={roomPassword}
+                  onChange={handleChangeRoomPassword}
+                  maxLength={15}
+                />
+              )}
+            </div>
+            <div
+              className="m-1 p-2 
+          border rounded-xl bg-white"
+            >
+              참가인원 :
+              <label className="p-1 m-1">
+                4명
+                <input
+                  type="radio"
+                  value={4}
+                  name="num"
+                  onChange={handleChangeRoomMax}
+                  defaultChecked
+                />
+              </label>
+              <label className="p-1 m-1">
+                6명
+                <input type="radio" value={6} name="num" onChange={handleChangeRoomMax} />
+              </label>
+              <label className="p-1 m-1">
+                8명
+                <input type="radio" value={8} name="num" onChange={handleChangeRoomMax} />
+              </label>
+            </div>
+            <div
+              className="m-1 px-2 
+          border rounded-xl bg-white flex flex-col"
+            >
+              <p>게임선택:</p>
+              <label>
+                <input
+                  type="radio"
+                  value={101}
+                  name="game"
+                  onChange={handleChangeRoomGame}
+                  defaultChecked
+                />
+                고요 속의 외침
+              </label>
+              <label>
+                <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} />
+                인물 맞추기
+              </label>
+            </div>
+            <button type="submit" className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-4 rounded-xl">
+              방 만들기
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );

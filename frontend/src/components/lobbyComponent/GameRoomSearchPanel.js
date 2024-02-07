@@ -20,7 +20,7 @@ const GameRoomSearchPanel = ({ onToggleView, onGameCategoryView, onSearchView })
   }, []);
 
   return (
-    <div className="col-start-4 col-end-13 row-start-1 row-end-2 rounded-3xl bg-tab11 mt-2">
+    <div className="col-start-4 col-end-13 row-start-1 row-end-2 rounded-3xl bg-tab11">
       <div className="flex flex-row">
         <RoomViewToggle onToggle={onToggleView} />
         <GameScrollSelector onGameCategory={onGameCategoryView} />
