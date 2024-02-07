@@ -161,7 +161,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
       setBTeamStreamManagers(BTeamStreamManagersCNT);
 
       const quiz = await getGameData(session.sessionId);
-      if (quiz !== undefined) {
+      if (quiz !== undefined && quiz.length !== 0) {
         setQuizData(quiz);
       }
 
