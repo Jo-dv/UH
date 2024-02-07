@@ -64,7 +64,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			//테스트 코드 - 회원 연결 시 변경
 			// connectors.add(new String[] {client.getId(), "닉네임"});
 			//실제 코드
-			connectors.add(new String[] {client.getId(), dto.getUserNickname()});
+			connectors.add(new String[] {client.getId(), String.valueOf(dto.getUserSeq()), dto.getUserNickname()});
 		}
 
 		// JSON 형식으로 구성
@@ -72,7 +72,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		for (String[] connector : connectors) {
 			JsonObject connectorObject = new JsonObject();
 			connectorObject.addProperty("connectionId", connector[0]);
-			connectorObject.addProperty("nickname", connector[1]);
+			connectorObject.addProperty("userSeq", Integer.valueOf(connector[1]));
+			connectorObject.addProperty("nickname", connector[2]);
 			connectorsArray.add(connectorObject);
 		}
 

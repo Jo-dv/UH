@@ -19,7 +19,7 @@ const FriendList = () => {
             ref={(el) => (friendRefs.current[i] = el)}
             key={i}
           >
-            {friend}
+            {friend.userNickname}
           </div>
         ))}
       </div>
