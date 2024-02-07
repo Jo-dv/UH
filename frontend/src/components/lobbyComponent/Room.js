@@ -57,7 +57,7 @@ const Room = (props) => {
       ) : (
         <div
           onClick={handleClick}
-          className="hover:animate-jump-in hover:animate-once hover:animate-duration-[5000ms] h-full m-4 p-4 border rounded-3xl bg-tab11"
+          className="hover:bg-tab12 h-full m-4 p-4 border rounded-3xl bg-tab11"
         >
           <div className="flex justify-start items-center space-x-2">
             <p>{props.isLocked === null ? "안잠금" : "잠금"}</p>

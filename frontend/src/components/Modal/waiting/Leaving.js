@@ -7,11 +7,15 @@ const Leaving = ({ leaving, onClose, leaveSession, exitRoom }) => {
   const { setIsLobby } = UseIsLobbyStore();
   const { setLeaving } = UseLeavingStore();
   const { send } = useWebSocket();
+  const closeModal = () => {
+    setLeaving(false);
+    onClose();
+  };
   return (
     <>
       {leaving && (
         <div
-          onClick={onClose}
+          onClick={closeModal}
           className="w-screen h-screen absolute inset-0
 flex justify-center items-center"
         >
@@ -22,7 +26,7 @@ flex justify-center items-center"
           >
             <p className="text-xl text-center p-4">진짜 나갈꺼얌?</p>
             <div>
-              <button onClick={onClose} className="bg-cancelButton py-2 px-4 m-2 rounded">
+              <button onClick={closeModal} className="bg-cancelButton py-2 px-4 m-2 rounded">
                 취소
               </button>
               <Link to="/lobby">
