@@ -1,20 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-const Timer = ({
-  maxTime,
-  time,
-  setTime,
-  maxRound,
-  round,
-  setRound,
-  changeTeamTurn,
-  setIsGameEnd,
-}) => {
+const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizIndex }) => {
   const startTime = useRef(null);
   const nowTime = useRef(null);
-  const [delay, setDelay] = useState(1000);
+  const [delay, setDelay] = useState(100);
   const [isRunning, setIsRunning] = useState(true);
-
+  // const [time, setTime] = useState(0);
   function useInterval(callback, delay) {
     const savedCallback = useRef();
 
@@ -40,23 +31,18 @@ const Timer = ({
       startTime.current = Date.now();
     } else {
       nowTime.current = Date.now() - startTime.current;
-      setTime(nowTime.current);
+      setTurnTime(nowTime.current);
     }
 
-    if (time > maxTime) {
+    if (turnTime >= maxTurnTime) {
       // console.log(nowTime.current, time);
-      changeTeamTurn();
-      startTime.current = Date.now();
-      setTime(0);
-      setRound((r) => r + 1);
+      plusQuizIndex();
     }
   };
   useEffect(() => {
-    if (round > maxRound) {
-      setIsRunning(false);
-      setIsGameEnd(true);
-    }
-  }, [round, maxRound]);
+    startTime.current = Date.now();
+    setTurnTime(0);
+  }, [quizIndex]);
 
   useInterval(
     () => {
@@ -65,19 +51,10 @@ const Timer = ({
     isRunning ? delay : null
   );
 
-  return (
-    <meter
-      min="0"
-      max={maxTime}
-      optimum={maxTime / 4}
-      low={maxTime / 2}
-      high={(maxTime * 3) / 4}
-      value={time}
-    ></meter>
-  );
+  return <div className="text-3xl">{maxTurnTime - turnTime}</div>;
 };
 
-export default Timer;
+export default TurnTimer;
 
 /*
 meter {

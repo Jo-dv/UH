@@ -9,7 +9,7 @@ import G101 from "./games/G101";
 import G102 from "./games/G102";
 
 const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => {
-  let maxTime = 50000;
+  let maxTime = 60000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
   const [loading, setLoading] = useState(true);
