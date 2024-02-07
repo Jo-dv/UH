@@ -40,7 +40,7 @@ const Header = () => {
   return (
     <header className="w-[1280px] mx-auto">
       <nav>
-        <ul className="flex flex-row items-end pt-10">
+        <ul className="flex flex-row items-end pt-5">
           {isLobbyPage ? (
             <>
               <li className="mr-7">

@@ -223,7 +223,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, isHos
                 {/* <p>{time}</p> */}
                 <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-xl"}> B: {BTeamScore}</p>
               </div>
-              <section className="w-full aspect-[4/3] relative rounded-b-[17px] overflow-hidden">
+              <section className="h-full aspect-[4/3] relative rounded-b-[17px] overflow-hidden">
                 {gameCategory === 101 ? (
                   <G101
                     gameLoading={gameLoading}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import OpenViduVideoComponent from "../Room/OvVideo";
+import OpenViduVideoComponent from "./OvVideo";
 import "./UserVideo.css";
 import Mic from "@mui/icons-material/Mic";
 import MicOff from "@mui/icons-material/MicOff";
