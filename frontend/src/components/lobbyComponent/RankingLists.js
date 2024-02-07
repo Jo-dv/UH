@@ -72,7 +72,7 @@ const RankingLists = ({ viewGameCategoryRanking }) => {
                   ? `${entry.user1}, ${entry.user2}, ${entry.user3}, ${entry.user4}`
                   : `${entry.userNickname}`}
               </span>
-              <span className="w-12 text-center">{entry.score || entry.rating}</span>
+              <span className="w-24 text-right pr-2">{entry.score || entry.rating}</span>
             </div>
           ))}
       </div>

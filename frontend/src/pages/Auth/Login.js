@@ -127,45 +127,49 @@ const Login = () => {
     <div className="w-full h-screen p-5 flex justify-center items-center z-10">
       <form
         onSubmit={onSubmit}
-        className="bg-opacity-50 bg-formBG w-96 border-2 rounded-md
+        className="bg-opacity-50 bg-formBG p-4 w-96 border-2 rounded-3xl
                 flex flex-col justify-center items-center z-20"
       >
-        <h2 className="font-['pixel'] text-5xl mt-3 mb-2">로그인</h2>
-        <input
-          type="text"
-          placeholder="아이디"
-          onChange={onChange}
-          name="userId"
-          value={form.userId}
-          className={`font-['pixel'] p-2 m-1 border-2 rounded w-72 ${
-            err.userId || err.general
-              ? animate
-                ? "animate-shake animate-twice animate-duration-150 border-red-500"
-                : ""
-              : ""
-          }`}
-        />
-        <p className="font-['pixel'] text-red-500 mb-1">{err.userId}</p>
-        {/* {!err.userId && <p>{err.userId}</p>} */}
+        <h2 className=" text-5xl mt-3 mb-5">로그인</h2>
+        <div className="p-3">
+          <input
+            type="text"
+            placeholder="아이디"
+            onChange={onChange}
+            name="userId"
+            value={form.userId}
+            className={` p-2 m-1 border-2 rounded-xl w-72 ${
+              err.userId || err.general
+                ? animate
+                  ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                  : ""
+                : "border-stone-500"
+            }`}
+          />
+          <p className=" text-red-500 mb-1">{err.userId}</p>
+          {/* {!err.userId && <p>{err.userId}</p>} */}
 
-        <input
-          type="password"
-          placeholder="비밀번호"
-          onChange={onChange}
-          name="userPassword"
-          value={form.userPassword}
-          className={`font-['pixel'] p-2 m-1 border-2 rounded border-purple5 bg-input w-72 ${
-            err.userPassword || err.general
-              ? animate
-                ? "animate-shake animate-twice animate-duration-150 border-red-500"
-                : ""
-              : ""
-          }`}
-        />
-        <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
+          <input
+            type="password"
+            placeholder="비밀번호"
+            onChange={onChange}
+            name="userPassword"
+            value={form.userPassword}
+            className={` p-2 m-1 border-2 rounded-xl bg-input w-72 ${
+              err.userPassword || err.general
+                ? animate
+                  ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                  : ""
+                : "border-stone-500"
+            }`}
+          />
+          <p className=" text-red-500 mb-1">{err.userPassword}</p>
+        </div>
 
-        <button className="font-['pixel'] p-2 m-1 rounded w-72 bg-tab10 hover:bg-[#95c75a]">로그인</button>
-        <p className="font-['pixel'] text-red-500 mb-1">{err.general}</p>
+        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-[#95c75a]">
+          로그인
+        </button>
+        <p className=" text-red-500 mb-1">{err.general}</p>
         {/* <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3> */}
@@ -180,9 +184,10 @@ const Login = () => {
             alt="카카오로그인버튼"
             type="button"
             onClick={kakaoLoginHandler}
+            className="rounded-xl"
           />
         </div>
-        <h3 className="p-2 m-2">
+        <h3 className="p-2 m-2 mb-0">
           <Link to="/auth/signup">회원가입</Link>
         </h3>
       </form>

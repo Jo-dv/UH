@@ -4,6 +4,7 @@ import axios from "axios";
 import startBackImg from "../../asset/image/BG.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -185,10 +186,10 @@ const Signup = () => {
     <div className="w-full h-screen p-5 flex justify-center items-center z-10">
       <form
         onSubmit={onSubmit}
-        className="bg-opacity-50 bg-formBG w-96 border-2 border-purple3
-        flex flex-col justify-center rounded-md items-center z-20"
+        className="bg-opacity-50 bg-formBG w-96 py-3 border-2 
+        flex flex-col justify-center rounded-3xl items-center z-20"
       >
-        <h1 className="text-5xl m-3">회원가입</h1>
+        <h1 className="text-5xl m-5 pb-2">회원가입</h1>
 
         {/* 아이디 입력창 */}
         <input
@@ -198,7 +199,7 @@ const Signup = () => {
           onBlur={checkUserIdDuplicate}
           name="userId"
           value={form.userId}
-          className={`w-60 p-2 m-2 border-2 rounded-md ${
+          className={`w-72 p-2 m-1 mb-2 border-2 rounded-xl ${
             err.userId
               ? animate
                 ? "animate-shake animate-twice animate-duration-150 border-red-500"
@@ -220,7 +221,7 @@ const Signup = () => {
             name="userPassword"
             value={form.userPassword}
             onBlur={checkPassword}
-            className={`p-2 w-60 border-2 rounded-md ${
+            className={`p-2 w-72 border-2 rounded-xl ${
               err.userPassword
                 ? animate
                   ? "animate-shake animate-twice animate-duration-150 border-red-500"
@@ -232,10 +233,14 @@ const Signup = () => {
             onClick={togglePassword}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
           >
-            {form.userPassword && (showPassword ? <VisibilityOffIcon color="disabled" /> : <VisibilityIcon color="disabled" />)}
+            {showPassword ? (
+              <VisibilityOffIcon color="disabled" />
+            ) : (
+              <VisibilityIcon color="disabled" />
+            )}
           </button>
         </div>
-        <p className="font-['pixel'] text-red-500 mb-1">{err.userPassword}</p>
+        <p className=" text-red-500 mb-1">{err.userPassword}</p>
 
         {/* 비밀번호 확인 입력창 */}
         <input
@@ -245,7 +250,7 @@ const Signup = () => {
           onBlur={checkPasswordMatch}
           name="passwordCheck"
           value={form.passwordCheck}
-          className={`p-2 m-1 w-60 border-2 rounded-md ${
+          className={`p-2 m-1 w-72 border-2 rounded-xl ${
             err.passwordCheck
               ? animate
                 ? "animate-shake animate-twice animate-duration-150 border-red-500"
@@ -253,11 +258,14 @@ const Signup = () => {
               : ""
           }`}
         />
-        <p className="font-['pixel'] text-red-500 mb-1">{err.passwordCheck}</p>
+        <p className=" text-red-500 mb-1">{err.passwordCheck}</p>
 
-        <button className="font-['pixel'] p-2 m-1 rounded w-60 bg-tab10 hover:bg-[#95c75a]">회원가입</button>
-        <h3>
-          <Link to="/auth/Login">Back</Link>
+        <button className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-[#95c75a]">회원가입</button>
+        <h3 className="self-start ml-12 mb-2 mt-1 flex items-center">
+          <Link to="/auth/Login" className="flex items-center">
+            <ArrowBackIcon fontSize="small" />
+            Back
+          </Link>
         </h3>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />

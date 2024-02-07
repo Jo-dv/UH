@@ -50,15 +50,19 @@ const LogOutModal = (props) => {
     <>
       <div
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+        onClick={() => {
+          props.setLogout(false);
+        }}
       >
-        <div className="bg-white rounded-lg border-gray-200 border shadow-lg p-5 md:p-6 mx-2">
+        <div className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2"
+        onClick={(e) => e.stopPropagation()}>
           <h2 className="text-lg font-medium text-gray-900 mb-4">로그아웃하시겠습니까?</h2>
           <div className="flex justify-center items-center space-x-4">
-            <button onClick={props.setLogout} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-md">
+            <button onClick={props.setLogout} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-xl">
               취소
             </button>
 
-            <button onClick={handleLogOut} className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-md">
+            <button onClick={handleLogOut} className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl">
               로그아웃
             </button>
           </div>
