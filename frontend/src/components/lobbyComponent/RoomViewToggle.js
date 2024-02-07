@@ -10,9 +10,23 @@ const RoomViewToggle = ({ onToggle }) => {
   };
 
   return (
-    <button onClick={onToggleView} className="mr-2 p-1 border rounded-3xl bg-white">
-      {allRooms === true ? "전체 보기" : "대기방만 보기"}
-    </button>
+    <>
+      {allRooms === true ? (
+        <button
+          onClick={onToggleView}
+          className="bg-white hover:bg-tab9 p-1 m-2 rounded-3xl basis-1/6"
+        >
+          전체 보기
+        </button>
+      ) : (
+        <button
+          onClick={onToggleView}
+          className="bg-tab9 hover:bg-white p-1 m-2 rounded-3xl basis-1/6"
+        >
+          대기방만 보기
+        </button>
+      )}
+    </>
   );
 };
 

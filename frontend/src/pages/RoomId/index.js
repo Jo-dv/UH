@@ -11,6 +11,7 @@ import UseRoomSetting from "../../store/UseRoomSetting.js";
 import UseInvitingStore from "../../store/UseInvitingStore.js";
 import useStore from "../../store/UserAuthStore";
 import UseLeavingStore from "../../store/UseLeavingStore.js";
+import { usePreventGoBack } from "../../hooks/usePreventGoBack.js";
 
 // component, modal
 import Chat from "../../components/Chat/index.js";
@@ -22,6 +23,7 @@ import Inviting from "../../components/Modal/waiting/Inviting.js";
 import Person from "../../components/waitingComponent/Person.js";
 
 export default function RoomId() {
+  // usePreventGoBack();
   const OV = useRef(new OpenVidu());
   const { getRoomInfo } = useWaitingRoomApiCall();
   const nickname = useStore((state) => state.user.userNickname);
@@ -461,14 +463,14 @@ export default function RoomId() {
             <div className="grid col-start-7 col-end-9 row-start-1 row-end-13">
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
-                  className=" bg-mc1 border rounded-3xl active:bg-mc2 w-full h-full flex justify-center items-center"
+                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center"
                   onClick={() => changeTeam("A")}
                 >
                   A팀
                 </button>
 
                 <button
-                  className=" bg-mc8 border rounded-3xl active:bg-mc7 w-full h-full flex justify-center items-center"
+                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center"
                   onClick={() => changeTeam("B")}
                 >
                   B팀
@@ -479,7 +481,7 @@ export default function RoomId() {
                   onClick={() => {
                     setReady();
                   }}
-                  className="bg-mc3 border rounded-3xl h-full flex justify-center items-center w-full"
+                  className="bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full"
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>

@@ -17,14 +17,14 @@ const Person = (props) => {
         const connectionId = streamManager.stream.connection.connectionId;
         const isTeamA = props.teamA && props.teamA.includes(connectionId);
         const isTeamB = props.teamB && props.teamB.includes(connectionId);
-        const backgroundClass = isTeamA ? "bg-mc1" : isTeamB ? "bg-mc7" : "formBG";
+        const backgroundClass = isTeamA ? "bg-tab1" : isTeamB ? "bg-tab12" : "formBG";
 
         return (
           <div
             key={index}
             onClick={() => streamManager && props.handleMainVideoStream(streamManager)}
           >
-            <div className={`${backgroundClass} grid rounded-3xl m-1 pb-2`}>
+            <div className={`${backgroundClass} grid rounded-xl m-1 pb-2`}>
               <UserVideo
                 streamManager={streamManager}
                 session={props.session}
