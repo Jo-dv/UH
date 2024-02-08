@@ -19,9 +19,9 @@ const Login = () => {
   const [animate, setAnimate] = useState(false);
 
   // 카카오 소셜 로그인 / 로그아웃
-  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-  const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
-  const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
+  const REST_API_KEY = "4fffa78521feee5e1eb947c704c08cf2" //process.env.REACT_APP_REST_API_KEY;
+  const REDIRECT_URI = "http://localhost:3000/callback/kakao" //process.env.REACT_APP_REDIRECT_URI;
+  const LOGOUT_REDIRECT_URI = "http://localhost:3000/auth/login" //process.env.REACT_APP_LOGOUT_REDIRECT_URI;
   const loginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
   const LogoutLink = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`;
   const kakaoLoginHandler = () => {
