@@ -21,8 +21,8 @@ const GameScrollSelector = ({ onGameCategory, extraOptions = [], showAllOption =
           {option.label}
         </option>
       ))}
-      <option value="1">고요 속의 외침</option>
-      <option value="2">인물 맞추기</option>
+      <option value="101">고요 속의 외침</option>
+      <option value="102">인물 맞추기</option>
     </select>
   );
 };

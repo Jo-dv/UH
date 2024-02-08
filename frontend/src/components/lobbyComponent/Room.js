@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EnterPassword from "../Modal/Lobby/EnterPassword";
 import NoEnter from "../Modal/Lobby/NoEnter";
 import IsPlaying from "../Modal/Lobby/IsPlaying";
@@ -7,6 +7,7 @@ import { useWebSocket } from "../../webSocket/UseWebSocket.js";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import PersonIcon from "@mui/icons-material/Person";
+
 // 개별 방 컴포넌트
 const Room = (props) => {
   const { send } = useWebSocket();
@@ -16,6 +17,19 @@ const Room = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   // 인원수 맥스여서 못들어감
   const [showNoEnter, setShowNoEnter] = useState(false);
+
+  // 모달 상태를 로컬 스토리지에서 불러오는 함수
+  useEffect(() => {
+    const showModalState = localStorage.getItem("showModal");
+    if (showModalState === "true") {
+      setShowModal(true);
+    }
+  }, []);
+
+  // 모달 상태를 로컬 스토리지에 저장하는 함수
+  useEffect(() => {
+    localStorage.setItem("showModal", showModal.toString());
+  }, [showModal]);
 
   const handleRoomMax = () => {
     if (props.numberOfPeople === props.totalNumberOfPeople) {
