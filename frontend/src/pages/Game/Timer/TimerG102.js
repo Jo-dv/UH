@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
-const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizIndex }) => {
+const Timer102 = ({ time, setTime, setIsGameEnd }) => {
+  const maxTime = 180000;
   const startTime = useRef(null);
   const nowTime = useRef(null);
-  const [delay, setDelay] = useState(100);
+  const [delay, setDelay] = useState(500);
   const [isRunning, setIsRunning] = useState(true);
-  // const [time, setTime] = useState(0);
+
   function useInterval(callback, delay) {
     const savedCallback = useRef();
 
@@ -31,18 +32,14 @@ const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizInde
       startTime.current = Date.now();
     } else {
       nowTime.current = Date.now() - startTime.current;
-      setTurnTime(nowTime.current);
+      setTime(nowTime.current);
     }
 
-    if (turnTime >= maxTurnTime) {
-      // console.log(nowTime.current, time);
-      plusQuizIndex();
+    if (time > maxTime) {
+      setIsRunning(false);
+      setIsGameEnd(true);
     }
   };
-  useEffect(() => {
-    startTime.current = Date.now();
-    setTurnTime(0);
-  }, [quizIndex]);
 
   useInterval(
     () => {
@@ -52,11 +49,19 @@ const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizInde
   );
 
   return (
-    <div className={`bg-[#00${maxTurnTime - turnTime}] w-full h-32`}>{maxTurnTime - turnTime}</div>
+    <meter
+      min="0"
+      max={maxTime}
+      optimum={maxTime / 4}
+      low={maxTime / 2}
+      high={(maxTime * 3) / 4}
+      value={time}
+      className="w-full h-10 absolute top-[-10px]"
+    ></meter>
   );
 };
 
-export default TurnTimer;
+export default Timer102;
 
 /*
 meter {

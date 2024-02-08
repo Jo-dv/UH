@@ -9,16 +9,18 @@ const AnswerInput = ({
   plusScore,
   changeTeamIndex,
   setTurnTime,
+  quizIndex,
+  setQuizIndex,
 }) => {
   const [answerMsg, setAnswerMsg] = useState("");
 
   const sendAnswer = (e) => {
-    // console.log("정답제출");
+    // console.log("정답제출", answer);
     e.preventDefault();
     setAnswerMsg("");
     // console.log(session);
     if (answer === answerMsg) {
-      const data = JSON.stringify({ ans: answerMsg, team: Team });
+      const data = JSON.stringify({ ans: answerMsg, team: Team, quizIndex: quizIndex });
       // console.log("정답창에서 보냄", data);
       session
         .signal({
@@ -40,9 +42,10 @@ const AnswerInput = ({
     // if (answer === event.data) {}
     const dataObj = JSON.parse(event.data);
     // console.log("정답창에서 받음", dataObj);
-    if (dataObj.ans === answer && dataObj.team === Team) {
-      plusQuizIndex();
-      plusScore(Team);
+    if (dataObj.ans === answer) {
+      // plusQuizIndex();
+      setQuizIndex(dataObj.quizIndex + 1);
+      plusScore(dataObj.team);
       changeTeamIndex();
     }
   });

@@ -25,6 +25,7 @@ const G101 = ({
   goWaitRoom,
   quizData,
   quizIndex,
+  setQuizIndex,
   plusQuizIndex,
   plusScore,
   changeTeamIndex,
@@ -124,6 +125,8 @@ const G101 = ({
                                 myUserName={myUserName}
                                 session={session}
                                 answer={quizData[quizIndex].quizAnswer}
+                                quizIndex={quizIndex}
+                                setQuizIndex={setQuizIndex}
                                 plusQuizIndex={plusQuizIndex}
                                 Team={turnPlayerId[2]}
                                 plusScore={plusScore}
@@ -137,6 +140,8 @@ const G101 = ({
                             myUserName={myUserName}
                             session={session}
                             answer={quizData[quizIndex].quizAnswer}
+                            quizIndex={quizIndex}
+                            setQuizIndex={setQuizIndex}
                             plusQuizIndex={plusQuizIndex}
                             Team={turnPlayerId[2]}
                             plusScore={plusScore}

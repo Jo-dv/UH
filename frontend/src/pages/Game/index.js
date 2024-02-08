@@ -242,6 +242,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                     myTeam={myTeam}
                     quizData={quizData}
                     quizIndex={quizIndex}
+                    setQuizIndex={setQuizIndex}
                     teamChangeLoading={teamChangeLoading}
                     changeTeamTurn={changeTeamTurn}
                     setIsGameEnd={setIsGameEnd}
@@ -271,6 +272,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                     myTeam={myTeam}
                     quizData={quizData}
                     quizIndex={quizIndex}
+                    setQuizIndex={setQuizIndex}
                     teamChangeLoading={teamChangeLoading}
                     changeTeamTurn={changeTeamTurn}
                     setIsGameEnd={setIsGameEnd}
