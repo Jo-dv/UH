@@ -14,10 +14,10 @@ const RankingLists = ({ viewGameCategoryRanking }) => {
       try {
         let data;
         switch (viewGameCategoryRanking) {
-          case "1":
+          case "101":
             data = await getRankShout(); // "고요 속의 외침" 게임 랭킹
             break;
-          case "2":
+          case "102":
             data = await getRankPerson(); // "인물 맞추기" 게임 랭킹
             break;
           case "3":
@@ -68,7 +68,7 @@ const RankingLists = ({ viewGameCategoryRanking }) => {
                 )}
               </span>
               <span className="flex-grow text-center">
-                {viewGameCategoryRanking === "1" || viewGameCategoryRanking === "2"
+                {viewGameCategoryRanking === "101" || viewGameCategoryRanking === "102"
                   ? `${entry.user1}, ${entry.user2}, ${entry.user3}, ${entry.user4}`
                   : `${entry.userNickname}`}
               </span>
