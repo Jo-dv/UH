@@ -115,7 +115,7 @@ const G101 = ({
                         changeTeamTurn={changeTeamTurn}
                         setIsGameEnd={setIsGameEnd}
                       />
-                      <div className="absolute flex text-black">
+                      <div className="absolute flex">
                         {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
                           <>
                             <p>{quizData[quizIndex].quizAnswer}</p>
