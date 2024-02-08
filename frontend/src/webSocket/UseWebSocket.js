@@ -33,7 +33,7 @@ export const WebSocketProvider = ({ children }) => {
       };
 
       socket.current.onmessage = (event) => {
-        console.log("WebSocket 메시지 수신:", event.data);
+        // console.log("WebSocket 메시지 수신:", event.data);
         if (onMessage) onMessage(event);
       };
 
@@ -44,15 +44,15 @@ export const WebSocketProvider = ({ children }) => {
 
     const con = () => {
       connect(
-        "wss://i10e201.p.ssafy.io/ws",
-        // "ws://localhost:5000/ws",
+        // "wss://i10e201.p.ssafy.io/ws",
+        "ws://localhost:5000/ws",
         null,
         (event) => {
-          console.log("WebSocket 메시지 수신:", event.data);
+          // console.log("WebSocket 메시지 수신:", event.data);
           const parsedMessage = JSON.parse(event.data);
           if (parsedMessage.connectors) {
             setSessionIds(parsedMessage.connectors);
-            console.log(parsedMessage.connectors);
+            // console.log(parsedMessage.connectors);
             setAccessors(parsedMessage.connectors);
           }
 
@@ -78,16 +78,15 @@ export const WebSocketProvider = ({ children }) => {
           /* 연결 종료 시 처리 */
         }
       );
-    }
-    if (nickname!=null) {
+    };
+    if (nickname != null) {
       con();
     }
 
     return () => {
       if (socket.current) {
         socket.current.close();
-        if (!nickname)
-          socket.current.onclose = null;
+        if (!nickname) socket.current.onclose = null;
         console.log("웹 소캣 연결 종료");
       }
     };
