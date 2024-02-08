@@ -37,15 +37,23 @@ export const WebSocketProvider = ({ children }) => {
         if (onMessage) onMessage(event);
       };
 
-      socket.current.onclose = () => {
-        con();
+      socket.current.onclose = (event) => {
+        if (event.code === 1008) {
+          // CloseStatus.POLICY_VIOLATION 에러 처리
+          console.error("웹 소캣 완전 종료,");
+          // 에러 처리 로직을 여기에 추가하세요
+        } else {
+          console.log("웹 소캣 정상적으로 종료됨");
+          con();
+        }
+       
       };
     };
 
     const con = () => {
       connect(
-        // "wss://i10e201.p.ssafy.io/ws",
-        "ws://localhost:5000/ws",
+        "wss://i10e201.p.ssafy.io/ws",
+        // "ws://localhost:5000/ws",
         null,
         (event) => {
           // console.log("WebSocket 메시지 수신:", event.data);
@@ -85,8 +93,9 @@ export const WebSocketProvider = ({ children }) => {
 
     return () => {
       if (socket.current) {
-        socket.current.close();
-        if (!nickname) socket.current.onclose = null;
+
+        socket.current.onclose = null;
+        socket.current.close(); 
         console.log("웹 소캣 연결 종료");
       }
     };
