@@ -35,6 +35,13 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		// 	session.close(CloseStatus.POLICY_VIOLATION);
 		// 	return;
 		// }
+
+		//로그인 되지 않은 유저의 소켓 연결을 막음
+		if (httpSession.getAttribute("user") == null) {
+			session.close(CloseStatus.POLICY_VIOLATION);
+			return;
+		}
+
 		CLIENTS.put(session, httpSession);
 		connectionIds.put(session.getId(), session);
 		// 클라이언트 접속 시 모든 클라이언트에게 접속 유저 리스트를 전송
