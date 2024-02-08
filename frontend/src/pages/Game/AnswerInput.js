@@ -15,7 +15,7 @@ const AnswerInput = ({
   const [answerMsg, setAnswerMsg] = useState("");
 
   const sendAnswer = (e) => {
-    console.log("정답제출", answer);
+    // console.log("정답제출", answer);
     e.preventDefault();
     setAnswerMsg("");
     // console.log(session);
