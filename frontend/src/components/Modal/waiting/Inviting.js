@@ -21,20 +21,18 @@ const Inviting = ({ inviting, onClose, openLink }) => {
       {inviting && (
         <div
           onClick={onClose}
-          className="w-screen h-screen absolute inset-0
-flex justify-center items-center"
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
           <section
             onClick={(e) => e.stopPropagation()}
-            className="bg-formBG min-w-80 min-h-40 rounded-2xl border-2 border-modalBorder
-  flex flex-col justify-center items-center"
+            className="bg-white rounded-3xl border-gray-200 border shadow-lg p-10 md:p-6 mx-2"
           >
             <button
               onClick={() => {
                 setInviting(false);
                 copyToClipboard();
               }}
-              className="bg-formButton py-2 px-4 m-2 rounded"
+              className="bg-tab10 hover:bg-[#95c75a] p-3 rounded-xl"
             >
               초대 링크 복사하기
             </button>

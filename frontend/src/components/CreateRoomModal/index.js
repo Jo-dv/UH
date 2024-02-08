@@ -1,6 +1,10 @@
 import { useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 
 const CreateRoomModal = ({ modalOnOff }) => {
   const [roomName, setRoomName] = useState(`P-${Math.floor(Math.random() * 1000)}`);
@@ -10,9 +14,18 @@ const CreateRoomModal = ({ modalOnOff }) => {
   const [lock, setLock] = useState(false);
   const [rooms, setRooms] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [animate, setAnimate] = useState(false);
   const { getRoomsList } = useLobbyApiCall();
+  const triggerAnimate = () => {
+    setAnimate(false);
+    setTimeout(() => setAnimate(true), 10);
+  };
+  const [showPassword, setShowPassword] = useState(false);
 
+  const togglePassword = (e) => {
+    e.preventDefault();
+    setLock((lock) => !lock);
+  };
   const handleChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
   }, []);
@@ -76,90 +89,100 @@ const CreateRoomModal = ({ modalOnOff }) => {
           <form
             onSubmit={submitHandler}
             onClick={(e) => e.stopPropagation()}
-            className="justify-center rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2 flex flex-col bg-formBG"
+            className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2"
           >
-            <div className="m-1 p-2 border rounded-3xl bg-white">
-              <label className="ml-3">
-                방제목 :
+            <div className="flex flex-wrap">
+              <label className="mt-3 mr-4">방제목</label>
+              <div className="rounded-2xl item-center ml-3 p-2 mb-3 border flex-auto">
                 <input
                   type="text"
                   placeholder="방 제목을 입력해주세요!"
                   value={roomName}
                   maxLength={12}
                   onChange={handleChangeRoomName}
+                  className="ml-3"
                   required
                 />
-              </label>
+              </div>
             </div>
             {errorMessage && <div className="error-message ml-12 text-red-500">{errorMessage}</div>}
-            <div
-              className="m-1 p-2 
-          border rounded-xl bg-white"
-            >
-              <label className="ml-3">비밀번호 : </label>
-              <input
-                type="checkbox"
-                onClick={() => {
-                  setLock(!lock);
-                }}
-              />
-              {lock && (
-                <input
-                  type="text"
-                  placeholder="비밀번호를 입력해주세요!"
-                  value={roomPassword}
-                  onChange={handleChangeRoomPassword}
-                  maxLength={15}
-                />
-              )}
+            <div className="flex flex-wrap">
+              <label className="mt-3 mr-3">비밀번호</label>
+              <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto">
+                <button onClick={togglePassword}>
+                  {lock ? <LockIcon /> : <LockOpenIcon />}
+                </button>
+                {lock && (
+                  <input
+                    type="text"
+                    placeholder="비밀번호를 입력해주세요!"
+                    value={roomPassword}
+                    onChange={handleChangeRoomPassword}
+                    maxLength={15}
+                    className="text-center"
+                  />
+                )}
+                {/* <button
+                  onClick={togglePassword}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </button> */}
+              </div>
             </div>
-            <div
-              className="m-1 p-2 
-          border rounded-xl bg-white"
-            >
-              참가인원 :
-              <label className="p-1 m-1">
-                4명
-                <input
-                  type="radio"
-                  value={4}
-                  name="num"
-                  onChange={handleChangeRoomMax}
-                  defaultChecked
-                />
-              </label>
-              <label className="p-1 m-1">
-                6명
-                <input type="radio" value={6} name="num" onChange={handleChangeRoomMax} />
-              </label>
-              <label className="p-1 m-1">
-                8명
-                <input type="radio" value={8} name="num" onChange={handleChangeRoomMax} />
-              </label>
+
+            <div className="flex flex-wrap">
+              <label className="mt-5 mr-7">인원수</label>
+              <div className="rounded-2xl p-2 mb-3 border flex-auto flex justify-center">
+                <label className="p-1 m-1">
+                  <input
+                    type="radio"
+                    value={4}
+                    name="num"
+                    onChange={handleChangeRoomMax}
+                    defaultChecked
+                    className="mr-2"
+                  />
+                  4명
+                </label>
+                <label className="p-1 m-1">
+                  <input type="radio" value={6} name="num" onChange={handleChangeRoomMax} className="mr-2" />
+                  6명
+                </label>
+                <label className="p-1 m-1">
+                  <input type="radio" value={8} name="num" onChange={handleChangeRoomMax} className="mr-2" />
+                  8명
+                </label>
+              </div>
             </div>
-            <div
-              className="m-1 px-2 
-          border rounded-xl bg-white flex flex-col"
-            >
-              <p>게임선택:</p>
-              <label>
-                <input
-                  type="radio"
-                  value={101}
-                  name="game"
-                  onChange={handleChangeRoomGame}
-                  defaultChecked
-                />
-                고요 속의 외침
-              </label>
-              <label>
-                <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} />
-                인물 맞추기
-              </label>
+            <div className="flex flex-wrap">
+              <label className="mt-7 mr-3">게임 선택</label>
+              <div className="rounded-2xl p-4 mb-3 border flex flex-col flex-auto justify-center">
+                <label>
+                  <input
+                    type="radio"
+                    value={101}
+                    name="game"
+                    onChange={handleChangeRoomGame}
+                    defaultChecked
+                    className="mr-2"
+                  />
+                  고요 속의 외침
+                </label>
+                <label>
+                  <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} className="mr-2" />
+                  인물 맞추기
+                </label>
+              </div>
             </div>
-            <button type="submit" className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-4 rounded-xl">
-              방 만들기
-            </button>
+            <div className="flex justify-center items-center">
+              <button
+                type="submit"
+                className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-2 rounded-xl"
+              >
+                방 만들기
+              </button>
+            </div>
           </form>
         </div>
       </div>

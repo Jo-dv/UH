@@ -395,14 +395,7 @@ export default function RoomId() {
       });
       setTeamA(teamAData);
       setTeamB(teamBData);
-      // setTeamA((prevTeamA) => {
-      //   const newUsers = teamAData.filter((user) => !prevTeamA.includes(user));
-      //   return [...prevTeamA, ...newUsers];
-      // });
-      // setTeamB((prevTeamB) => {
-      //   const newUsers = teamBData.filter((user) => !prevTeamB.includes(user));
-      //   return [...prevTeamB, ...newUsers];
-      // });
+
       console.log(teamA);
       console.log(teamB);
     } catch (error) {

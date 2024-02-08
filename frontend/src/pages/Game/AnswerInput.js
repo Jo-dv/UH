@@ -8,6 +8,7 @@ const AnswerInput = ({
   Team,
   plusScore,
   changeTeamIndex,
+  setTurnTime,
 }) => {
   const [answerMsg, setAnswerMsg] = useState("");
 

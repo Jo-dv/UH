@@ -9,7 +9,7 @@ import G101 from "./games/G101";
 import G102 from "./games/G102";
 
 const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => {
-  let maxTime = 50000;
+  let maxTime = 60000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
   const [loading, setLoading] = useState(true);
@@ -161,6 +161,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
       setBTeamStreamManagers(BTeamStreamManagersCNT);
 
       const quiz = await getGameData(session.sessionId);
+      console.log("quiz data axios result :", quiz);
       if (quiz !== undefined && quiz.length !== 0) {
         setQuizData(quiz);
       }

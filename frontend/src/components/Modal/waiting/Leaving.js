@@ -16,17 +16,20 @@ const Leaving = ({ leaving, onClose, leaveSession, exitRoom }) => {
       {leaving && (
         <div
           onClick={closeModal}
-          className="w-screen h-screen absolute inset-0
-flex justify-center items-center"
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
           <section
             onClick={(e) => e.stopPropagation()}
-            className="bg-formBG min-w-80 min-h-40 rounded-2xl border-2 border-modalBorder
-  flex flex-col justify-center items-center"
+            className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2"
           >
-            <p className="text-xl text-center p-4">진짜 나갈꺼얌?</p>
-            <div>
-              <button onClick={closeModal} className="bg-cancelButton py-2 px-4 m-2 rounded">
+            <p className="text-lg font-medium text-gray-900 flex justify-center items-center mb-4">
+              진짜 나갈꺼얌?
+            </p>
+            <div className="flex justify-center items-center space-x-4">
+              <button
+                onClick={closeModal}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-xl"
+              >
                 취소
               </button>
               <Link to="/lobby">
@@ -35,7 +38,7 @@ flex justify-center items-center"
                     setIsLobby(null);
                     setLeaving(false);
                   }}
-                  className="bg-formButton py-2 px-4 m-2 rounded"
+                  className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl"
                 >
                   방 나가기
                 </button>

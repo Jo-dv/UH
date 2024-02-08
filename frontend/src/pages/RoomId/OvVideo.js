@@ -11,7 +11,7 @@ export default function OpenViduVideoComponent({ streamManager }) {
 
   return (
     <div className="flex justify-center items-center h-full">
-      <video autoPlay={true} ref={videoRef} className="rounded-3xl h-28 w-56" />
+      <video autoPlay={true} ref={videoRef} className="rounded-3xl h-28 w-42" />
     </div>
   );
 }

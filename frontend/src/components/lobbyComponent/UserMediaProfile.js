@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useStore from "../../store/UserAuthStore";
 
 import WebcamComponent from "./WebcamMicStateManager";
-import alternativeImage from "../../asset/image/alternativeImage.png";
+import alternativeImage from "../../asset/image/character.jpg";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 

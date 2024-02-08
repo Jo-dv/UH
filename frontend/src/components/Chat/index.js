@@ -50,11 +50,11 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
 
   return (
     <section
-      className="bg-neutral-300 
+      className="bg-neutral-200 
     border rounded-3xl overflow-hidden h-full w-full flex flex-col"
     >
       <h2 className="bg-neutral-400 px-8 h-6">채팅</h2>
-      <div className="p-2 h-screen-16">
+      <div className="p-4 h-screen-16">
         <ul
           ref={ulRef}
           className="mb-2 px-2 border rounded-3xl bg-white h-screen-40 max-h-44 overflow-auto"

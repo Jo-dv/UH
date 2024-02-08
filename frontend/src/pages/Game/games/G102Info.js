@@ -34,7 +34,7 @@ const G102Info = ({ maxTime, maxRound, setGameLoading, session }) => {
     };
   }, []);
   return (
-    <div>
+    <div className="z-10">
       인물 맞추기
       <br />
       <br /> 제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.

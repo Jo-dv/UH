@@ -102,7 +102,6 @@ export const getGameData = async (sessionId) => {
     console.log(response.data);
     return response.data; //
   } catch (error) {
-    console.log("게임 문제 로드 error");
     console.error("게임 문제 로드 error", error);
   }
 };

@@ -129,35 +129,16 @@ const G102 = ({
                           setIsGameEnd={setIsGameEnd}
                         />
                         <div className="absolute flex text-black">
-                          {turnPlayerId[2] !== myTeam ? (
-                            <>
-                              <p>{quizData[quizIndex].quizAnswer}</p>
-
-                              <div className="hidden">
-                                <AnswerInput
-                                  myUserName={myUserName}
-                                  session={session}
-                                  answer={quizData[quizIndex].quizAnswer}
-                                  plusQuizIndex={plusQuizIndex}
-                                  Team={turnPlayerId[2]}
-                                  plusScore={plusScore}
-                                  changeTeamIndex={changeTeamIndex}
-                                  setTurnTime={setTurnTime}
-                                />
-                              </div>
-                            </>
-                          ) : (
-                            <AnswerInput
-                              myUserName={myUserName}
-                              session={session}
-                              answer={quizData[quizIndex].quizAnswer}
-                              plusQuizIndex={plusQuizIndex}
-                              Team={turnPlayerId[2]}
-                              plusScore={plusScore}
-                              changeTeamIndex={changeTeamIndex}
-                              setTurnTime={setTurnTime}
-                            />
-                          )}
+                          <AnswerInput
+                            myUserName={myUserName}
+                            session={session}
+                            answer={quizData[quizIndex].quizAnswer}
+                            plusQuizIndex={plusQuizIndex}
+                            Team={myTeam}
+                            plusScore={plusScore}
+                            changeTeamIndex={changeTeamIndex}
+                            setTurnTime={setTurnTime}
+                          />
                         </div>
                       </div>
                     </div>
