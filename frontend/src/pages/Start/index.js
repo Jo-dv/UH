@@ -12,7 +12,7 @@ function Start() {
     resetUser();
     const timer = setTimeout(() => {
       navigate("/auth/login"); // '/login'은 로그인 페이지의 경로
-    }, 5000); // 5000ms(5초) 후에 페이지 이동
+    }, 2500); // 5000ms(5초) 후에 페이지 이동
 
     return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 정리
   }, [navigate]);
@@ -26,13 +26,13 @@ function Start() {
       >
         <img
           className="w-4/5 max-w-2xl
-      animate-jump-in animate-duration-[2000ms] z-10"
+      animate-jump-in animate-duration-[1500ms] z-10"
           alt="Logo"
           src={logoImg}
         />
 
         <img
-          className="animate-fade animate-delay-[2000ms] 
+          className="animate-fade  
         absolute h-screen w-full"
           alt="Background"
           src={startBackImg}
