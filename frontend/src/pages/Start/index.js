@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logoImg from "../../asset/image/LOGO.png";
 import startBackImg from "../../asset/image/BG.png";
 import useStore from "../../store/UserAuthStore";
+
 function Start() {
   const navigate = useNavigate();
   const resetUser = useStore((state) => state.resetUser);
@@ -23,8 +24,6 @@ function Start() {
       flex justify-center items-center"
         onClick={() => navigate("/auth/login")}
       >
-        {/* <h1>abc 가나다</h1>
-        <h2 className="font-['pixel']">abc 가나다</h2> */}
         <img
           className="w-4/5 max-w-2xl
       animate-jump-in animate-duration-[2000ms] z-10"
