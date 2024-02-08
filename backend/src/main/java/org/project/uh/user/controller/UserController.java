@@ -6,6 +6,7 @@ import java.util.Map;
 import org.project.uh.user.dto.MypageDto;
 import org.project.uh.user.dto.UserDto;
 import org.project.uh.user.service.UserService;
+import org.project.uh.util.PasswordHashUtil;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -75,6 +76,8 @@ public class UserController {
 	@PostMapping("/user/join")
 	public ResponseEntity<String> insertUser(@RequestBody UserDto dto) {
 		try {
+			//비밀번호 해싱
+			dto.setUserPassword(PasswordHashUtil.hashPassword(dto.getUserPassword()));
 			int result = service.insertUser(dto);
 			if (result == 0) {
 				return new ResponseEntity<>("중복된 아이디", HttpStatus.BAD_REQUEST);
@@ -116,6 +119,8 @@ public class UserController {
 	@PostMapping("/user/login")
 	public ResponseEntity<Object> login(@RequestBody UserDto dto, HttpSession session) {
 		try {
+			//비밀번호 해싱
+			dto.setUserPassword(PasswordHashUtil.hashPassword(dto.getUserPassword()));
 			UserDto result = service.login(dto);
 			if (result == null) {
 				return new ResponseEntity<>("로그인 오류", HttpStatus.BAD_REQUEST);
