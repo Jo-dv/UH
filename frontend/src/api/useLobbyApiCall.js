@@ -10,6 +10,7 @@ const useLobbyApiCall = () => {
   const rankShoutUrl = `rank/shout`;
   const rankSoloUrl = `rank/solo`;
   const checkPasswordUrl = `password`;
+  const friendsUrl = `friends`;
 
   // roomList 목록
   const getRoomsList = async () => {
@@ -134,6 +135,18 @@ const useLobbyApiCall = () => {
     }
   };
 
+  // [방 입장] 방 비밀번호 일치 확인
+  const listFriends = async () => {
+    try {
+      const response = await axios.get(friendsUrl);
+      const friendsList = response.data;
+      return friendsList;
+    } catch (error) {
+      console.error("비정상적인 접근", error);
+      throw error;
+    }
+  };
+
   return {
     getRoomsList,
     getSearchRooms,
@@ -145,6 +158,7 @@ const useLobbyApiCall = () => {
     getRankSolo,
     getMyPageInfo,
     postCheckPassword,
+    listFriends,
   };
 };
 
