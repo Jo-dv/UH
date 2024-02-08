@@ -1,5 +1,4 @@
 const IsPlaying = ({ isPlaying, onClose }) => {
-  console.log("실행됨!");
   return (
     <>
       {isPlaying && (

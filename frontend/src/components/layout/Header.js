@@ -29,7 +29,7 @@ const Header = () => {
   const handleLogoClick = () => {
     if (location.pathname.startsWith("/room")) {
       // 현재 '/room' 경로일 때는 아무 동작도 하지 않음
-      console.log("Room 페이지에서 로비로 이동할 수 없습니다.");
+      // console.log("Room 페이지에서 로비로 이동할 수 없습니다.");
     } else {
       // 그 외의 경우에는 로비 페이지로 이동
       setIsLobby(null);

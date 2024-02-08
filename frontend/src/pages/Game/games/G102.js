@@ -34,7 +34,6 @@ const G102 = ({
   setIsGameEnd,
 }) => {
   useEffect(() => {
-    console.log("G102 퀴즈데이터", quizData);
   }, []);
   const [maxTurnTime, setMaxTurnTime] = useState(10000);
   const [turnTime, setTurnTime] = useState(0);

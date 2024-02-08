@@ -16,8 +16,8 @@ export const createSession = async (
   roomGame = 101,
   max = 4
 ) => {
-  console.log("333333");
-  console.log("나 받은 게임 이거임", roomGame);
+  // console.log("333333");
+  // console.log("나 받은 게임 이거임", roomGame);
 
   try {
     const response = await axios.post("rooms", {
@@ -27,8 +27,6 @@ export const createSession = async (
       gameCategory: roomGame,
       max: max,
     });
-    console.log("-----------------");
-    console.log("roomPassword", roomPassword);
     // console.log("방만들기", response.data);
     // 성공적인 응답의 경우 sessionId 반환
     return response.data;
@@ -66,7 +64,7 @@ export const createToken = async (sessionId) => {
  * @param {boolean} host
  */
 export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, isHost) => {
-  console.log("플레이어추가 진행함", sessionId, connectionId, userSeq, userNickname, isHost);
+  // console.log("플레이어추가 진행함", sessionId, connectionId, userSeq, userNickname, isHost);
   try {
     const response = await axios.post("players", {
       sessionId: sessionId,
@@ -75,7 +73,6 @@ export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, 
       userNickname: userNickname,
       host: isHost,
     });
-    console.log(response.data); // "방에 입장했습니다."
   } catch (error) {
     console.log("플레이어 추가 에러");
     console.error("Error:", error.message);
@@ -88,10 +85,8 @@ export const addPlayer = async (sessionId, connectionId, userSeq, userNickname, 
  * @param {string} connectionId
  */
 export const exitRoom = async (sessionId, connectionId) => {
-  console.log("방나가기 sessionId:", sessionId, " connectionId:", connectionId);
   try {
     const response = await axios.delete(`exitrooms/${sessionId}/${connectionId}`);
-    console.log("방 나가기 완료", response.data);
   } catch (error) {
     console.log("방나가기 에러", error.message);
     console.error("Error:", error.message);

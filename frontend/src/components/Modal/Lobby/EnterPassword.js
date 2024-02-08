@@ -6,7 +6,6 @@ const EnterPassword = ({ showModal, isLocked, sessionId, onClose }) => {
   const navigate = useNavigate();
   const { postCheckPassword } = useLobbyApiCall();
   const [roomPassword, setRoomPassword] = useState(null);
-  console.log("비번 입력 모달 실행됨");
   const handleChangeRoomPassword = useCallback((e) => {
     setRoomPassword(e.target.value);
   }, []);
@@ -19,7 +18,6 @@ const EnterPassword = ({ showModal, isLocked, sessionId, onClose }) => {
         navigate(`/room/${sessionId}`);
       } else {
         setAgain(true);
-        console.log("비밀번호가 틀렸습니다.");
       }
     } catch (error) {
       console.error("서버에 요청하는 동안 오류가 발생했습니다.", error);

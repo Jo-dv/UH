@@ -17,7 +17,7 @@ const AccessorsList = () => {
       <div className="w-1/2">
         {accessors.map((accessor, i) =>
           nickname === accessor.nickname ? null : (
-            <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i} onClick={()=>console.log(accessor.userSeq)}>
+            <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i} /*onClick={()=>console.log(accessor.userSeq)}*/>
               {accessor.nickname}
             </div>
           )
