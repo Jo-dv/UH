@@ -14,7 +14,7 @@ const GameRoomSearchPanel = ({ onToggleView, onGameCategoryView, onSearchView })
     const fetchData = async () => {
       const data = await getSearchRooms();
       setSearchRooms(data);
-      console.log(data); // 데이터 확인
+      // console.log(data); // 데이터 확인
     };
     fetchData();
   }, []);

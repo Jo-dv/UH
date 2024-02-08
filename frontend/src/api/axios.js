@@ -15,13 +15,13 @@ axiosInstance.interceptors.response.use(
   (error) => {
     if (error.response.status === 401) {
       // 401 에러가 발생하면 로그인 페이지 처리
-      console.log("401 에러가 발생했습니다. 로그인 페이지로 이동합니다.");
+      console.log("로그인 페이지로 이동합니다.");
 
       // 로그인 페이지로 리다이렉트
       window.location.href = "/auth/login";
     } else if (error.response.status === 403) {
       // 403 에러가 발생하면 닉네임 페이지 처리
-      console.log("403 에러가 발생했습니다. 닉네임 설정 페이지로 이동합니다.");
+      console.log("닉네임 설정 페이지로 이동합니다.");
       alert("닉네임이없어용");
 
       // 로그인 페이지로 리다이렉트

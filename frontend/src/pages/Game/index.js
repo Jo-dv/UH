@@ -161,7 +161,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
       setBTeamStreamManagers(BTeamStreamManagersCNT);
 
       const quiz = await getGameData(session.sessionId);
-      console.log("quiz data axios result :", quiz);
+      // console.log("quiz data axios result :", quiz);
       if (quiz !== undefined && quiz.length !== 0) {
         setQuizData(quiz);
       }

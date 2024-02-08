@@ -95,7 +95,6 @@ const Signup = () => {
           }
         );
         const res = response.data;
-        console.log(res);
         if (res === 0) {
           setErr({ ...err, userId: "중복된 아이디입니다" }); // 중복된 경우 에러 메시지 설정
           triggerAnimate();
@@ -160,13 +159,11 @@ const Signup = () => {
     // 모든 유효성 검사를 통과하면 서버로 데이터 전송
     if (newErr.userId === "" && newErr.userPassword === "" && newErr.passwordCheck === "") {
       const { userId, userPassword } = form;
-      console.log("회원가입 정보:", { userId, userPassword });
       try {
         const response = await axios.post(
           "user/join",
           { userId, userPassword }
         );
-        console.log("서버 응답:", response);
         // 회원가입 성공 후 처리
         // 예: navigate("/login") 또는 성공 메시지 표시
         navigate("/auth/login");

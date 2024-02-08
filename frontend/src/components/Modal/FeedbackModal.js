@@ -16,7 +16,7 @@ const FeedbackModal = (props) => {
   };
   // sendFeedback console 버전
   const sendFeedbackConsole = () => {
-    console.log({ userSeq, feedbackContent });
+    // console.log({ userSeq, feedbackContent });
     props.setFeedback(false);
   };
 
@@ -32,7 +32,7 @@ const FeedbackModal = (props) => {
       await axios.post("feedback", 
       { userSeq, feedbackContent }
       );
-      console.log({ userSeq, feedbackContent });
+      // console.log({ userSeq, feedbackContent });
       props.setFeedback(false);
     } catch (error) {
       console.error("feedback 전송 실패", error);
