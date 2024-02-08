@@ -1,5 +1,5 @@
 import UserVideo from "../../pages/RoomId/UserVideo";
-import personImage from "../../asset/image/person.png";
+import personImage from "../../asset/image/character.jpg";
 
 const Person = (props) => {
   const streamManagers = props.publisher
@@ -20,10 +20,8 @@ const Person = (props) => {
         const backgroundClass = isTeamA ? "bg-tab1" : isTeamB ? "bg-tab12" : "formBG";
 
         return (
-          <div
-            key={connectionId}
-          >
-            <div className={`${backgroundClass} grid rounded-xl m-1 pb-2`}>
+          <div key={connectionId}>
+            <div className={`${backgroundClass} grid rounded-3xl m-1 pb-2`}>
               <UserVideo
                 streamManager={streamManager}
                 session={props.session}

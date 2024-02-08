@@ -11,10 +11,10 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const originalRoomInfo = roomInfo;
   console.log("받은 방정보", originalRoomInfo);
   // 원래 방 정보 모달에 기입
-  const [roomName, setRoomName] = useState(originalRoomInfo.roomName);
-  const [roomPassword, setRoomPassword] = useState(roomInfo.roomPassword);
-  const [roomMax, setRoomMax] = useState(roomInfo.Max);
-  const [roomGame, setRoomGame] = useState(roomInfo.gameCategory);
+  const [roomName, setRoomName] = useState(originalRoomInfo.roomData.roomName);
+  const [roomPassword, setRoomPassword] = useState(originalRoomInfo.roomData.roomPassword);
+  const [roomMax, setRoomMax] = useState(originalRoomInfo.roomData.max);
+  const [roomGame, setRoomGame] = useState(originalRoomInfo.roomData.gameCategory);
 
   console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
 
@@ -29,31 +29,6 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const { getRoomsList } = useLobbyApiCall();
   const [rooms, setRooms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getRoomsList();
-        setRooms(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const checkRoomNameExists = (name) => {
-    if (name === originalRoomInfo.roomName) {
-      return false;
-    } else {
-      const isNameExists = rooms.some((room) => room.roomName === name);
-      console.log("중복 검사 결과:", isNameExists); // 중복 검사 결과 확인
-      return isNameExists;
-    }
-  };
 
   const handleChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
@@ -71,15 +46,36 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
     setRoomGame(e.target.value);
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const data = await getRoomsList();
+        setRooms(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const checkRoomNameExists = (name) => {
+    const isNameExists = rooms.some((room) => room.roomName === name);
+    console.log("중복 검사 결과:", isNameExists); // 중복 검사 결과 확인
+    return isNameExists;
+  };
+
   console.log("제출한 방 정보", roomName, roomPassword, roomMax, roomGame);
   // 방 정보 바꾸는 Handler
   const handleUpdateRoom = (e) => {
     e.preventDefault();
-
-    console.log("방 이름 중복 검사 시작"); // 로그 추가
-    if (checkRoomNameExists(roomName)) {
-      setErrorMessage("이미 사용 중인 방 제목입니다.");
-      return;
+    if (roomName !== originalRoomInfo.roomData.roomName) {
+      if (checkRoomNameExists(roomName)) {
+        setErrorMessage("이미 사용 중인 방 제목입니다.");
+        return;
+      }
     }
     // 비밀번호 입력란이 활성화되었고, 비밀번호가 입력되었을 때만 비밀번호 값을 전달합니다.
     const roomInfo = {
@@ -122,7 +118,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
               <div className="rounded-2xl item-center ml-3 p-2 mb-3 border flex-auto">
                 <input
                   type="text"
-                  placeholder={originalRoomInfo.roomName}
+                  placeholder={roomInfo.roomData.roomName}
                   value={roomName}
                   maxLength={12}
                   onChange={handleChangeRoomName}
@@ -163,16 +159,28 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
                   4명
                 </label>
                 <label className="p-1 m-1">
-                  <input type="radio" value={6} name="num" onChange={handleChangeRoomMax} className="mr-2" />
+                  <input
+                    type="radio"
+                    value={6}
+                    name="num"
+                    onChange={handleChangeRoomMax}
+                    className="mr-2"
+                  />
                   6명
                 </label>
                 <label className="p-1 m-1">
-                  <input type="radio" value={8} name="num" onChange={handleChangeRoomMax} className="mr-2" />
+                  <input
+                    type="radio"
+                    value={8}
+                    name="num"
+                    onChange={handleChangeRoomMax}
+                    className="mr-2"
+                  />
                   8명
                 </label>
-                </div>
               </div>
-              <div className="flex flex-wrap">
+            </div>
+            <div className="flex flex-wrap">
               <label className="mt-7 mr-3">게임 선택</label>
               <div className="rounded-2xl p-4 mb-3 border flex flex-col flex-auto justify-center">
                 <label>
@@ -187,20 +195,30 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
                   고요 속의 외침
                 </label>
                 <label>
-                  <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} className="mr-2" />
+                  <input
+                    type="radio"
+                    value={102}
+                    name="game"
+                    onChange={handleChangeRoomGame}
+                    className="mr-2"
+                  />
                   인물 맞추기
                 </label>
               </div>
             </div>
             <div className="flex justify-center items-center">
-            <button
-              type="submit"
-              className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-2 rounded-xl"
-              onClick={onClose}
-              disabled={isLoading}
-            >
-              방 설정 바꾸기
-            </button>
+              <button
+                type="submit"
+                className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-2 rounded-xl"
+                // onClick={(e) => {
+                //   e.preventDefault();
+                //   handleUpdateRoom(e);
+                //   onClose();
+                // }}
+                // disabled={isLoading}
+              >
+                방 설정 바꾸기
+              </button>
             </div>
           </form>
         </div>
