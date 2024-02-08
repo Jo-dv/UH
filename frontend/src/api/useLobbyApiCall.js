@@ -135,7 +135,7 @@ const useLobbyApiCall = () => {
     }
   };
 
-  // [방 입장] 방 비밀번호 일치 확인
+  // 친구 리스트 불러오기
   const listFriends = async () => {
     try {
       const response = await axios.get(friendsUrl);

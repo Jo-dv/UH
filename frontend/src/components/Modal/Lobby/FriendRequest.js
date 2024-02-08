@@ -1,18 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios.js";
-import useStore from "../../store/UserAuthStore";
+import useStore from "../../store/UseFriendsStore";
 
-const LogOutModal = (props) => {
+const FriendRequestModal = (props) => {
   const navigate = useNavigate();
-  // resetUser 가져오기
-  const resetUser = useStore((state) => state.resetUser);
+  // freins request 가져오기
+  const fromUserSeq = useStore((state) => state.fronmUserSeq);
   const userSeq = useStore((state) => state.user.userSeq);
-  // 카카오 소셜 로그인 / 로그아웃
-  const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-  const LOGOUT_REDIRECT_URI = process.env.REACT_APP_LOGOUT_REDIRECT_URI;
-  const LogoutLink = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${LOGOUT_REDIRECT_URI}`
 
+  
   // 로그아웃 로직
   const handleLogOut = async () => {
     try {
@@ -20,7 +17,7 @@ const LogOutModal = (props) => {
       { userSeq: userSeq }
       );
       const res = response.data
-      // console.log(res);
+      console.log(res);
       // store의 유저 정보 초기화
       if (res === 1){
         resetUser();
@@ -72,4 +69,4 @@ const LogOutModal = (props) => {
   );
 };
 
-export default LogOutModal;
+export default FriendRequestModal;
