@@ -5,7 +5,8 @@ import MicOff from "@mui/icons-material/MicOff";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import useStore from "../../store/UserAuthStore";
-
+import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
+import crown from "../../asset/image/crown.png"
 const UserVideo = ({
   streamManager,
   session,
@@ -14,7 +15,10 @@ const UserVideo = ({
   gamePlayer,
   deleteSubscriber,
   subscribers,
+  connectionId,
   kickOutUser,
+  hostId,
+  playerReady, 
 }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
@@ -92,7 +96,6 @@ const UserVideo = ({
   //   }
   // };
 
-  console.log("ㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅ", session);
   return (
     <div className="">
       {streamManager !== undefined ? (
@@ -101,9 +104,11 @@ const UserVideo = ({
             <p>
               {/* {nickname} */}
               {getNicknameTag()}
+              {hostId===connectionId?<img className="h-4" src={crown}></img>:null}
+              {playerReady?<div className="ml-1">ready</div>:null}
               {nickname === getNicknameTag() ? (
                 <>
-                  {audioActive === false ? (
+                  {/* {audioActive === false ? (
                     <button onClick={onMic}>
                       <MicOff />
                     </button>
@@ -121,15 +126,16 @@ const UserVideo = ({
                     <button onClick={muteVideo}>
                       <VideocamIcon />
                     </button>
-                  )}
+                  )} */}
                 </>
               ) : isHost === true ? (
                 <button
                   onClick={() => {
+                    if(window.confirm("강퇴하시겠습니까?"))
                     kickOutUser(streamManager.stream.connection.connectionId);
                   }}
-                >
-                  X
+                class="ml-1">
+                  <CancelPresentationTwoToneIcon/>
                 </button>
               ) : null}
             </p>
