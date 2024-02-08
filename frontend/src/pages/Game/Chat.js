@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import useStore from "../../store/UserAuthStore";
 
-const Chat = ({ session, myConnectionId, gamePlayer }) => {
+const Chat = ({ session, myConnectionId, gamePlayer, gameCategory }) => {
   const [chat, setChat] = useState("");
 
   const [messageList, setMessageList] = useState([]);
@@ -57,7 +57,7 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
         })}
         <li className="">{receiveMsg}</li>
       </ul>
-      {myConnectionId !== gamePlayer ? (
+      {myConnectionId === gamePlayer && gameCategory === 101 ? null : (
         <form
           className="px-3
           rounded-3xl bg-white
@@ -77,7 +77,7 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
             채팅
           </button>
         </form>
-      ) : null}
+      )}
     </section>
   );
 };

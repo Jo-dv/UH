@@ -171,7 +171,7 @@ export default function RoomId() {
 
           setroomInfo(serverRoomInfo);
           send({ type: "refresh" });
-          handleNewRoomInfo(session)
+          handleNewRoomInfo(session);
         });
     }
   }, [session, myUserName]);
@@ -189,8 +189,6 @@ export default function RoomId() {
     setSubscribers([]);
     setMainStreamManager(undefined);
     setPublisher(undefined);
-
-
   }, [session]);
 
   useEffect(() => {
@@ -369,6 +367,7 @@ export default function RoomId() {
   if (session !== undefined) {
     session.on("signal:room-playDone", (event) => {
       console.log("플레이 소켓 받음", event.data);
+      setIsReady(false);
       setIsPlay(false);
     });
   }
