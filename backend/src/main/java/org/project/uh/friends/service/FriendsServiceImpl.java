@@ -53,7 +53,7 @@ public class FriendsServiceImpl implements FriendsService {
 
 	@Override
 	public ResponseEntity<String> deleteFriends(int friendsId) {
-		if (friendsDao.acceptFriends(friendsId) == 1) {
+		if (friendsDao.deleteFriends(friendsId) == 1) {
 			return new ResponseEntity<>("정상적으로 처리되었습니다.", HttpStatus.OK);
 		}
 		return new ResponseEntity<>("비정상적인 요청입니다.", HttpStatus.INTERNAL_SERVER_ERROR);
