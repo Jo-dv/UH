@@ -66,7 +66,7 @@ const FeedbackModal = (props) => {
               />
               {feedbackError && <div className="text-red-500">{feedbackError}</div>}
             </div>
-            <button onClick={sendFeedback} className="bg-tab10 py-2 px-3 m-2 rounded-xl hover:bg-[#95c75a]">
+            <button onClick={sendFeedback} className="bg-tab10 py-2 px-3 m-2 rounded-xl hover:bg-tab10hover">
               보내기
             </button>
           </div>

@@ -21,6 +21,7 @@ import Leaving from "../../components/Modal/waiting/Leaving.js";
 import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
 import Inviting from "../../components/Modal/waiting/Inviting.js";
 import Person from "../../components/waitingComponent/Person.js";
+import KickedModal from "../../components/Modal/waiting/KickedModal.js";
 
 export default function RoomId() {
   // usePreventGoBack();
@@ -52,6 +53,7 @@ export default function RoomId() {
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
   const navigate = useNavigate();
+  const [isKickeded, setIsKicked] = useState(false);
 
   // 함수 정의
   const handleMainVideoStream = useCallback(
@@ -104,9 +106,10 @@ export default function RoomId() {
     mySession.on("signal:disconnect", async (event) => {
       const { connectionId } = JSON.parse(event.data);
       if (mySession.connection.connectionId === connectionId) {
-        alert("강퇴");
-        await leaveSession();
-        navigate("/lobby");
+        // alert("강퇴");
+        // await leaveSession();
+        // navigate("/lobby");
+        setIsKicked(true);
       }
     });
 
@@ -533,6 +536,11 @@ export default function RoomId() {
       {inviting && (
         <Inviting onClose={() => setInviting(false)} inviting={inviting} openLink={openLink} />
       )}
+      {/* <KickedModal isOpen={isKickeded} onClose={handleKickedModalClose} /> */}
+      <KickedModal isOpen={isKickeded} onClose={() => {
+        setIsKicked(false); // 모달 닫기
+        navigate("/lobby"); // 사용자를 로비로 이동
+      }} />
     </>
   );
 }

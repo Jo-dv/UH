@@ -62,7 +62,7 @@ const LogOutModal = (props) => {
               취소
             </button>
 
-            <button onClick={handleLogOut} className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl">
+            <button onClick={handleLogOut} className="bg-tab10 hover:bg-tab10hover py-2 px-4 rounded-xl">
               로그아웃
             </button>
           </div>
