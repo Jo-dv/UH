@@ -66,12 +66,12 @@ export default function RoomId() {
   );
   // console.log(mySessionId);
   const joinSession = useCallback(() => {
-    OV.current.enableProdMode();  // 로그 기록 해제
     // console.log("joinSession 함수 시작");
     if (session) {
       session.disconnect();
     }
     OV.current=new OpenVidu();
+    OV.current.enableProdMode();  // 로그 기록 해제
     const mySession = OV.current.initSession();
     // console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
