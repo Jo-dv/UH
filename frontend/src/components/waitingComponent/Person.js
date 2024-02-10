@@ -1,7 +1,14 @@
 import UserVideo from "../../pages/RoomId/UserVideo";
 import personImage from "../../asset/image/character.jpg";
+import React, { useState, useEffect } from "react";
 
 const Person = (props) => {
+  const [players, setPlayers] = useState();
+  useEffect(() => {
+    setPlayers(props.playersInfo)
+  }, [props.playersInfo])
+
+
   const streamManagers = props.publisher
     ? [props.publisher, ...props.subscribers]
     : props.subscribers;
@@ -31,6 +38,10 @@ const Person = (props) => {
                 subscribers={props.subscribers}
                 kickOutUser={props.kickOutUser}
                 connectionId={connectionId}
+                hostId={props.hostId}
+                playerReady={players && players[connectionId] && players[connectionId].ready
+                  ? players[connectionId].ready : undefined}
+
               />
             </div>
           </div>

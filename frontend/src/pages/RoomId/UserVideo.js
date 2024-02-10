@@ -7,6 +7,7 @@ import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import useStore from "../../store/UserAuthStore";
 import KickOutModal from "../../components/Modal/waiting/KickOutModal";
 import CloseIcon from "@mui/icons-material/Close";
+import Crown from "../../asset/image/crown.png";
 
 const UserVideo = ({
   streamManager,
@@ -17,6 +18,10 @@ const UserVideo = ({
   deleteSubscriber,
   subscribers,
   kickOutUser,
+  hostId,
+  playerReady,
+  connectionId,
+
 }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
@@ -122,9 +127,11 @@ const UserVideo = ({
       {streamManager !== undefined ? (
         <div className="">
           <div className="absolute ml-7 mt-2 flex w-52 justify-between">
-            <p>
+            <p className="flex">
               {/* {nickname} */}
               {getNicknameTag()}
+              {hostId===connectionId?<img className="h-4 ml-1" src={Crown}></img>:null}
+              {playerReady?<div className="ml-1">ready</div>:null}
             </p>
               {nickname === getNicknameTag() ? (
                 <>

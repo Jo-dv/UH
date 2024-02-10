@@ -92,6 +92,7 @@ export default function RoomId() {
 
     mySession.on("signal:team-change", (event) => {
       const { connectionId, team } = JSON.parse(event.data);
+      handleNewRoomInfo(mySession);
       // teamA와 teamB 상태 업데이트
       if (team === "A") {
         setTeamA((prev) => [...prev, connectionId]);
@@ -101,6 +102,11 @@ export default function RoomId() {
         setTeamA((prev) => prev.filter((id) => id !== connectionId));
       }
     });
+    mySession.on("signal:ready", (event) => {
+      //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
+      handleNewRoomInfo(mySession);
+    });
+
 
     //강퇴 처리(event로 보낸 connectionId와 같은 아이디를 찾아 방나가기 처리)
     mySession.on("signal:disconnect", async (event) => {
@@ -319,6 +325,16 @@ export default function RoomId() {
       } else {
         setIsPlay(false);
       }
+      if (session !== undefined) {
+        session
+          .signal({
+            type: "ready"
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+
     } catch (error) {
       console.error("set Ready Error:", error);
     }
@@ -467,6 +483,9 @@ export default function RoomId() {
                 teamB={teamB}
                 deleteSubscriber={deleteSubscriber}
                 kickOutUser={kickOutUser}
+                hostId={roomInfo.roomStatus && roomInfo.roomStatus.hostId ? roomInfo.roomStatus.hostId : undefined}
+                playersInfo={roomInfo.roomStatus && roomInfo.roomStatus.players ? roomInfo.roomStatus.players : undefined}
+
               />
             }
           </div>
