@@ -226,7 +226,7 @@ const Signup = () => {
             onClick={togglePassword}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
           >
-            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            {showPassword ? <VisibilityOffIcon color="disabled" /> : <VisibilityIcon color="disabled"/>}
           </button>
         </div>
         <p className=" text-red-500 mb-1">{err.userPassword}</p>
@@ -249,7 +249,7 @@ const Signup = () => {
         />
         <p className=" text-red-500 mb-1">{err.passwordCheck}</p>
 
-        <button className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-[#95c75a]">회원가입</button>
+        <button className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">회원가입</button>
         <h3 className="self-start ml-12 mb-2 mt-1 flex items-center">
           <Link to="/auth/Login" className="flex items-center">
             <ArrowBackIcon fontSize="small" />

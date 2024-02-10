@@ -154,7 +154,7 @@ const CreateNickname = () => {
         {/* 에러 메시지 표시 */}
         {err.userNickname && <p className="text-red-500">{err.userNickname}</p>}
 
-        <button className="font-['pixel'] p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-[#95c75a]">입장하기</button>
+        <button className="p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-tab10hover">입장하기</button>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
 

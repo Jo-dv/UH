@@ -7,6 +7,9 @@ import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import useStore from "../../store/UserAuthStore";
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import crown from "../../asset/image/crown.png"
+import KickOutModal from "../../components/Modal/waiting/KickOutModal";
+import CloseIcon from "@mui/icons-material/Close";
+
 const UserVideo = ({
   streamManager,
   session,
@@ -39,6 +42,7 @@ const UserVideo = ({
         console.error(error);
       });
   };
+
   session.on("signal:user-set", (event) => {
     setAudioActive(streamManager.stream.audioActive);
     setVideoActive(streamManager.stream.videoActive);
@@ -96,16 +100,38 @@ const UserVideo = ({
   //   }
   // };
 
+  // console.log("ㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅ", session);
+  // 모달 상태와 강퇴할 사용자의 ID를 관리하는 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  // 강퇴 버튼 클릭 핸들러
+  const handleKickOutClick = (userId) => {
+    setSelectedUserId(userId);
+    setIsModalOpen(true);
+  };
+
+  // 모달에서 강퇴 확인
+  const handleConfirmKickOut = () => {
+    kickOutUser(selectedUserId);
+    setIsModalOpen(false);
+  };
+
+  // 모달 닫기
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="">
       {streamManager !== undefined ? (
         <div className="">
-          <div className="absolute ml-7 mt-2">
+          <div className="absolute ml-7 mt-2 flex">
             <p>
               {/* {nickname} */}
               {getNicknameTag()}
-              {hostId===connectionId?<img className="h-4" src={crown}></img>:null}
-              {playerReady?<div className="ml-1">ready</div>:null}
+            </p>
+            <div className="ml-36">
               {nickname === getNicknameTag() ? (
                 <>
                   {/* {audioActive === false ? (
@@ -129,22 +155,27 @@ const UserVideo = ({
                   )} */}
                 </>
               ) : isHost === true ? (
-                <button
-                  onClick={() => {
-                    if(window.confirm("강퇴하시겠습니까?"))
-                    kickOutUser(streamManager.stream.connection.connectionId);
-                  }}
-                class="ml-1">
-                  <CancelPresentationTwoToneIcon/>
-                </button>
+                  <button
+                    // 강퇴 버튼 클릭 시 모달 창을 띄움
+                    onClick={() => handleKickOutClick(streamManager.stream.connection.connectionId)}
+                    className="bg-red-500 hover:bg-red-700 text-white p-1 rounded flex items-center justify-center w-5 h-5"
+                  >
+                    <CloseIcon fontSize="small" />
+                  </button>
               ) : null}
-            </p>
+            </div>
           </div>
           <div className="pt-9">
             <OpenViduVideoComponent streamManager={streamManager} />
           </div>
         </div>
       ) : null}
+      <KickOutModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmKickOut}
+        userName={getNicknameTag()} // 강퇴할 사용자의 닉네임을 모달에 전달
+      />
     </div>
   );
 };
