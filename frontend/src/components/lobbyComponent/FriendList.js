@@ -4,6 +4,7 @@ import UseAccessorsStore from "../../store/UseAccessorsStore";
 import useFriends from "../../hooks/useFriends";
 import UseFriendsStore from "../../store/UseFriendsStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
+import { useWebSocket } from "../../webSocket/UseWebSocket.js";
 
 
 const FriendList = () => {
@@ -14,6 +15,7 @@ const FriendList = () => {
     const [combinedList, setCombinedList] = useState([]);
     const [friendsNotInCommon, setFriendsNotInCommon] = useState([]);
     const { rejectFriends, listFriends } = useLobbyApiCall();
+    const { send } = useWebSocket();
 
     // 친구 목록 갱신을 위한 함수 정의
     const updateFriendsList = useCallback(async () => {
@@ -59,6 +61,14 @@ const FriendList = () => {
                     {combinedList.map((friend, i) => (
                         <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
                             <div>{friend.nickname}
+                                {/* 따라가기 */}
+                                <button className="ml-2" onClick={async () => {
+                                    send({
+                                        type: "follow",
+                                        connectionId: friend.connectionId
+                                    });
+                                }}>
+                                    follow</button>
                                 {/* 친구 삭제 기능 드롭다운으로든 버튼으로든 디자인 필요 */}
                                 <button className="ml-2" onClick={async () => {
                                     if (window.confirm("삭제하시겠습니까")) {
