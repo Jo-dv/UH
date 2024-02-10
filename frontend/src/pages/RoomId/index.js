@@ -24,7 +24,7 @@ import Person from "../../components/waitingComponent/Person.js";
 
 export default function RoomId() {
   // usePreventGoBack();
-  const OV = useRef(new OpenVidu());
+  const OV = useRef(undefined);
   const { getRoomInfo } = useWaitingRoomApiCall();
   const nickname = useStore((state) => state.user.userNickname);
   const { inviting, setInviting } = UseInvitingStore();
@@ -51,7 +51,25 @@ export default function RoomId() {
   const [sessionID, setSessionID] = useState("");
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
+  const [isMeme, setIsMeme] = useState(false);
+
   const navigate = useNavigate();
+
+  const itemUse = (myTeam) => {
+    if (session !== undefined) {
+      session
+        .signal({
+          data: JSON.stringify({
+            myTeam: myTeam
+          }),
+          to: [],
+          type: "meme",
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }
 
   // 함수 정의
   const handleMainVideoStream = useCallback(
@@ -68,7 +86,7 @@ export default function RoomId() {
     if (session) {
       session.disconnect();
     }
-    // console.log("OpenVidu 세션 초기화 시도");
+    OV.current = new OpenVidu();
     const mySession = OV.current.initSession();
     // console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
@@ -190,7 +208,7 @@ export default function RoomId() {
       await send({ type: "refresh" });
     }
 
-    OV.current = new OpenVidu();
+    OV.current = undefined;
     setSession(undefined);
     setSubscribers([]);
     setMainStreamManager(undefined);
@@ -298,8 +316,26 @@ export default function RoomId() {
           setTeamA((prev) => prev.filter((id) => id !== connectionId));
         }
       });
+
+
+      //아이템 처리
+      session.on("signal:meme", (event) => {
+        const { myTeam } = JSON.parse(event.data);
+        console.log(session.connection.connectionId)
+        if (myTeam === "A") {
+          if (teamB.includes(session.connection.connectionId)) {
+            // console.log("공격받음")
+            setIsMeme(true);
+          }
+        } else if (myTeam === "B") {
+          if (teamA.includes(session.connection.connectionId)) {
+            // console.log("공격받음")
+            setIsMeme(true);
+          }
+        }
+      });
     }
-  }, [session]); // session 객체를 의존성 배열에 추가
+  }, [session,teamA,teamB]); // session 객체를 의존성 배열에 추가
 
   const setReady = async () => {
     // console.log("준비");
@@ -529,6 +565,8 @@ export default function RoomId() {
           session={session}
           myUserName={myUserName}
           sendPlayDone={sendPlayDone}
+          itemUse={itemUse}
+          isMeme={isMeme}
         />
       ) : null}
       {leaving && (
@@ -540,6 +578,7 @@ export default function RoomId() {
           onClose={() => setRoomSetting(false)}
           roomSetting={roomSetting}
           roomInfo={roomInfo}
+          connectionId={session.connection.connectionId}
         />
       )}
       {inviting && (

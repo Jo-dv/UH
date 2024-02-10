@@ -4,7 +4,7 @@ import useWaitingRoomApiCall from "../../../api/useWaitingRoomApiCall";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 
-const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
+const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
   // console.log(roomInfo);
@@ -47,6 +47,11 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   }, []);
 
   useEffect(() => {
+    if(roomInfo.roomStatus.hostId!=connectionId){
+      alert("방장만 가능합니다.")
+      
+    }
+    else{
     const fetchData = async () => {
       try {
         setIsLoading(true);
@@ -58,7 +63,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
         setIsLoading(false);
       }
     };
-    fetchData();
+    fetchData();}
   }, []);
 
   const checkRoomNameExists = (name) => {
@@ -79,7 +84,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
     }
     // 비밀번호 입력란이 활성화되었고, 비밀번호가 입력되었을 때만 비밀번호 값을 전달합니다.
     const roomInfo = {
-      sessionId: originalRoomInfo.sessionId,
+      sessionId: originalRoomInfo.roomData.sessionId,
       roomName: roomName,
       roomPassword: lock && roomPassword ? roomPassword : null,
       roomGame: roomGame,
@@ -210,12 +215,12 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
               <button
                 type="submit"
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-2 rounded-xl"
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   handleUpdateRoom(e);
-                //   onClose();
-                // }}
-                // disabled={isLoading}
+                onClick={(e) => {
+                  // e.preventDefault();
+                  // handleUpdateRoom(e);
+                  // onClose();
+                }}
+                disabled={isLoading}
               >
                 방 설정 바꾸기
               </button>
