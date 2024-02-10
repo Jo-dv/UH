@@ -118,15 +118,14 @@ const UserVideo = ({
   };
 
   return (
-    <div className="">
+    <div className="relative">
       {streamManager !== undefined ? (
         <div className="">
-          <div className="absolute ml-7 mt-2 flex">
+          <div className="absolute ml-7 mt-2 flex w-52 justify-between">
             <p>
               {/* {nickname} */}
               {getNicknameTag()}
             </p>
-            <div className="ml-36">
               {nickname === getNicknameTag() ? (
                 <>
                   {/* {audioActive === false ? (
@@ -158,7 +157,6 @@ const UserVideo = ({
                     <CloseIcon fontSize="small" />
                   </button>
               ) : null}
-            </div>
           </div>
           <div className="pt-9">
             <OpenViduVideoComponent streamManager={streamManager} />
