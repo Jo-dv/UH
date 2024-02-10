@@ -139,7 +139,7 @@ const CreateNickname = () => {
         {/* 닉네임 입력창 */}
         <input
           type="text"
-          placeholder="닉네임(한글, 영어, 숫자 4-20자)"
+          placeholder="닉네임(한글, 영어, 숫자 4-10자)"
           onChange={onChange}
           onBlur={checkUserNicknameDuplicate}
           name="userNickname"
