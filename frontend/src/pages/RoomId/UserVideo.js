@@ -9,6 +9,7 @@ import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentatio
 import crown from "../../asset/image/crown.png"
 import KickOutModal from "../../components/Modal/waiting/KickOutModal";
 import CloseIcon from "@mui/icons-material/Close";
+import Crown from "../../asset/image/crown.png";
 
 const UserVideo = ({
   streamManager,
@@ -18,10 +19,10 @@ const UserVideo = ({
   gamePlayer,
   deleteSubscriber,
   subscribers,
-  connectionId,
   kickOutUser,
   hostId,
-  playerReady, 
+  playerReady,
+  connectionId,
 }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
@@ -123,15 +124,16 @@ const UserVideo = ({
   };
 
   return (
-    <div className="">
+    <div className="relative">
       {streamManager !== undefined ? (
         <div className="">
-          <div className="absolute ml-7 mt-2 flex">
-            <p>
+          <div className="absolute ml-7 mt-2 flex w-52 justify-between">
+            <p className="flex">
               {/* {nickname} */}
               {getNicknameTag()}
+              {hostId===connectionId?<img className="h-4 ml-1" src={Crown}></img>:null}
+              {playerReady?<div className="ml-1">ready</div>:null}
             </p>
-            <div className="ml-36">
               {nickname === getNicknameTag() ? (
                 <>
                   {/* {audioActive === false ? (
@@ -163,7 +165,6 @@ const UserVideo = ({
                     <CloseIcon fontSize="small" />
                   </button>
               ) : null}
-            </div>
           </div>
           <div className="pt-9">
             <OpenViduVideoComponent streamManager={streamManager} />

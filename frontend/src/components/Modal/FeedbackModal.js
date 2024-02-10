@@ -19,6 +19,12 @@ const FeedbackModal = (props) => {
     // console.log({ userSeq, feedbackContent });
     props.setFeedback(false);
   };
+  // 모달을 닫는 함수
+  const closeModal = () => {
+    props.setFeedback(false); // 부모 컴포넌트에 모달 닫힘 상태 전달
+    setFeedback(""); // 피드백 입력 내용 초기화
+    setFeedbackError(""); // 에러 메시지 초기화
+  };
 
   // 피드백 내용을 가지고 axios 요청
   const sendFeedback = async (e) => {
@@ -33,7 +39,8 @@ const FeedbackModal = (props) => {
       { userSeq, feedbackContent }
       );
       // console.log({ userSeq, feedbackContent });
-      props.setFeedback(false);
+      // props.setFeedback(false);
+      closeModal();
     } catch (error) {
       console.error("feedback 전송 실패", error);
     }
@@ -52,7 +59,7 @@ const FeedbackModal = (props) => {
       >
         <form
           onClick={(e) => e.stopPropagation()}
-          className=" bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-4 mx-2"
+          className=" bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-4 mx-2 w-80"
         >
           <div className=" text-center text-lg font-medium text-gray-900">
             <label>피드백</label>
@@ -60,12 +67,15 @@ const FeedbackModal = (props) => {
               <textarea
                 placeholder="피드백을 입력해주세요!"
                 className="m-1 px-2 
-          border border-gray-400 rounded-xl bg-white text-center resize-none"
+          border border-gray-400 rounded-xl bg-white text-center resize-none w-full h-32"
                 value={feedbackContent}
                 onChange={onChange}
               />
               {feedbackError && <div className="text-red-500">{feedbackError}</div>}
             </div>
+            <button onClick={closeModal} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 mr-2 rounded-xl">
+              취소
+            </button>
             <button onClick={sendFeedback} className="bg-tab10 py-2 px-3 m-2 rounded-xl hover:bg-tab10hover">
               보내기
             </button>

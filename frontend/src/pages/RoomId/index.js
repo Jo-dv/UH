@@ -102,6 +102,11 @@ export default function RoomId() {
         setTeamA((prev) => prev.filter((id) => id !== connectionId));
       }
     });
+    mySession.on("signal:ready", (event) => {
+      //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
+      handleNewRoomInfo(mySession);
+    });
+
 
     mySession.on("signal:ready", (event) => {
       //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
@@ -324,7 +329,6 @@ export default function RoomId() {
       } else {
         setIsPlay(false);
       }
-
       if (session !== undefined) {
         session
           .signal({
@@ -334,6 +338,7 @@ export default function RoomId() {
             console.error(error);
           });
       }
+      
     } catch (error) {
       console.error("set Ready Error:", error);
     }
@@ -479,6 +484,7 @@ export default function RoomId() {
                 kickOutUser={kickOutUser}
                 hostId={roomInfo.roomStatus && roomInfo.roomStatus.hostId ? roomInfo.roomStatus.hostId : undefined}
                 playersInfo={roomInfo.roomStatus && roomInfo.roomStatus.players ? roomInfo.roomStatus.players : undefined}
+                
               />
             }
           </div>
