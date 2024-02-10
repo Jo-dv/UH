@@ -8,6 +8,7 @@ import RoomList from "../../components/lobbyComponent/RoomList";
 import UserMediaProfile from "../../components/lobbyComponent/UserMediaProfile";
 import GameRoomSearchPanel from "../../components/lobbyComponent/GameRoomSearchPanel";
 import MyPage from "../../components/lobbyComponent/MyPage";
+import Alarm from "../../components/lobbyComponent/AlarmButton";
 
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import useStore from "../../store/UserAuthStore";
@@ -70,6 +71,7 @@ const Lobby = () => {
   return (
     <>
       <div className="container-box bg-[#FFFBF7]  grid grid-rows-12 grid-cols-12 p-2 border rounded-3xl">
+        <Alarm/>
         <UserList />
         <UserMediaProfile />
         {isLobby === null ? (

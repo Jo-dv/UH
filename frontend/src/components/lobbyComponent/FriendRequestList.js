@@ -23,21 +23,29 @@ const FriendRequestList = () => {
  const requestedFriends = friends.filter(friend => friend.friendsState === false);
 
   return (
-    <div className="p-[16px] overflow-y-scroll h-full scroll-smooth">
-      <div className="w-1/2">
-        {requestedFriends.map((friend, i) => (
-          <div
-            className="ml-[12px] mb-[4px] text-l"
-            ref={(el) => (friendRefs.current[i] = el)}
-            key={i}
-          >
-            {friend.userNickname}
-              {/* 친구 요청 수락,거절 기능 드롭다운으로든 버튼으로든 디자인 필요 */}
-            <button onClick={async()=>{await acceptFriends(friend.friendsId); updateFriendsList() }}>수락</button>
-            <button onClick={async()=>{await rejectFriends(friend.friendsId); updateFriendsList() }}>거절</button>
-          </div> 
-        ))}
+    <div className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2" style={{ width: '300px', height: '350px', zIndex: 9999 }}>
+    <p className="text-xl text-center">받은 친구요청</p>
+    <hr className="border border-gray-300 my-3"/>
+      <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
+      {requestedFriends && requestedFriends.map((friend, i) => (
+        <div ref={(el) => (friendRefs.current[i] = el)} key={i}>
+          <div className="flex items-center justify-between">
+            <div className="flex-grow">{friend.userNickname}</div>
+              <div className="flex">
+                <button onClick={async()=>{await acceptFriends(friend.friendsId); updateFriendsList() }} className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1">수락</button>
+                <button onClick={async()=>{await rejectFriends(friend.friendsId); updateFriendsList() }} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-2 rounded-xl">거절</button>
+              </div>
+            </div>
+          {i !== requestedFriends.length - 1 && <hr className="border-1 border-gray-300 my-1 w-full" />}
+        </div>
+      ))}
       </div>
+      
+      {requestedFriends.length === 0 && (
+        <div>
+          <p>받은 요청이 없습니다</p>  
+        </div>
+      )}
     </div>
   );
 };

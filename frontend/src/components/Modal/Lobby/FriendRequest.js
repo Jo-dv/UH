@@ -1,69 +1,72 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../../api/axios.js";
-import useStore from "../../store/UseFriendsStore";
+import axios from "../../../api/axios.js";
+import UseFriendsStore from "../../../store/UseFriendsStore";
 
 const FriendRequestModal = (props) => {
-  const navigate = useNavigate();
-  // freins request 가져오기
-  const fromUserSeq = useStore((state) => state.fronmUserSeq);
-  const userSeq = useStore((state) => state.user.userSeq);
 
-  
-  // 로그아웃 로직
-  const handleLogOut = async () => {
+  const { friends } = UseFriendsStore();
+  const [ request, setRequest ] = useState([]);
+  console.log("친구칭구",friends)
+
+    useEffect(() => {
+      const result = friends
+        .filter(item => item.friendsState === false)
+        .map(item => item.userNickname);
+      setRequest(result);
+      console.log(result);
+    }, [friends]);
+
+
+  const acceptHandler = async (friendsId) => {
     try {
-      const response = await axios.post("user/logout", 
-      { userSeq: userSeq }
-      );
-      const res = response.data
-      console.log(res);
-      // store의 유저 정보 초기화
-      if (res === 1){
-        resetUser();
-        sessionStorage.clear();
-        // 모달 검사 불리언 값 바꾸기
-        props.setLogout(false);
-        console.log("로그아웃 완료");
-        navigate("/auth/login");
-      } else if (res === 2) {
-        resetUser();
-        sessionStorage.clear();
-        props.setLogout(false);
-        console.log("카카오 로그아웃 완료");
-        window.location.href = LogoutLink;
-      }
-      
-    } catch (error) {
-      console.error("로그아웃 에러", error);
+      const response = await axios.put(`friends/${friendsId}`,{});
+      // const res = response.data
+      console.log(response);
+      console.log("친구칭구",friends)
     }
-  };
-  
-  const kakaoLogoutHandler = () => {
-    window.location.href = LogoutLink;
-  };
+    catch (error) {
+      console.log("친구 신청 받기 에러", error);
+    } 
+  }
+
+  const rejectHandler = async (friendsId) => {
+    try{
+      const response = await axios.delete(`friends/${friendsId}`,{});
+      // const res = response.data
+      console.log(response);
+    }
+    catch (error) {
+      console.log("친구 요청 거절 에러", error)
+    }
+  }
+
 
   return (
     <>
-      <div
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-        onClick={() => {
-          props.setLogout(false);
-        }}
-      >
-        <div className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2"
-        onClick={(e) => e.stopPropagation()}>
-          <h2 className="text-lg font-medium text-gray-900 mb-4">로그아웃하시겠습니까?</h2>
-          <div className="flex justify-center items-center space-x-4">
-            <button onClick={props.setLogout} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-xl">
-              취소
-            </button>
-
-            <button onClick={handleLogOut} className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl">
-              로그아웃
-            </button>
+      <div className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2" style={{ width: '300px', height: '350px', zIndex: 9999 }}>
+        <p className="text-xl text-center">받은 친구요청</p>
+        <hr className="border border-gray-300 my-3"/>
+          <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
+          {request && request.map((nickname, index) => (
+            <div key={index}>
+              <div className="flex items-center justify-between">
+                <div className="flex-grow">{nickname}</div>
+                <div className="flex">
+                  <button onClick={() => acceptHandler(friends[index].friendsId)} className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1">수락</button>
+                  <button onClick={() => rejectHandler(friends[index].friendsId)} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-2 rounded-xl">거절</button>
+                </div>
+              </div>
+              {index !== request.length - 1 && <hr className="border-1 border-gray-300 my-1 w-full" />}
+            </div>
+          ))}
           </div>
-        </div>
+          
+          {request.length === 0 && (
+            <div>
+              <p>받은 요청이 없습니다</p>  
+            </div>
+          )}
       </div>
     </>
   );
