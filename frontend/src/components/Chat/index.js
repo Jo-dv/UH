@@ -20,7 +20,7 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
         type: "room-chat", // The type of message (optional)
       })
       .then(() => {
-        console.log("보냄 :", chat);
+        // console.log("보냄 :", chat);
         setChat("");
         setMessageList([...messageList, receiveMsg]);
       })
@@ -32,7 +32,7 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
   session.on("signal:room-chat", (event) => {
     // console.log('받음')
     if (receiveMsg !== event.data) {
-      console.log("받음d :", event.data); // Message
+      // console.log("받음d :", event.data); // Message
     }
     setReceiveMsg(event.data);
     setMessageList([...messageList, receiveMsg]);

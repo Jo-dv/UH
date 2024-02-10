@@ -26,6 +26,7 @@ import org.project.uh.util.PasswordHashUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -513,6 +514,24 @@ public class RoomController {
 
 			room.setPlay(true);
 			return new ResponseEntity<>("게임이 시작되었습니다.", HttpStatus.OK);
+		}
+	}
+
+	@Scheduled(fixedRate = 60000)
+	public void cleanupInactiveSessions() {
+		try {
+			openvidu.fetch();
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}
+		System.out.println("클린");
+		for (String sessionId : roomList.keySet()) {
+			// 해당 세션ID로 유효한 세션이 없으면 방 제거
+			Session session = openvidu.getActiveSession(sessionId);
+			if (session == null) {
+				roomList.remove(sessionId);
+				System.out.println("Session closed: " + sessionId);
+			}
 		}
 	}
 }

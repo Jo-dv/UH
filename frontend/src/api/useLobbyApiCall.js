@@ -17,7 +17,7 @@ const useLobbyApiCall = () => {
     try {
       const response = await axios.get(roomsListUrl);
       const roomsList = response.data;
-      console.log(roomsList);
+      // console.log(roomsList);
       return roomsList;
     } catch (error) {
       console.error("roomsList 확인 중 에러 발생", error);
@@ -135,7 +135,7 @@ const useLobbyApiCall = () => {
     }
   };
 
-  // 친구 리스트 불러오기
+  // 친구 목록 확인 
   const listFriends = async () => {
     try {
       const response = await axios.get(friendsUrl);
@@ -146,6 +146,27 @@ const useLobbyApiCall = () => {
       throw error;
     }
   };
+
+  //친구 요청을 수락
+  const acceptFriends = async (friendsId) => {
+    try {
+      await axios.put(friendsUrl+`/${friendsId}`);
+    } catch (error) {
+      console.error("비정상적인 접근", error);
+      throw error;
+    }
+  };
+
+  //친구 요청을 거절
+  const rejectFriends = async (friendsId) => {
+    try {
+      await axios.delete(friendsUrl+`/${friendsId}`);
+    } catch (error) {
+      console.error("비정상적인 접근", error);
+      throw error;
+    }
+  };
+
 
   return {
     getRoomsList,
@@ -159,6 +180,8 @@ const useLobbyApiCall = () => {
     getMyPageInfo,
     postCheckPassword,
     listFriends,
+    acceptFriends,
+    rejectFriends,
   };
 };
 

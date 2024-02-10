@@ -8,7 +8,7 @@
 //   );
 // };
 const RankingList = ({ rankingList, viewGameCategoryRanking }) => {
-  console.log("리스트: ", rankingList);
+  // console.log("리스트: ", rankingList);
 
   return (
     <div>

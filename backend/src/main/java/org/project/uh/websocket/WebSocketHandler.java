@@ -24,32 +24,54 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 	private static final Map<WebSocketSession, HttpSession> CLIENTS = new ConcurrentHashMap<>();
 	private static final Map<String, WebSocketSession> connectionIds = new ConcurrentHashMap<>();
+	private static final Map<WebSocketSession, Integer> userList = new ConcurrentHashMap<>();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		HttpSession httpSession = (HttpSession)session.getAttributes().get("httpSession");
-		// if (isHttpSessionAlreadyConnected(httpSession)) {
-		// 	// 이미 연결된 경우 접속을 막고 메시지를 보내고 연결을 종료
-		// 	TextMessage errorMessage = new TextMessage("You are already connected from another session.");
-		// 	session.sendMessage(errorMessage);
-		// 	session.close(CloseStatus.POLICY_VIOLATION);
-		// 	return;
-		// }
+		System.out.println(httpSession);
+		if (isHttpSessionAlreadyConnected(httpSession)) {
+			// 이미 연결된 경우 접속을 막고 메시지를 보내고 연결을 종료
+			session.close(CloseStatus.PROTOCOL_ERROR);
+			return;
+		}
+
+		if (isUserAlreadyLogined(httpSession)) {
+			//이미 로그인되어 있는 유저의 재로그인을 막음
+			session.close(CloseStatus.BAD_DATA);
+			return;
+		}
+
+		//로그인 되지 않은 유저의 소켓 연결을 막음
+		if (httpSession.getAttribute("user") == null) {
+			session.close(CloseStatus.POLICY_VIOLATION);
+			return;
+		}
+
 		CLIENTS.put(session, httpSession);
 		connectionIds.put(session.getId(), session);
+		UserDto user = (UserDto)httpSession.getAttribute("user");
+		userList.put(session, user.getUserSeq());
 		// 클라이언트 접속 시 모든 클라이언트에게 접속 유저 리스트를 전송
 		sendConnectors();
 	}
 
-	//동시 접속 여부 확인
-	// private boolean isHttpSessionAlreadyConnected(HttpSession httpSession) {
-	// 	return CLIENTS.values().contains(httpSession);
-	// }
+	// 동시 접속 여부 확인
+	private boolean isHttpSessionAlreadyConnected(HttpSession httpSession) {
+		UserDto user = (UserDto)httpSession.getAttribute("user");
+		return CLIENTS.containsValue(httpSession);
+	}
+
+	private boolean isUserAlreadyLogined(HttpSession httpSession) {
+		UserDto user = (UserDto)httpSession.getAttribute("user");
+		return userList.containsValue(user.getUserSeq());
+	}
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		connectionIds.remove(session.getId());
 		CLIENTS.remove(session);
+		userList.remove(session);
 		// 클라이언트 연결 종료 시 모든 클라이언트에게 접속 유저 리스트를 전송 다시 전송
 		sendConnectors();
 	}
