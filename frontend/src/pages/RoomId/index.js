@@ -66,6 +66,7 @@ export default function RoomId() {
   );
   // console.log(mySessionId);
   const joinSession = useCallback(() => {
+    OV.current.enableProdMode();  // 로그 기록 해제
     // console.log("joinSession 함수 시작");
     if (session) {
       session.disconnect();
