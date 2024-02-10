@@ -25,7 +25,7 @@ import KickedModal from "../../components/Modal/waiting/KickedModal.js";
 
 export default function RoomId() {
   // usePreventGoBack();
-  const OV = useRef(new OpenVidu());
+  const OV = useRef(undefined);
   const { getRoomInfo } = useWaitingRoomApiCall();
   const nickname = useStore((state) => state.user.userNickname);
   const { inviting, setInviting } = UseInvitingStore();
@@ -71,7 +71,7 @@ export default function RoomId() {
     if (session) {
       session.disconnect();
     }
-    // console.log("OpenVidu 세션 초기화 시도");
+    OV.current=new OpenVidu();
     const mySession = OV.current.initSession();
     // console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
@@ -199,7 +199,7 @@ export default function RoomId() {
       await send({ type: "refresh" });
     }
 
-    OV.current = new OpenVidu();
+    OV.current =undefined;
     setSession(undefined);
     setSubscribers([]);
     setMainStreamManager(undefined);
