@@ -54,13 +54,13 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
   });
 
   return (
-    <section className="col-start-4 col-end-13 row-start-2 row-end-13 m-2">
-      <div className="flex flex-wrap overflow-y-scroll h-full mr-1">
+    <section className="col-start-4 col-end-13 row-start-2 row-end-13 m-2 overflow-y-scroll h-full p-1">
+      <div className="flex flex-wrap  ">
         {isLoading ? (
           <div>로딩중</div>
         ) : filteredRooms.length > 0 ? (
           filteredRooms.map((room, i) => (
-            <div className="w-1/2" ref={(el) => (roomRefs.current[i] = el)} key={i}>
+            <div className="h-full" ref={(el) => (roomRefs.current[i] = el)} key={i}>
               <Room
                 roomTitle={room.roomName}
                 gameType={room.gameCategory}
