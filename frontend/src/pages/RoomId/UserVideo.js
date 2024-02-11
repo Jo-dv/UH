@@ -51,50 +51,39 @@ const UserVideo = ({
   });
 
   const muteMic = () => {
-    console.log("들어옴",streamManager.constructor.name)
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
-      console.log("함수 전",streamManager.constructor.name)
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(false);
-      console.log("함수 후")
       socketSend();
-      console.log("소켓 후")
     }
   };
   const onMic = () => {
-    console.log("들어옴",streamManager.constructor.name)
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
-      console.log("함수 전",streamManager.constructor.name)
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(true);
-      console.log("함수 후")
-      socketSend();
-      console.log("소켓 후")
     }
   };
   const muteVideo = () => {
-    console.log("들어옴",streamManager.constructor.name)
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishVideo(false);
       socketSend();
     }
   };
   const onVideo = () => {
-    console.log("들어옴",streamManager.constructor.name)
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishVideo(true);
       socketSend();
     }
   };
 
   if (gamePlayer === streamManager.stream.connection.connectionId) {
-    if (streamManager.constructor.name === "Publisher") {
+    if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(false);
       streamManager.publishVideo(true);
       socketSend();
