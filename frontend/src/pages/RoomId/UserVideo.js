@@ -51,7 +51,7 @@ const UserVideo = ({
   });
 
   const muteMic = () => {
-    console.log("들어옴")
+    console.log("들어옴",streamManager.constructor.name)
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "Publisher") {
@@ -63,7 +63,7 @@ const UserVideo = ({
     }
   };
   const onMic = () => {
-    console.log("들어옴")
+    console.log("들어옴",streamManager.constructor.name)
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "Publisher") {
@@ -75,7 +75,7 @@ const UserVideo = ({
     }
   };
   const muteVideo = () => {
-    console.log("들어옴")
+    console.log("들어옴",streamManager.constructor.name)
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "Publisher") {
@@ -84,7 +84,7 @@ const UserVideo = ({
     }
   };
   const onVideo = () => {
-    console.log("들어옴")
+    console.log("들어옴",streamManager.constructor.name)
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "Publisher") {
