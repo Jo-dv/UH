@@ -170,6 +170,7 @@ const Login = () => {
             placeholder="비밀번호"
             onChange={onChange}
             name="userPassword"
+            autoComplete="off"
             value={form.userPassword}
             className={` p-2 m-1 border-2 rounded-xl bg-input w-72 ${
               err.userPassword || err.general
