@@ -65,6 +65,7 @@ const UserVideo = ({
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(true);
+      socketSend();
     }
   };
   const muteVideo = () => {
