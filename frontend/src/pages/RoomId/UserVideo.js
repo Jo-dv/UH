@@ -45,6 +45,7 @@ const UserVideo = ({
   };
 
   session.on("signal:user-set", (event) => {
+    console.log("받음")
     setAudioActive(streamManager.stream.audioActive);
     setVideoActive(streamManager.stream.videoActive);
   });
@@ -53,16 +54,22 @@ const UserVideo = ({
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "Publisher") {
+      console.log("함수 전",streamManager.constructor.name)
       streamManager.publishAudio(false);
+      console.log("함수 후")
       socketSend();
+      console.log("소켓 후")
     }
   };
   const onMic = () => {
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "Publisher") {
+      console.log("함수 전",streamManager.constructor.name)
       streamManager.publishAudio(true);
+      console.log("함수 후")
       socketSend();
+      console.log("소켓 후")
     }
   };
   const muteVideo = () => {
