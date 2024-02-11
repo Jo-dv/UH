@@ -38,7 +38,7 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
 
   const muteMic = () => {
     // console.log("스트림메니저", streamManager);
-    if (streamManager.constructor.name === "Publisher") {
+    if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(false);
       socketSend();
     }
@@ -46,7 +46,7 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
   const onMic = () => {
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(true);
       socketSend();
     }
@@ -55,13 +55,13 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
     // console.log("스트림메니저", streamManager);
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishVideo(false);
       socketSend();
     }
   };
   const onVideo = () => {
-    if (streamManager.constructor.name === "Publisher") {
+    if (streamManager.constructor.name === "t") {
       streamManager.publishVideo(true);
       socketSend();
     }
@@ -69,7 +69,7 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
 
   useEffect(() => {
     if (gamePlayer === streamManager.stream.connection.connectionId) {
-      if (streamManager.constructor.name === "Publisher") {
+      if (streamManager.constructor.name === "t") {
         streamManager.publishAudio(false);
         streamManager.publishVideo(true);
         socketSend(); //cpu 메모리 잡아먹는 범인
