@@ -56,7 +56,7 @@ const G102 = ({
                   <div className="w-full h-full flex flex-col justify-center items-center bg-mc1">
                     <p className="text-3xl animate-shake animate-thrice">A Team Win</p>
                     <br />
-                    <button onClick={goWaitRoom} className="text-xl">
+                    <button onClick={goWaitRoom} className="text-xl z-30">
                       로비로
                     </button>
                   </div>
@@ -65,14 +65,14 @@ const G102 = ({
                     {ATeamScore === BTeamScore ? (
                       <div className="w-full h-full flex flex-col justify-center items-center bg-mc10">
                         <p className="text-3xl animate-shake animate-thrice">무승부</p>
-                        <button onClick={goWaitRoom} className="text-xl z-20">
+                        <button onClick={goWaitRoom} className="text-xl z-30">
                           로비로
                         </button>
                       </div>
                     ) : (
                       <div className="w-full h-full flex flex-col justify-center items-center bg-mc5">
                         <p className="text-3xl animate-bounce">B Team Win</p>
-                        <button onClick={goWaitRoom} className="text-xl z-20">
+                        <button onClick={goWaitRoom} className="text-xl z-30">
                           로비로
                         </button>
                       </div>

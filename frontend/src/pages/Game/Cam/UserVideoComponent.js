@@ -86,7 +86,7 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
             <p>
               {getNicknameTag()}
 
-              {audioActive === false ? (
+              {/* {audioActive === false ? (
                 <button onClick={onMic}>
                   <MicOff />
                 </button>
@@ -104,7 +104,7 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
                 <button onClick={muteVideo}>
                   <VideocamIcon />
                 </button>
-              )}
+              )} */}
             </p>
             {/* <p>
               isHost : {isHost ? "true" : "false"}, isReady : {isReady ? "true" : "false"}
