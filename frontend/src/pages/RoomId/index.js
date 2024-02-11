@@ -54,6 +54,7 @@ export default function RoomId() {
   const [teamB, setTeamB] = useState([]);
   const navigate = useNavigate();
   const [isKickeded, setIsKicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 함수 정의
   const handleMainVideoStream = useCallback(
@@ -439,18 +440,24 @@ export default function RoomId() {
     }
   };
 
+  useEffect(() => {
+    joinSession();
+    setIsLoading(false);
+  }, []);
   return (
     <>
-      {session === undefined ? (
+      {/* {isLoading ? (<p>Loading</p>) : ( */}
+
+      {/* {session === undefined ? (
         <div>
-          <button onClick={joinSession} className="bg-mc1 p-2">
+        <button onClick={joinSession} className="bg-mc1 p-2">
             {firstRoomInfo.roomName} : JOIN ROOM
           </button>
           <section className="w-1/2">
-            <MyCam />
+          <MyCam />
           </section>
         </div>
-      ) : null}
+      ) : null} */}
 
       {session !== undefined && isPlay === false ? (
         <div className="container-box bg-[#FFFBF7] grid grid-rows-10 grid-cols-12 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
