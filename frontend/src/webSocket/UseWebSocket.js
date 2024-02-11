@@ -73,7 +73,7 @@ export const WebSocketProvider = ({ children }) => {
           { userSeq: userSeq }
         );
         const res = response.data;
-        console.log(res);
+        // console.log(res);
         // store의 유저 정보 초기화
         if (res === 1) {
           resetUser();
@@ -138,7 +138,7 @@ export const WebSocketProvider = ({ children }) => {
 
         socket.current.onclose = null;
         socket.current.close();
-        console.log("웹 소캣 연결 종료");
+        // console.log("웹 소캣 연결 종료");
       }
     };
   }, [nickname]);
