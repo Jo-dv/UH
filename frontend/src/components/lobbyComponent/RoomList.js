@@ -4,11 +4,12 @@ import Room from "./Room";
 import useLobby from "../../hooks/useLobby";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import { useWebSocket } from "../../webSocket/UseWebSocket";
+import UseRoomStore from "../../store/UseRoomStore";
 
 const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
   const { getRoomsList } = useLobbyApiCall();
   const { roomRefs } = useLobby();
-  const [rooms, setRooms] = useState([]);
+  const { rooms, setRooms} = UseRoomStore();
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
   const { refreshRequested, setRefreshRequested } = useWebSocket(); // WebSocket으로부터 새로고침 요청 상태 가져오기
 
