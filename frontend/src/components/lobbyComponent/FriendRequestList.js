@@ -23,7 +23,7 @@ const FriendRequestList = () => {
  const requestedFriends = friends.filter(friend => friend.friendsState === false);
 
   return (
-    <div className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2" style={{ width: '300px', height: '350px', zIndex: 9999 }}>
+    <div className="z-1000 bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2 z-999" style={{ width: '300px', height: '350px', zIndex: 9999 }}>
     <p className="text-xl text-center">받은 친구요청</p>
     <hr className="border border-gray-300 my-3"/>
       <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
