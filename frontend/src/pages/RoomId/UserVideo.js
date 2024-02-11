@@ -136,7 +136,7 @@ const UserVideo = ({
             </p>
               {nickname === getNicknameTag() ? (
                 <>
-                  {/* {audioActive === false ? (
+                  {audioActive === false ? (
                     <button onClick={onMic}>
                       <MicOff />
                     </button>
@@ -154,7 +154,7 @@ const UserVideo = ({
                     <button onClick={muteVideo}>
                       <VideocamIcon />
                     </button>
-                  )} */}
+                  )}
                 </>
               ) : isHost === true ? (
                   <button
