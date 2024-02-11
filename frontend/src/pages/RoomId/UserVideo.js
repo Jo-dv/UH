@@ -45,7 +45,6 @@ const UserVideo = ({
   };
 
   session.on("signal:user-set", (event) => {
-    console.log("받음")
     setAudioActive(streamManager.stream.audioActive);
     setVideoActive(streamManager.stream.videoActive);
   });
