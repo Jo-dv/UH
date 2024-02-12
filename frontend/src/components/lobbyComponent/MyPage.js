@@ -92,11 +92,13 @@ const MyPage = () => {
   }, [userSeq]);
 
   return (
-    <section className="rounded-lg mt-4 col-start-4 col-end-13 row-start-1 row-end-13 overflow-auto p-4">
-      <h1 className="text-5xl ml-5" style={{ fontFamily: "var(--font-bold)" }}>
-        {myPageInfo && myPageInfo.userNickname}
-      </h1>
-      <p className="text-2xl ml-5 mt-5">레이팅 : {myPageInfo && myPageInfo.rating}</p>
+    <section className="rounded-lg mt-4 col-start-4 col-end-13 row-start-1 row-end-13 ">
+      <div className="flex items-center justify-between">
+        <h1 className="text-5xl ml-14" style={{ fontFamily: "var(--font-bold)" }}>
+          {myPageInfo && myPageInfo.userNickname}
+        </h1>
+        <p className="text-2xl mr-10 mt-5">레이팅 : {myPageInfo && myPageInfo.rating}</p>
+      </div>
       <div className="grid grid-cols-3 col-start-1 col-end-2">
         <div className="mt-5">
           {myPageInfo && (
@@ -107,12 +109,12 @@ const MyPage = () => {
               <p className="text-2xl text-center">닉네임: {myPageInfo.userNickname}</p>
               <p className="text-2xl text-center">레이팅: {myPageInfo.rating}</p>
               <br></br> */}
-              <div className="mt-10">
+              <div className="mt-6">
                 <p className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
                   경기 승률
                 </p>
                 {myPageInfo?.record?.length !== 0 && (
-                  <div className="flex justify-center items-center content-center h-full">
+                  <div className="flex justify-center items-center content-center h-full mt-4">
                     <DonutChart color="#3498db" percent={winPercent} size="250px" />
                   </div>
                 )}
@@ -126,12 +128,12 @@ const MyPage = () => {
           )}
         </div>
 
-        <div className="col-start-2 col-end-4 relative mt-7">
-          <div className="ml-5 mt-8">
-            <h2 className="text-2xl" style={{ fontFamily: "var(--font-bold)" }}>
+        <div className="col-start-2 col-end-4 relative mt-7 ">
+          <div className="ml-5 mt-4">
+            <h2 className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
               경기 기록
             </h2>
-            <div className="record-container overflow-auto h-100 mt-4">
+            <div className="record-container overflow-auto p-4 h-[360px] mt-4">
               {myPageInfo?.record?.map((record, index) => (
                 <div
                   key={index}

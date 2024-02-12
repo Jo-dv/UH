@@ -33,7 +33,7 @@ const FriendRequestList = () => {
     <p className="text-xl text-center">받은 친구요청</p>
     <hr className="border border-gray-300 my-3"/>
       <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
-      {requestedFriends && requestedFriends.map((friend, i) => (
+      {requestList && requestList.map((friend, i) => (
         <div ref={(el) => (friendRefs.current[i] = el)} key={i}>
           <div className="flex items-center justify-between">
             <div className="flex-grow">{friend.userNickname}</div>
@@ -42,12 +42,12 @@ const FriendRequestList = () => {
                 <button onClick={async()=>{await rejectFriends(friend.friendsId); updateFriendsList() }} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-2 rounded-xl">거절</button>
               </div>
             </div>
-          {i !== requestedFriends.length - 1 && <hr className="border-1 border-gray-300 my-1 w-full" />}
+          {i !== requestList.length - 1 && <hr className="border-1 border-gray-300 my-1 w-full" />}
         </div>
       ))}
       </div>
       
-      {requestedFriends.length === 0 && (
+      {requestList.length === 0 && (
         <div>
           <p>받은 요청이 없습니다</p>  
         </div>
