@@ -6,7 +6,6 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import useStore from "../../store/UserAuthStore";
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
-import crown from "../../asset/image/crown.png"
 import KickOutModal from "../../components/Modal/waiting/KickOutModal";
 import CloseIcon from "@mui/icons-material/Close";
 import Crown from "../../asset/image/crown.png";
@@ -131,7 +130,7 @@ const UserVideo = ({
             <p className="flex">
               {/* {nickname} */}
               {getNicknameTag()}
-              {hostId===connectionId?<img className="h-4 ml-1" src={Crown}></img>:null}
+              {hostId===connectionId?<img className="h-4 ml-1 mt-1" src={Crown}></img>:null}
               {playerReady?<div className="ml-1">ready</div>:null}
             </p>
               {nickname === getNicknameTag() ? (
