@@ -146,6 +146,12 @@ const Login = () => {
         className="bg-opacity-50 bg-formBG p-4 w-96 border-2 rounded-3xl
                 flex flex-col justify-center items-center z-20"
       >
+        {/* 티커 추가 */}
+      <div className="w-full overflow-hidden">
+        <div className="whitespace-nowrap animate-scroll">
+          <span className="py-2 px-4">카메라와 마이크 권한이 필요해요!</span>
+        </div>
+      </div>
         <h2 className=" text-5xl mt-3 mb-5">로그인</h2>
         <div className="p-3">
           <input
