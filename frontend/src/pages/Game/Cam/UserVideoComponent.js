@@ -78,9 +78,9 @@ const UserVideoComponent = ({
   };
 
   useEffect(() => {
-    console.log(streamManager)
+    console.log(session.connection.connectionId)
     if (gameCategory === 101) {
-      if (gamePlayer === streamManager.stream.connection.connectionId) {
+      if (gamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId) {
         if (streamManager.constructor.name === "t") {
           streamManager.publishAudio(false);
           streamManager.publishVideo(true);
