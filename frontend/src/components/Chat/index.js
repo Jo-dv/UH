@@ -51,7 +51,7 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
     if (session.sessionConnected()) {
       session
         .signal({
-          data: `[알림]${nickname}님 환영합니다`, // Any string (optional)
+          data: `[알림] ${nickname}님 환영합니다`, // Any string (optional)
           to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
           type: "room-chat", // The type of message (optional)
         })

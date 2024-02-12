@@ -222,7 +222,7 @@ export default function RoomId() {
       //나갔을 때 알림
       await session
       .signal({
-        data: `[알림]${nickname}님이 나갔습니다.`,
+        data: `[알림] ${nickname}님이 나갔습니다.`,
         to: [], 
         type: "room-chat", 
       })
