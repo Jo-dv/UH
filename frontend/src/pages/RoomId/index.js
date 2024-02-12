@@ -213,6 +213,17 @@ export default function RoomId() {
   const leaveSession = useCallback(async () => {
     // Leave the session
     if (session) {
+      //나갔을 때 알림
+      await session
+      .signal({
+        data: `${nickname}님이 나갔습니다.`,
+        to: [], 
+        type: "room-chat", 
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
       await exitRoom(session.sessionId, session.connection.connectionId);
       await session.disconnect();
       await send({ type: "refresh" });
