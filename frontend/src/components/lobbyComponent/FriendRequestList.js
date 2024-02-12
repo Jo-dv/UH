@@ -18,11 +18,15 @@ const FriendRequestList = () => {
 
   useEffect(() => {
     updateFriendsList();
+    
     friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
+
     // 친구 요청 리스트를 불러옴
     const requestedFriends = friends.filter(friend => friend.friendsState === false);
-        setRequestList(requestedFriends);
-      }, [friends])
+
+    setRequestList(requestedFriends);
+  }, [friends]);
+
 
   return (
     <div className="z-1000 bg-white bg-opacity-95 rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2 z-999" style={{ width: '300px', height: '350px', zIndex: 9999 }}>

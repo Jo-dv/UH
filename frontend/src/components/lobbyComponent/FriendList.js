@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useCallback, useRef, useState } from "react";
 import { useWebSocket } from "../../webSocket/UseWebSocket.js";
 import useAccessors from "../../hooks/useAccessors";
 import UseAccessorsStore from "../../store/UseAccessorsStore";
@@ -23,6 +23,25 @@ const FriendList = () => {
   const [selectedFriendId, setSelectedFriendId] = useState(null);
   const [onlineFreindDropdown, setOnlineFreindDropdown] = useState(false);
   const [offlineFreindDropdown, setOfflineFreindDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // 드롭다운 외부 클릭 감지
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOnlineFreindDropdown(null); // 온라인 드롭다운을 닫음
+        setOfflineFreindDropdown(null); // 오프라인 드롭다운을 닫음
+      }
+    };
+
+    // 클릭 이벤트 리스너 추가
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // 클린업 함수에서 이벤트 리스너 제거
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   // 친구 삭제 모달
   const handleFriendDelete = (friend) => {
@@ -39,14 +58,18 @@ const FriendList = () => {
   };
 
   // 온라인 친구 드롭다운
-  const onlineDropdown = () => {
-    setOnlineFreindDropdown(!onlineFreindDropdown);
+  const onlineDropdown = (friend) => {
+    console.log(friend);
+    if (onlineFreindDropdown === friend.userNickname) {
+      setOnlineFreindDropdown(null);
+    } else {
+      setOnlineFreindDropdown(friend.userNickname);
+    }
   };
 
   // 오프라인 친구 드롭다운
   const offlineDropdown = (friend) => {
     if (offlineFreindDropdown === friend.userNickname) {
-      console.log(friend);
       setOfflineFreindDropdown(null);
     } else {
       setOfflineFreindDropdown(friend.userNickname);
@@ -59,9 +82,9 @@ const FriendList = () => {
     setFriends(friendsList);
   }, [listFriends, setFriends]);
 
+
   useEffect(() => {
     updateFriendsList();
-
     friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
 
     // 요청 상태가 아닌 친구들의 리스트만 불러옴
@@ -96,41 +119,58 @@ const FriendList = () => {
   return (
     <div className="relative">
       <div className="p-[16px] overflow-y-scroll h-[250px] scroll-smooth">
-        <div className="w-1/2">
+        <div className="w-full">
           <p>접속한 친구</p>
-          {combinedList && combinedList.map((friend, i) => (
-            <div className="ml-[12px] mb-[4px] text-l text-gray-500" key={i}>
-              <div>
-                {selectedFriend === friend && (
-                  <div className="absolute top-[30px] right-0 bg-white border border-gray-200 shadow-md rounded-md z-10">
-                    <button
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                      onClick={async () => {
-                        send({
-                          type: "follow",
-                          connectionId: friend.connectionId,
-                        });
-                      }}
-                    >
-                      따라가기
-                    </button>
-                    <button
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                      onClick={() => handleFriendDelete(friend)}
-                    >
-                      삭제하기
-                    </button>
-                  </div>
-                )}
+          {combinedList &&
+            combinedList.map((friend, i) => (
+              <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
+                <div className="relative inline-block">
+                  <button
+                    className="text-gray-500"
+                    onClick={() => onlineDropdown(friend)}
+                    aria-expanded={onlineFreindDropdown === friend ? "true" : "false"}
+                    aria-haspopup="true"
+                  >
+                    {friend.nickname}
+                  </button>
+                  {onlineFreindDropdown === friend.userNickname && (
+                    <div ref={dropdownRef} className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg">
+                      <button
+                        className="text-gray-700 text-sm block px-4 py-1 w-full text-left hover:bg-gray-100 rounded-t-2xl"
+                        onClick={async () => {
+                          send({
+                            type: "follow",
+                            connectionId: friend.connectionId,
+                          });
+                        }}
+                      >
+                        따라가기
+                      </button>
+                      <hr></hr>
+                      <div
+                        className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
+                        onClick={() => handleFriendDelete(friend)}
+                      >
+                        <button onClick={() => handleFriendDelete(friend)}>삭제하기</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {deleted === true && selectedFriendId === friend.friendsId ? (
+                  <FriendDeleteModal
+                    selectedFriend={selectedFriend}
+                    selectedFriendId={selectedFriendId}
+                    setModal={setDelete}
+                  />
+                ) : null}
               </div>
-            </div>
-          ))}
+            ))}
           <hr className="border-orange-900 my-2"></hr>
           <p>미접속 친구</p>
-          {friendsNotInCommon && friendsNotInCommon.map((friend, i) => (
-            <div className="ml-[12px] mb-[4px] text-l" ref={friendRefs.current[i]} key={i}>
-              <div className="relative inline-block">
-                <div>
+          {friendsNotInCommon &&
+            friendsNotInCommon.map((friend, i) => (
+              <div className="ml-[12px] mb-[4px] text-l" ref={friendRefs.current[i]} key={i}>
+                <div className="relative inline-block">
                   <button
                     className="text-gray-500"
                     onClick={() => offlineDropdown(friend)}
@@ -139,27 +179,26 @@ const FriendList = () => {
                   >
                     {friend.userNickname}
                   </button>
-                </div>
-                {offlineFreindDropdown === friend.userNickname && (
-                  <div className="absolute ml-5 z-10 w-[87px] bg-white rounded-3xl border-gray-200 border shadow-lg">
-                    <div
-                      className="text-gray-700 text-sm block px-4 py-2 text-sm w-full text-left"
-                      onClick={() => handleFriendDelete(friend)}
-                    >
-                      <button onClick={() => handleFriendDelete(friend)}>삭제하기</button>
+                  {offlineFreindDropdown === friend.userNickname && (
+                    <div ref={dropdownRef} className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg">
+                      <div
+                        className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
+                        onClick={() => handleFriendDelete(friend)}
+                      >
+                        <button onClick={() => handleFriendDelete(friend)}>삭제하기</button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+                {deleted === true && selectedFriendId === friend.friendsId ? (
+                  <FriendDeleteModal
+                    selectedFriend={selectedFriend}
+                    selectedFriendId={selectedFriendId}
+                    setModal={setDelete}
+                  />
+                ) : null}
               </div>
-              {deleted === true && selectedFriendId === friend.friendsId ? (
-                <FriendDeleteModal
-                  selectedFriend={selectedFriend}
-                  selectedFriendId={selectedFriendId}
-                  setModal={setDelete}
-                />
-              ) : null}
-            </div>
-          ))}
+            ))}
         </div>
         {showModal && (
           <div
@@ -174,12 +213,12 @@ const FriendList = () => {
       </div>
       <div className="absolute bottom-0 right-0 z-999 mr-6">
         <button
-          className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1"
+          className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10"
           onClick={() => {
             setShowModal((prevState) => !prevState);
           }}
         >
-          {showModal ? "닫기" : "요청"}
+          {showModal ? "✖" : "🔔"}
         </button>
       </div>
     </div>
