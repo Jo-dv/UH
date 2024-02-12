@@ -16,7 +16,7 @@ const UserVideoComponent = ({
 }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
-  const [beforeGamePlayer, setBeforeGamePlayer] = useState(gamePlayer);
+  const [beforeGamePlayer, setBeforeGamePlayer] = useState(undefined);
   const getNicknameTag = () => {
     // Gets the nickName of the user
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -84,14 +84,11 @@ const UserVideoComponent = ({
     console.log("2",session.connection.connectionId)
     if (gameCategory === 101) {
       if (gamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId) {
-        if (streamManager.constructor.name === "t") {
           streamManager.publishAudio(false);
           streamManager.publishVideo(true);
           socketSend(); //cpu 메모리 잡아먹는 범인
-        }
       } else {
         if (
-          streamManager.constructor.name === "t" &&
           beforeGamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId
         ) {
           streamManager.publishAudio(true);
