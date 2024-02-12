@@ -34,7 +34,7 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
     };
   }, []);
   return (
-    <div>
+    <div className="z-30">
       고요 속의 외침
       <br />
       <br /> 제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.

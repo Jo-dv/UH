@@ -146,6 +146,12 @@ const Login = () => {
         className="bg-opacity-50 bg-formBG p-4 w-96 border-2 rounded-3xl
                 flex flex-col justify-center items-center z-20"
       >
+        {/* 티커 추가 */}
+      <div className="w-full overflow-hidden">
+        <div className="whitespace-nowrap animate-scroll">
+          <span className="py-2 px-4">카메라와 마이크 권한이 필요해요!</span>
+        </div>
+      </div>
         <h2 className=" text-5xl mt-3 mb-5">로그인</h2>
         <div className="p-3">
           <input
@@ -170,6 +176,7 @@ const Login = () => {
             placeholder="비밀번호"
             onChange={onChange}
             name="userPassword"
+            autoComplete="off"
             value={form.userPassword}
             className={` p-2 m-1 border-2 rounded-xl bg-input w-72 ${
               err.userPassword || err.general
@@ -182,7 +189,7 @@ const Login = () => {
           <p className=" text-red-500 mb-1">{err.userPassword}</p>
         </div>
 
-        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-[#95c75a]">
+        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">
           로그인
         </button>
         <p className=" text-red-500 mb-1">{err.general}</p>

@@ -3,21 +3,23 @@ import useLobbyApiCall from "../../../api/useLobbyApiCall";
 import useWaitingRoomApiCall from "../../../api/useWaitingRoomApiCall";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import { useWebSocket } from "../../../webSocket/UseWebSocket";
 
-const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
+const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
   // console.log(roomInfo);
   const originalRoomInfo = roomInfo;
   // console.log("받은 방정보", originalRoomInfo);
+  const { send } = useWebSocket();
   // 원래 방 정보 모달에 기입
-  const [roomName, setRoomName] = useState(originalRoomInfo.roomData.roomName);
-  const [roomPassword, setRoomPassword] = useState(originalRoomInfo.roomData.roomPassword);
-  const [roomMax, setRoomMax] = useState(originalRoomInfo.roomData.max);
-  const [roomGame, setRoomGame] = useState(originalRoomInfo.roomData.gameCategory);
+  const [roomName, setRoomName] = useState(originalRoomInfo?.roomData?.roomName || "");
+  const [roomPassword, setRoomPassword] = useState(originalRoomInfo?.roomData?.roomPassword || "");
+  const [roomMax, setRoomMax] = useState(originalRoomInfo?.roomData?.max || "");
+  const [roomGame, setRoomGame] = useState(originalRoomInfo?.roomData?.gameCategory || "");
 
   // console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
-
+  // console.log(originalRoomInfo);
   // 비밀 번호 활성화 변수
   const [lock, setLock] = useState(false);
   const togglePassword = (e) => {
@@ -29,7 +31,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const { getRoomsList } = useLobbyApiCall();
   const [rooms, setRooms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [adjusting, setAdjusting] = useState(false);
   const handleChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
   }, []);
@@ -47,6 +49,11 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   }, []);
 
   useEffect(() => {
+    if(roomInfo.roomStatus.hostId!=connectionId){
+      alert("방장만 가능합니다.")
+      
+    }
+    else{
     const fetchData = async () => {
       try {
         setIsLoading(true);
@@ -58,7 +65,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
         setIsLoading(false);
       }
     };
-    fetchData();
+    fetchData();}
   }, []);
 
   const checkRoomNameExists = (name) => {
@@ -79,25 +86,25 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
     }
     // 비밀번호 입력란이 활성화되었고, 비밀번호가 입력되었을 때만 비밀번호 값을 전달합니다.
     const roomInfo = {
-      sessionId: originalRoomInfo.sessionId,
+      sessionId: originalRoomInfo.roomData.sessionId,
       roomName: roomName,
       roomPassword: lock && roomPassword ? roomPassword : null,
-      roomGame: roomGame,
-      roomMax: roomMax,
+      gameCategory: roomGame,
+      max: roomMax,
     };
-
     putRoomsList(roomInfo)
-      .then((data) => {
+      .then((roomInfo) => {
         // 성공적으로 업데이트된 경우 처리
-        // console.log("방 설정 업데이트 성공:", data);
+        send({ type: "refresh" });
+        // console.log("방 설정 업데이트 성공:", roomInfo);
       })
       .catch((error) => {
         // 오류 처리
         console.error("방 설정 업데이트 실패:", error);
+        if (error.response) {
+          console.error("서버 응답 데이터:", error.response.data);
+        }
       });
-
-    // console.log("바뀔 방 정보", roomName, roomPassword, roomMax, roomGame);
-    // console.log("roomInfo", roomInfo);
   };
 
   return (
@@ -118,7 +125,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
               <div className="rounded-2xl item-center ml-3 p-2 mb-3 border flex-auto">
                 <input
                   type="text"
-                  placeholder={roomInfo.roomData.roomName}
+                  // placeholder={originalRoomInfo.roomData.roomName}
                   value={roomName}
                   maxLength={12}
                   onChange={handleChangeRoomName}
@@ -130,13 +137,13 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
             {errorMessage && <div className="error-message ml-12 text-red-500">{errorMessage}</div>}
             <div className="flex flex-wrap">
               <label className="mt-3 mr-3">비밀번호</label>
-              <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto">
+              <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto flex flex-warp">
                 <button onClick={togglePassword}>{lock ? <LockIcon /> : <LockOpenIcon />}</button>
                 {lock && (
                   <input
                     type="text"
                     placeholder="비밀번호를 입력해주세요!"
-                    value={roomPassword}
+                    // value={roomPassword}
                     onChange={handleChangeRoomPassword}
                     maxLength={15}
                     className="text-center"
@@ -152,6 +159,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
                     type="radio"
                     value={4}
                     name="num"
+                    checked={roomMax === "4"}
                     onChange={handleChangeRoomMax}
                     defaultChecked
                     className="mr-2"
@@ -163,6 +171,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
                     type="radio"
                     value={6}
                     name="num"
+                    checked={roomMax === "6"}
                     onChange={handleChangeRoomMax}
                     className="mr-2"
                   />
@@ -173,6 +182,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
                     type="radio"
                     value={8}
                     name="num"
+                    checked={roomMax === "8"}
                     onChange={handleChangeRoomMax}
                     className="mr-2"
                   />
@@ -210,12 +220,13 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
               <button
                 type="submit"
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-2 rounded-xl"
-                // onClick={(e) => {
-                //   e.preventDefault();
-                //   handleUpdateRoom(e);
-                //   onClose();
-                // }}
-                // disabled={isLoading}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleUpdateRoom(e);
+
+                  onClose();
+                }}
+                disabled={isLoading}
               >
                 방 설정 바꾸기
               </button>

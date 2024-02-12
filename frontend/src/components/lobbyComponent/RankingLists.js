@@ -27,7 +27,7 @@ const RankingLists = ({ viewGameCategoryRanking }) => {
             data = await getRankSolo(); // 개인 랭킹 (예시로 사용, 실제 구현에 맞춰 조정)
             break;
         }
-        console.log(data);
+        // console.log(data);
         setRankingData(data);
       } catch (error) {
         console.error("Error loading ranking data:", error);

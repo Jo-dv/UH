@@ -56,9 +56,12 @@ public class UserController {
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@GetMapping("/user")
-	public ResponseEntity<List<UserDto>> listUser() {
+	public ResponseEntity<List<UserDto>> listUser(HttpSession session) {
 		try {
-			return new ResponseEntity<>(service.listUser(), HttpStatus.OK);
+			UserDto user = (UserDto)session.getAttribute("user");
+			if (user != null && user.getUserId().equals("admin201"))
+				return new ResponseEntity<>(service.listUser(), HttpStatus.OK);
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}

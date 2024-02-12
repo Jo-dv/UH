@@ -51,7 +51,7 @@ public class FeedbackController {
 		}
 	}
 
-	// 피드백 보내기
+	// 피드백 조회
 	@Operation(
 		summary = "피드백 조회"
 	)

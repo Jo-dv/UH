@@ -12,26 +12,29 @@ import UseInvitingStore from "../../store/UseInvitingStore.js";
 import useStore from "../../store/UserAuthStore";
 import UseLeavingStore from "../../store/UseLeavingStore.js";
 import { usePreventGoBack } from "../../hooks/usePreventGoBack.js";
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import PersonIcon from "@mui/icons-material/Person";
 
 // component, modal
 import Chat from "../../components/Chat/index.js";
-import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import Game from "../Game/index.js";
 import Leaving from "../../components/Modal/waiting/Leaving.js";
 import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
 import Inviting from "../../components/Modal/waiting/Inviting.js";
 import Person from "../../components/waitingComponent/Person.js";
+import KickedModal from "../../components/Modal/waiting/KickedModal.js";
 
 export default function RoomId() {
   // usePreventGoBack();
-  const OV = useRef(new OpenVidu());
+  const OV = useRef(undefined);
   const { getRoomInfo } = useWaitingRoomApiCall();
   const nickname = useStore((state) => state.user.userNickname);
   const { inviting, setInviting } = UseInvitingStore();
   const { send } = useWebSocket();
   const { roomSetting, setRoomSetting } = UseRoomSetting();
   const { leaving, setLeaving } = UseLeavingStore();
-
+  const { refreshRequested, setRefreshRequested } = useWebSocket();
   const [myUserName, setMyUserName] = useState(nickname);
   const { id } = useParams();
   const [mySessionId, setMySessionId] = useState(id);
@@ -51,9 +54,34 @@ export default function RoomId() {
   const [sessionID, setSessionID] = useState("");
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
-  const navigate = useNavigate();
+  const [isMeme, setIsMeme] = useState(false);
 
+  const navigate = useNavigate();
+  const [isKickeded, setIsKicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [roomName, setRoomName] = useState(roomInfo.roomData?.roomName || "");
+  const [roomPassword, setRoomPassword] = useState(roomInfo.roomData?.roomPassword || "");
+  const [roomMax, setRoomMax] = useState(roomInfo.roomData?.max || "");
+  const [roomGame, setRoomGame] = useState(roomInfo.roomData?.gameCategory || "");
+  const [adjusting, setAdjusting] = useState(false);
+
+  const itemUse = (myTeam) => {
+    if (session !== undefined) {
+      session
+        .signal({
+          data: JSON.stringify({
+            myTeam: myTeam
+          }),
+          to: [],
+          type: "meme",
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }
   // 함수 정의
+
   const handleMainVideoStream = useCallback(
     (stream) => {
       if (mainStreamManager !== stream) {
@@ -68,7 +96,8 @@ export default function RoomId() {
     if (session) {
       session.disconnect();
     }
-    // console.log("OpenVidu 세션 초기화 시도");
+    OV.current = new OpenVidu();
+    OV.current.enableProdMode(); // 로그 기록 해제
     const mySession = OV.current.initSession();
     // console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
@@ -100,6 +129,10 @@ export default function RoomId() {
         setTeamA((prev) => prev.filter((id) => id !== connectionId));
       }
     });
+    mySession.on("signal:ready", (event) => {
+      //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
+      handleNewRoomInfo(mySession);
+    });
 
     mySession.on("signal:ready", (event) => {
       //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
@@ -110,9 +143,10 @@ export default function RoomId() {
     mySession.on("signal:disconnect", async (event) => {
       const { connectionId } = JSON.parse(event.data);
       if (mySession.connection.connectionId === connectionId) {
-        await leaveSession();
-        navigate("/lobby");
-        alert("강퇴당했습니다.");
+        // alert("강퇴");
+        // await leaveSession();
+        // navigate("/lobby");
+        setIsKicked(true);
       }
     });
 
@@ -173,11 +207,12 @@ export default function RoomId() {
         //방조회
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
-          // console.log("서버에서 받은 방정보", serverRoomInfo);
-
           setroomInfo(serverRoomInfo);
           send({ type: "refresh" });
           handleNewRoomInfo(session);
+         
+
+          // console.log("서버에서 받은 방정보", serverRoomInfo);
         });
     }
   }, [session, myUserName]);
@@ -185,12 +220,23 @@ export default function RoomId() {
   const leaveSession = useCallback(async () => {
     // Leave the session
     if (session) {
+      //나갔을 때 알림
+      await session
+      .signal({
+        data: `[알림] ${nickname}님이 나갔습니다.`,
+        to: [], 
+        type: "room-chat", 
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
       await exitRoom(session.sessionId, session.connection.connectionId);
       await session.disconnect();
       await send({ type: "refresh" });
     }
 
-    OV.current = new OpenVidu();
+    OV.current = undefined;
     setSession(undefined);
     setSubscribers([]);
     setMainStreamManager(undefined);
@@ -298,8 +344,26 @@ export default function RoomId() {
           setTeamA((prev) => prev.filter((id) => id !== connectionId));
         }
       });
+
+
+      //아이템 처리
+      session.on("signal:meme", (event) => {
+        const { myTeam } = JSON.parse(event.data);
+        console.log(session.connection.connectionId)
+        if (myTeam === "A") {
+          if (teamB.includes(session.connection.connectionId)) {
+            // console.log("공격받음")
+            setIsMeme(true);
+          }
+        } else if (myTeam === "B") {
+          if (teamA.includes(session.connection.connectionId)) {
+            // console.log("공격받음")
+            setIsMeme(true);
+          }
+        }
+      });
     }
-  }, [session]); // session 객체를 의존성 배열에 추가
+  }, [session,teamA,teamB]); // session 객체를 의존성 배열에 추가
 
   const setReady = async () => {
     // console.log("준비");
@@ -321,11 +385,10 @@ export default function RoomId() {
       } else {
         setIsPlay(false);
       }
-
       if (session !== undefined) {
         session
           .signal({
-            type: "ready"
+            type: "ready",
           })
           .catch((error) => {
             console.error(error);
@@ -407,7 +470,6 @@ export default function RoomId() {
       });
       setTeamA(teamAData);
       setTeamB(teamBData);
-
     } catch (error) {
       console.error("Error fetching room info:", error);
     }
@@ -430,32 +492,68 @@ export default function RoomId() {
     }
   };
 
+  useEffect(() => {
+    if (roomInfo && roomInfo.roomData) {
+      setRoomName(roomInfo.roomData.roomName);
+      setRoomPassword(roomInfo.roomData.roomPassword);
+      setRoomGame(roomInfo.roomData.gameCategory);
+      setRoomMax(roomInfo.roomData.max);
+    }
+  }, [roomInfo]);
+
+  useEffect(() => {
+    joinSession();
+    setIsLoading(false);
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const data = await getRoomInfo(session.sessionId);
+      setroomInfo(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // WebSocket을 통한 새로고침 요청에 대한 처리
+  useEffect(() => {
+    if (refreshRequested) {
+      fetchData();
+      setRefreshRequested(false);
+    }
+  }, [refreshRequested]);
+
   return (
     <>
-      {session === undefined ? (
+      {/* {isLoading ? (<p>Loading</p>) : ( */}
+
+      {/* {session === undefined ? (
         <div>
-          <button onClick={joinSession} className="bg-mc1 p-2">
+        <button onClick={joinSession} className="bg-mc1 p-2">
             {firstRoomInfo.roomName} : JOIN ROOM
           </button>
           <section className="w-1/2">
-            <MyCam />
+          <MyCam />
           </section>
         </div>
-      ) : null}
+      ) : null} */}
 
       {session !== undefined && isPlay === false ? (
         <div className="container-box bg-[#FFFBF7] grid grid-rows-10 grid-cols-12 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
           {/* 방 정보 출력 */}
-          <div className="flex flex-wrap col-start-1 col-end-13 row-start-1 row-end-2 ml-10 items-center">
+          <div className="flex flex-wrap col-start-1 col-end-13 row-start-1 row-end-2 ml-10 relative">
             {roomInfo && roomInfo.roomData && (
-              <div className="flex justify-between items-center w-full">
+              <div className="flex items-center space-x-3 w-full">
+                <p>{roomPassword === null ? <LockOpenIcon /> : <LockIcon />}</p>
                 <div className="text-2xl">
-                  {roomInfo.roomData.roomName} -{" "}
-                  {roomInfo.roomData.gameCategory === 101 ? "고요 속의 외침" : "인물 맞추기"}
+                  {roomName} - {roomGame === 101 ? "고요 속의 외침" : "인물 맞추기"}
                 </div>
-                <div className="flex justify-end mr-11">
+                <div className="absolute right-11 flex flex-wrap items-center space-x-3">
+                  <p>
+                    <PersonIcon />
+                  </p>
                   <p className="text-2xl">
-                    {roomInfo.roomData.count}/{roomInfo.roomData.max}
+                    {roomInfo.roomData.count}/{roomMax}
                   </p>
                 </div>
               </div>
@@ -474,8 +572,16 @@ export default function RoomId() {
                 teamB={teamB}
                 deleteSubscriber={deleteSubscriber}
                 kickOutUser={kickOutUser}
-                hostId={roomInfo.roomStatus && roomInfo.roomStatus.hostId ? roomInfo.roomStatus.hostId : undefined}
-                playersInfo={roomInfo.roomStatus && roomInfo.roomStatus.players ? roomInfo.roomStatus.players : undefined}
+                hostId={
+                  roomInfo.roomStatus && roomInfo.roomStatus.hostId
+                    ? roomInfo.roomStatus.hostId
+                    : undefined
+                }
+                playersInfo={
+                  roomInfo.roomStatus && roomInfo.roomStatus.players
+                    ? roomInfo.roomStatus.players
+                    : undefined
+                }
               />
             }
           </div>
@@ -510,7 +616,9 @@ export default function RoomId() {
                   onClick={() => {
                     setReady();
                   }}
-                  className="bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full"
+                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${
+                    isReady ? "bg-tab4" : ""
+                  }`}
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
@@ -529,6 +637,8 @@ export default function RoomId() {
           session={session}
           myUserName={myUserName}
           sendPlayDone={sendPlayDone}
+          itemUse={itemUse}
+          isMeme={isMeme}
         />
       ) : null}
       {leaving && (
@@ -540,11 +650,20 @@ export default function RoomId() {
           onClose={() => setRoomSetting(false)}
           roomSetting={roomSetting}
           roomInfo={roomInfo}
+          connectionId={session.connection.connectionId}
         />
       )}
       {inviting && (
         <Inviting onClose={() => setInviting(false)} inviting={inviting} openLink={openLink} />
       )}
+      {/* <KickedModal isOpen={isKickeded} onClose={handleKickedModalClose} /> */}
+      <KickedModal
+        isOpen={isKickeded}
+        onClose={() => {
+          setIsKicked(false); // 모달 닫기
+          navigate("/lobby"); // 사용자를 로비로 이동
+        }}
+      />
     </>
   );
 }
