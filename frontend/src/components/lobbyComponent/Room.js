@@ -34,7 +34,6 @@ const Room = (props) => {
   const handleRoomMax = () => {
     if (props.numberOfPeople === props.totalNumberOfPeople) {
       setShowNoEnter(true);
-      // 여기서 추가적인 작업을 수행할 수 있음 (예: 모달 표시)
     } else {
       setShowNoEnter(false);
       if (props.isLocked) {
@@ -75,7 +74,7 @@ const Room = (props) => {
           </div>
         </div>
       ) : (
-        <div onClick={handleClick} className="h-full m-4 p-4 border rounded-3xl bg-tab2">
+        <div onClick={handleClick} className="h-full m-4 p-5 border rounded-3xl bg-tab2">
           <div className="flex flex-wrap justify-start items-center space-x-3 mb-7">
             <p>{props.isLocked === null ? <LockOpenIcon /> : <LockIcon />}</p>
             <p className="text-3xl">{props.roomTitle}</p>
