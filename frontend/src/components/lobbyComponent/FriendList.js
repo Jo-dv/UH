@@ -21,7 +21,7 @@ const FriendList = () => {
   const [deleted, setDelete] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [selectedFriendId, setSelectedFriendId] = useState(null);
-  const [dropdownIndex, setDropdownIndex] = useState(null);
+  
 
   const handleDropdownToggle = (friend) => {
     if (selectedFriend === friend) {
@@ -44,6 +44,7 @@ const FriendList = () => {
       setShowModal(false);
     }
   };
+
 
   // 친구 목록 갱신을 위한 함수 정의
   const updateFriendsList = useCallback(async () => {
@@ -118,6 +119,13 @@ const FriendList = () => {
               {deleted === true ? <FriendDeleteModal selectedFriend={selectedFriend} selectedFriendId={selectedFriendId} setModal={setDelete} /> : null}
             </div>
           ))}
+          {showModal && (
+            <div className="fixed top-0 right-30 w-full h-full flex justify-center items-center z-50" onClick={closeModal}>
+              <div>
+                <FriendRequestList />
+              </div>
+            </div>
+          )}
           </div>
       </div>
       <div className="absolute bottom-0 right-0 z-999 mr-6">
