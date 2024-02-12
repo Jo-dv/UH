@@ -4,7 +4,7 @@ import useWaitingRoomApiCall from "../../../api/useWaitingRoomApiCall";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 
-const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
+const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
   // console.log(roomInfo);
@@ -47,6 +47,11 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   }, []);
 
   useEffect(() => {
+    if(roomInfo.roomStatus.hostId!=connectionId){
+      alert("방장만 가능합니다.")
+      
+    }
+    else{
     const fetchData = async () => {
       try {
         setIsLoading(true);
@@ -58,7 +63,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
         setIsLoading(false);
       }
     };
-    fetchData();
+    fetchData();}
   }, []);
 
   const checkRoomNameExists = (name) => {
