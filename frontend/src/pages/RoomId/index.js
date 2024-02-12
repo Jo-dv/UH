@@ -61,6 +61,7 @@ export default function RoomId() {
   const [roomPassword, setRoomPassword] = useState(roomInfo.roomData?.roomPassword || "");
   const [roomMax, setRoomMax] = useState(roomInfo.roomData?.max || "");
   const [roomGame, setRoomGame] = useState(roomInfo.roomData?.gameCategory || "");
+  const [adjusting, setAdjusting] = useState(false);
   // 함수 정의
 
   const handleMainVideoStream = useCallback(

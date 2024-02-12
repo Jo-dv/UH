@@ -4,6 +4,7 @@ import useWaitingRoomApiCall from "../../../api/useWaitingRoomApiCall";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useWebSocket } from "../../../webSocket/UseWebSocket";
+
 const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
@@ -30,7 +31,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const { getRoomsList } = useLobbyApiCall();
   const [rooms, setRooms] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [adjusting, setAdjusting] = useState(false);
   const handleChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
   }, []);
@@ -86,8 +87,6 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
       gameCategory: roomGame,
       max: roomMax,
     };
-    // console.log("11111111111111111111", roomInfo.sessionId);
-    // console.log("2222222222222222222", originalRoomInfo.roomData.sessionId);
     putRoomsList(roomInfo)
       .then((roomInfo) => {
         // 성공적으로 업데이트된 경우 처리
@@ -101,9 +100,6 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
           console.error("서버 응답 데이터:", error.response.data);
         }
       });
-
-    // console.log("바뀔 방 정보", roomName, roomPassword, roomMax, roomGame);
-    // console.log("roomInfo", roomInfo);
   };
 
   return (
@@ -222,6 +218,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   handleUpdateRoom(e);
+
                   onClose();
                 }}
                 disabled={isLoading}
