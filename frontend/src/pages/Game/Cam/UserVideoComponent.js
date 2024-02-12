@@ -78,11 +78,12 @@ const UserVideoComponent = ({
   };
 
   useEffect(() => {
-    console.log("0",beforeGamePlayer)
+    console.log("0",gamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId)
     console.log("1",gamePlayer)
     console.log("2",streamManager.stream.connection.connectionId)
-    console.log("2",session.connection.connectionId)
+    console.log("3",session.connection.connectionId)
     if (gameCategory === 101) {
+      console.log(gamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId)
       if (gamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId) {
           streamManager.publishAudio(false);
           streamManager.publishVideo(true);
