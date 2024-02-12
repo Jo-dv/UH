@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Donut from "./Donut";
 
 const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizIndex }) => {
   const startTime = useRef(null);
@@ -51,9 +52,7 @@ const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizInde
     isRunning ? delay : null
   );
 
-  return (
-    <div className={`bg-[#00${maxTurnTime - turnTime}] w-full h-32`}>{maxTurnTime - turnTime}</div>
-  );
+  return <Donut color="#F88585" percent={turnTime / maxTurnTime} size="200px" />;
 };
 
 export default TurnTimer;

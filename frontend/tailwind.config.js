@@ -32,6 +32,7 @@ module.exports = {
         tab8: "#99b7db",
         tab9: "#f8d44c",
         tab10: "#a8d572",
+        tab10hover: "#95c75a",
         tab11: "#f6ecc9",
         tab12: "#f2ac3c",
       },

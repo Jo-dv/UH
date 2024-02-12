@@ -40,6 +40,7 @@ const Person = (props) => {
                 hostId={props.hostId}
                 playerReady={players && players[connectionId] && players[connectionId].ready
                   ? players[connectionId].ready : undefined}
+                  
               />
             </div>
           </div>

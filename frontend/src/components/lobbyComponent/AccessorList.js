@@ -17,7 +17,7 @@ const AccessorsList = () => {
 
   return (
     <div className="p-[16px] overflow-y-scroll h-full scroll-smooth">
-      <div className="w-1/2">
+      <div className="">
         {accessors.map((accessor, i) =>
           nickname === accessor.nickname ? null : (
             <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}

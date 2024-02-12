@@ -21,6 +21,7 @@ import Leaving from "../../components/Modal/waiting/Leaving.js";
 import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
 import Inviting from "../../components/Modal/waiting/Inviting.js";
 import Person from "../../components/waitingComponent/Person.js";
+import KickedModal from "../../components/Modal/waiting/KickedModal.js";
 
 export default function RoomId() {
   // usePreventGoBack();
@@ -54,6 +55,8 @@ export default function RoomId() {
   const [isMeme, setIsMeme] = useState(false);
 
   const navigate = useNavigate();
+  const [isKickeded, setIsKicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const itemUse = (myTeam) => {
     if (session !== undefined) {
@@ -86,7 +89,8 @@ export default function RoomId() {
     if (session) {
       session.disconnect();
     }
-    OV.current = new OpenVidu();
+    OV.current=new OpenVidu();
+    OV.current.enableProdMode();  // 로그 기록 해제
     const mySession = OV.current.initSession();
     // console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
@@ -118,6 +122,11 @@ export default function RoomId() {
         setTeamA((prev) => prev.filter((id) => id !== connectionId));
       }
     });
+    mySession.on("signal:ready", (event) => {
+      //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
+      handleNewRoomInfo(mySession);
+    });
+
 
     mySession.on("signal:ready", (event) => {
       //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
@@ -128,9 +137,10 @@ export default function RoomId() {
     mySession.on("signal:disconnect", async (event) => {
       const { connectionId } = JSON.parse(event.data);
       if (mySession.connection.connectionId === connectionId) {
-        await leaveSession();
-        navigate("/lobby");
-        alert("강퇴당했습니다.");
+        // alert("강퇴");
+        // await leaveSession();
+        // navigate("/lobby");
+        setIsKicked(true);
       }
     });
 
@@ -208,7 +218,7 @@ export default function RoomId() {
       await send({ type: "refresh" });
     }
 
-    OV.current = undefined;
+    OV.current =undefined;
     setSession(undefined);
     setSubscribers([]);
     setMainStreamManager(undefined);
@@ -357,7 +367,6 @@ export default function RoomId() {
       } else {
         setIsPlay(false);
       }
-
       if (session !== undefined) {
         session
           .signal({
@@ -367,6 +376,7 @@ export default function RoomId() {
             console.error(error);
           });
       }
+      
     } catch (error) {
       console.error("set Ready Error:", error);
     }
@@ -466,18 +476,24 @@ export default function RoomId() {
     }
   };
 
+  useEffect(() => {
+    joinSession();
+    setIsLoading(false);
+  }, []);
   return (
     <>
-      {session === undefined ? (
+      {/* {isLoading ? (<p>Loading</p>) : ( */}
+
+      {/* {session === undefined ? (
         <div>
-          <button onClick={joinSession} className="bg-mc1 p-2">
+        <button onClick={joinSession} className="bg-mc1 p-2">
             {firstRoomInfo.roomName} : JOIN ROOM
           </button>
           <section className="w-1/2">
-            <MyCam />
+          <MyCam />
           </section>
         </div>
-      ) : null}
+      ) : null} */}
 
       {session !== undefined && isPlay === false ? (
         <div className="container-box bg-[#FFFBF7] grid grid-rows-10 grid-cols-12 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
@@ -512,6 +528,7 @@ export default function RoomId() {
                 kickOutUser={kickOutUser}
                 hostId={roomInfo.roomStatus && roomInfo.roomStatus.hostId ? roomInfo.roomStatus.hostId : undefined}
                 playersInfo={roomInfo.roomStatus && roomInfo.roomStatus.players ? roomInfo.roomStatus.players : undefined}
+                
               />
             }
           </div>
@@ -546,7 +563,9 @@ export default function RoomId() {
                   onClick={() => {
                     setReady();
                   }}
-                  className="bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full"
+                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${
+                    isReady ? "bg-tab4" : ""
+                  }`}
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
@@ -584,6 +603,11 @@ export default function RoomId() {
       {inviting && (
         <Inviting onClose={() => setInviting(false)} inviting={inviting} openLink={openLink} />
       )}
+      {/* <KickedModal isOpen={isKickeded} onClose={handleKickedModalClose} /> */}
+      <KickedModal isOpen={isKickeded} onClose={() => {
+        setIsKicked(false); // 모달 닫기
+        navigate("/lobby"); // 사용자를 로비로 이동
+      }} />
     </>
   );
 }

@@ -170,6 +170,7 @@ const Login = () => {
             placeholder="비밀번호"
             onChange={onChange}
             name="userPassword"
+            autoComplete="off"
             value={form.userPassword}
             className={` p-2 m-1 border-2 rounded-xl bg-input w-72 ${
               err.userPassword || err.general
@@ -182,7 +183,7 @@ const Login = () => {
           <p className=" text-red-500 mb-1">{err.userPassword}</p>
         </div>
 
-        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-[#95c75a]">
+        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">
           로그인
         </button>
         <p className=" text-red-500 mb-1">{err.general}</p>

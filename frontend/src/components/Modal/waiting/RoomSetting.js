@@ -11,10 +11,10 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
   const originalRoomInfo = roomInfo;
   // console.log("받은 방정보", originalRoomInfo);
   // 원래 방 정보 모달에 기입
-  const [roomName, setRoomName] = useState(originalRoomInfo.roomData.roomName);
-  const [roomPassword, setRoomPassword] = useState(originalRoomInfo.roomData.roomPassword);
-  const [roomMax, setRoomMax] = useState(originalRoomInfo.roomData.max);
-  const [roomGame, setRoomGame] = useState(originalRoomInfo.roomData.gameCategory);
+  const [roomName, setRoomName] = useState(originalRoomInfo?.roomData?.roomName || "");
+  const [roomPassword, setRoomPassword] = useState(originalRoomInfo?.roomData?.roomPassword || "");
+  const [roomMax, setRoomMax] = useState(originalRoomInfo?.roomData?.max || "");
+  const [roomGame, setRoomGame] = useState(originalRoomInfo?.roomData?.gameCategory || "");
 
   // console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
 
@@ -92,13 +92,16 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
     };
 
     putRoomsList(roomInfo)
-      .then((data) => {
+      .then((roomInfo) => {
         // 성공적으로 업데이트된 경우 처리
         // console.log("방 설정 업데이트 성공:", data);
       })
       .catch((error) => {
         // 오류 처리
         console.error("방 설정 업데이트 실패:", error);
+        if (error.response) {
+          console.error("서버 응답 데이터:", error.response.data);
+        }
       });
 
     // console.log("바뀔 방 정보", roomName, roomPassword, roomMax, roomGame);
@@ -123,7 +126,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
               <div className="rounded-2xl item-center ml-3 p-2 mb-3 border flex-auto">
                 <input
                   type="text"
-                  placeholder={roomInfo.roomData.roomName}
+                  // placeholder={originalRoomInfo.roomData.roomName}
                   value={roomName}
                   maxLength={12}
                   onChange={handleChangeRoomName}
@@ -216,9 +219,9 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
                 type="submit"
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-2 rounded-xl"
                 onClick={(e) => {
-                  // e.preventDefault();
-                  // handleUpdateRoom(e);
-                  // onClose();
+                  e.preventDefault();
+                  handleUpdateRoom(e);
+                  onClose();
                 }}
                 disabled={isLoading}
               >

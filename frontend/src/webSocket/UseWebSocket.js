@@ -73,7 +73,7 @@ export const WebSocketProvider = ({ children }) => {
           { userSeq: userSeq }
         );
         const res = response.data;
-        console.log(res);
+        // console.log(res);
         // store의 유저 정보 초기화
         if (res === 1) {
           resetUser();
