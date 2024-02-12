@@ -17,8 +17,6 @@ const FriendRequestList = () => {
   }, [listFriends, setFriends]);
 
   useEffect(() => {
-    updateFriendsList();
-    
     friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
 
     // 친구 요청 리스트를 불러옴
@@ -33,7 +31,7 @@ const FriendRequestList = () => {
       <p className="text-xl text-center">받은 친구요청</p>
       <hr className="border border-gray-300 my-3"/>
         <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
-        {requestList && requestList.map((friend, i) => (
+        {requestList.map((friend, i) => (
           <div ref={(el) => (friendRefs.current[i] = el)} key={i}>
             <div className="flex items-center justify-between">
               <div className="flex-grow">{friend.userNickname}</div>
@@ -47,11 +45,10 @@ const FriendRequestList = () => {
         ))}
         </div>
         
-        {requestList && requestList.length === 0 && (
+        {requestList.length === 0}
           <div>
             <p className="text-center">받은 요청이 없습니다</p>  
           </div>
-        )}
     </div>
   );
 };
