@@ -78,7 +78,7 @@ const UserVideoComponent = ({
   };
 
   useEffect(() => {
-    console.log("gamePlayer", gamePlayer, "그전", beforeGamePlayer);
+    console.log(streamManager)
     if (gameCategory === 101) {
       if (gamePlayer === streamManager.stream.connection.connectionId) {
         if (streamManager.constructor.name === "t") {
