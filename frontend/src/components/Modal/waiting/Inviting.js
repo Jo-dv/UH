@@ -9,7 +9,7 @@ const Inviting = ({ inviting, onClose, openLink }) => {
     navigator.clipboard
       .writeText(invitingLink)
       .then(() => {
-        console.log("링크가 클립보드에 복사되었습니다.");
+        // console.log("링크가 클립보드에 복사되었습니다.");
       })
       .catch((err) => {
         console.error("클립보드에 복사하는데 실패했습니다:", err);

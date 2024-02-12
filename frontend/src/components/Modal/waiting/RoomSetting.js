@@ -18,7 +18,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const [roomGame, setRoomGame] = useState(originalRoomInfo?.roomData?.gameCategory || "");
 
   // console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
-  console.log(originalRoomInfo);
+  // console.log(originalRoomInfo);
   // 비밀 번호 활성화 변수
   const [lock, setLock] = useState(false);
   const togglePassword = (e) => {
@@ -68,7 +68,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
     return isNameExists;
   };
 
-  console.log("제출한 방 정보", roomName, roomPassword, roomMax, roomGame);
+  // console.log("제출한 방 정보", roomName, roomPassword, roomMax, roomGame);
   // 방 정보 바꾸는 Handler
   const handleUpdateRoom = (e) => {
     e.preventDefault();
@@ -92,7 +92,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
       .then((roomInfo) => {
         // 성공적으로 업데이트된 경우 처리
         send({ type: "refresh" });
-        console.log("방 설정 업데이트 성공:", roomInfo);
+        // console.log("방 설정 업데이트 성공:", roomInfo);
       })
       .catch((error) => {
         // 오류 처리
@@ -102,8 +102,8 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
         }
       });
 
-    console.log("바뀔 방 정보", roomName, roomPassword, roomMax, roomGame);
-    console.log("roomInfo", roomInfo);
+    // console.log("바뀔 방 정보", roomName, roomPassword, roomMax, roomGame);
+    // console.log("roomInfo", roomInfo);
   };
 
   return (

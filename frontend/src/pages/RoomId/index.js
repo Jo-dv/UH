@@ -188,11 +188,11 @@ export default function RoomId() {
         //방조회
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
-          console.log("서버에서 받은 방정보", serverRoomInfo);
+          // console.log("서버에서 받은 방정보", serverRoomInfo);
           handleNewRoomInfo(session);
           setroomInfo(serverRoomInfo);
 
-          console.log("서버에서 받은 방정보", serverRoomInfo);
+          // console.log("서버에서 받은 방정보", serverRoomInfo);
         });
     }
   }, [session, myUserName]);
