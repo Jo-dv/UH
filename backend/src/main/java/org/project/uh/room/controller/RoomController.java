@@ -48,7 +48,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -102,17 +101,14 @@ public class RoomController {
 	})
 	@PostMapping("/rooms")
 	public ResponseEntity<String> initializeSession(@RequestBody RoomDto roomDto,
-		HttpSession httpSession) {
+		@SessionAttribute(name = "user") UserDto user) {
 		//방 만들기/입장(입장할 방 ID)
 		String sessionId = roomDto.getSessionId();
 
 		//방을 만드는 경우
 		if (sessionId.equals("create")) {
 			try {
-				String roomId = roomService.createRoom(openvidu, roomDto, roomList);
-				//session 에 현재 참여중인 방 정보 입력
-				httpSession.setAttribute("roomId", roomId);
-				return new ResponseEntity<>(roomId, HttpStatus.OK);
+				return new ResponseEntity<>(roomService.createRoom(openvidu, roomDto, roomList), HttpStatus.OK);
 			} catch (Exception e) {
 				return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -125,11 +121,8 @@ public class RoomController {
 					return new ResponseEntity<>("인원초과", HttpStatus.BAD_REQUEST);
 				else if (result.equals("시작된방")) {
 					return new ResponseEntity<>("이미 시작된 방", HttpStatus.NOT_FOUND);
-				} else {
-					//session 에 현재 참여중인 방 정보 입력
-					httpSession.setAttribute("roomId", sessionId);
+				} else
 					return new ResponseEntity<>(sessionId, HttpStatus.OK);
-				}
 			} catch (Exception e) {
 				return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -232,16 +225,13 @@ public class RoomController {
 	})
 	@DeleteMapping("/exitrooms/{sessionId}/{connectionId}")
 	public ResponseEntity<String> removeConnection(@PathVariable("sessionId") String sessionId,
-		@PathVariable("connectionId") String connectionId, HttpSession httpSession) {
+		@PathVariable("connectionId") String connectionId) {
 		RoomDto roomDto = roomList.get(sessionId);
 
 		//예외처리
 		if (roomDto == null) {
 			return new ResponseEntity<>("비정상적인 접근", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		//session에서 방 정보 제거
-		httpSession.removeAttribute("roomId");
 
 		// count가 0이 되면 방 제거
 		if (roomDto.getCount() == 1) {

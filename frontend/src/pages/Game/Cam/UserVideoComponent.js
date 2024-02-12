@@ -6,17 +6,9 @@ import MicOff from "@mui/icons-material/MicOff";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 
-const UserVideoComponent = ({
-  streamManager,
-  session,
-  isHost,
-  isReady,
-  gamePlayer,
-  gameCategory,
-}) => {
+const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlayer }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
-  const [beforeGamePlayer, setBeforeGamePlayer] = useState(gamePlayer);
   const getNicknameTag = () => {
     // Gets the nickName of the user
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -45,16 +37,14 @@ const UserVideoComponent = ({
   });
 
   const muteMic = () => {
-    console.log("스트림메니저", streamManager);
-    console.log("스트림메니저2", gamePlayer);
-    console.log("스트림메니저3", gameCategory);
+    // console.log("스트림메니저", streamManager);
     if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(false);
       socketSend();
     }
   };
   const onMic = () => {
-    if (gamePlayer === streamManager.stream.connection.connectionId && gameCategory === 101) {
+    if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(true);
@@ -78,25 +68,14 @@ const UserVideoComponent = ({
   };
 
   useEffect(() => {
-    console.log("gamePlayer", gamePlayer, "그전", beforeGamePlayer);
-    if (gameCategory === 101) {
-      if (gamePlayer === streamManager.stream.connection.connectionId) {
-        if (streamManager.constructor.name === "t") {
-          streamManager.publishAudio(false);
-          streamManager.publishVideo(true);
-          socketSend(); //cpu 메모리 잡아먹는 범인
-        }
-      } else {
-        if (
-          streamManager.constructor.name === "t" &&
-          beforeGamePlayer === streamManager.stream.connection.connectionId
-        ) {
-          streamManager.publishAudio(true);
-          socketSend(); //cpu 메모리 잡아먹는 범인
-        }
-      }
-      setBeforeGamePlayer(gamePlayer);
-    }
+    console.log('test',streamManager)
+    // if (gamePlayer === streamManager.stream.connection.connectionId) {
+    //   if (streamManager.constructor.name === "t") {
+    //     streamManager.publishAudio(false);
+    //     streamManager.publishVideo(true);
+    //     socketSend(); //cpu 메모리 잡아먹는 범인
+    //   }
+    // }
   }, [gamePlayer]);
 
   return (
@@ -108,7 +87,7 @@ const UserVideoComponent = ({
             <p>
               {getNicknameTag()}
 
-              {audioActive === false ? (
+              {/* {audioActive === false ? (
                 <button onClick={onMic}>
                   <MicOff />
                 </button>
@@ -118,7 +97,7 @@ const UserVideoComponent = ({
                 </button>
               )}
 
-              {/* {videoActive === false ? (
+              {videoActive === false ? (
                 <button onClick={onVideo}>
                   <VideocamOffIcon />
                 </button>

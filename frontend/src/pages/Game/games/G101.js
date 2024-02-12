@@ -32,7 +32,8 @@ const G101 = ({
   changeTeamTurn,
   setIsGameEnd,
 }) => {
-  useEffect(() => {}, []);
+  useEffect(() => {
+  }, []);
   const [maxTurnTime, setMaxTurnTime] = useState(5000);
   const [turnTime, setTurnTime] = useState(0);
   return (
@@ -73,7 +74,6 @@ const G101 = ({
                   streamManager={turnPlayerId[1]}
                   session={session}
                   gamePlayer={turnPlayerId[0]}
-                  gameCategory={101}
                 />
 
                 {/* {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
@@ -131,7 +131,6 @@ const G101 = ({
                                 plusScore={plusScore}
                                 changeTeamIndex={changeTeamIndex}
                                 setTurnTime={setTurnTime}
-                                G101form={true}
                               />
                             </div>
                           </>
