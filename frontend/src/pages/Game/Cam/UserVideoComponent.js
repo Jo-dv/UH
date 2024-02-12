@@ -78,14 +78,21 @@ const UserVideoComponent = ({
   };
 
   useEffect(() => {
+    console.log("0",beforeGamePlayer)
+    console.log("1",gamePlayer)
+    console.log("2",streamManager.stream.connection.connectionId)
+    console.log("2",session.connection.connectionId)
     if (gameCategory === 101) {
-      if (gamePlayer === session.connection.connectionId) {
-        streamManager.publishAudio(false);
-        streamManager.publishVideo(true);
-        socketSend(); //cpu 메모리 잡아먹는 범인
+      if (gamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId) {
+        if (streamManager.constructor.name === "t") {
+          streamManager.publishAudio(false);
+          streamManager.publishVideo(true);
+          socketSend(); //cpu 메모리 잡아먹는 범인
+        }
       } else {
         if (
-          beforeGamePlayer === session.connection.connectionId
+          streamManager.constructor.name === "t" &&
+          beforeGamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId
         ) {
           streamManager.publishAudio(true);
           socketSend(); //cpu 메모리 잡아먹는 범인
