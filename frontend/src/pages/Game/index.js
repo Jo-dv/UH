@@ -8,7 +8,7 @@ import UserVideoComponent from "./Cam/UserVideoComponent";
 import G101 from "./games/G101";
 import G102 from "./games/G102";
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => {
+const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUse,isMeme }) => {
   let maxTime = 60000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -43,6 +43,8 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
   const [BTeamScore, setBTeamScore] = useState(0);
   const [teamChangeLoading, setTeamChangeLoading] = useState(false);
   const [gameCategory, setGameCategory] = useState(undefined);
+  const [isEnded, setIsEnded] = useState(false); // 하위 컴포넌트에게 영상 재생 상태를 전달할 상태
+
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
   };
@@ -198,6 +200,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                         streamManager={sub[1]}
                         session={session}
                         gamePlayer={turnPlayerId[0]}
+                        gameCategory={gameCategory}
                       />
                     </div>
                   ) : (
@@ -206,6 +209,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                         streamManager={sub[1]}
                         session={session}
                         gamePlayer={turnPlayerId[0]}
+                        gameCategory={gameCategory}
                       />
                     </div>
                   )}
@@ -279,6 +283,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                     plusScore={plusScore}
                     changeTeamIndex={changeTeamIndex}
                     plusQuizIndex={plusQuizIndex}
+                    isItem={isMeme}
                   />
                 ) : null}
                 {/* <button onClick={sendPlayDone}>playDone</button> */}
@@ -303,6 +308,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                         streamManager={sub[1]}
                         session={session}
                         gamePlayer={turnPlayerId[0]}
+                        gameCategory={gameCategory}
                       />
                     </div>
                   ) : (
@@ -311,6 +317,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                         streamManager={sub[1]}
                         session={session}
                         gamePlayer={turnPlayerId[0]}
+                        gameCategory={gameCategory}
                       />
                     </div>
                   )}
@@ -318,6 +325,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
               ))}
             </section>
           </div>
+          {!isEnded?<button onClick={()=>itemUse(myTeam)}>bombs</button>:null}
         </main>
       )}
     </>

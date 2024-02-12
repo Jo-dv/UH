@@ -54,6 +54,8 @@ export default function RoomId() {
   const [sessionID, setSessionID] = useState("");
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
+  const [isMeme, setIsMeme] = useState(false);
+
   const navigate = useNavigate();
   const [isKickeded, setIsKicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -62,6 +64,22 @@ export default function RoomId() {
   const [roomMax, setRoomMax] = useState(roomInfo.roomData?.max || "");
   const [roomGame, setRoomGame] = useState(roomInfo.roomData?.gameCategory || "");
   const [adjusting, setAdjusting] = useState(false);
+
+  const itemUse = (myTeam) => {
+    if (session !== undefined) {
+      session
+        .signal({
+          data: JSON.stringify({
+            myTeam: myTeam
+          }),
+          to: [],
+          type: "meme",
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }
   // 함수 정의
 
   const handleMainVideoStream = useCallback(
@@ -201,6 +219,17 @@ export default function RoomId() {
   const leaveSession = useCallback(async () => {
     // Leave the session
     if (session) {
+      //나갔을 때 알림
+      await session
+      .signal({
+        data: `${nickname}님이 나갔습니다.`,
+        to: [], 
+        type: "room-chat", 
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
       await exitRoom(session.sessionId, session.connection.connectionId);
       await session.disconnect();
       await send({ type: "refresh" });
@@ -314,8 +343,26 @@ export default function RoomId() {
           setTeamA((prev) => prev.filter((id) => id !== connectionId));
         }
       });
+
+
+      //아이템 처리
+      session.on("signal:meme", (event) => {
+        const { myTeam } = JSON.parse(event.data);
+        console.log(session.connection.connectionId)
+        if (myTeam === "A") {
+          if (teamB.includes(session.connection.connectionId)) {
+            // console.log("공격받음")
+            setIsMeme(true);
+          }
+        } else if (myTeam === "B") {
+          if (teamA.includes(session.connection.connectionId)) {
+            // console.log("공격받음")
+            setIsMeme(true);
+          }
+        }
+      });
     }
-  }, [session]); // session 객체를 의존성 배열에 추가
+  }, [session,teamA,teamB]); // session 객체를 의존성 배열에 추가
 
   const setReady = async () => {
     // console.log("준비");
@@ -589,6 +636,8 @@ export default function RoomId() {
           session={session}
           myUserName={myUserName}
           sendPlayDone={sendPlayDone}
+          itemUse={itemUse}
+          isMeme={isMeme}
         />
       ) : null}
       {leaving && (
@@ -600,6 +649,7 @@ export default function RoomId() {
           onClose={() => setRoomSetting(false)}
           roomSetting={roomSetting}
           roomInfo={roomInfo}
+          connectionId={session.connection.connectionId}
         />
       )}
       {inviting && (

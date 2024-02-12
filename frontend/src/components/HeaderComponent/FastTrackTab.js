@@ -12,7 +12,7 @@ const FastTrackTab = () => {
   const handleFastTrack = async() => {
     const rooms = await getRoomsList()
 
-    const filteredRooms = rooms.filter((room) => !room.play && room.max > room.count);
+    const filteredRooms = rooms.filter((room) => !room.play && room.max > room.count&&room.roomPassword==null);
 
     if (filteredRooms.length > 0) {
       const randomRoom = filteredRooms[Math.floor(Math.random() * filteredRooms.length)];
