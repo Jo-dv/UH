@@ -78,7 +78,6 @@ const UserVideoComponent = ({
   };
 
   useEffect(() => {
-    console.log(session.connection.connectionId)
     if (gameCategory === 101) {
       if (gamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId) {
         if (streamManager.constructor.name === "t") {
@@ -89,7 +88,7 @@ const UserVideoComponent = ({
       } else {
         if (
           streamManager.constructor.name === "t" &&
-          beforeGamePlayer === streamManager.stream.connection.connectionId
+          beforeGamePlayer === streamManager.stream.connection.connectionId===session.connection.connectionId
         ) {
           streamManager.publishAudio(true);
           socketSend(); //cpu 메모리 잡아먹는 범인
