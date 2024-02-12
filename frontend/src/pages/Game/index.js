@@ -198,6 +198,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                         streamManager={sub[1]}
                         session={session}
                         gamePlayer={turnPlayerId[0]}
+                        gameCategory={gameCategory}
                       />
                     </div>
                   ) : (
@@ -206,6 +207,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                         streamManager={sub[1]}
                         session={session}
                         gamePlayer={turnPlayerId[0]}
+                        gameCategory={gameCategory}
                       />
                     </div>
                   )}
@@ -303,6 +305,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                         streamManager={sub[1]}
                         session={session}
                         gamePlayer={turnPlayerId[0]}
+                        gameCategory={gameCategory}
                       />
                     </div>
                   ) : (
@@ -311,6 +314,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                         streamManager={sub[1]}
                         session={session}
                         gamePlayer={turnPlayerId[0]}
+                        gameCategory={gameCategory}
                       />
                     </div>
                   )}
