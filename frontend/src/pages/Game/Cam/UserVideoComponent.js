@@ -78,19 +78,19 @@ const UserVideoComponent = ({
   };
 
   useEffect(() => {
-    console.log("0", gamePlayer == streamManager.stream.connection.connectionId == session.connection.connectionId)
+    console.log("0", (gamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId))
     console.log("1", gamePlayer)
     console.log("2", streamManager.stream.connection.connectionId)
     console.log("3", session.connection.connectionId)
     if (gameCategory === 101) {
-      console.log(gamePlayer == streamManager.stream.connection.connectionId == session.connection.connectionId)
-      if (gamePlayer == streamManager.stream.connection.connectionId == session.connection.connectionId) {
+      console.log((gamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId))
+      if ((gamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId)) {
         streamManager.publishAudio(false);
         streamManager.publishVideo(true);
         socketSend(); //cpu 메모리 잡아먹는 범인
       } else {
         if (
-          beforeGamePlayer == streamManager.stream.connection.connectionId == session.connection.connectionId
+          (beforeGamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId)
         ) {
           streamManager.publishAudio(true);
           socketSend(); //cpu 메모리 잡아먹는 범인
