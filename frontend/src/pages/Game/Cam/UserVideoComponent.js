@@ -45,20 +45,25 @@ const UserVideoComponent = ({
   });
 
   const muteMic = () => {
-    console.log("스트림메니저", streamManager);
-    console.log("스트림메니저2", gamePlayer);
-    console.log("스트림메니저3", gameCategory);
     if (streamManager.constructor.name === "t") {
-      streamManager.publishAudio(false);
-      socketSend();
+      if (streamManager.stream.connection.connectionId != session.connection.connectionId) {
+        alert("본인의 마이크만 끌 수 있습니다.")
+      } else {
+        streamManager.publishAudio(false);
+        socketSend();
+      }
     }
   };
   const onMic = () => {
     if (gamePlayer === streamManager.stream.connection.connectionId && gameCategory === 101) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "t") {
-      streamManager.publishAudio(true);
-      socketSend();
+      if (streamManager.stream.connection.connectionId != session.connection.connectionId) {
+        alert("본인의 마이크만 켤 수 있습니다.")
+      } else {
+        streamManager.publishAudio(true);
+        socketSend();
+      }
     }
   };
   const muteVideo = () => {
@@ -66,24 +71,27 @@ const UserVideoComponent = ({
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "t") {
-      streamManager.publishVideo(false);
-      socketSend();
+      if (streamManager.stream.connection.connectionId != session.connection.connectionId) {
+        alert("본인의 화면만 끌 수 있습니다.")
+      } else {
+        streamManager.publishVideo(false);
+        socketSend();
+      }
     }
   };
   const onVideo = () => {
     if (streamManager.constructor.name === "t") {
-      streamManager.publishVideo(true);
-      socketSend();
+      if (streamManager.stream.connection.connectionId != session.connection.connectionId) {
+        alert("본인의 화면만 켤 수 있습니다.")
+      } else {
+        streamManager.publishVideo(true);
+        socketSend();
+      }
     }
   };
 
   useEffect(() => {
-    console.log("0", (gamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId))
-    console.log("1", gamePlayer)
-    console.log("2", streamManager.stream.connection.connectionId)
-    console.log("3", session.connection.connectionId)
     if (gameCategory === 101) {
-      console.log((gamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId))
       if ((gamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId)) {
         streamManager.publishAudio(false);
         streamManager.publishVideo(true);
@@ -119,7 +127,7 @@ const UserVideoComponent = ({
                 </button>
               )}
 
-              {/* {videoActive === false ? (
+              {videoActive === false ? (
                 <button onClick={onVideo}>
                   <VideocamOffIcon />
                 </button>
@@ -127,7 +135,7 @@ const UserVideoComponent = ({
                 <button onClick={muteVideo}>
                   <VideocamIcon />
                 </button>
-              )} */}
+              )}
             </p>
             {/* <p>
               isHost : {isHost ? "true" : "false"}, isReady : {isReady ? "true" : "false"}
