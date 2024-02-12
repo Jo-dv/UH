@@ -2,7 +2,7 @@ import UseInvitingStore from "../../../store/UseInvitingStore";
 
 const Inviting = ({ inviting, onClose, openLink }) => {
   const { setInviting } = UseInvitingStore();
-  const invitingLink = `현재 미지원입니다....`;
+  const invitingLink =  `현재 미지원입니다....`;
 
   // 클립보드에 초대 링크 복사
   const copyToClipboard = () => {

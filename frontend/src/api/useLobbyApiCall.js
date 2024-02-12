@@ -135,7 +135,7 @@ const useLobbyApiCall = () => {
     }
   };
 
-  // [방 입장] 방 비밀번호 일치 확인
+  // 친구 목록 확인 
   const listFriends = async () => {
     try {
       const response = await axios.get(friendsUrl);
@@ -146,6 +146,41 @@ const useLobbyApiCall = () => {
       throw error;
     }
   };
+
+  //친구 요청을 수락
+  const acceptFriends = async (friendsId) => {
+    try {
+      await axios.put(friendsUrl + `/${friendsId}`);
+    } catch (error) {
+      console.error("비정상적인 접근", error);
+      throw error;
+    }
+  };
+
+  //친구 요청을 거절
+  const rejectFriends = async (friendsId) => {
+    try {
+      await axios.delete(friendsUrl + `/${friendsId}`);
+    } catch (error) {
+      console.error("비정상적인 접근", error);
+      throw error;
+    }
+  };
+
+  //친구 요청 보내기
+  const requestFriends = async (toUserSeq) => {
+    try {
+      await axios.post(friendsUrl, { toUserSeq: toUserSeq });
+    } catch (error) {
+      if (error.response.status === 400) {
+        alert("이미 요청되었거나 친구 상태입니다.");
+      } else {
+        console.error("비정상적인 접근", error);
+        throw error;
+      }
+    }
+  };
+
 
   return {
     getRoomsList,
@@ -159,6 +194,9 @@ const useLobbyApiCall = () => {
     getMyPageInfo,
     postCheckPassword,
     listFriends,
+    acceptFriends,
+    rejectFriends,
+    requestFriends,
   };
 };
 

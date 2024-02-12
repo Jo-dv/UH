@@ -137,7 +137,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			WebSocketSession followSession = connectionIds.get(connectionId);
 			HttpSession followHttpSession = CLIENTS.get(followSession);
 			String roomId = (String)followHttpSession.getAttribute("roomId");
-			jsonMessage.add("roomId", JsonParser.parseString(roomId));
+			if (roomId == null)
+				jsonMessage.add("roomId", null);
+			else
+				jsonMessage.add("roomId", JsonParser.parseString(roomId));
 
 			handleFollow(session, jsonMessage);
 		}//전체에게 새로고침 요청
