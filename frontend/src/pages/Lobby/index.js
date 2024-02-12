@@ -11,15 +11,11 @@ import MyPage from "../../components/lobbyComponent/MyPage";
 
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import useStore from "../../store/UserAuthStore";
-import useFriendsStore from "../../store/UseFriendsStore";
-import useLobbyApiCall from "../../api/useLobbyApiCall";
 
 const Lobby = () => {
   // currentComponent 설정
   const { isLobby, setIsLobby } = UseIsLobbyStore();
   const resetUser = useStore((state) => state.resetUser);
-  const { setFriends } = useFriendsStore();
-  const { listFriends } = useLobbyApiCall();
   // [userAuth] 페이지가 이동할 때 사용
   const navigate = useNavigate();
 
@@ -35,11 +31,6 @@ const Lobby = () => {
     //   }
     // };
     // fetchUserAuth();
-    const friend = async () => {
-      const friendsList = await listFriends();
-      setFriends(friendsList);
-    }
-    friend();
 
   }, []);
 
