@@ -20,7 +20,6 @@ const LogOutModal = (props) => {
       { userSeq: userSeq }
       );
       const res = response.data
-      console.log(res);
       // store의 유저 정보 초기화
       if (res === 1){
         resetUser();
@@ -62,7 +61,7 @@ const LogOutModal = (props) => {
               취소
             </button>
 
-            <button onClick={handleLogOut} className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl">
+            <button onClick={handleLogOut} className="bg-tab10 hover:bg-tab10hover py-2 px-4 rounded-xl">
               로그아웃
             </button>
           </div>

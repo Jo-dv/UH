@@ -6,6 +6,7 @@ import java.util.Map;
 import org.project.uh.user.dto.MypageDto;
 import org.project.uh.user.dto.UserDto;
 import org.project.uh.user.service.UserService;
+import org.project.uh.util.PasswordHashUtil;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -41,7 +42,7 @@ public class UserController {
 	private final UserService service;
 
 	private final String clientId = "4fffa78521feee5e1eb947c704c08cf2"; // 카카오 앱의 Client ID
-	private final String redirectUri = "http://localhost:3000/callback/kakao"; // Redirect URI
+	private final String redirectUri = "https://i10e201.p.ssafy.io/callback/kakao"; // Redirect URI
 	private final String tokenRequestUri = "https://kauth.kakao.com/oauth/token"; // 카카오 토큰 요청 URI
 	private final String requestUri = "https://kapi.kakao.com/v2/user/me"; // 카카오 사용자 정보 요청 URI
 	private final String kakaoLogoutUri = "https://kauth.kakao.com/oauth/logout"; // 카카오 로그아웃 URI
@@ -55,9 +56,12 @@ public class UserController {
 		@ApiResponse(responseCode = "500", description = "비정상적인 접근")
 	})
 	@GetMapping("/user")
-	public ResponseEntity<List<UserDto>> listUser() {
+	public ResponseEntity<List<UserDto>> listUser(HttpSession session) {
 		try {
-			return new ResponseEntity<>(service.listUser(), HttpStatus.OK);
+			UserDto user = (UserDto)session.getAttribute("user");
+			if (user != null && user.getUserId().equals("admin201"))
+				return new ResponseEntity<>(service.listUser(), HttpStatus.OK);
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -75,6 +79,8 @@ public class UserController {
 	@PostMapping("/user/join")
 	public ResponseEntity<String> insertUser(@RequestBody UserDto dto) {
 		try {
+			//비밀번호 해싱
+			dto.setUserPassword(PasswordHashUtil.hashPassword(dto.getUserPassword()));
 			int result = service.insertUser(dto);
 			if (result == 0) {
 				return new ResponseEntity<>("중복된 아이디", HttpStatus.BAD_REQUEST);
@@ -116,6 +122,8 @@ public class UserController {
 	@PostMapping("/user/login")
 	public ResponseEntity<Object> login(@RequestBody UserDto dto, HttpSession session) {
 		try {
+			//비밀번호 해싱
+			dto.setUserPassword(PasswordHashUtil.hashPassword(dto.getUserPassword()));
 			UserDto result = service.login(dto);
 			if (result == null) {
 				return new ResponseEntity<>("로그인 오류", HttpStatus.BAD_REQUEST);

@@ -20,7 +20,6 @@ const CreateNickname = () => {
   };
 
   useEffect(() => {
-    console.log("userInfo:", userState);
   }, [userState]);
 
   const [form, setForm] = useState({
@@ -56,7 +55,6 @@ const CreateNickname = () => {
           userNickname: form.userNickname,
         });
         const res = response.data;
-        console.log(res);
         if (res === 0) {
           setErr({ ...err, userNickname: "중복된 닉네임입니다" }); // 중복된 경우 에러 메시지 설정
           triggerAnimate();
@@ -101,12 +99,10 @@ const CreateNickname = () => {
     setErr(newErr);
 
     if (newErr.userNickname === "") {
-      console.log("닉네임 :", form);
       // const userSeq = sessionStorage.getItem("userSeq");
       try {
         const response = await axios.post("user/nickname", { userNickname: form.userNickname });
         const res = response.data;
-        console.log("서버 응답:", res);
         if (res.status === 400) {
           setErr({ ...err, userNickname: "중복된 닉네임입니다" });
           triggerAnimate();
@@ -114,7 +110,6 @@ const CreateNickname = () => {
           // sessionStorage.setItem("userNickname", form.userNickname);
           // zustand 사용해보기
           setUser({ userSeq: userState.userSeq, userNickname: form.userNickname });
-          console.log("닉네임 생성 성공");
           navigate("/lobby");
         }
       } catch (error) {
@@ -139,7 +134,7 @@ const CreateNickname = () => {
         {/* 닉네임 입력창 */}
         <input
           type="text"
-          placeholder="닉네임(한글, 영어, 숫자 4-20자)"
+          placeholder="닉네임(한글, 영어, 숫자 4-10자)"
           onChange={onChange}
           onBlur={checkUserNicknameDuplicate}
           name="userNickname"
@@ -159,7 +154,7 @@ const CreateNickname = () => {
         {/* 에러 메시지 표시 */}
         {err.userNickname && <p className="text-red-500">{err.userNickname}</p>}
 
-        <button className="font-['pixel'] p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-[#95c75a]">입장하기</button>
+        <button className="p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-tab10hover">입장하기</button>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
 

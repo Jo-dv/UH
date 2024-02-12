@@ -19,7 +19,7 @@ const Chat = ({ session, myConnectionId, gamePlayer, gameCategory }) => {
         type: "room-chat", // The type of message (optional)
       })
       .then(() => {
-        console.log("보냄 :", chat);
+        // console.log("보냄 :", chat);
         setChat("");
         setMessageList([...messageList, receiveMsg]);
       })
@@ -31,7 +31,7 @@ const Chat = ({ session, myConnectionId, gamePlayer, gameCategory }) => {
   session.on("signal:room-chat", (event) => {
     // console.log('받음')
     if (receiveMsg !== event.data) {
-      console.log("받음d :", event.data); // Message
+      // console.log("받음d :", event.data); // Message
     }
     setReceiveMsg(event.data);
     setMessageList([...messageList, receiveMsg]);
@@ -51,11 +51,17 @@ const Chat = ({ session, myConnectionId, gamePlayer, gameCategory }) => {
     <section className="w-full flex flex-col absolute bottom-[40px] opacity-70">
       {/* <h2 className="bg-neutral-400 px-8 h-6">채팅</h2> */}
 
-      <ul ref={ulRef} className="mb-2 px-2 h-[140px] overflow-auto flex flex-col justify-end">
+      <ul ref={ulRef} className=" px-2 h-[200px] overflow-auto flex flex-col justify-end">
         {messageList.map((item, index) => {
-          return <li key={index}>{item}</li>;
+          return (
+            <li className="m-2" key={index}>
+              <span className="bg-black opacity-50 text-white p-1 rounded-xl">{item}</span>
+            </li>
+          );
         })}
-        <li className="">{receiveMsg}</li>
+        <li className="m-2" key={receiveMsg}>
+          <span className="bg-black opacity-50 text-white p-1 rounded-xl">{receiveMsg}</span>
+        </li>
       </ul>
       {myConnectionId === gamePlayer && gameCategory === 101 ? null : (
         <form

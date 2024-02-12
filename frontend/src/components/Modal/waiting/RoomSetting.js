@@ -7,17 +7,16 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
-  console.log(roomInfo);
+  // console.log(roomInfo);
   const originalRoomInfo = roomInfo;
-  console.log("받은 방정보", originalRoomInfo);
-
+  // console.log("받은 방정보", originalRoomInfo);
   // 원래 방 정보 모달에 기입
   const [roomName, setRoomName] = useState(originalRoomInfo?.roomData?.roomName || "");
   const [roomPassword, setRoomPassword] = useState(originalRoomInfo?.roomData?.roomPassword || "");
   const [roomMax, setRoomMax] = useState(originalRoomInfo?.roomData?.max || "");
   const [roomGame, setRoomGame] = useState(originalRoomInfo?.roomData?.gameCategory || "");
 
-  console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
+  // console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
 
   // 비밀 번호 활성화 변수
   const [lock, setLock] = useState(false);
@@ -64,11 +63,11 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
 
   const checkRoomNameExists = (name) => {
     const isNameExists = rooms.some((room) => room.roomName === name);
-    console.log("중복 검사 결과:", isNameExists); // 중복 검사 결과 확인
+    // console.log("중복 검사 결과:", isNameExists); // 중복 검사 결과 확인
     return isNameExists;
   };
 
-  console.log("제출한 방 정보", roomName, roomPassword, roomMax, roomGame);
+  // console.log("제출한 방 정보", roomName, roomPassword, roomMax, roomGame);
   // 방 정보 바꾸는 Handler
   const handleUpdateRoom = (e) => {
     e.preventDefault();
@@ -90,7 +89,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
     putRoomsList(roomInfo)
       .then((roomInfo) => {
         // 성공적으로 업데이트된 경우 처리
-        console.log("방 설정 업데이트 성공:", roomInfo);
+        // console.log("방 설정 업데이트 성공:", data);
       })
       .catch((error) => {
         // 오류 처리
@@ -100,8 +99,8 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
         }
       });
 
-    console.log("바뀔 방 정보", roomName, roomPassword, roomMax, roomGame);
-    console.log("roomInfo", roomInfo);
+    // console.log("바뀔 방 정보", roomName, roomPassword, roomMax, roomGame);
+    // console.log("roomInfo", roomInfo);
   };
 
   return (

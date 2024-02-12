@@ -5,6 +5,11 @@ import MicOff from "@mui/icons-material/MicOff";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import useStore from "../../store/UserAuthStore";
+import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
+import crown from "../../asset/image/crown.png"
+import KickOutModal from "../../components/Modal/waiting/KickOutModal";
+import CloseIcon from "@mui/icons-material/Close";
+import Crown from "../../asset/image/crown.png";
 
 const UserVideo = ({
   streamManager,
@@ -15,6 +20,9 @@ const UserVideo = ({
   deleteSubscriber,
   subscribers,
   kickOutUser,
+  hostId,
+  playerReady,
+  connectionId,
 }) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
@@ -35,6 +43,7 @@ const UserVideo = ({
         console.error(error);
       });
   };
+
   session.on("signal:user-set", (event) => {
     setAudioActive(streamManager.stream.audioActive);
     setVideoActive(streamManager.stream.videoActive);
@@ -43,7 +52,7 @@ const UserVideo = ({
   const muteMic = () => {
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(false);
       socketSend();
     }
@@ -51,7 +60,7 @@ const UserVideo = ({
   const onMic = () => {
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(true);
       socketSend();
     }
@@ -59,7 +68,7 @@ const UserVideo = ({
   const muteVideo = () => {
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishVideo(false);
       socketSend();
     }
@@ -67,14 +76,14 @@ const UserVideo = ({
   const onVideo = () => {
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishVideo(true);
       socketSend();
     }
   };
 
   if (gamePlayer === streamManager.stream.connection.connectionId) {
-    if (streamManager.constructor.name === "Publisher") {
+    if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(false);
       streamManager.publishVideo(true);
       socketSend();
@@ -93,17 +102,41 @@ const UserVideo = ({
   // };
 
   // console.log("ㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅ", session);
+  // 모달 상태와 강퇴할 사용자의 ID를 관리하는 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  // 강퇴 버튼 클릭 핸들러
+  const handleKickOutClick = (userId) => {
+    setSelectedUserId(userId);
+    setIsModalOpen(true);
+  };
+
+  // 모달에서 강퇴 확인
+  const handleConfirmKickOut = () => {
+    kickOutUser(selectedUserId);
+    setIsModalOpen(false);
+  };
+
+  // 모달 닫기
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
-    <div className="">
+    <div className="relative">
       {streamManager !== undefined ? (
         <div className="">
-          <div className="absolute ml-7 mt-2">
-            <p>
+          <div className="absolute ml-7 mt-2 flex w-52 justify-between">
+            <p className="flex">
               {/* {nickname} */}
               {getNicknameTag()}
+              {hostId===connectionId?<img className="h-4 ml-1" src={Crown}></img>:null}
+              {playerReady?<div className="ml-1">ready</div>:null}
+            </p>
               {nickname === getNicknameTag() ? (
                 <>
-                  {/* {audioActive === false ? (
+                  {audioActive === false ? (
                     <button onClick={onMic}>
                       <MicOff />
                     </button>
@@ -121,24 +154,29 @@ const UserVideo = ({
                     <button onClick={muteVideo}>
                       <VideocamIcon />
                     </button>
-                  )} */}
+                  )}
                 </>
               ) : isHost === true ? (
-                <button
-                  onClick={() => {
-                    kickOutUser(streamManager.stream.connection.connectionId);
-                  }}
-                >
-                  X
-                </button>
+                  <button
+                    // 강퇴 버튼 클릭 시 모달 창을 띄움
+                    onClick={() => handleKickOutClick(streamManager.stream.connection.connectionId)}
+                    className="bg-red-500 hover:bg-red-700 text-white p-1 rounded flex items-center justify-center w-5 h-5"
+                  >
+                    <CloseIcon fontSize="small" />
+                  </button>
               ) : null}
-            </p>
           </div>
           <div className="pt-9">
             <OpenViduVideoComponent streamManager={streamManager} />
           </div>
         </div>
       ) : null}
+      <KickOutModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmKickOut}
+        userName={getNicknameTag()} // 강퇴할 사용자의 닉네임을 모달에 전달
+      />
     </div>
   );
 };

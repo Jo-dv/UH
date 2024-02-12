@@ -33,7 +33,6 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
   // WebSocket을 통한 새로고침 요청에 대한 처리
   useEffect(() => {
     if (refreshRequested) {
-      console.log("새로고침 요청 받음");
       fetchData();
       setRefreshRequested(false);
     }

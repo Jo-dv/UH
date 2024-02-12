@@ -53,7 +53,6 @@ const Login = () => {
         { userSeq: userSeq }
       );
       const res = response.data;
-      console.log(res);
       // store의 유저 정보 초기화
       if (res === 1) {
         resetUser();
@@ -65,7 +64,7 @@ const Login = () => {
         window.location.href = LogoutLink;
       } else {
         // 나중에 else만 나두기
-        console.log("로그아웃 대상 없음");
+        // console.log("로그아웃 대상 없음");
       }
     } catch (error) {
       console.error("로그아웃 에러", error);
@@ -116,7 +115,6 @@ const Login = () => {
       try {
         const response = await axios.post("user/login", { userId, userPassword });
         const res = response.data;
-        console.log("서버 응답:", res);
         // 닉네임이 없다면
         if (res.userNickname === null) {
           // zustand 사용해보기
@@ -126,7 +124,6 @@ const Login = () => {
         } else {
           // zustand 사용해보기
           setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
-          console.log("로그인 성공");
           navigate("/lobby");
         }
       } catch (error) {
@@ -173,6 +170,7 @@ const Login = () => {
             placeholder="비밀번호"
             onChange={onChange}
             name="userPassword"
+            autoComplete="off"
             value={form.userPassword}
             className={` p-2 m-1 border-2 rounded-xl bg-input w-72 ${
               err.userPassword || err.general
@@ -185,7 +183,7 @@ const Login = () => {
           <p className=" text-red-500 mb-1">{err.userPassword}</p>
         </div>
 
-        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-[#95c75a]">
+        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">
           로그인
         </button>
         <p className=" text-red-500 mb-1">{err.general}</p>

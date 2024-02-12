@@ -13,8 +13,7 @@ const KakaoRedirectHandler = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log({ code });
-      console.log("userInfo: ", userState);
+
       // 요청 보내기
       if (code) {
         try {

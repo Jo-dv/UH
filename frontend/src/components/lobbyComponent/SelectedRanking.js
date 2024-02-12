@@ -14,7 +14,7 @@ const SelectedRanking = ({ onGameCategoryView }) => {
     setViewGameCategoryRanking(viewAll);
   };
 
-  console.log(viewGameCategoryRanking);
+  //console.log(viewGameCategoryRanking);
   return (
     <div className="col-start-4 col-end-13 row-start-1 row-end-13 m-5">
       <div className="col-start-2 col-end-7 row-start-1 row-end-2">

@@ -5,15 +5,12 @@ import FastNoEnter from "../Modal/Lobby/FastNoEnter";
 
 const FastTrackTab = () => {
   const { getRoomsList } = useLobbyApiCall();
-  const [rooms, setRooms] = useState([]);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [showNoEnter, setShowNoEnter] = useState(false);
 
-  const handleFastTrack = () => {
-    getRoomsList()
-    .then((res) => setRooms(res))
-    .catch((err) => setError("방 목록을 불러오는 데 실패했습니다."));
+  const handleFastTrack = async() => {
+    const rooms = await getRoomsList()
 
     const filteredRooms = rooms.filter((room) => !room.play && room.max > room.count);
 

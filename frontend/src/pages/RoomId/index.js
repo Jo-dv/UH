@@ -21,10 +21,11 @@ import Leaving from "../../components/Modal/waiting/Leaving.js";
 import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
 import Inviting from "../../components/Modal/waiting/Inviting.js";
 import Person from "../../components/waitingComponent/Person.js";
+import KickedModal from "../../components/Modal/waiting/KickedModal.js";
 
 export default function RoomId() {
   // usePreventGoBack();
-  const OV = useRef(new OpenVidu());
+  const OV = useRef(undefined);
   const { getRoomInfo } = useWaitingRoomApiCall();
   const nickname = useStore((state) => state.user.userNickname);
   const { inviting, setInviting } = UseInvitingStore();
@@ -52,6 +53,8 @@ export default function RoomId() {
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
   const navigate = useNavigate();
+  const [isKickeded, setIsKicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 함수 정의
   const handleMainVideoStream = useCallback(
@@ -62,19 +65,20 @@ export default function RoomId() {
     },
     [mainStreamManager]
   );
-  console.log(mySessionId);
+  // console.log(mySessionId);
   const joinSession = useCallback(() => {
-    console.log("joinSession 함수 시작");
+    // console.log("joinSession 함수 시작");
     if (session) {
       session.disconnect();
     }
-    console.log("OpenVidu 세션 초기화 시도");
+    OV.current=new OpenVidu();
+    OV.current.enableProdMode();  // 로그 기록 해제
     const mySession = OV.current.initSession();
-    console.log("OpenVidu 세션 초기화 완료:", mySession);
+    // console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
-      console.log(teamA);
+      // console.log(teamA);
       handleNewRoomInfo(mySession);
-      console.log("hhhhhhhh", mySession);
+      // console.log("hhhhhhhh", mySession);
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((subscribers) => [...subscribers, subscriber]);
     });
@@ -90,6 +94,7 @@ export default function RoomId() {
 
     mySession.on("signal:team-change", (event) => {
       const { connectionId, team } = JSON.parse(event.data);
+      handleNewRoomInfo(mySession);
       // teamA와 teamB 상태 업데이트
       if (team === "A") {
         setTeamA((prev) => [...prev, connectionId]);
@@ -99,21 +104,32 @@ export default function RoomId() {
         setTeamA((prev) => prev.filter((id) => id !== connectionId));
       }
     });
+    mySession.on("signal:ready", (event) => {
+      //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
+      handleNewRoomInfo(mySession);
+    });
+
+
+    mySession.on("signal:ready", (event) => {
+      //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
+      handleNewRoomInfo(mySession);
+    });
 
     //강퇴 처리(event로 보낸 connectionId와 같은 아이디를 찾아 방나가기 처리)
     mySession.on("signal:disconnect", async (event) => {
       const { connectionId } = JSON.parse(event.data);
       if (mySession.connection.connectionId === connectionId) {
-        alert("강퇴");
-        await leaveSession();
-        navigate("/lobby");
+        // alert("강퇴");
+        // await leaveSession();
+        // navigate("/lobby");
+        setIsKicked(true);
       }
     });
 
     setSession(mySession);
-    console.log("111111111111111111", mySession);
+    // console.log("111111111111111111", mySession);
     window.addEventListener("beforeunload", leaveSession);
-    console.log("세션 설정 완료");
+    // console.log("세션 설정 완료");
   }, []);
 
   useEffect(() => {
@@ -167,7 +183,7 @@ export default function RoomId() {
         //방조회
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
-          console.log("서버에서 받은 방정보", serverRoomInfo);
+          // console.log("서버에서 받은 방정보", serverRoomInfo);
 
           setroomInfo(serverRoomInfo);
           send({ type: "refresh" });
@@ -184,7 +200,7 @@ export default function RoomId() {
       await send({ type: "refresh" });
     }
 
-    OV.current = new OpenVidu();
+    OV.current =undefined;
     setSession(undefined);
     setSubscribers([]);
     setMainStreamManager(undefined);
@@ -242,7 +258,7 @@ export default function RoomId() {
   }, [mySessionId]);
 
   const changeTeam = (team) => {
-    console.log(`팀변경 ${team}`, session);
+    // console.log(`팀변경 ${team}`, session);
     try {
       playerTeam(session.sessionId, session.connection.connectionId, team);
 
@@ -256,7 +272,7 @@ export default function RoomId() {
         setTeamA((prev) => prev.filter((id) => id !== connectionId));
       }
 
-      console.log(nickname, team);
+      // console.log(nickname, team);
     } catch (error) {
       console.error("Error:", error.message);
     }
@@ -271,10 +287,10 @@ export default function RoomId() {
         type: "team-change",
       })
       .then(() => {
-        console.log("팀 변경 시그널 전송 성공");
+        // console.log("팀 변경 시그널 전송 성공");
       })
       .catch((error) => {
-        console.error("팀 변경 시그널 전송 실패:", error);
+        // console.error("팀 변경 시그널 전송 실패:", error);
       });
   };
 
@@ -284,7 +300,6 @@ export default function RoomId() {
       // 팀 변경 시그널 수신 리스너 설정
       session.on("signal:team-change", (event) => {
         const { connectionId, team } = JSON.parse(event.data);
-
         if (team === "A") {
           setTeamA((prev) => [...prev, connectionId]);
           setTeamB((prev) => prev.filter((id) => id !== connectionId));
@@ -297,7 +312,7 @@ export default function RoomId() {
   }, [session]); // session 객체를 의존성 배열에 추가
 
   const setReady = async () => {
-    console.log("준비");
+    // console.log("준비");
     try {
       if (isHost) {
         await startPlay(session.sessionId);
@@ -316,12 +331,22 @@ export default function RoomId() {
       } else {
         setIsPlay(false);
       }
+      if (session !== undefined) {
+        session
+          .signal({
+            type: "ready"
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+      
     } catch (error) {
       console.error("set Ready Error:", error);
     }
   };
   const sendPlay = () => {
-    console.log("플레이 소켓 보냄");
+    // console.log("플레이 소켓 보냄");
     if (session !== undefined) {
       session
         .signal({
@@ -366,7 +391,7 @@ export default function RoomId() {
   };
   if (session !== undefined) {
     session.on("signal:room-playDone", (event) => {
-      console.log("플레이 소켓 받음", event.data);
+      // console.log("플레이 소켓 받음", event.data);
       setIsReady(false);
       setIsPlay(false);
     });
@@ -374,11 +399,8 @@ export default function RoomId() {
   // 새 사용자가 접속할 때 실행되는 함수
   const handleNewRoomInfo = async (session) => {
     try {
-      console.log("새 사용자가 접속할 때 실행되는 함수 아싸!");
-      console.log(session.sessionId);
       const roomData = await getRoomInfo(session.sessionId);
       const players = roomData.roomStatus.players;
-      console.log("1212121212", roomData);
       setroomInfo(roomData);
       if (roomData.roomStatus.hostId === session.connection.connectionId) {
         setIsHost(true);
@@ -396,8 +418,6 @@ export default function RoomId() {
       setTeamA(teamAData);
       setTeamB(teamBData);
 
-      console.log(teamA);
-      console.log(teamB);
     } catch (error) {
       console.error("Error fetching room info:", error);
     }
@@ -420,18 +440,24 @@ export default function RoomId() {
     }
   };
 
+  useEffect(() => {
+    joinSession();
+    setIsLoading(false);
+  }, []);
   return (
     <>
-      {session === undefined ? (
+      {/* {isLoading ? (<p>Loading</p>) : ( */}
+
+      {/* {session === undefined ? (
         <div>
-          <button onClick={joinSession} className="bg-mc1 p-2">
+        <button onClick={joinSession} className="bg-mc1 p-2">
             {firstRoomInfo.roomName} : JOIN ROOM
           </button>
           <section className="w-1/2">
-            <MyCam />
+          <MyCam />
           </section>
         </div>
-      ) : null}
+      ) : null} */}
 
       {session !== undefined && isPlay === false ? (
         <div className="container-box bg-[#FFFBF7] grid grid-rows-10 grid-cols-12 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
@@ -464,6 +490,9 @@ export default function RoomId() {
                 teamB={teamB}
                 deleteSubscriber={deleteSubscriber}
                 kickOutUser={kickOutUser}
+                hostId={roomInfo.roomStatus && roomInfo.roomStatus.hostId ? roomInfo.roomStatus.hostId : undefined}
+                playersInfo={roomInfo.roomStatus && roomInfo.roomStatus.players ? roomInfo.roomStatus.players : undefined}
+                
               />
             }
           </div>
@@ -535,6 +564,11 @@ export default function RoomId() {
       {inviting && (
         <Inviting onClose={() => setInviting(false)} inviting={inviting} openLink={openLink} />
       )}
+      {/* <KickedModal isOpen={isKickeded} onClose={handleKickedModalClose} /> */}
+      <KickedModal isOpen={isKickeded} onClose={() => {
+        setIsKicked(false); // 모달 닫기
+        navigate("/lobby"); // 사용자를 로비로 이동
+      }} />
     </>
   );
 }

@@ -95,7 +95,6 @@ const Signup = () => {
           }
         );
         const res = response.data;
-        console.log(res);
         if (res === 0) {
           setErr({ ...err, userId: "중복된 아이디입니다" }); // 중복된 경우 에러 메시지 설정
           triggerAnimate();
@@ -160,13 +159,11 @@ const Signup = () => {
     // 모든 유효성 검사를 통과하면 서버로 데이터 전송
     if (newErr.userId === "" && newErr.userPassword === "" && newErr.passwordCheck === "") {
       const { userId, userPassword } = form;
-      console.log("회원가입 정보:", { userId, userPassword });
       try {
         const response = await axios.post(
           "user/join",
           { userId, userPassword }
         );
-        console.log("서버 응답:", response);
         // 회원가입 성공 후 처리
         // 예: navigate("/login") 또는 성공 메시지 표시
         navigate("/auth/login");
@@ -229,7 +226,7 @@ const Signup = () => {
             onClick={togglePassword}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
           >
-            {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+            {showPassword ? <VisibilityOffIcon color="disabled" /> : <VisibilityIcon color="disabled"/>}
           </button>
         </div>
         <p className=" text-red-500 mb-1">{err.userPassword}</p>
@@ -252,7 +249,7 @@ const Signup = () => {
         />
         <p className=" text-red-500 mb-1">{err.passwordCheck}</p>
 
-        <button className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-[#95c75a]">회원가입</button>
+        <button className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">회원가입</button>
         <h3 className="self-start ml-12 mb-2 mt-1 flex items-center">
           <Link to="/auth/Login" className="flex items-center">
             <ArrowBackIcon fontSize="small" />

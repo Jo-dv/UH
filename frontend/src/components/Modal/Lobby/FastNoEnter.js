@@ -1,5 +1,4 @@
 const FastNoEnter = ({ showNoEnter, onClose }) => {
-  console.log("실행됨!");
   return (
     <>
       {showNoEnter && (
