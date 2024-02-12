@@ -53,13 +53,13 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
   });
 
   return (
-    <section className="col-start-4 col-end-13 row-start-2 row-end-13 m-2">
-      <div className="flex flex-wrap overflow-y-scroll h-full mr-1">
+    <section className="col-start-4 col-end-13 row-start-2 row-end-13 m-2 overflow-y-scroll p-1">
+      <div className="flex flex-wrap mr-1">
         {isLoading ? (
           <div>로딩중</div>
         ) : filteredRooms.length > 0 ? (
           filteredRooms.map((room, i) => (
-            <div className="w-1/2" ref={(el) => (roomRefs.current[i] = el)} key={i}>
+            <div className="h-full" ref={(el) => (roomRefs.current[i] = el)} key={i}>
               <Room
                 roomTitle={room.roomName}
                 gameType={room.gameCategory}
@@ -72,7 +72,7 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
             </div>
           ))
         ) : (
-          <div className="flex justify-center items-center content-center w-[98%] h-full text-3xl animate-shake animate-infinite animate-duration-[2000ms]">
+          <div className="flex justify-center items-center content-center w-[98%] text-3xl animate-shake animate-infinite animate-duration-[2000ms]">
             방이 없어요.
           </div>
         )}
