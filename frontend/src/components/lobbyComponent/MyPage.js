@@ -128,12 +128,12 @@ const MyPage = () => {
           )}
         </div>
 
-        <div className="col-start-2 col-end-4 relative mt-7 ">
-          <div className="ml-5 mt-4">
+        <div className="col-start-2 col-end-4 relative mt-5">
+          <div className="ml-5 mt-7">
             <h2 className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
               경기 기록
             </h2>
-            <div className="record-container overflow-auto p-4 h-[360px] mt-4">
+            <div className="record-container overflow-auto p-4 h-[360px]">
               {myPageInfo?.record?.map((record, index) => (
                 <div
                   key={index}
