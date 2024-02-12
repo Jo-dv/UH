@@ -48,7 +48,7 @@ const UserVideoComponent = ({
     console.log("스트림메니저", streamManager);
     console.log("스트림메니저2", gamePlayer);
     console.log("스트림메니저3", gameCategory);
-    if (streamManager.constructor.name === "Publisher") {
+    if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(false);
       socketSend();
     }
@@ -56,7 +56,7 @@ const UserVideoComponent = ({
   const onMic = () => {
     if (gamePlayer === streamManager.stream.connection.connectionId && gameCategory === 101) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishAudio(true);
       socketSend();
     }
@@ -65,13 +65,13 @@ const UserVideoComponent = ({
     // console.log("스트림메니저", streamManager);
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
-    } else if (streamManager.constructor.name === "Publisher") {
+    } else if (streamManager.constructor.name === "t") {
       streamManager.publishVideo(false);
       socketSend();
     }
   };
   const onVideo = () => {
-    if (streamManager.constructor.name === "Publisher") {
+    if (streamManager.constructor.name === "t") {
       streamManager.publishVideo(true);
       socketSend();
     }
@@ -81,14 +81,14 @@ const UserVideoComponent = ({
     console.log("gamePlayer", gamePlayer, "그전", beforeGamePlayer);
     if (gameCategory === 101) {
       if (gamePlayer === streamManager.stream.connection.connectionId) {
-        if (streamManager.constructor.name === "Publisher") {
+        if (streamManager.constructor.name === "t") {
           streamManager.publishAudio(false);
           streamManager.publishVideo(true);
           socketSend(); //cpu 메모리 잡아먹는 범인
         }
       } else {
         if (
-          streamManager.constructor.name === "Publisher" &&
+          streamManager.constructor.name === "t" &&
           beforeGamePlayer === streamManager.stream.connection.connectionId
         ) {
           streamManager.publishAudio(true);
