@@ -22,15 +22,6 @@ const FriendList = () => {
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [selectedFriendId, setSelectedFriendId] = useState(null);
   
-
-  const handleDropdownToggle = (friend) => {
-    if (selectedFriend === friend) {
-      setSelectedFriend(null);
-    } else {
-      setSelectedFriend(friend);
-    }
-  };
-  
   // 클릭된 친구의 닉네임을 선택하고 삭제 모달을 엽니다.
   const handleFriendDelete = (friend) => {
     setSelectedFriend(friend.userNickname);
@@ -91,7 +82,6 @@ const FriendList = () => {
           {combinedList.map((friend, i) => (
             <div className="ml-[12px] mb-[4px] text-l text-gray-500" key={i}>
               <div>
-                <button onClick={() => handleDropdownToggle(friend)}>{friend.nickname}</button>
                 {selectedFriend === friend && (
                   <div className="absolute top-[30px] right-0 bg-white border border-gray-200 shadow-md rounded-md z-10">
                     <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={async () => {
@@ -120,7 +110,7 @@ const FriendList = () => {
             </div>
           ))}
           {showModal && (
-            <div className="fixed top-0 right-30 w-full h-full flex justify-center items-center z-50" onClick={closeModal}>
+            <div className="absolute top-80 left-150 w-full h-full flex justify-center items-center z-50" onClick={closeModal}>
               <div>
                 <FriendRequestList />
               </div>
