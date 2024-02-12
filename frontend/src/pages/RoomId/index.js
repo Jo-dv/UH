@@ -499,7 +499,9 @@ export default function RoomId() {
                   onClick={() => {
                     setReady();
                   }}
-                  className="bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full"
+                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${
+                    isReady ? "bg-tab4" : ""
+                  }`}
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
