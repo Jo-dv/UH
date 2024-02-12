@@ -5,7 +5,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useWebSocket } from "../../../webSocket/UseWebSocket";
 
-const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
+const RoomSetting = ({ onClose, roomSetting, roomInfo }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
   // console.log(roomInfo);
@@ -49,11 +49,6 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
   }, []);
 
   useEffect(() => {
-    if(roomInfo.roomStatus.hostId!=connectionId){
-      alert("방장만 가능합니다.")
-      
-    }
-    else{
     const fetchData = async () => {
       try {
         setIsLoading(true);
@@ -65,7 +60,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
         setIsLoading(false);
       }
     };
-    fetchData();}
+    fetchData();
   }, []);
 
   const checkRoomNameExists = (name) => {

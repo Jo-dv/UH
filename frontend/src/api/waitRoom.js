@@ -86,7 +86,8 @@ export const startPlay = async (sessionId) => {
       play: true,
     });
   } catch (error) {
-    alert(error.response.data)
+    console.log("게임시작 에러");
+    console.error("Error:", error.response.data);
   }
 };
 
