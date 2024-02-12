@@ -21,8 +21,16 @@ const FriendList = () => {
   const [deleted, setDelete] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [selectedFriendId, setSelectedFriendId] = useState(null);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownIndex, setDropdownIndex] = useState(null);
 
+  const handleDropdownToggle = (friend) => {
+    if (selectedFriend === friend) {
+      setSelectedFriend(null);
+    } else {
+      setSelectedFriend(friend);
+    }
+  };
+  
   // 클릭된 친구의 닉네임을 선택하고 삭제 모달을 엽니다.
   const handleFriendDelete = (friend) => {
     setSelectedFriend(friend.userNickname);
@@ -31,10 +39,11 @@ const FriendList = () => {
   };
 
   // 모달 닫기 함수
-  const closeModal = () => {
-    setShowModal(false);
+  const closeModal = (event) => {
+    if (event.target === event.currentTarget) {
+      setShowModal(false);
+    }
   };
-
 
   // 친구 목록 갱신을 위한 함수 정의
   const updateFriendsList = useCallback(async () => {
@@ -43,88 +52,85 @@ const FriendList = () => {
   }, [listFriends, setFriends]);
 
   useEffect(() => {
-    updateFriendsList();
+  updateFriendsList();
 
-    friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
+  friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
 
-    // 요청 상태가 아닌 친구들의 리스트만 불러옴
-    const acceptedFriends = friends.filter(friend => friend.friendsState === true);
+  // 요청 상태가 아닌 친구들의 리스트만 불러옴
+  const acceptedFriends = friends.filter(friend => friend.friendsState === true);
 
-    // Accessors와 Friends에서 동일한 닉네임을 가진 사용자 찾기
-    const commonUsers = accessors.filter(accessor => {
-        return acceptedFriends.some(friend => friend.userNickname === accessor.nickname);
-    });
+  // Accessors와 Friends에서 동일한 닉네임을 가진 사용자 찾기
+  const commonUsers = accessors.filter(accessor => {
+      return acceptedFriends.some(friend => friend.userNickname === accessor.nickname);
+  });
 
-    // combinedList 업데이트
-    setCombinedList(commonUsers);
+  // combinedList 업데이트
+  setCombinedList(commonUsers);
 
-    // friends에서 가져온 friendsId 속성 추가
-    setCombinedList(commonUsers.map(user => ({
-        ...user,
-        friendsId: acceptedFriends.find(friend => friend.userNickname === user.nickname)?.friendsId
-    })));
+  // friends에서 가져온 friendsId 속성 추가
+  setCombinedList(commonUsers.map(user => ({
+      ...user,
+      friendsId: acceptedFriends.find(friend => friend.userNickname === user.nickname)?.friendsId
+  })));
 
-    // commonUsers에 속하지 않는 Friends 리스트의 사용자들 필터링
-    const friendsNotInCommonList = acceptedFriends.filter(friend => {
-        return !commonUsers.some(user => user.nickname === friend.userNickname);
-    });
+  // commonUsers에 속하지 않는 Friends 리스트의 사용자들 필터링
+  const friendsNotInCommonList = acceptedFriends.filter(friend => {
+      return !commonUsers.some(user => user.nickname === friend.userNickname);
+  });
 
-    // friendsNotInCommon 업데이트
-    setFriendsNotInCommon(friendsNotInCommonList);
-}, [accessors, friends]);
+  // friendsNotInCommon 업데이트
+  setFriendsNotInCommon(friendsNotInCommonList);
+  }, [accessors, friends]);
 
-    return (
-        <div>
-            <div className="relative p-[16px] overflow-y-scroll h-[250px] scroll-smooth">
-                <div className="w-1/2">
-                    {combinedList.map((friend, i) => (
-                        <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
-                            <div>{friend.nickname}
-                                {/* 따라가기 */}
-                                <button className="ml-2" onClick={async () => {
-                                    send({
-                                        type: "follow",
-                                        connectionId: friend.connectionId
-                                    });
-                                }}>
-                                    follow</button>
-                                {/* 친구 삭제 기능 드롭다운으로든 버튼으로든 디자인 필요 */}
-                                <button onClick={() => handleFriendDelete(friend)}>
-                                  {friend.userNickname}
-                                </button>
-                                {deleted === true ? <FriendDeleteModal selectedFriend={selectedFriend} selectedFriendId={selectedFriendId} setModal={setDelete} /> : null}
-                                    </div>
-                        </div>
-                    ))}
-                    {friendsNotInCommon.map((friend, i) => (
-                        <div className="ml-[12px] mb-[4px] text-l" ref={friendRefs.current[i]} key={i}>
-                                <button onClick={() => handleFriendDelete(friend)}>
-                                  {friend.userNickname}
-                                </button>
-                                {deleted === true ? <FriendDeleteModal selectedFriend={selectedFriend} selectedFriendId={selectedFriendId} setModal={setDelete} /> : null}
-                        </div>
-                    ))}
-                    {showModal && (
-                      <div className="fixed top-0 right-30 w-full h-full flex justify-center items-center z-50" onClick={closeModal}>
-                        <div>
-                          <FriendRequestList />
-                        </div>
-                      </div>
-                    )}
-
-                    </div>
-                    <div className="absolute bottom-0 right-0 z-999">
-                      <button className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1"
-                        onClick={() => {
-                          setShowModal(prevState => !prevState);
-                        }}
-                      >
-                        {showModal ? "닫기" : "요청"}
-                      </button>
-                    </div>
+  return (
+    <div className="relative">
+      <div className="p-[16px] overflow-y-scroll h-[250px] scroll-smooth">
+        <div className="w-1/2">
+          <p>접속한 친구</p>
+          {combinedList.map((friend, i) => (
+            <div className="ml-[12px] mb-[4px] text-l text-gray-500" key={i}>
+              <div>
+                <button onClick={() => handleDropdownToggle(friend)}>{friend.nickname}</button>
+                {selectedFriend === friend && (
+                  <div className="absolute top-[30px] right-0 bg-white border border-gray-200 shadow-md rounded-md z-10">
+                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={async () => {
+                      send({
+                        type: "follow",
+                        connectionId: friend.connectionId
+                      });
+                    }}>
+                      따라가기
+                    </button>
+                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleFriendDelete(friend)}>
+                      삭제하기
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-        </div>
-    );
+          ))}
+          <p>미접속 친구</p>
+          {friendsNotInCommon.map((friend, i) => (
+            <div className="ml-[12px] mb-[4px] text-l" ref={friendRefs.current[i]} key={i}>
+              <button className="text-gray-500" onClick={() => handleFriendDelete(friend)}>
+                {friend.userNickname}
+              </button>
+              {deleted === true ? <FriendDeleteModal selectedFriend={selectedFriend} selectedFriendId={selectedFriendId} setModal={setDelete} /> : null}
+            </div>
+          ))}
+          </div>
+      </div>
+      <div className="absolute bottom-0 right-0 z-999 mr-6">
+            <button className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1"
+              onClick={() => {
+                setShowModal(prevState => !prevState);
+              }}
+            >
+            {showModal ? "닫기" : "요청"}
+            </button>
+          </div>
+    </div>
+  );
 };
 
 export default FriendList;

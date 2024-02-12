@@ -140,14 +140,15 @@ const MyPage = () => {
                   className={`record-entry rounded-md border-cancelButton pb-2 pt-2 mb-2 ${
                     record.win ? "bg-blue-100" : "bg-red-100"
                   }`}
+                  style={{ height: '7rem', display: 'flex', alignItems: 'center'}}
                 >
-                  <div className="grid grid-cols-3 gap-4 text-center">
+                  <div className="grid grid-cols-3 gap-4 text-center w-full">
                     <div className="my-auto">
                       <p className="text-2xl ml-2" style={{ fontFamily: "var(--font-bold)" }}>
                         {record.gameCategory === 101 ? "고요속의 외침" : "인물 퀴즈"}
                       </p>
                       <p className="ml-2">점수: {record.score}</p>
-                      <p className="ml-2">{new Date(record.created).toLocaleString()}</p>
+                      <p className="ml-2 text-gray-500">{new Date(record.created).toLocaleDateString('ko-KR', { year: '2-digit', month: '2-digit', day: '2-digit', separator: '' })}</p>
                     </div>
                     <div className="my-auto">
                       <p className="ml-2">

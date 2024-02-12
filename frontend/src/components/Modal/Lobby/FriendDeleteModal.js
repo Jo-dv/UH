@@ -6,7 +6,6 @@ import UseFriendsStore from "../../../store/UseFriendsStore";
 import useLobbyApiCall from "../../../api/useLobbyApiCall";
 
 const FriendDeleteModal = (props) => {
-    const { friendRefs } = useFriends();
     const { friends,setFriends } = UseFriendsStore();
     const { rejectFriends,listFriends } = useLobbyApiCall();
 
@@ -20,7 +19,6 @@ const FriendDeleteModal = (props) => {
     const handleDeleteClick = async () => {
         try {
             await rejectFriends(props.selectedFriendId);
-            console.log("친구아이디",props.selectedFriendId)
             updateFriendsList(); // 친구 목록 업데이트
             props.setModal(false); // 모달 닫기
         } catch (error) {
