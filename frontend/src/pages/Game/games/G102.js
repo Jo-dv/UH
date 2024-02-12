@@ -5,6 +5,8 @@ import TimerG102 from "../Timer/TimerG102";
 import G102Info from "./G102Info";
 import TurnTimer from "../Timer/TurnTimer";
 import Chipi from "../../../asset/items/Chipi.mp4"
+import Tooth from "../../../asset/items/Tooth.mp4"
+import Josh from "../../../asset/items/Josh.mp4"
 
 const G102 = ({
   session,
@@ -95,10 +97,9 @@ const G102 = ({
               <>
                 {isEnded ?
                   <video
-                    width='10000'
-                    height='10000'
                     autoPlay
                     onEnded={()=>setIsEnded(false)}
+                    style={{ width: '100%', height: '100%', objectFit: 'fill' }}
                   >
                     <source src={Chipi} type="video/mp4" />
                   </video> :
