@@ -9,20 +9,18 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
   const ulRef = useRef(null);
   // 닉네임 가져오기
   const nickname = useStore((state) => state.user.userNickname);
-  const [receiveMsg, setReceiveMsg] = useState(`${nickname}님 환영합니다`);
+  const [receiveMsg, setReceiveMsg] = useState();
   const sendMsg = (e) => {
     e.preventDefault();
     // console.log(session);
     session
       .signal({
-        data: `${nickname}: ${chat}`, // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: "room-chat", // The type of message (optional)
+        data: `${nickname}: ${chat}`, 
+        to: [], 
+        type: "room-chat", 
       })
       .then(() => {
-        // console.log("보냄 :", chat);
         setChat("");
-        setMessageList([...messageList, receiveMsg]);
       })
       .catch((error) => {
         console.error(error);
@@ -47,6 +45,21 @@ const Chat = ({ session, myConnectionId, gamePlayer }) => {
       ulRef.current.scrollTop = ulRef.current.scrollHeight;
     }
   }, [messageList]);
+
+  //들어올 때 알림
+  useEffect(() => {
+    if (session.sessionConnected()) {
+      session
+        .signal({
+          data: `${nickname}님 환영합니다`, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+          type: "room-chat", // The type of message (optional)
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [session.sessionConnected()]);
 
   return (
     <section
