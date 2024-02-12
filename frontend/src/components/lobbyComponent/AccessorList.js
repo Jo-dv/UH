@@ -30,7 +30,6 @@ const AccessorsList = () => {
 
   // 접속자 드롭다운
   const accessorClick = (accessor) => {
-    // console.log(accessor);
     if (accessorDropdown === accessor.userNickname) {
       setAccessorDropdown(null);
     } else {

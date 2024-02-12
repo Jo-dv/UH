@@ -78,8 +78,6 @@ const MyPage = () => {
         const totalCount = winCount + loseCount;
         const winPercent = Math.round((winCount / totalCount) * 100) / 100;
         const losePercent = Math.round((loseCount / totalCount) * 100) / 100;
-        // console.log("카운트",winCount, loseCount)
-        // console.log("퍼센트",winPercent, losePercent );
 
         setRecordPercent({
           winPercent,
@@ -103,12 +101,6 @@ const MyPage = () => {
         <div className="mt-5">
           {myPageInfo && (
             <div className="mt-7">
-              {/* <h2 className="text-2xl text-center mb-3" style={{ fontFamily: "var(--font-bold)" }}>
-                프로필
-              </h2>
-              <p className="text-2xl text-center">닉네임: {myPageInfo.userNickname}</p>
-              <p className="text-2xl text-center">레이팅: {myPageInfo.rating}</p>
-              <br></br> */}
               <div className="mt-6">
                 <p className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
                   경기 승률

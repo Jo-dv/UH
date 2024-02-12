@@ -59,7 +59,6 @@ const FriendList = () => {
 
   // 온라인 친구 드롭다운
   const onlineDropdown = (friend) => {
-    console.log(friend);
     if (onlineFreindDropdown === friend.userNickname) {
       setOnlineFreindDropdown(null);
     } else {
