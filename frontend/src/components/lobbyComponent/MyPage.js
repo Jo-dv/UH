@@ -8,16 +8,16 @@ function DonutChart({ color, percent, size }) {
   return (
     <Chart size={size}>
       <AniSvg viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="90" fill="none" stroke="#F88585" strokeWidth="20" />
+        <circle cx="100" cy="100" r="70" fill="none" stroke="#F88585" strokeWidth="40" />
         <AnimatedCircle
           cx="100"
           cy="100"
-          r="90"
+          r="70"
           fill="none"
           stroke={color}
-          strokeWidth="20"
-          strokeDasharray={`${2 * Math.PI * 90 * percent} ${2 * Math.PI * 90 * (1 - percent)}`}
-          strokeDashoffset={2 * Math.PI * 90 * 0.25}
+          strokeWidth="40"
+          strokeDasharray={`${2 * Math.PI * 70 * percent} ${2 * Math.PI * 70 * (1 - percent)}`}
+          strokeDashoffset={2 * Math.PI * 70 * 0.25}
         />
       </AniSvg>
       <Percent color={color}>{percent * 100}%</Percent>
@@ -38,7 +38,7 @@ const AniSvg = styled.svg`
 
 const circleFill = keyframes`
     0%{
-        stroke-dasharray:0 ${2 * Math.PI * 90};
+        stroke-dasharray:0 ${2 * Math.PI * 70};
     }
 `;
 
@@ -48,7 +48,7 @@ const AnimatedCircle = styled.circle`
 
 const Percent = styled.span`
   position: absolute;
-  top: 30%;
+  top: 45%;
   left: 50%;
   transform: translateX(-50%);
   font-size: 20px;
@@ -93,62 +93,85 @@ const MyPage = () => {
 
   return (
     <section className="rounded-lg mt-4 col-start-4 col-end-13 row-start-1 row-end-13 overflow-auto p-4">
-      <h1 className="text-5xl border-b-4" style={{ fontFamily: "var(--font-bold)" }}>
-        MyPage
+      <h1 className="text-5xl ml-5" style={{ fontFamily: "var(--font-bold)" }}>
+        {myPageInfo && myPageInfo.userNickname}님 마이페이지
       </h1>
+      <p className="text-2xl ml-5 mt-5">레이팅 : {myPageInfo && myPageInfo.rating}</p>
       <div className="grid grid-cols-3 col-start-1 col-end-2">
-        <div>
+        <div className="mt-5">
           {myPageInfo && (
             <div className="mt-7">
-              <p className="text-2xl">닉네임: {myPageInfo.userNickname}</p>
-              <p className="text-2xl">레이팅: {myPageInfo.rating}</p>
-              <br></br>
-              <div className="">
-                <p className="text-2xl">경기 승률</p>
-                <div className="flex justify-center items-center content-center h-full">
-                  <DonutChart color="#86EFAC" percent={winPercent} size="200px" />
-                </div>
+              {/* <h2 className="text-2xl text-center mb-3" style={{ fontFamily: "var(--font-bold)" }}>
+                프로필
+              </h2>
+              <p className="text-2xl text-center">닉네임: {myPageInfo.userNickname}</p>
+              <p className="text-2xl text-center">레이팅: {myPageInfo.rating}</p>
+              <br></br> */}
+              <div className="mt-10">
+                <p className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
+                  경기 승률
+                </p>
+                {myPageInfo?.record?.length !== 0 && (
+                  <div className="flex justify-center items-center content-center h-full">
+                    <DonutChart color="#3498db" percent={winPercent} size="250px" />
+                  </div>
+                )}
+                {myPageInfo?.record?.length === 0 && (
+                  <div className="record-entry border-2 rounded-md border-cancelButton pb-2 pt-2 mt-4">
+                    <p className="ml-2 text-center">경기 승률이 없습니다.</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
         </div>
 
-        <div className="col-start-2 col-end-4 relative border-l-4">
-          {/* <div className="absolute left-0 top-0 h-full border-r-2 border-gray-300"></div> */}
-          <div className="ml-5 mt-6">
+        <div className="col-start-2 col-end-4 relative mt-7">
+          <div className="ml-5 mt-8">
             <h2 className="text-2xl" style={{ fontFamily: "var(--font-bold)" }}>
               경기 기록
             </h2>
-            <div className="record-container overflow-auto h-96 border-t-2">
+            <div className="record-container overflow-auto h-100 mt-4">
               {myPageInfo?.record?.map((record, index) => (
                 <div
                   key={index}
-                  className={`record-entry border-2 rounded-md border-cancelButton pb-2 pt-2 ${
-                    record.win ? "bg-green-100" : "bg-red-100"
+                  className={`record-entry rounded-md border-cancelButton pb-2 pt-2 mb-2 ${
+                    record.win ? "bg-blue-100" : "bg-red-100"
                   }`}
                 >
-                  <p className="ml-2" style={{ fontFamily: "var(--font-bold)" }}>
-                    {record.gameCategory === 101 ? "고요속의 외침" : "인물 퀴즈"}
-                  </p>
-                  <p className="ml-2">
-                    팀원 :
-                    {[record.user1, record.user2, record.user3, record.user4]
-                      .filter(Boolean)
-                      .map((user, index, array) => (
-                        <span key={user}>
-                          {user}
-                          {index !== array.length - 1 && ", "}
-                        </span>
-                      ))}
-                  </p>
-                  <p className="ml-2">점수: {record.score}</p>
-                  <p className="ml-2">승리: {record.win ? "승리" : "패배"}</p>
-                  <p className="ml-2">날짜: {new Date(record.created).toLocaleString()}</p>
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div className="my-auto">
+                      <p className="text-2xl ml-2" style={{ fontFamily: "var(--font-bold)" }}>
+                        {record.gameCategory === 101 ? "고요속의 외침" : "인물 퀴즈"}
+                      </p>
+                      <p className="ml-2">점수: {record.score}</p>
+                      <p className="ml-2">{new Date(record.created).toLocaleString()}</p>
+                    </div>
+                    <div className="my-auto">
+                      <p className="ml-2">
+                        {[record.user1, record.user2, record.user3, record.user4]
+                          .filter(Boolean)
+                          .map((user, index) => (
+                            <p key={index} className="ml-4">
+                              {user}
+                            </p>
+                          ))}
+                      </p>
+                    </div>
+
+                    <p
+                      className={`text-4xl ml-2 my-auto ${
+                        record.win ? "text-blue-500" : "text-red-500"
+                      }`}
+                    >
+                      {record.win ? "승리" : "패배"}
+                    </p>
+                  </div>
                 </div>
               ))}
               {myPageInfo?.record?.length === 0 && (
                 <div className="record-entry border-2 rounded-md border-cancelButton pb-2 pt-2">
-                  <p className="ml-2">등록된 경기 기록이 없습니다.</p>
+                  <p className="ml-2 text-center">경기 기록이 없습니다.</p>
                 </div>
               )}
             </div>

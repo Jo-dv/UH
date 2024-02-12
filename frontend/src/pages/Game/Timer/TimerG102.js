@@ -1,18 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
-const Timer = ({
-  maxTime,
-  time,
-  setTime,
-  maxRound,
-  round,
-  setRound,
-  changeTeamTurn,
-  setIsGameEnd,
-}) => {
+const Timer102 = ({ time, setTime, setIsGameEnd }) => {
+  const maxTime = 180000;
   const startTime = useRef(null);
   const nowTime = useRef(null);
-  const [delay, setDelay] = useState(1000);
+  const [delay, setDelay] = useState(500);
   const [isRunning, setIsRunning] = useState(true);
 
   function useInterval(callback, delay) {
@@ -44,19 +36,10 @@ const Timer = ({
     }
 
     if (time > maxTime) {
-      // console.log(nowTime.current, time);
-      changeTeamTurn();
-      startTime.current = Date.now();
-      setTime(0);
-      setRound((r) => r + 1);
-    }
-  };
-  useEffect(() => {
-    if (round > maxRound) {
       setIsRunning(false);
       setIsGameEnd(true);
     }
-  }, [round, maxRound]);
+  };
 
   useInterval(
     () => {
@@ -73,11 +56,12 @@ const Timer = ({
       low={maxTime / 2}
       high={(maxTime * 3) / 4}
       value={time}
+      className="w-full h-10 absolute top-[-10px]"
     ></meter>
   );
 };
 
-export default Timer;
+export default Timer102;
 
 /*
 meter {

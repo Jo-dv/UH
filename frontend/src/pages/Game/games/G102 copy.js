@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import AnswerInput from "../AnswerInput";
-import TimerG102 from "../Timer/TimerG102";
+import Timer from "../Timer/Timer";
 import G102Info from "./G102Info";
 import TurnTimer from "../Timer/TurnTimer";
 
@@ -26,7 +26,6 @@ const G102 = ({
   goWaitRoom,
   quizData,
   quizIndex,
-  setQuizIndex,
   plusQuizIndex,
   plusScore,
   changeTeamIndex,
@@ -36,7 +35,7 @@ const G102 = ({
   useEffect(() => {
     console.log("G102 퀴즈데이터", quizData);
   }, []);
-  const [maxTurnTime, setMaxTurnTime] = useState(10000);
+  const [maxTurnTime, setMaxTurnTime] = useState(5000);
   const [turnTime, setTurnTime] = useState(0);
   return (
     <div className="w-full aspect-[4/3] relative flex flex-col ">
@@ -65,6 +64,7 @@ const G102 = ({
                     {ATeamScore === BTeamScore ? (
                       <div className="w-full h-full flex flex-col justify-center items-center bg-mc10">
                         <p className="text-3xl animate-shake animate-thrice">무승부</p>
+                        <br />
                         <button onClick={goWaitRoom} className="text-xl z-20">
                           로비로
                         </button>
@@ -72,6 +72,7 @@ const G102 = ({
                     ) : (
                       <div className="w-full h-full flex flex-col justify-center items-center bg-mc5">
                         <p className="text-3xl animate-bounce">B Team Win</p>
+                        <br />
                         <button onClick={goWaitRoom} className="text-xl z-20">
                           로비로
                         </button>
@@ -83,7 +84,6 @@ const G102 = ({
             ) : (
               <>
                 <div className="w-full h-full flex justify-center">
-                  <TimerG102 time={time} setTime={setTime} setIsGameEnd={setIsGameEnd} />
                   <img
                     src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
                     alt="정답사진"
@@ -116,20 +116,30 @@ const G102 = ({
                         plusQuizIndex={plusQuizIndex}
                       />
                     </div>
-                    <div className="opacity-90 absolute w-full bottom-0 bg-tab10 p-1">
+                    <div className="opacity-90 absolute w-full  bottom-[-24px]">
                       <div className="relative flex justify-center items-center">
-                        <AnswerInput
-                          myUserName={myUserName}
-                          session={session}
-                          answer={quizData[quizIndex].quizAnswer}
-                          quizIndex={quizIndex}
-                          setQuizIndex={setQuizIndex}
-                          plusQuizIndex={plusQuizIndex}
-                          Team={myTeam}
-                          plusScore={plusScore}
-                          changeTeamIndex={changeTeamIndex}
-                          setTurnTime={setTurnTime}
+                        <Timer
+                          maxTime={maxTime}
+                          time={time}
+                          setTime={setTime}
+                          maxRound={maxRound}
+                          round={round}
+                          setRound={setRound}
+                          changeTeamTurn={changeTeamTurn}
+                          setIsGameEnd={setIsGameEnd}
                         />
+                        <div className="absolute flex text-black">
+                          <AnswerInput
+                            myUserName={myUserName}
+                            session={session}
+                            answer={quizData[quizIndex].quizAnswer}
+                            plusQuizIndex={plusQuizIndex}
+                            Team={myTeam}
+                            plusScore={plusScore}
+                            changeTeamIndex={changeTeamIndex}
+                            setTurnTime={setTurnTime}
+                          />
+                        </div>
                       </div>
                     </div>
                   </>

@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import UserVideoComponent from "../Cam/UserVideoComponent";
 import AnswerInput from "../AnswerInput";
-import Timer from "../Timer";
+import Timer from "../Timer/Timer";
 import G101Info from "./G101Info";
 
 const G101 = ({
@@ -25,6 +25,7 @@ const G101 = ({
   goWaitRoom,
   quizData,
   quizIndex,
+  setQuizIndex,
   plusQuizIndex,
   plusScore,
   changeTeamIndex,
@@ -34,6 +35,8 @@ const G101 = ({
   useEffect(() => {
     console.log("G101 퀴즈데이터", quizData);
   }, []);
+  const [maxTurnTime, setMaxTurnTime] = useState(5000);
+  const [turnTime, setTurnTime] = useState(0);
   return (
     <div className="w-full aspect-[4/3] relative flex flex-col ">
       {gameLoading ? (
@@ -62,7 +65,7 @@ const G101 = ({
                   )}
                 </div>
                 <br></br>
-                <button onClick={goWaitRoom} className="animate-bounce">
+                <button onClick={goWaitRoom} className="animate-bounce z-10">
                   로비로
                 </button>
               </div>
@@ -122,10 +125,13 @@ const G101 = ({
                                 myUserName={myUserName}
                                 session={session}
                                 answer={quizData[quizIndex].quizAnswer}
+                                quizIndex={quizIndex}
+                                setQuizIndex={setQuizIndex}
                                 plusQuizIndex={plusQuizIndex}
                                 Team={turnPlayerId[2]}
                                 plusScore={plusScore}
                                 changeTeamIndex={changeTeamIndex}
+                                setTurnTime={setTurnTime}
                               />
                             </div>
                           </>
@@ -134,10 +140,13 @@ const G101 = ({
                             myUserName={myUserName}
                             session={session}
                             answer={quizData[quizIndex].quizAnswer}
+                            quizIndex={quizIndex}
+                            setQuizIndex={setQuizIndex}
                             plusQuizIndex={plusQuizIndex}
                             Team={turnPlayerId[2]}
                             plusScore={plusScore}
                             changeTeamIndex={changeTeamIndex}
+                            setTurnTime={setTurnTime}
                           />
                         )}
                       </div>

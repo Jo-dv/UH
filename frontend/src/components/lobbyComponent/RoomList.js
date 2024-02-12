@@ -60,7 +60,7 @@ const RoomList = ({ viewAllRooms, viewGameCategoryRooms, viewSearchRooms }) => {
           <div>로딩중</div>
         ) : filteredRooms.length > 0 ? (
           filteredRooms.map((room, i) => (
-            <div className="w-1/2" ref={(el) => (roomRefs.current[i] = el)} key={i}>
+            <div className="h-full" ref={(el) => (roomRefs.current[i] = el)} key={i}>
               <Room
                 roomTitle={room.roomName}
                 gameType={room.gameCategory}

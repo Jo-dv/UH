@@ -36,8 +36,6 @@ const Leaving = ({ leaving, onClose, leaveSession, exitRoom }) => {
                 <button
                   onClick={() => {
                     setIsLobby(null);
-                    send({ type: "refresh" });
-                    leaveSession();
                     setLeaving(false);
                   }}
                   className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl"

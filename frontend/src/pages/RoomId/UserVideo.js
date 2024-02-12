@@ -92,7 +92,7 @@ const UserVideo = ({
   //   }
   // };
 
-  console.log("ㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅ", session);
+  // console.log("ㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅㅅ", session);
   return (
     <div className="">
       {streamManager !== undefined ? (

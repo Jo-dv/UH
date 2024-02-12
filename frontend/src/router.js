@@ -14,7 +14,7 @@ import RoomId from "./pages/RoomId";
 const route = (
   <>
     <Route path="/" element={<Start />}></Route>
-    <Route path="game" element={<Game />}></Route>
+    {/* <Route path="game" element={<Game />}></Route> */}
     <Route element={<Layout />}>
       <Route path="room/:id" element={<RoomId />}></Route>
       <Route path="lobby" element={<Lobby />}></Route>

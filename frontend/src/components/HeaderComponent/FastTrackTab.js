@@ -9,13 +9,12 @@ const FastTrackTab = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const [showNoEnter, setShowNoEnter] = useState(false);
-  useEffect(() => {
-    getRoomsList()
-      .then((res) => setRooms(res))
-      .catch((err) => setError("방 목록을 불러오는 데 실패했습니다."));
-  }, []);
 
   const handleFastTrack = () => {
+    getRoomsList()
+    .then((res) => setRooms(res))
+    .catch((err) => setError("방 목록을 불러오는 데 실패했습니다."));
+
     const filteredRooms = rooms.filter((room) => !room.play && room.max > room.count);
 
     if (filteredRooms.length > 0) {
