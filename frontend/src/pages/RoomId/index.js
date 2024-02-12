@@ -507,6 +507,7 @@ export default function RoomId() {
   }, []);
 
   const fetchData = async () => {
+    if(session.sessionId!=undefined)
     try {
       const data = await getRoomInfo(session.sessionId);
       setroomInfo(data);
