@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Chat from "./Chat";
 import "./Game.css";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Fab from "@mui/material/Fab";
+import DesktopAccessDisabledIcon from "@mui/icons-material/DesktopAccessDisabled";
+import EditOffIcon from "@mui/icons-material/EditOff";
+import SearchIcon from "@mui/icons-material/Search";
+import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "./Cam/UserVideoComponent";
@@ -186,6 +192,23 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
     }
   };
   // console.log(quizData);
+  // mui 색상 팔레트
+  const theme = createTheme({
+    palette: {
+      button1: {
+        main: "#EF476F",
+      },
+      button2: {
+        main: "#F78C6B",
+      },
+      button3: {
+        main: "#FFD166",
+      },
+      button4: {
+        main: "#06D6A0",
+      },
+    },
+  });
   return (
     <>
       {loading ? (
@@ -227,6 +250,22 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                 <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-xl"}> B: {BTeamScore}</p>
               </div>
               <section className="relative rounded-b-[17px] overflow-hidden">
+                <div className="absolute top-0 right-0 p-2 flex space-x-2 z-10">
+                  <ThemeProvider theme={theme}>
+                    <Fab size="small" color="button4" aria-label="add">
+                      <DesktopAccessDisabledIcon />
+                    </Fab>
+                    <Fab size="small" color="button1" aria-label="add">
+                      <EditOffIcon />
+                    </Fab>
+                    <Fab size="small" color="button2" aria-label="add">
+                      <SearchIcon />
+                    </Fab>
+                    <Fab size="small" color="button3" aria-label="add">
+                      <RecordVoiceOverIcon />
+                    </Fab>
+                  </ThemeProvider>
+                </div>
                 {gameCategory === 101 ? (
                   <G101
                     gameLoading={gameLoading}
@@ -334,7 +373,11 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
           </div>
-          {!isEnded ? <button onClick={() => itemUse(myTeam)}>bombs</button> : null}
+          {!isEnded ? (
+            <button onClick={() => itemUse(myTeam)}>
+              <DesktopAccessDisabledIcon />
+            </button>
+          ) : null}
         </main>
       )}
     </>
