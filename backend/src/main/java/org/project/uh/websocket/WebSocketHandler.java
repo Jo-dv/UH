@@ -123,7 +123,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 			//httpSession을 통해 초대를 보낸 유저의 roomId 추출
 			String roomId = (String)httpSession.getAttribute("roomId");
-			jsonMessage.add("roomId", JsonParser.parseString(roomId));
+			if (roomId == null)
+				jsonMessage.add("roomId", null);
+			else
+				jsonMessage.add("roomId", JsonParser.parseString(roomId));
 
 			handleInvite(toConnectionId, jsonMessage);
 		}//친구 따라가기 
