@@ -11,14 +11,13 @@ import org.project.uh.ranking.dto.UserRankDto;
 public interface RankDao {
 
 	// 개인 랭킹 조회
-	@Select("select * from rank_user")
+	@Select("select * from rank_user limit 10")
 	public List<UserRankDto> userRank();
 
 	// 고요속의 외침 랭킹
 	// 사람 수랑 게임 코드
 	@Select("select * from rank_shout")
 	public List<RankDto> shoutRank();
-
 
 	// 인물 맞추기 랭킹
 	@Select("select * from rank_person")
