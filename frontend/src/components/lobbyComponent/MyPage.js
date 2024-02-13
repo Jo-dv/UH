@@ -78,8 +78,6 @@ const MyPage = () => {
         const totalCount = winCount + loseCount;
         const winPercent = Math.round((winCount / totalCount) * 100) / 100;
         const losePercent = Math.round((loseCount / totalCount) * 100) / 100;
-        // console.log("카운트",winCount, loseCount)
-        // console.log("퍼센트",winPercent, losePercent );
 
         setRecordPercent({
           winPercent,
@@ -94,7 +92,7 @@ const MyPage = () => {
   return (
     <section className="rounded-lg mt-4 col-start-4 col-end-13 row-start-1 row-end-13 ">
       <div className="flex items-center justify-between">
-        <h1 className="text-5xl ml-14" style={{ fontFamily: "var(--font-bold)" }}>
+        <h1 className="text-5xl ml-10" style={{ fontFamily: "var(--font-bold)" }}>
           {myPageInfo && myPageInfo.userNickname}
         </h1>
         <p className="text-2xl mr-10 mt-5">레이팅 : {myPageInfo && myPageInfo.rating}</p>
@@ -103,13 +101,7 @@ const MyPage = () => {
         <div className="mt-5">
           {myPageInfo && (
             <div className="mt-7">
-              {/* <h2 className="text-2xl text-center mb-3" style={{ fontFamily: "var(--font-bold)" }}>
-                프로필
-              </h2>
-              <p className="text-2xl text-center">닉네임: {myPageInfo.userNickname}</p>
-              <p className="text-2xl text-center">레이팅: {myPageInfo.rating}</p>
-              <br></br> */}
-              <div className="mt-6">
+              <div className="mt-6 ml-6">
                 <p className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
                   경기 승률
                 </p>
@@ -128,12 +120,12 @@ const MyPage = () => {
           )}
         </div>
 
-        <div className="col-start-2 col-end-4 relative mt-7 ">
-          <div className="ml-5 mt-4">
+        <div className="col-start-2 col-end-4 relative mt-5">
+          <div className="ml-5 mt-7">
             <h2 className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
               경기 기록
             </h2>
-            <div className="record-container overflow-auto p-4 h-[360px] mt-4">
+            <div className="record-container overflow-auto p-4 h-[360px]">
               {myPageInfo?.record?.map((record, index) => (
                 <div
                   key={index}

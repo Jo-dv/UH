@@ -27,7 +27,7 @@ const Person = (props) => {
         const backgroundClass = isTeamA ? "bg-tab1" : isTeamB ? "bg-tab12" : "formBG";
         return (
           <div key={connectionId}>
-            <div className={`${backgroundClass} grid rounded-3xl m-1 pb-2`}>
+            <div className={`${backgroundClass} relative grid rounded-3xl m-1 pb-2`}>
               <UserVideo
                 streamManager={streamManager}
                 session={props.session}
