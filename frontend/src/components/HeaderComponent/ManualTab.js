@@ -1,5 +1,6 @@
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 
 const ManualTab = () => {
     const { setIsLobby } = UseIsLobbyStore();
@@ -11,7 +12,7 @@ const ManualTab = () => {
           setIsLobby("Manual");
         }}
       >
-        <QuestionMarkIcon color="disabled"/>
+        <MenuBookIcon color="disabled"/>
       </button>
     );
   };
