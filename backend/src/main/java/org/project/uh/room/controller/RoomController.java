@@ -527,7 +527,7 @@ public class RoomController {
 		}
 	}
 
-	@Scheduled(fixedRate = 60000)
+	@Scheduled(fixedRate = 20000)
 	public void cleanupInactiveSessions() {
 		try {
 			openvidu.fetch();
