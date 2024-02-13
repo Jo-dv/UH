@@ -64,7 +64,10 @@ const EnterPassword = ({ showModal, isLocked, sessionId, onClose }) => {
                 취소
               </button>
               <button
-                onClick={handleRoomClick}
+                onClick={() => {
+                  handleRoomClick();
+                  onClose();
+                }}
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl"
               >
                 확인

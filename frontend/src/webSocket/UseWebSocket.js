@@ -110,7 +110,7 @@ export const WebSocketProvider = ({ children }) => {
                 handleInvite(parsedMessage);
                 break;
               case "follow":
-                handleFollow(parsedMessage);
+                handleFollow(parsedMessage.roomId);
                 break;
               default:
                 // 기타 메시지 처리
@@ -136,14 +136,19 @@ export const WebSocketProvider = ({ children }) => {
     };
   }, [nickname]);
 
+  //초대 받기 처리
   const handleInvite = (message) => {
-    console.log("Invite received", message);
+    console.log("Invite received", message.fromNickname,message.roomId);
     setNotificationMessage(`You are invited to join room ${message.roomId}`);
   };
 
-  const handleFollow = (message) => {
-    console.log("Follow received", message);
-    // 따라가기 메시지 처리 로직
+  const handleFollow = (roomId) => {
+    if (roomId == null) {
+      alert("입장할 방이 없습니다.")
+    } else {
+      navigate(`/room/${roomId}`);
+      // 따라가기 메시지 처리 로직
+    }
   };
 
   const handleRefresh = () => {

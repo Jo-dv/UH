@@ -9,6 +9,7 @@ import LogOutTab from "../HeaderComponent/LogOutTab";
 import RoomSettingTab from "../HeaderComponent/RoomSettingTab";
 import InvitingTab from "../HeaderComponent/InvitingTab";
 import LeavingTab from "../HeaderComponent/LeavingTab";
+import HomeTab from "../HeaderComponent/HomeTab";
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import logoImg from "../../asset/image/LOGO.png";
 
@@ -47,6 +48,9 @@ const Header = () => {
                 <button onClick={handleLogoClick}>
                   <img src={logoImg} alt="Logo" className="h-[80px]" />
                 </button>
+              </li>
+              <li>
+                <HomeTab />
               </li>
               <li>
                 <CreateRoomTab />

@@ -35,6 +35,7 @@ module.exports = {
         tab10hover: "#95c75a",
         tab11: "#f6ecc9",
         tab12: "#f2ac3c",
+        tab13: "#fb7185"
       },
       height: {
         "screen-80": "calc(100vh - 96px)",
@@ -43,6 +44,15 @@ module.exports = {
       },
       transformOrigin: {
         bottom: "bottom",
+      },
+      keyframes: {
+        scroll: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(-68%)' },
+        },
+      },
+      animation: {
+        scroll: 'scroll 15s linear infinite',
       },
     },
   },

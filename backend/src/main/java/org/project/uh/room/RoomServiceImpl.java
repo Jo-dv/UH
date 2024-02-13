@@ -105,6 +105,11 @@ public class RoomServiceImpl implements RoomService {
 			Set<String> nextHost = roomStatus.getPlayers().keySet();
 			for (String s : nextHost) {
 				if (!s.equals(connectionId)) {
+					//방장이 될 사람이 준비 상태인 경우
+					if (roomStatus.getPlayers().get(s).isReady()) {
+						roomStatus.setReadyCount(roomStatus.getReadyCount() - 1);
+						roomStatus.getPlayers().get(s).setReady(false);
+					}
 					roomStatus.setHostId(s);
 					break;
 				}

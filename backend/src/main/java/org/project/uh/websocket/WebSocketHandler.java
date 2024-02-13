@@ -30,17 +30,17 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		HttpSession httpSession = (HttpSession)session.getAttributes().get("httpSession");
 		System.out.println(httpSession);
-		if (isHttpSessionAlreadyConnected(httpSession)) {
-			// 이미 연결된 경우 접속을 막고 메시지를 보내고 연결을 종료
-			session.close(CloseStatus.PROTOCOL_ERROR);
-			return;
-		}
-
-		if (isUserAlreadyLogined(httpSession)) {
-			//이미 로그인되어 있는 유저의 재로그인을 막음
-			session.close(CloseStatus.BAD_DATA);
-			return;
-		}
+		// if (isHttpSessionAlreadyConnected(httpSession)) {
+		// 	// 이미 연결된 경우 접속을 막고 메시지를 보내고 연결을 종료
+		// 	session.close(CloseStatus.PROTOCOL_ERROR);
+		// 	return;
+		// }
+		//
+		// if (isUserAlreadyLogined(httpSession)) {
+		// 	//이미 로그인되어 있는 유저의 재로그인을 막음
+		// 	session.close(CloseStatus.BAD_DATA);
+		// 	return;
+		// }
 
 		//로그인 되지 않은 유저의 소켓 연결을 막음
 		if (httpSession.getAttribute("user") == null) {
@@ -123,7 +123,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 			//httpSession을 통해 초대를 보낸 유저의 roomId 추출
 			String roomId = (String)httpSession.getAttribute("roomId");
-			jsonMessage.add("roomId", JsonParser.parseString(roomId));
+			if (roomId == null)
+				jsonMessage.add("roomId", null);
+			else
+				jsonMessage.add("roomId", JsonParser.parseString(roomId));
 
 			handleInvite(toConnectionId, jsonMessage);
 		}//친구 따라가기 
@@ -137,7 +140,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
 			WebSocketSession followSession = connectionIds.get(connectionId);
 			HttpSession followHttpSession = CLIENTS.get(followSession);
 			String roomId = (String)followHttpSession.getAttribute("roomId");
-			jsonMessage.add("roomId", JsonParser.parseString(roomId));
+			if (roomId == null)
+				jsonMessage.add("roomId", null);
+			else
+				jsonMessage.add("roomId", JsonParser.parseString(roomId));
 
 			handleFollow(session, jsonMessage);
 		}//전체에게 새로고침 요청
