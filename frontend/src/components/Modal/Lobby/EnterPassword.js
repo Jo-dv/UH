@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLobbyApiCall from "../../../api/useLobbyApiCall";
 
@@ -11,19 +11,27 @@ const EnterPassword = ({ showModal, isLocked, sessionId, onClose }) => {
   }, []);
   const [again, setAgain] = useState(false);
 
+  useEffect(() => {
+    console.log("Effect:", again);
+  }, [again]);
+
   const handleRoomClick = async () => {
     try {
       const checkPassword = await postCheckPassword(sessionId, roomPassword);
+      console.log("checkPassword", checkPassword);
       if (checkPassword) {
         navigate(`/room/${sessionId}`);
       } else {
         setAgain(true);
+        console.log("3333333333", again);
+        console.log("비밀번호가 틀렸습니다.");
       }
     } catch (error) {
       console.error("서버에 요청하는 동안 오류가 발생했습니다.", error);
+      setAgain(true);
     }
   };
-
+  console.log("2222222222222222222", again);
   return (
     <>
       {showModal && (

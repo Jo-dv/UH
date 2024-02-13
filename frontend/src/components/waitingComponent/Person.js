@@ -5,9 +5,8 @@ import React, { useState, useEffect } from "react";
 const Person = (props) => {
   const [players, setPlayers] = useState();
   useEffect(() => {
-    setPlayers(props.playersInfo)
-  }, [props.playersInfo])
-
+    setPlayers(props.playersInfo);
+  }, [props.playersInfo]);
 
   const streamManagers = props.publisher
     ? [props.publisher, ...props.subscribers]
@@ -38,9 +37,11 @@ const Person = (props) => {
                 kickOutUser={props.kickOutUser}
                 connectionId={connectionId}
                 hostId={props.hostId}
-                playerReady={players && players[connectionId] && players[connectionId].ready
-                  ? players[connectionId].ready : undefined}
-                  
+                playerReady={
+                  players && players[connectionId] && players[connectionId].ready
+                    ? players[connectionId].ready
+                    : undefined
+                }
               />
             </div>
           </div>
