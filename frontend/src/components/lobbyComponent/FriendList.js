@@ -132,7 +132,7 @@ const FriendList = () => {
                   >
                     {friend.nickname}
                   </button>
-                  {onlineFreindDropdown === friend.userNickname && (
+                  {onlineFreindDropdown === friend.nickname && (
                     <div
                       ref={dropdownRef}
                       className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg"
