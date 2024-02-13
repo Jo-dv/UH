@@ -146,7 +146,8 @@ export default function RoomId() {
         // alert("강퇴");
         // await leaveSession();
         // navigate("/lobby");
-        setIsKicked(true);
+        // setIsKicked(true);
+        navigate("/lobby?kicked=true");
       }
     });
 

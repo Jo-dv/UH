@@ -1,5 +1,6 @@
 /*eslint-disable*/
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
 import SelectedRanking from "../../components/lobbyComponent/SelectedRanking";
@@ -9,6 +10,7 @@ import UserMediaProfile from "../../components/lobbyComponent/UserMediaProfile";
 import GameRoomSearchPanel from "../../components/lobbyComponent/GameRoomSearchPanel";
 import MyPage from "../../components/lobbyComponent/MyPage";
 import SelectGameManual from "../../components/lobbyComponent/SelectGameManual";
+import KickedModal from '../../components/Modal/waiting/KickedModal';
 
 
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
@@ -20,6 +22,9 @@ const Lobby = () => {
   const resetUser = useStore((state) => state.resetUser);
   // [userAuth] 페이지가 이동할 때 사용
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showKickedModal, setShowKickedModal] = useState(false);
+  
 
   useEffect(() => {
     // 로비로 들어올 때마다 isLobby의 값을 null로
@@ -33,7 +38,13 @@ const Lobby = () => {
     //   }
     // };
     // fetchUserAuth();
-  }, []);
+    const queryParams = new URLSearchParams(location.search);
+    if (queryParams.get('kicked') === 'true') {
+      setShowKickedModal(true);
+      // 쿼리 파라미터를 제거합니다.
+      navigate(location.pathname, {replace: true});
+    }
+  }, [location, navigate]);
 
   // [RoomList] 전체방, 대기방만 보기
   const [viewAllRooms, setViewAllRooms] = useState(true);
@@ -85,6 +96,7 @@ const Lobby = () => {
         ) : isLobby === "Manual" ? (
           <SelectGameManual />
         ) : null}
+        <KickedModal isOpen={showKickedModal} onClose={() => setShowKickedModal(false)} />
       </div>
     </>
   );
