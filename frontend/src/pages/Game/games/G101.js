@@ -31,6 +31,7 @@ const G101 = ({
   changeTeamIndex,
   changeTeamTurn,
   setIsGameEnd,
+  rand01,
 }) => {
   useEffect(() => {}, []);
   const [maxTurnTime, setMaxTurnTime] = useState(5000);
@@ -55,7 +56,10 @@ const G101 = ({
                   ) : (
                     <>
                       {ATeamScore === BTeamScore ? (
-                        <p className="text-3xl animate-shake animate-thrice">무승부</p>
+                        <>
+                          <p className="text-3xl animate-shake animate-thrice">무승부</p>
+                          {rand01 > 0 ? <p>A팀 Win</p> : <p>B팀 Win</p>}
+                        </>
                       ) : (
                         <p className="text-3xl animate-shake animate-thrice">B Team Win</p>
                       )}
