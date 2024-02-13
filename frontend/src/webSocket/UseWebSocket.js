@@ -88,8 +88,8 @@ export const WebSocketProvider = ({ children }) => {
 
     const con = () => {
       connect(
-        "wss://i10e201.p.ssafy.io/ws",
-        // "ws://localhost:5000/ws",
+        // "wss://i10e201.p.ssafy.io/ws",
+        "ws://localhost:5000/ws",
         null,
         (event) => {
           // console.log("WebSocket 메시지 수신:", event.data);
@@ -138,7 +138,7 @@ export const WebSocketProvider = ({ children }) => {
 
   //초대 받기 처리
   const handleInvite = (message) => {
-    console.log("Invite received", message.fromNickname,message.roomId);
+    console.log("Invite received", message.fromNickname, message.roomId);
     setNotificationMessage(`You are invited to join room ${message.roomId}`);
   };
 
