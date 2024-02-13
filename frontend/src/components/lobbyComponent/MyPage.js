@@ -95,7 +95,7 @@ const MyPage = () => {
         <h1 className="text-5xl ml-10" style={{ fontFamily: "var(--font-bold)" }}>
           {myPageInfo && myPageInfo.userNickname}
         </h1>
-        <p className="text-2xl mr-10 mt-5">{myPageInfo && myPageInfo.myRank}</p>
+        <p className="text-2xl mr-10 mt-5">개인랭킹 {myPageInfo && myPageInfo.myRank}등</p>
         <p className="text-2xl mr-10 mt-5">레이팅 : {myPageInfo && myPageInfo.rating}</p>
       </div>
       <div className="grid grid-cols-3 col-start-1 col-end-2">

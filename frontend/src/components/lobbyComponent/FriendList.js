@@ -25,7 +25,8 @@ const FriendList = () => {
   const [offlineFreindDropdown, setOfflineFreindDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const [requestListLength, setRequestListLength] = useState(0);
-  
+  const modalRef = useRef(null);
+
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -44,6 +45,20 @@ const FriendList = () => {
     };
   }, []);
 
+  // 모달 외부 클릭  감지
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showModal && modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowModal(false); // 모달 외부 클릭 시 모달 닫기
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showModal]);
+
   // 친구 삭제 모달
   const handleFriendDelete = (friend) => {
     setSelectedFriend(friend.userNickname);
@@ -60,10 +75,10 @@ const FriendList = () => {
 
   // 온라인 친구 드롭다운
   const onlineDropdown = (friend) => {
-    if (onlineFreindDropdown === friend.userNickname) {
+    if (onlineFreindDropdown === friend.nickname) {
       setOnlineFreindDropdown(null);
     } else {
-      setOnlineFreindDropdown(friend.userNickname);
+      setOnlineFreindDropdown(friend.nickname);
     }
   };
 
@@ -114,7 +129,6 @@ const FriendList = () => {
     // friendsNotInCommon 업데이트
     setFriendsNotInCommon(friendsNotInCommonList);
   }, [accessors, friends]);
-
 
   return (
     <div className="relative">
@@ -226,6 +240,7 @@ const FriendList = () => {
             <div
               className="absolute ml-10 h-full flex justify-center items-center z-50"
               onClick={closeModal}
+              ref={modalRef}
             >
               <div>
                 <FriendRequestList onListUpdate={setRequestListLength} />
