@@ -1,29 +1,20 @@
 import React, { useEffect, useCallback, useState } from "react";
 import useFriends from "../../hooks/useFriends";
 import UseFriendsStore from "../../store/UseFriendsStore";
+import UseFriendRequestStore from "../../store/UseFriendRequestStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 
 const FriendRequestList = ({ onListUpdate }) => {
   const { friendRefs } = useFriends();
   const { friends, setFriends } = UseFriendsStore();
   const { acceptFriends, rejectFriends, listFriends } = useLobbyApiCall();
-  const [requestList, setRequestList] = useState([]);
+  const {requestList} = UseFriendRequestStore();
 
   // 친구 목록 갱신을 위한 함수 정의
   const updateFriendsList = useCallback(async () => {
     const friendsList = await listFriends();
     setFriends(friendsList);
   }, [listFriends, setFriends]);
-
-  useEffect(() => {
-    friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
-
-    // 친구 요청 리스트를 불러옴
-    const requestedFriends = friends.filter((friend) => friend.friendsState === false);
-
-    setRequestList(requestedFriends);
-    onListUpdate(requestedFriends.length);
-  }, [friends]);
 
   return (
     <div
