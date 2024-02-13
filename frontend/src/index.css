@@ -17,6 +17,15 @@
   src: url(./asset/font/NPSfont_bold.woff);
 }
 
+@font-face {
+  font-family: "TAEBAEK";
+  src: url(./asset/font/TAEBAEK_font.otf);
+}
+@font-face {
+  font-family: "Beatster";
+  src: url(./asset/font/Beatster-Font.otf);
+}
+
 body {
   background-image: url("./asset/image/BG.png");
   background-repeat: no-repeat;

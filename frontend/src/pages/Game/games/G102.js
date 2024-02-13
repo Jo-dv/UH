@@ -7,6 +7,7 @@ import TurnTimer from "../Timer/TurnTimer";
 import Chipi from "../../../asset/items/Chipi.mp4";
 import Tooth from "../../../asset/items/Tooth.mp4";
 import Josh from "../../../asset/items/Josh.mp4";
+import Win from "../Win/Win";
 
 const G102 = ({
   session,
@@ -61,36 +62,12 @@ const G102 = ({
         <>
           <div className="w-full h-full absolute flex flex-col">
             {isGameEnd ? (
-              <>
-                {ATeamScore > BTeamScore ? (
-                  <div className="w-full h-full flex flex-col justify-center items-center bg-mc1">
-                    <p className="text-3xl animate-shake animate-thrice">A Team Win</p>
-                    <br />
-                    <button onClick={goWaitRoom} className="text-xl z-30">
-                      로비로
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    {ATeamScore === BTeamScore ? (
-                      <div className="w-full h-full flex flex-col justify-center items-center bg-mc10">
-                        <p className="text-3xl animate-shake animate-thrice">무승부</p>
-                        {rand01 > 0 ? <p>A팀 Win</p> : <p>B팀 Win</p>}
-                        <button onClick={goWaitRoom} className="text-xl z-30">
-                          로비로
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="w-full h-full flex flex-col justify-center items-center bg-mc5">
-                        <p className="text-3xl animate-bounce">B Team Win</p>
-                        <button onClick={goWaitRoom} className="text-xl z-30">
-                          로비로
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </>
+              <Win
+                ATeamScore={ATeamScore}
+                BTeamScore={BTeamScore}
+                goWaitRoom={goWaitRoom}
+                rand01={rand01}
+              />
             ) : (
               <>
                 {isEnded ? (

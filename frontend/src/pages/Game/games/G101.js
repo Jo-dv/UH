@@ -3,6 +3,7 @@ import UserVideoComponent from "../Cam/UserVideoComponent";
 import AnswerInput from "../AnswerInput";
 import Timer from "../Timer/Timer";
 import G101Info from "./G101Info";
+import Win from "../Win/Win";
 
 const G101 = ({
   session,
@@ -49,28 +50,12 @@ const G101 = ({
         <>
           <div className="w-full h-full absolute flex flex-col">
             {isGameEnd ? (
-              <div className="bg-mc5 w-full h-full flex flex-col justify-center items-center">
-                <div>
-                  {ATeamScore > BTeamScore ? (
-                    <p className="text-3xl animate-shake animate-thrice">A Team Win</p>
-                  ) : (
-                    <>
-                      {ATeamScore === BTeamScore ? (
-                        <>
-                          <p className="text-3xl animate-shake animate-thrice">무승부</p>
-                          {rand01 > 0 ? <p>A팀 Win</p> : <p>B팀 Win</p>}
-                        </>
-                      ) : (
-                        <p className="text-3xl animate-shake animate-thrice">B Team Win</p>
-                      )}
-                    </>
-                  )}
-                </div>
-                <br></br>
-                <button onClick={goWaitRoom} className="animate-bounce z-10">
-                  로비로
-                </button>
-              </div>
+              <Win
+                ATeamScore={ATeamScore}
+                BTeamScore={BTeamScore}
+                goWaitRoom={goWaitRoom}
+                rand01={rand01}
+              />
             ) : (
               <>
                 <UserVideoComponent
