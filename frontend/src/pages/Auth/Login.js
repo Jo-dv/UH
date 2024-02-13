@@ -147,11 +147,12 @@ const Login = () => {
                 flex flex-col justify-center items-center z-20"
       >
         {/* 티커 추가 */}
-      <div className="w-full overflow-hidden">
+      {/* <div className="w-full overflow-hidden m-2">
         <div className="whitespace-nowrap animate-scroll">
-          <span className="py-2 px-4">카메라와 마이크 권한이 필요해요!</span>
+          <span className="py-2 px-4 bg-mc9">카메라와 마이크 권한이 필요해요!</span>
         </div>
-      </div>
+      </div> */}
+      <p className="m-2">카메라와 마이크 권한이 필요해요!</p>
         <h2 className=" text-5xl mt-3 mb-5">로그인</h2>
         <div className="p-3">
           <input
@@ -193,6 +194,10 @@ const Login = () => {
           로그인
         </button>
         <p className=" text-red-500 mb-1">{err.general}</p>
+        {/* <button className=" p-2 m-1 rounded-xl w-72 bg-[#fee500] hover:bg-[#ddc700]"
+        onClick={kakaoLoginHandler}>
+          카카오 로그인
+        </button> */}
         {/* <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3> */}
