@@ -22,7 +22,6 @@ const Room = (props) => {
 
   const [isHover, setIsHover] = useState(true);
 
-  // 비밀번호 입력, 모달 상태를 로컬 스토리지에서 불러오는 함수
   useEffect(() => {
     const showModalState = localStorage.getItem("showModal");
     if (showModalState === "true") {
