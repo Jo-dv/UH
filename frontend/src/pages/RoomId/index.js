@@ -70,7 +70,7 @@ export default function RoomId() {
       session
         .signal({
           data: JSON.stringify({
-            myTeam: myTeam
+            myTeam: myTeam,
           }),
           to: [],
           type: "meme",
@@ -79,7 +79,7 @@ export default function RoomId() {
           console.error(error);
         });
     }
-  }
+  };
   // 함수 정의
 
   const handleMainVideoStream = useCallback(
@@ -210,7 +210,6 @@ export default function RoomId() {
           setroomInfo(serverRoomInfo);
           send({ type: "refresh" });
           handleNewRoomInfo(session);
-         
 
           // console.log("서버에서 받은 방정보", serverRoomInfo);
         });
@@ -222,14 +221,14 @@ export default function RoomId() {
     if (session) {
       //나갔을 때 알림
       await session
-      .signal({
-        data: `[알림] ${nickname}님이 나갔습니다.`,
-        to: [], 
-        type: "room-chat", 
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+        .signal({
+          data: `[알림] ${nickname}님이 나갔습니다.`,
+          to: [],
+          type: "room-chat",
+        })
+        .catch((error) => {
+          console.error(error);
+        });
 
       await exitRoom(session.sessionId, session.connection.connectionId);
       await session.disconnect();
@@ -345,11 +344,10 @@ export default function RoomId() {
         }
       });
 
-
       //아이템 처리
       session.on("signal:meme", (event) => {
         const { myTeam } = JSON.parse(event.data);
-        console.log(session.connection.connectionId)
+        console.log(session.connection.connectionId);
         if (myTeam === "A") {
           if (teamB.includes(session.connection.connectionId)) {
             // console.log("공격받음")
@@ -363,7 +361,7 @@ export default function RoomId() {
         }
       });
     }
-  }, [session,teamA,teamB]); // session 객체를 의존성 배열에 추가
+  }, [session, teamA, teamB]); // session 객체를 의존성 배열에 추가
 
   const setReady = async () => {
     // console.log("준비");
@@ -507,13 +505,13 @@ export default function RoomId() {
   }, []);
 
   const fetchData = async () => {
-    if(session.sessionId!=undefined)
-    try {
-      const data = await getRoomInfo(session.sessionId);
-      setroomInfo(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    if (session.sessionId != undefined)
+      try {
+        const data = await getRoomInfo(session.sessionId);
+        setroomInfo(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
   };
 
   // WebSocket을 통한 새로고침 요청에 대한 처리
@@ -652,6 +650,7 @@ export default function RoomId() {
           roomSetting={roomSetting}
           roomInfo={roomInfo}
           connectionId={session.connection.connectionId}
+          isHost={isHost}
         />
       )}
       {inviting && (

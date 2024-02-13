@@ -5,7 +5,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useWebSocket } from "../../../webSocket/UseWebSocket";
 
-const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
+const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) => {
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
   // console.log(roomInfo);
@@ -14,11 +14,13 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
   const { send } = useWebSocket();
   // 원래 방 정보 모달에 기입
   const [roomName, setRoomName] = useState(originalRoomInfo?.roomData?.roomName || "");
-  const [roomPassword, setRoomPassword] = useState(originalRoomInfo?.roomData?.roomPassword || "");
+  const [roomPassword, setRoomPassword] = useState(
+    originalRoomInfo?.roomData?.roomPassword || null
+  );
   const [roomMax, setRoomMax] = useState(originalRoomInfo?.roomData?.max || "");
   const [roomGame, setRoomGame] = useState(originalRoomInfo?.roomData?.gameCategory || "");
 
-  // console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
+  console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
   // console.log(originalRoomInfo);
   // 비밀 번호 활성화 변수
   const [lock, setLock] = useState(false);
@@ -49,23 +51,22 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
   }, []);
 
   useEffect(() => {
-    if(roomInfo.roomStatus.hostId!=connectionId){
-      alert("방장만 가능합니다.")
-      
+    if (roomInfo.roomStatus.hostId != connectionId) {
+      alert("방장만 가능합니다.");
+    } else {
+      const fetchData = async () => {
+        try {
+          setIsLoading(true);
+          const data = await getRoomsList();
+          setRooms(data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchData();
     }
-    else{
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getRoomsList();
-        setRooms(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();}
   }, []);
 
   const checkRoomNameExists = (name) => {
@@ -109,7 +110,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
 
   return (
     <>
-      {roomSetting && (
+      {roomSetting && isHost && (
         <div
           onClick={onClose}
           className="min-w-100 min-h-96 absolute inset-0
@@ -144,6 +145,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
                     type="text"
                     placeholder="비밀번호를 입력해주세요!"
                     // value={roomPassword}
+                    checked={roomPassword}
                     onChange={handleChangeRoomPassword}
                     maxLength={15}
                     className="text-center"
@@ -159,7 +161,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
                     type="radio"
                     value={4}
                     name="num"
-                    checked={roomMax === "4"}
+                    checked={roomMax === 4}
                     onChange={handleChangeRoomMax}
                     defaultChecked
                     className="mr-2"
@@ -171,7 +173,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
                     type="radio"
                     value={6}
                     name="num"
-                    checked={roomMax === "6"}
+                    checked={roomMax === 6}
                     onChange={handleChangeRoomMax}
                     className="mr-2"
                   />
@@ -182,7 +184,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
                     type="radio"
                     value={8}
                     name="num"
-                    checked={roomMax === "8"}
+                    checked={roomMax === 8}
                     onChange={handleChangeRoomMax}
                     className="mr-2"
                   />
@@ -198,6 +200,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
                     type="radio"
                     value={101}
                     name="game"
+                    checked={roomGame === 101}
                     onChange={handleChangeRoomGame}
                     defaultChecked
                     className="mr-2"
@@ -208,6 +211,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
                   <input
                     type="radio"
                     value={102}
+                    checked={roomGame === 102}
                     name="game"
                     onChange={handleChangeRoomGame}
                     className="mr-2"
@@ -223,7 +227,6 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo,connectionId }) => {
                 onClick={(e) => {
                   e.preventDefault();
                   handleUpdateRoom(e);
-
                   onClose();
                 }}
                 disabled={isLoading}
