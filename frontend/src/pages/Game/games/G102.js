@@ -33,8 +33,7 @@ const G102 = ({
   changeTeamTurn,
   setIsGameEnd,
 }) => {
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
   const [maxTurnTime, setMaxTurnTime] = useState(10000);
   const [turnTime, setTurnTime] = useState(0);
   return (
@@ -115,7 +114,7 @@ const G102 = ({
                         plusQuizIndex={plusQuizIndex}
                       />
                     </div>
-                    <div className="opacity-90 absolute w-full bottom-0 bg-tab10 p-1">
+                    {/* <div className="opacity-90 absolute w-full bottom-0 bg-tab10 p-1">
                       <div className="relative flex justify-center items-center">
                         <AnswerInput
                           myUserName={myUserName}
@@ -130,7 +129,7 @@ const G102 = ({
                           setTurnTime={setTurnTime}
                         />
                       </div>
-                    </div>
+                    </div> */}
                   </>
                 )}
               </>

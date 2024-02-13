@@ -292,6 +292,13 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone }) => 
                     myConnectionId={myConnectionId}
                     gamePlayer={turnPlayerId[0]}
                     gameCategory={gameCategory}
+                    quizIndex={quizIndex}
+                    myTeam={myTeam}
+                    Team={turnPlayerId[2]}
+                    setQuizIndex={setQuizIndex}
+                    changeTeamIndex={changeTeamIndex}
+                    answer={quizData[quizIndex].quizAnswer}
+                    plusScore={plusScore}
                   />
                 ) : null}
               </section>
