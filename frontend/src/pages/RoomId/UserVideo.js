@@ -5,8 +5,8 @@ import MicOff from "@mui/icons-material/MicOff";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 import useStore from "../../store/UserAuthStore";
-import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
-import crown from "../../asset/image/crown.png"
+import CancelPresentationTwoToneIcon from "@mui/icons-material/CancelPresentationTwoTone";
+import crown from "../../asset/image/crown.png";
 import KickOutModal from "../../components/Modal/waiting/KickOutModal";
 import CloseIcon from "@mui/icons-material/Close";
 import Crown from "../../asset/image/crown.png";
@@ -131,40 +131,40 @@ const UserVideo = ({
             <p className="flex">
               {/* {nickname} */}
               {getNicknameTag()}
-              {hostId===connectionId?<img className="h-4 ml-1" src={Crown}></img>:null}
-              {playerReady?<div className="ml-1">ready</div>:null}
+              {hostId === connectionId ? <img className="h-4 ml-1" src={Crown}></img> : null}
+              {playerReady ? <div className="ml-1">ready</div> : null}
             </p>
-              {nickname === getNicknameTag() ? (
-                <>
-                  {audioActive === false ? (
-                    <button onClick={onMic}>
-                      <MicOff />
-                    </button>
-                  ) : (
-                    <button onClick={muteMic}>
-                      <Mic />
-                    </button>
-                  )}
-
-                  {videoActive === false ? (
-                    <button onClick={onVideo}>
-                      <VideocamOffIcon />
-                    </button>
-                  ) : (
-                    <button onClick={muteVideo}>
-                      <VideocamIcon />
-                    </button>
-                  )}
-                </>
-              ) : isHost === true ? (
-                  <button
-                    // 강퇴 버튼 클릭 시 모달 창을 띄움
-                    onClick={() => handleKickOutClick(streamManager.stream.connection.connectionId)}
-                    className="bg-red-500 hover:bg-red-700 text-white p-1 rounded flex items-center justify-center w-5 h-5"
-                  >
-                    <CloseIcon fontSize="small" />
+            {nickname === getNicknameTag() ? (
+              <>
+                {audioActive === false ? (
+                  <button onClick={onMic}>
+                    <MicOff />
                   </button>
-              ) : null}
+                ) : (
+                  <button onClick={muteMic}>
+                    <Mic />
+                  </button>
+                )}
+
+                {videoActive === false ? (
+                  <button onClick={onVideo}>
+                    <VideocamOffIcon />
+                  </button>
+                ) : (
+                  <button onClick={muteVideo}>
+                    <VideocamIcon />
+                  </button>
+                )}
+              </>
+            ) : isHost === true ? (
+              <button
+                // 강퇴 버튼 클릭 시 모달 창을 띄움
+                onClick={() => handleKickOutClick(streamManager.stream.connection.connectionId)}
+                className="bg-red-500 hover:bg-red-700 text-white p-1 rounded flex items-center justify-center w-5 h-5"
+              >
+                <CloseIcon fontSize="small" />
+              </button>
+            ) : null}
           </div>
           <div className="pt-9">
             <OpenViduVideoComponent streamManager={streamManager} />

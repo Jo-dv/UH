@@ -88,8 +88,8 @@ export const WebSocketProvider = ({ children }) => {
 
     const con = () => {
       connect(
-        "wss://i10e201.p.ssafy.io/ws",
-        // "ws://localhost:5000/ws",
+        // "wss://i10e201.p.ssafy.io/ws",
+        "ws://localhost:5000/ws",
         null,
         (event) => {
           // console.log("WebSocket 메시지 수신:", event.data);
@@ -143,7 +143,7 @@ export const WebSocketProvider = ({ children }) => {
 
   const handleFollow = (roomId) => {
     if (roomId == null) {
-      alert("입장할 방이 없습니다.")
+      alert("입장할 방이 없습니다.");
     } else {
       navigate(`/room/${roomId}`);
       // 따라가기 메시지 처리 로직
