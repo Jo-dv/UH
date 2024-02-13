@@ -135,7 +135,7 @@ const UserVideo = ({
             </p>
             {nickname === getNicknameTag() ? (
               <>
-                <div className="absolute right-0 top-20 mt-2">
+                <div className="absolute right-0 top-20 mt-2 z-30">
                   <div>
                     {audioActive === false ? (
                       <button onClick={onMic}>
@@ -164,7 +164,7 @@ const UserVideo = ({
               <button
                 // 강퇴 버튼 클릭 시 모달 창을 띄움
                 onClick={() => handleKickOutClick(streamManager.stream.connection.connectionId)}
-                className="bg-red-500 hover:bg-red-700 text-white p-1 rounded flex items-center justify-center w-5 h-5"
+                className="bg-red-500 hover:bg-red-700 text-white p-1 rounded flex items-center justify-center w-5 h-5 z-30"
               >
                 <CloseIcon fontSize="small" />
               </button>
