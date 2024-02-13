@@ -18,26 +18,25 @@ const Win = ({ ATeamScore, BTeamScore, goWaitRoom, rand01 }) => {
       ) : (
         <>
           {ATeamScore === BTeamScore ? (
-            <div className="w-full h-full flex flex-col justify-center items-center ">
+            <div className="w-full h-full flex flex-col justify-center items-center">
               {/* <p className="text-3xl animate-jump-out animate-delay-500">무승부</p> */}
-              <div className="flex flex-col justify-center items-center animate-flip-up animate-delay-1500">
-                {rand01 > 0 ? (
-                  <p className="text-9xl font-['Beatster'] animate-wiggle animate-infinite">
-                    A Team Win
-                  </p>
-                ) : (
-                  <p className="text-9xl font-['Beatster'] animate-wiggle animate-infinite">
-                    B Team Win
-                  </p>
-                )}
-                <button
-                  onClick={goWaitRoom}
-                  className="z-30 text-xl bg-tab10 p-3 rounded-3xl animate-bounce"
-                >
-                  대기방으로 돌아가기
-                </button>
-              </div>
-              <p className="absolute text-9xl animate-jump-out">승자는!!!</p>
+
+              {rand01 > 0 ? (
+                <p className="text-9xl font-['Beatster'] animate-wiggle animate-infinite">
+                  A Team Win
+                </p>
+              ) : (
+                <p className="text-9xl font-['Beatster'] animate-wiggle animate-infinite">
+                  B Team Win
+                </p>
+              )}
+
+              <button
+                onClick={goWaitRoom}
+                className="z-30 text-xl bg-tab10 p-3 rounded-3xl animate-bounce"
+              >
+                대기방으로 돌아가기
+              </button>
             </div>
           ) : (
             <div className="w-full h-full flex flex-col justify-center items-center bg-tab2 animate-fade-left">
