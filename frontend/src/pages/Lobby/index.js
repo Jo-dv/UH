@@ -8,6 +8,7 @@ import RoomList from "../../components/lobbyComponent/RoomList";
 import UserMediaProfile from "../../components/lobbyComponent/UserMediaProfile";
 import GameRoomSearchPanel from "../../components/lobbyComponent/GameRoomSearchPanel";
 import MyPage from "../../components/lobbyComponent/MyPage";
+import SelectGameManual from "../../components/lobbyComponent/SelectGameManual";
 
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import useStore from "../../store/UserAuthStore";
@@ -31,7 +32,6 @@ const Lobby = () => {
     //   }
     // };
     // fetchUserAuth();
-
   }, []);
 
   // [RoomList] 전체방, 대기방만 보기
@@ -80,6 +80,8 @@ const Lobby = () => {
           <SelectedRanking />
         ) : isLobby === "MyPage" ? (
           <MyPage />
+        ) : isLobby === "Manual" ? (
+          <SelectGameManual />
         ) : null}
       </div>
     </>
