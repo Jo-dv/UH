@@ -4,6 +4,7 @@ import useAccessors from "../../hooks/useAccessors";
 import UseAccessorsStore from "../../store/UseAccessorsStore";
 import useFriends from "../../hooks/useFriends";
 import UseFriendsStore from "../../store/UseFriendsStore";
+import UseFriendRequestStore from "../../store/UseFriendRequestStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import FriendRequestList from "./FriendRequestList";
 import FriendDeleteModal from "../Modal/Lobby/FriendDeleteModal";
@@ -24,9 +25,9 @@ const FriendList = () => {
   const [onlineFreindDropdown, setOnlineFreindDropdown] = useState(false);
   const [offlineFreindDropdown, setOfflineFreindDropdown] = useState(false);
   const dropdownRef = useRef(null);
-  const [requestListLength, setRequestListLength] = useState(0);
+  const {requestList, setRequestList} = UseFriendRequestStore();
   const modalRef = useRef(null);
-
+  
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -128,6 +129,13 @@ const FriendList = () => {
 
     // friendsNotInCommon 업데이트
     setFriendsNotInCommon(friendsNotInCommonList);
+
+    // friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
+
+    // 친구 요청 리스트를 불러옴
+    const requestedFriends = friends.filter((friend) => friend.friendsState === false);
+
+    setRequestList(requestedFriends);
   }, [accessors, friends]);
 
   return (
@@ -228,10 +236,10 @@ const FriendList = () => {
               }}
             >
               {showModal ? "✖" : "🔔"}
-              {requestListLength > 0 && (
+              {requestList.length > 0 && (
                 // requestListLength가 0보다 클 때 뱃지 표시
                 <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                  {requestListLength}
+                  {requestList.length}
                 </span>
               )}
             </button>
@@ -243,7 +251,7 @@ const FriendList = () => {
               ref={modalRef}
             >
               <div>
-                <FriendRequestList onListUpdate={setRequestListLength} />
+                <FriendRequestList/>
               </div>
             </div>
           )}
