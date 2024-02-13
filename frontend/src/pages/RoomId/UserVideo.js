@@ -135,7 +135,7 @@ const UserVideo = ({
             </p>
             {nickname === getNicknameTag() ? (
               <>
-                <div className="absolute right-0 top-20 mt-2">
+                <div className="absolute right-0 top-20 mt-2 z-30">
                   <div>
                     {audioActive === false ? (
                       <button onClick={onMic}>
