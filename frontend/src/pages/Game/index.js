@@ -8,7 +8,7 @@ import UserVideoComponent from "./Cam/UserVideoComponent";
 import G101 from "./games/G101";
 import G102 from "./games/G102";
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUse,isMeme }) => {
+const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, isMeme }) => {
   let maxTime = 60000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -86,6 +86,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
       setTeamTurn("B");
       setTeamIndex(0);
       setTurnPlayerId(BTeamStreamManagers[TeamIndex]);
+      // changeTeamIndex();
       plusQuizIndex();
 
       if (round < maxRound) {
@@ -98,6 +99,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
       setTeamTurn("A");
       setTeamIndex(0);
       setTurnPlayerId(ATeamStreamManagers[TeamIndex]);
+      // changeTeamIndex();
       plusQuizIndex();
 
       if (round < maxRound) {
@@ -195,7 +197,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
               {ATeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="cam bg-tab10">
+                    <div key={i} className="cam bg-tab10">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -204,7 +206,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
                       />
                     </div>
                   ) : (
-                    <div key={sub[0]} className="cam bg-tab1">
+                    <div key={i} className="cam bg-tab1">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -310,7 +312,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
               {BTeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={sub[0]} className="cam bg-tab10">
+                    <div key={i} className="cam bg-tab10">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -319,7 +321,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
                       />
                     </div>
                   ) : (
-                    <div key={sub[0]} className="cam bg-tab12">
+                    <div key={i} className="cam bg-tab12">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -332,7 +334,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
               ))}
             </section>
           </div>
-          {!isEnded?<button onClick={()=>itemUse(myTeam)}>bombs</button>:null}
+          {!isEnded ? <button onClick={() => itemUse(myTeam)}>bombs</button> : null}
         </main>
       )}
     </>

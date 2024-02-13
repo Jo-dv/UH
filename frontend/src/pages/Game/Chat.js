@@ -51,24 +51,35 @@ const Chat = ({
 
   session.on("signal:room-chat", (event) => {
     const dataObj = JSON.parse(event.data);
-    if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
-      // plusQuizIndex();
-      setQuizIndex(dataObj.quizIndex + 1);
-      plusScore(dataObj.team);
-      changeTeamIndex();
-      setIsAnswer(true);
-      setTimeout(() => setIsAnswer(false), 1000);
-      dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-start";
-    } else if (dataObj.team === dataObj.myTeam) {
-      dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
-    } else {
-      dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+    if (gameCategory === 101) {
+      if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
+        setQuizIndex(dataObj.quizIndex + 1);
+        plusScore(dataObj.team);
+        changeTeamIndex();
+        setIsAnswer(true);
+        setTimeout(() => setIsAnswer(false), 1000);
+        dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-center";
+      } else if (dataObj.team === dataObj.myTeam) {
+        dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
+      } else {
+        dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+      }
+    } else if (gameCategory === 102) {
+      if (dataObj.ans === answer) {
+        setQuizIndex(dataObj.quizIndex + 1);
+        plusScore(dataObj.myTeam);
+        changeTeamIndex();
+        setIsAnswer(true);
+        setTimeout(() => setIsAnswer(false), 1000);
+        dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-center";
+      } else if (dataObj.myTeam === "A") {
+        dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
+      } else if (dataObj.myTeam === "B") {
+        dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+      }
     }
-    // console.log(dataObj);
+
     setMessageList([...messageList, dataObj]);
-    // console.log(messageList)
-    // console.log('폼',event.from); // Connection object of the sender
-    // console.log('타입',event.type); // The type of message ("my-chat")
   });
 
   useEffect(() => {
@@ -94,6 +105,7 @@ const Chat = ({
     if (ulRef.current) {
       ulRef.current.scrollTop = ulRef.current.scrollHeight;
     }
+    console.log(answer, gameCategory);
   }, [messageList]);
 
   return (
