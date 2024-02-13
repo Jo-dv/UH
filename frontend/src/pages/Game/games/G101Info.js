@@ -34,7 +34,7 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
     };
   }, []);
   return (
-    <div>
+    <div className="z-30">
       고요 속의 외침
       <br />
       <br /> 제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.
@@ -52,7 +52,7 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
           <button
             onClick={sendGameStart}
             className="animate-bounce
-          p-4 m-4 text-xl z-30"
+          p-4 m-4 text-xl"
           >
             - Game Start -
           </button>

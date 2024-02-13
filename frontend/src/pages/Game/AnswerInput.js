@@ -11,6 +11,7 @@ const AnswerInput = ({
   setTurnTime,
   quizIndex,
   setQuizIndex,
+  G101form,
 }) => {
   const [answerMsg, setAnswerMsg] = useState("");
   const [sendList, setSendList] = useState([]);
@@ -20,7 +21,7 @@ const AnswerInput = ({
   const sendAnswer = (e) => {
     // console.log("정답제출", answer);
     e.preventDefault();
-    setAnswerMsg("");
+    // setAnswerMsg("");
     // console.log(session);
 
     const data = JSON.stringify({
@@ -38,16 +39,16 @@ const AnswerInput = ({
       })
       .then(() => {
         // console.log("정답제출 보냄 :", answerMsg);
-        // setAnswerMsg("");
+        setAnswerMsg("");
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  console.log("정답창에서 받음", answer);
+  // console.log("정답창에서 받음", answer);
   session.on("signal:game-answer", (event) => {
-    // if (answer === event.data) {}
+    console.log("정답창에서 받음", answer);
     const dataObj = JSON.parse(event.data);
     if (dataObj.ans === answer) {
       // plusQuizIndex();
@@ -55,6 +56,7 @@ const AnswerInput = ({
       plusScore(dataObj.team);
       changeTeamIndex();
       setIsAnswer(true);
+      setTimeout(() => setIsAnswer(false), 1000);
     } else {
       const msg = dataObj.myUserName + " : " + dataObj.ans;
       setSendList([...sendList, msg]);
@@ -68,9 +70,10 @@ const AnswerInput = ({
     }
   }, [sendList]);
 
-  useEffect(() => {
-    setTimeout(() => setIsAnswer(false), 1000);
-  }, [isAnswer]);
+  // useEffect(() => {
+  //   setTimeout(() => setIsAnswer(false), 1000);
+  // }, [isAnswer]);
+
   return (
     <>
       {isAnswer ? (
@@ -93,22 +96,24 @@ const AnswerInput = ({
             );
           })}
         </ul>
-        <form
-          className="px-2 border rounded-3xl bg-white flex flex-row overflow-hidden z-20"
-          onSubmit={sendAnswer}
-        >
-          <input
-            type="text"
-            placeholder="정답을 입력해 주세요!"
-            className="grow"
-            maxLength="10"
-            value={answerMsg}
-            onChange={(e) => setAnswerMsg(e.target.value)}
-          />
-          <button className="w-11 m-1 pl-2 border-l-2 border-solid" type="submit">
-            정답
-          </button>
-        </form>
+        {G101form ? null : (
+          <form
+            className="px-2 border rounded-3xl bg-white flex flex-row overflow-hidden z-20"
+            onSubmit={sendAnswer}
+          >
+            <input
+              type="text"
+              placeholder="정답을 입력해 주세요!"
+              className="grow"
+              maxLength="10"
+              value={answerMsg}
+              onChange={(e) => setAnswerMsg(e.target.value)}
+            />
+            <button className="w-11 m-1 pl-2 border-l-2 border-solid" type="submit">
+              정답
+            </button>
+          </form>
+        )}
       </session>
     </>
   );

@@ -6,9 +6,17 @@ import MicOff from "@mui/icons-material/MicOff";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 
-const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlayer }) => {
+const UserVideoComponent = ({
+  streamManager,
+  session,
+  isHost,
+  isReady,
+  gamePlayer,
+  gameCategory,
+}) => {
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
+  const [beforeGamePlayer, setBeforeGamePlayer] = useState(undefined);
   const getNicknameTag = () => {
     // Gets the nickName of the user
     return JSON.parse(streamManager.stream.connection.data).clientData;
@@ -37,18 +45,25 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
   });
 
   const muteMic = () => {
-    // console.log("스트림메니저", streamManager);
     if (streamManager.constructor.name === "t") {
-      streamManager.publishAudio(false);
-      socketSend();
+      if (streamManager.stream.connection.connectionId != session.connection.connectionId) {
+        alert("본인의 마이크만 끌 수 있습니다.")
+      } else {
+        streamManager.publishAudio(false);
+        socketSend();
+      }
     }
   };
   const onMic = () => {
-    if (gamePlayer === streamManager.stream.connection.connectionId) {
+    if (gamePlayer === streamManager.stream.connection.connectionId && gameCategory === 101) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "t") {
-      streamManager.publishAudio(true);
-      socketSend();
+      if (streamManager.stream.connection.connectionId != session.connection.connectionId) {
+        alert("본인의 마이크만 켤 수 있습니다.")
+      } else {
+        streamManager.publishAudio(true);
+        socketSend();
+      }
     }
   };
   const muteVideo = () => {
@@ -56,26 +71,41 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
     if (gamePlayer === streamManager.stream.connection.connectionId) {
       alert("발화자는 음소거 해제가 불가능 합니다.");
     } else if (streamManager.constructor.name === "t") {
-      streamManager.publishVideo(false);
-      socketSend();
+      if (streamManager.stream.connection.connectionId != session.connection.connectionId) {
+        alert("본인의 화면만 끌 수 있습니다.")
+      } else {
+        streamManager.publishVideo(false);
+        socketSend();
+      }
     }
   };
   const onVideo = () => {
     if (streamManager.constructor.name === "t") {
-      streamManager.publishVideo(true);
-      socketSend();
+      if (streamManager.stream.connection.connectionId != session.connection.connectionId) {
+        alert("본인의 화면만 켤 수 있습니다.")
+      } else {
+        streamManager.publishVideo(true);
+        socketSend();
+      }
     }
   };
 
   useEffect(() => {
-    console.log('test',streamManager)
-    // if (gamePlayer === streamManager.stream.connection.connectionId) {
-    //   if (streamManager.constructor.name === "t") {
-    //     streamManager.publishAudio(false);
-    //     streamManager.publishVideo(true);
-    //     socketSend(); //cpu 메모리 잡아먹는 범인
-    //   }
-    // }
+    if (gameCategory === 101) {
+      if ((gamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId)) {
+        streamManager.publishAudio(false);
+        streamManager.publishVideo(true);
+        socketSend(); //cpu 메모리 잡아먹는 범인
+      } else {
+        if (
+          (beforeGamePlayer == streamManager.stream.connection.connectionId) && (streamManager.stream.connection.connectionId == session.connection.connectionId)
+        ) {
+          streamManager.publishAudio(true);
+          socketSend(); //cpu 메모리 잡아먹는 범인
+        }
+      }
+      setBeforeGamePlayer(gamePlayer);
+    }
   }, [gamePlayer]);
 
   return (
@@ -87,7 +117,7 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
             <p>
               {getNicknameTag()}
 
-              {/* {audioActive === false ? (
+              {audioActive === false ? (
                 <button onClick={onMic}>
                   <MicOff />
                 </button>
@@ -105,7 +135,7 @@ const UserVideoComponent = ({ streamManager, session, isHost, isReady, gamePlaye
                 <button onClick={muteVideo}>
                   <VideocamIcon />
                 </button>
-              )} */}
+              )}
             </p>
             {/* <p>
               isHost : {isHost ? "true" : "false"}, isReady : {isReady ? "true" : "false"}

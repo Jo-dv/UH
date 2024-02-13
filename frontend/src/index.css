@@ -36,14 +36,6 @@ body {
   --font-bold: "round-bold";
 }
 
-:root {
-  --font-bold: "round-bold";
-}
-
-:root {
-  --font-bold: "round-bold";
-}
-
 /* 스크롤바 디자인 */
 ::-webkit-scrollbar {
   width: 10px;

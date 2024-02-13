@@ -108,7 +108,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
             {errorMessage && <div className="error-message ml-12 text-red-500">{errorMessage}</div>}
             <div className="flex flex-wrap">
               <label className="mt-3 mr-3">비밀번호</label>
-              <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto">
+              <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto flex flex-wrap">
                 <button onClick={togglePassword}>{lock ? <LockIcon /> : <LockOpenIcon />}</button>
                 {lock && (
                   <input
@@ -120,12 +120,6 @@ const CreateRoomModal = ({ modalOnOff }) => {
                     className="text-center"
                   />
                 )}
-                {/* <button
-                  onClick={togglePassword}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                >
-                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                </button> */}
               </div>
             </div>
 
