@@ -17,6 +17,11 @@
   src: url(./asset/font/NPSfont_bold.woff);
 }
 
+@font-face {
+  font-family: "round-extrabold";
+  src: url(./asset/font/NPSfont_extrabold.woff);
+}
+
 body {
   background-image: url("./asset/image/BG.png");
   background-repeat: no-repeat;
@@ -34,6 +39,10 @@ body {
 
 :root {
   --font-bold: "round-bold";
+}
+
+:root {
+  --font-extrabold: "round-extrabold";
 }
 
 /* 스크롤바 디자인 */

@@ -135,7 +135,7 @@ const UserVideo = ({
             </p>
             {nickname === getNicknameTag() ? (
               <>
-                <div className="absolute right-0 top-20 mt-2">
+                <div className="absolute right-0 top-20 mt-2 z-30">
                   <div>
                     {audioActive === false ? (
                       <button onClick={onMic}>
@@ -147,7 +147,7 @@ const UserVideo = ({
                       </button>
                     )}
                   </div>
-                  <div >
+                  <div>
                     {videoActive === false ? (
                       <button onClick={onVideo}>
                         <VideocamOffIcon />
@@ -164,23 +164,15 @@ const UserVideo = ({
               <button
                 // 강퇴 버튼 클릭 시 모달 창을 띄움
                 onClick={() => handleKickOutClick(streamManager.stream.connection.connectionId)}
-                className="bg-red-500 hover:bg-red-700 text-white p-1 rounded flex items-center justify-center w-5 h-5"
+                className="bg-red-500 hover:bg-red-700 text-white p-1 rounded flex items-center justify-center w-5 h-5 z-30"
               >
                 <CloseIcon fontSize="small" />
               </button>
             ) : null}
           </div>
           <div className="pt-9 relative">
-            <OpenViduVideoComponent streamManager={streamManager} />
+            <OpenViduVideoComponent isReady={playerReady} streamManager={streamManager} />
           </div>
-          {playerReady ? (
-            <div
-              className="absolute text-center bottom-2 z-10 text-xl text-red-900"
-              style={{ fontFamily: "var(--font-bold)", left: 0, right: 0}}
-            >
-              READY
-            </div>
-          ) : null}
         </div>
       ) : null}
       <KickOutModal
