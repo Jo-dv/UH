@@ -545,14 +545,18 @@ export default function RoomId() {
             {roomInfo && roomInfo.roomData && (
               <div className="flex items-center space-x-3 w-full">
                 <p>{roomPassword === null ? <LockOpenIcon /> : <LockIcon />}</p>
-                <div className="text-2xl">
-                  {roomName} - {roomGame === 101 ? "고요 속의 외침" : "인물 맞추기"}
+                <div className="flex flex-wrap space-x-4">
+                  <p className="font-[round-bold] text-3xl">{roomName}</p>
+                  <p className="font-[round-bold] text-3xl">-</p>
+                  <p className="font-[round-bold] text-3xl">
+                    {roomGame === 101 ? "고요 속의 외침" : "인물 맞추기"}
+                  </p>
                 </div>
                 <div className="absolute right-11 flex flex-wrap items-center space-x-3">
                   <p>
                     <PersonIcon />
                   </p>
-                  <p className="text-2xl">
+                  <p className="font-[round-bold] text-2xl">
                     {roomInfo.roomData.count}/{roomMax}
                   </p>
                 </div>
@@ -598,14 +602,14 @@ export default function RoomId() {
             <div className="grid col-start-7 col-end-9 row-start-1 row-end-13">
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
-                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center"
+                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center font-[round-bold] text-xl"
                   onClick={() => changeTeam("A")}
                 >
                   A팀
                 </button>
 
                 <button
-                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center"
+                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center font-[round-bold] text-xl"
                   onClick={() => changeTeam("B")}
                 >
                   B팀
@@ -616,7 +620,7 @@ export default function RoomId() {
                   onClick={() => {
                     setReady();
                   }}
-                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${
+                  className={`bg-tab10 active:bg-tab4 border font-[round-bold] text-2xl rounded-2xl h-full flex justify-center items-center w-full ${
                     isReady ? "bg-tab4" : ""
                   }`}
                 >
