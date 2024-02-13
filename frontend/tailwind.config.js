@@ -52,7 +52,7 @@ module.exports = {
         },
       },
       animation: {
-        scroll: 'scroll 15s linear infinite',
+        scroll: 'scroll 8s linear infinite',
       },
     },
   },

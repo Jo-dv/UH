@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import OpenViduVideoComponent from "../RoomId/OvVideo";
 import Mic from "@mui/icons-material/Mic";
 import MicOff from "@mui/icons-material/MicOff";
@@ -23,6 +24,8 @@ const UserVideo = ({
   playerReady,
   connectionId,
 }) => {
+  const navigate = useNavigate();
+  
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
   const getNicknameTag = () => {

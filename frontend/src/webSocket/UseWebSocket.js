@@ -138,7 +138,7 @@ export const WebSocketProvider = ({ children }) => {
 
   //초대 받기 처리
   const handleInvite = (message) => {
-    console.log("Invite received", message.fromNickname,message.roomId);
+    console.log("Invite received", message.fromNickname, message.roomId);
     setNotificationMessage(`You are invited to join room ${message.roomId}`);
   };
 
