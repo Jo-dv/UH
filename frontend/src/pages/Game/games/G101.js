@@ -119,21 +119,19 @@ const G101 = ({
                           <>
                             <p>{quizData[quizIndex].quizAnswer}</p>
 
-                            <div className="hidden">
-                              <AnswerInput
-                                myUserName={myUserName}
-                                session={session}
-                                answer={quizData[quizIndex].quizAnswer}
-                                quizIndex={quizIndex}
-                                setQuizIndex={setQuizIndex}
-                                plusQuizIndex={plusQuizIndex}
-                                Team={turnPlayerId[2]}
-                                plusScore={plusScore}
-                                changeTeamIndex={changeTeamIndex}
-                                setTurnTime={setTurnTime}
-                                G101form={true}
-                              />
-                            </div>
+                            <AnswerInput
+                              myUserName={myUserName}
+                              session={session}
+                              answer={quizData[quizIndex].quizAnswer}
+                              quizIndex={quizIndex}
+                              setQuizIndex={setQuizIndex}
+                              plusQuizIndex={plusQuizIndex}
+                              Team={turnPlayerId[2]}
+                              plusScore={plusScore}
+                              changeTeamIndex={changeTeamIndex}
+                              setTurnTime={setTurnTime}
+                              G101form={true}
+                            />
                           </>
                         ) : (
                           <AnswerInput
