@@ -171,6 +171,7 @@ const useLobbyApiCall = () => {
   const requestFriends = async (toUserSeq) => {
     try {
       await axios.post(friendsUrl, { toUserSeq: toUserSeq });
+      alert("친구 요청 완료");
     } catch (error) {
       if (error.response.status === 400) {
         alert("이미 요청되었거나 친구 상태입니다.");

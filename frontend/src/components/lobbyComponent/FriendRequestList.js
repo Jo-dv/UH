@@ -3,7 +3,7 @@ import useFriends from "../../hooks/useFriends";
 import UseFriendsStore from "../../store/UseFriendsStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 
-const FriendRequestList = () => {
+const FriendRequestList = ({ onListUpdate }) => {
   const { friendRefs } = useFriends();
   const { friends, setFriends } = UseFriendsStore();
   const { acceptFriends, rejectFriends, listFriends } = useLobbyApiCall();
@@ -22,6 +22,7 @@ const FriendRequestList = () => {
     const requestedFriends = friends.filter((friend) => friend.friendsState === false);
 
     setRequestList(requestedFriends);
+    onListUpdate(requestedFriends.length);
   }, [friends]);
 
   return (
