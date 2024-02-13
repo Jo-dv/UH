@@ -51,7 +51,6 @@ const AccessorsList = () => {
             <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
               <div className="relative inline-block">
                 <button
-                  className="text-gray-500"
                   onClick={() => accessorClick(accessor)}
                   aria-expanded={accessorDropdown === accessor ? "true" : "false"}
                   aria-haspopup="true"

@@ -123,7 +123,7 @@ const UserVideo = ({
   };
 
   return (
-    <div className="relative">
+    <div className="">
       {streamManager !== undefined ? (
         <div className="">
           <div className="absolute ml-7 mt-2 flex w-52 justify-between">
@@ -135,7 +135,7 @@ const UserVideo = ({
             </p>
             {nickname === getNicknameTag() ? (
               <>
-                <div>
+                <div className="absolute right-0 top-20 mt-2">
                   <div>
                     {audioActive === false ? (
                       <button onClick={onMic}>
@@ -147,7 +147,7 @@ const UserVideo = ({
                       </button>
                     )}
                   </div>
-                  <div>
+                  <div >
                     {videoActive === false ? (
                       <button onClick={onVideo}>
                         <VideocamOffIcon />
@@ -175,7 +175,7 @@ const UserVideo = ({
           </div>
           {playerReady ? (
             <div
-              className="absolute text-center bottom-0 z-10 text-xl text-red-900"
+              className="absolute text-center bottom-2 z-10 text-xl text-red-900"
               style={{ fontFamily: "var(--font-bold)", left: 0, right: 0}}
             >
               READY

@@ -67,7 +67,7 @@ const FriendRequestList = () => {
         <div>
           <p className="text-center">받은 요청이 없습니다</p>
         </div>
-      )};
+      )}
     </div>
   );
 };

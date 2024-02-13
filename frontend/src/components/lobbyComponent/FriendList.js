@@ -81,7 +81,6 @@ const FriendList = () => {
     setFriends(friendsList);
   }, [listFriends, setFriends]);
 
-
   useEffect(() => {
     updateFriendsList();
     friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
@@ -119,13 +118,12 @@ const FriendList = () => {
     <div className="relative">
       <div className="p-[16px] overflow-y-scroll h-[250px] scroll-smooth">
         <div className="w-full">
-          <p>접속한 친구</p>
+          <p style={{ fontFamily: "var(--font-bold)" }}>접속한 친구</p>
           {combinedList &&
             combinedList.map((friend, i) => (
               <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
                 <div className="relative inline-block">
                   <button
-                    className="text-gray-500"
                     onClick={() => onlineDropdown(friend)}
                     aria-expanded={onlineFreindDropdown === friend ? "true" : "false"}
                     aria-haspopup="true"
@@ -133,7 +131,10 @@ const FriendList = () => {
                     {friend.nickname}
                   </button>
                   {onlineFreindDropdown === friend.userNickname && (
-                    <div ref={dropdownRef} className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg">
+                    <div
+                      ref={dropdownRef}
+                      className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg"
+                    >
                       <button
                         className="text-gray-700 text-sm block px-4 py-1 w-full text-left hover:bg-gray-100 rounded-t-2xl"
                         onClick={async () => {
@@ -165,7 +166,7 @@ const FriendList = () => {
               </div>
             ))}
           <hr className="border-orange-900 my-2"></hr>
-          <p>미접속 친구</p>
+          <p style={{ fontFamily: "var(--font-bold)" }}>미접속 친구</p>
           {friendsNotInCommon &&
             friendsNotInCommon.map((friend, i) => (
               <div className="ml-[12px] mb-[4px] text-l" ref={friendRefs.current[i]} key={i}>
@@ -179,7 +180,10 @@ const FriendList = () => {
                     {friend.userNickname}
                   </button>
                   {offlineFreindDropdown === friend.userNickname && (
-                    <div ref={dropdownRef} className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg">
+                    <div
+                      ref={dropdownRef}
+                      className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg"
+                    >
                       <div
                         className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
                         onClick={() => handleFriendDelete(friend)}
@@ -199,26 +203,28 @@ const FriendList = () => {
               </div>
             ))}
         </div>
+        <div className="absolute bottom-0 right-0 z-999 mr-6">
+          <div className="relative">
+          <button
+            className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10"
+            onClick={() => {
+              setShowModal((prevState) => !prevState);
+            }}
+          >
+            {showModal ? "✖" : "🔔"}
+          </button>
+        </div>
         {showModal && (
           <div
-            className="absolute top-80 left-150 w-full h-full flex justify-center items-center z-50"
+            className="absolute ml-10 h-full flex justify-center items-center z-50"
             onClick={closeModal}
           >
             <div>
               <FriendRequestList />
             </div>
           </div>
-        )}
-      </div>
-      <div className="absolute bottom-0 right-0 z-999 mr-6">
-        <button
-          className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10"
-          onClick={() => {
-            setShowModal((prevState) => !prevState);
-          }}
-        >
-          {showModal ? "✖" : "🔔"}
-        </button>
+          )}
+          </div>
       </div>
     </div>
   );
