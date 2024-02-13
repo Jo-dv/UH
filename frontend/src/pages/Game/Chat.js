@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import useStore from "../../store/UserAuthStore";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import CorrectMusic from "../../components/CorrectMusic";
+
 const Chat = ({
   session,
   myConnectionId,
@@ -110,15 +112,17 @@ const Chat = ({
 
   return (
     <>
-      {isAnswer ? (
-        <TaskAltIcon
-          className="absolute bottom-20 m-auto animate-jump-in"
-          color="success"
-          sx={{ fontSize: 400 }}
-        />
-      ) : null}
-
       <section className="w-full flex flex-col absolute bottom-9 opacity-70">
+        {isAnswer ? (
+          <>
+            <TaskAltIcon
+              className="absolute bottom-20 left-32 animate-jump-in"
+              color="success"
+              sx={{ fontSize: 400 }}
+            />
+            <CorrectMusic />
+          </>
+        ) : null}
         {/* <h2 className="bg-neutral-400 px-8 h-6">채팅</h2> */}
 
         <ul ref={ulRef} className=" px-2 h-[200px] overflow-y-auto flex flex-col justify-end">
