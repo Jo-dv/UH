@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
 		return 1;
 	}
 
-
 	// 아이디 중복 체크
 	@Override
 	public int idCheck(String userId) {
@@ -76,6 +75,7 @@ public class UserServiceImpl implements UserService {
 	public MypageDto mypage(int userSeq) {
 		MypageDto mypage = dao.mypage(userSeq);
 		mypage.setRecord(dao.userRecord(userSeq));
+		mypage.setMyRank(dao.userRank(userSeq));
 		return mypage;
 	}
 
