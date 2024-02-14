@@ -3,6 +3,11 @@ import Chat from "./Chat";
 import "./Game.css";
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "./Cam/UserVideoComponent";
+import Tooltip from "@mui/material/Tooltip";
+import chipi from "../../asset/image/chipi.gif";
+import stop from "../../asset/image/stop.gif";
+import talk from "../../asset/image/talk.gif";
+import gethint from "../../asset/image/hint.gif";
 
 import G101 from "./games/G101";
 import G102 from "./games/G102";
@@ -207,6 +212,30 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       }
     }
   };
+  useEffect(() => {
+    // 키보드 입력에 반응하여 특정 액션 실행
+    const handleKeyPress = (event) => {
+      switch (event.key) {
+        case ',': // 화면 가리기
+          itemUse(myTeam, "meme");
+          break;
+        case '.': // 채팅 막기
+          itemUse(myTeam, "disable");
+          break;
+        case '/': // 초성 힌트
+          itemUse(myTeam, "hint");
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [myTeam, itemUse]);
 
   return (
     <>
@@ -363,9 +392,15 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
           </div>
-          <button onClick={() => itemUse(myTeam, "meme")}>bombs{meme}</button>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}>disable{disable}</button>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>hint{hint}</button>
+          <Tooltip title="화면 가리기" arrow>
+          <button onClick={() => itemUse(myTeam, "meme")}><img src={chipi} alt="chipi" className="border rounded-full w-12 h-12" />{meme}</button>
+          </Tooltip>
+          <Tooltip title="채팅 막기" arrow>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}><img src={stop} alt="stop" className="border rounded-full w-12 h-12" />{disable}</button>
+          </Tooltip>
+          <Tooltip title="초성 힌트" arrow>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}><img src={gethint} alt="hint" className="border rounded-full w-12 h-12" />{hint}</button>
+          </Tooltip>
         </main>
       )}
     </>
