@@ -1,18 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Chat from "./Chat";
 import "./Game.css";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import Fab from "@mui/material/Fab";
-import DesktopAccessDisabledIcon from "@mui/icons-material/DesktopAccessDisabled";
-import EditOffIcon from "@mui/icons-material/EditOff";
-import SearchIcon from "@mui/icons-material/Search";
-import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
-import chipi from "../../asset/image/chipi.gif";
-import stop from "../../asset/image/stop.gif";
-import talk from "../../asset/image/talk.gif";
-import hint from "../../asset/image/hint.gif";
-import Tooltip from "@mui/material/Tooltip";
-
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "./Cam/UserVideoComponent";
 
@@ -219,24 +207,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       }
     }
   };
-  // console.log(quizData);
-  // mui 색상 팔레트
-  const theme = createTheme({
-    palette: {
-      button1: {
-        main: "#EF476F",
-      },
-      button2: {
-        main: "#F78C6B",
-      },
-      button3: {
-        main: "#FFD166",
-      },
-      button4: {
-        main: "#06D6A0",
-      },
-    },
-  });
+
   return (
     <>
       {loading ? (
@@ -278,48 +249,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                 <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-lg"}>B : {BTeamScore}</p>
               </div>
               <section className="relative rounded-b-[17px] overflow-hidden">
-                <div className="absolute top-0 right-0 flex space-x-2 p-2 mt-4 z-40">
-                  {/* {!isEnded ? ( */}
-                  <Tooltip title="화면 가리기" arrow>
-                    <button onClick={() => itemUse(myTeam)}>
-                      <img src={chipi} alt="chipi" className="border rounded-full w-12 h-12" />
-                    </button>
-                  </Tooltip>
-                  {/*) : null}*/}
-                  <Tooltip title="채팅 막기" arrow>
-                  <button>
-                    <img src={stop} alt="stop" className="border rounded-full w-12 h-12" />
-                  </button>
-                  </Tooltip>
-                  <Tooltip title="초성 힌트" arrow>
-                  <button>
-                    <img src={hint} alt="hint" className="border rounded-full w-12 h-12" />
-                  </button>
-                  </Tooltip>
-                  <Tooltip title="STT" arrow>
-                  <button>
-                    <img src={talk} alt="talk" className="border bg-white rounded-full w-12 h-12" />
-                  </button>
-                  </Tooltip>
-                  {/*<ThemeProvider theme={theme}>
-                    <Fab size="small" color="button4" aria-label="add">
-                      
-                      <img src={chipi} alt="chipi" className="w-12 h-12"/>
-                    </Fab>
-                    <Fab size="small" color="button1" aria-label="add">
-                      
-                      <img src={stop} alt="stop" className="w-12 h-12"/>
-                    </Fab>
-                    <Fab size="small" color="button2" aria-label="add">
-                      
-                      <img src={hint} alt="hint" className="w-12 h-12"/>
-                    </Fab>
-                    <Fab size="small" color="button3" aria-label="add">
-                      
-                      <img src={talk} alt="talk" className="w-12 h-12"/>
-                    </Fab>
-                  </ThemeProvider>*/}
-                </div>
                 {gameCategory === 101 ? (
                   <G101
                     gameLoading={gameLoading}
@@ -434,23 +363,9 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
           </div>
-          {/* {!isEnded ? (
-            <button onClick={() => itemUse(myTeam)}>
-              <DesktopAccessDisabledIcon />
-            </button>
-          ) : null} */}
-          {/* <button>
-            <img src={chipi} alt="chipi" className="border rounded-full w-24 h-24" />
-          </button>
-          <button>
-            <img src={stop} alt="stop" className="border rounded-full w-24 h-24" />
-          </button>
-          <button>
-            <img src={hint} alt="hint" className="border rounded-full w-24 h-24" />
-          </button>
-          <button>
-            <img src={talk} alt="talk" className="border bg-white rounded-full w-24 h-24" />
-          </button> */}
+          <button onClick={() => itemUse(myTeam, "meme")}>bombs{meme}</button>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}>disable{disable}</button>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>hint{hint}</button>
         </main>
       )}
     </>
