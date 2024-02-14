@@ -34,8 +34,9 @@ const G102Info = ({ maxTime, maxRound, setGameLoading, session }) => {
     };
   }, []);
   return (
-    <div className="z-10">
-      인물 맞추기
+    <div className="z-10 text-xl">
+      <br />
+      <p className="text-3xl font-[round-extrabold]">인물 맞추기</p>
       <br />
       <br /> 제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.
       <br />
@@ -45,17 +46,24 @@ const G102Info = ({ maxTime, maxRound, setGameLoading, session }) => {
       <br /> 팀당 {maxTime / 1000}초 동안 진행합니다.
       <br /> 총 {maxRound}라운드 진행합니다.
       <br />
-      <div className="animate-fade animate-delay-[3000ms] ">
+      <div className="animate-fade animate-delay-[3000ms] flex justify-center">
         {isLoading ? (
           <p>loading...</p>
         ) : (
-          <button
-            onClick={sendGameStart}
-            className="animate-bounce
-          p-4 m-4 text-3xl"
-          >
-            - Game Start -
-          </button>
+          <div className="animate-bounce ">
+            <div
+              className="bg-orange-800 hover:bg-orange-800 shadow-xl py-2 px-4 rounded-3xl text-3xl font-[round-extrabold] z-30 mt-20"
+              style={{ width: "300px", height: "70px" }}
+            >
+              <button
+                onClick={sendGameStart}
+                className="bg-tab2 hover:bg-tab7 shadow-inner py-2 px-4 rounded-3xl text-4xl font-[round-extrabold] z-31 -ml-5 -mt-5"
+                style={{ width: "300px", height: "70px" }}
+              >
+                <p className="text-white font-[button]">Game Start</p>
+              </button>
+            </div>
+          </div>
         )}
       </div>
     </div>

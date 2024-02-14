@@ -54,15 +54,14 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
               className="bg-orange-800 hover:bg-orange-800 shadow-xl py-2 px-4 rounded-3xl text-3xl font-[round-extrabold] z-30 mt-20"
               style={{ width: "300px", height: "70px" }}
             >
-            <button
+              <button
                 onClick={sendGameStart}
-                  className="bg-tab2 hover:bg-tab7 shadow-inner py-2 px-4 rounded-3xl text-4xl font-[round-extrabold] z-31 -ml-5 -mt-5"
-                  style={{ width: "300px", height: "70px" }}
+                className="bg-tab2 hover:bg-tab7 shadow-inner py-2 px-4 rounded-3xl text-4xl font-[round-extrabold] z-31 -ml-5 -mt-5"
+                style={{ width: "300px", height: "70px" }}
               >
                 <p className="text-white font-[button]">Game Start</p>
               </button>
-
-          </div>
+            </div>
           </div>
         )}
       </div>
