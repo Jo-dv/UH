@@ -1,14 +1,25 @@
 import { useEffect, useRef, useState } from "react";
 import Chat from "./Chat";
 import "./Game.css";
-
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "./Cam/UserVideoComponent";
 
 import G101 from "./games/G101";
 import G102 from "./games/G102";
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, isMeme }) => {
+const getInitials = (src) => {
+  let string = '';
+  for (var i = 0; i < src.length; i++) {
+    let index = ((src.charCodeAt(i) - 44032) / 28) / 21;
+    if (index >= 0) {
+      string += String.fromCharCode(index + 4352);
+    }
+  }
+  return string;
+}
+
+const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, meme, disable, hint,
+  setMeme, setDisable, setHint, memeAttack, setMemeAttack, disableAttack, setDisableAttack, hintUse, setHintUse }) => {
   let maxTime = 30000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -43,8 +54,20 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   const [BTeamScore, setBTeamScore] = useState(0);
   const [teamChangeLoading, setTeamChangeLoading] = useState(false);
   const [gameCategory, setGameCategory] = useState(undefined);
-  const [isEnded, setIsEnded] = useState(false); // 하위 컴포넌트에게 영상 재생 상태를 전달할 상태
   const [rand01, setRand01] = useState(Math.floor(Math.random() * 2));
+
+  useEffect(() => {
+    if (hintUse) {
+      const extractedInitials = getInitials(quizData[quizIndex].quizAnswer);
+      console.log(quizData[quizIndex].quizAnswer)
+      console.log(extractedInitials)
+    }
+
+    setTimeout(() => {
+      setHintUse(false);
+    }, 5000);
+  }, [hintUse,quizIndex]);
+
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
   };
@@ -247,6 +270,9 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                     changeTeamIndex={changeTeamIndex}
                     plusQuizIndex={plusQuizIndex}
                     rand01={rand01}
+                    memeAttack={memeAttack}
+                    hintUse={hintUse}
+
                   />
                 ) : null}
                 {gameCategory === 102 ? (
@@ -277,8 +303,9 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                     plusScore={plusScore}
                     changeTeamIndex={changeTeamIndex}
                     plusQuizIndex={plusQuizIndex}
-                    isItem={isMeme}
                     rand01={rand01}
+                    memeAttack={memeAttack}
+                    hintUse={hintUse}
                   />
                 ) : null}
                 {/* <button onClick={sendPlayDone}>playDone</button> */}
@@ -297,6 +324,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                     changeTeamIndex={changeTeamIndex}
                     answer={quizData[quizIndex].quizAnswer}
                     plusScore={plusScore}
+                    disableAttack={disableAttack}
                   />
                 ) : null}
               </section>
@@ -327,7 +355,9 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
           </div>
-          {!isEnded ? <button onClick={() => itemUse(myTeam)}>bombs</button> : null}
+          <button onClick={() => itemUse(myTeam, "meme")}>bombs{meme}</button>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}>disable{disable}</button>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>hint{hint}</button>
         </main>
       )}
     </>
