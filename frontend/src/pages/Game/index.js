@@ -11,6 +11,7 @@ import chipi from "../../asset/image/chipi.gif";
 import stop from "../../asset/image/stop.gif";
 import talk from "../../asset/image/talk.gif";
 import hint from "../../asset/image/hint.gif";
+import Tooltip from "@mui/material/Tooltip";
 
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "./Cam/UserVideoComponent";
@@ -245,21 +246,29 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                 <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-lg"}>B : {BTeamScore}</p>
               </div>
               <section className="relative rounded-b-[17px] overflow-hidden">
-                <div className="absolute top-0 right-0 flex space-x-2 p-2 z-40">
-                {!isEnded ? (
-                  <button onClick={() => itemUse(myTeam)}>
-                    <img src={chipi} alt="chipi" className="border rounded-full w-12 h-12" />
-                  </button>
-                  ) : null}
+                <div className="absolute top-0 right-0 flex space-x-2 p-2 mt-4 z-40">
+                  {/* {!isEnded ? ( */}
+                  <Tooltip title="화면 가리기" arrow>
+                    <button onClick={() => itemUse(myTeam)}>
+                      <img src={chipi} alt="chipi" className="border rounded-full w-12 h-12" />
+                    </button>
+                  </Tooltip>
+                  {/*) : null}*/}
+                  <Tooltip title="채팅 막기" arrow>
                   <button>
                     <img src={stop} alt="stop" className="border rounded-full w-12 h-12" />
                   </button>
+                  </Tooltip>
+                  <Tooltip title="초성 힌트" arrow>
                   <button>
                     <img src={hint} alt="hint" className="border rounded-full w-12 h-12" />
                   </button>
+                  </Tooltip>
+                  <Tooltip title="STT" arrow>
                   <button>
                     <img src={talk} alt="talk" className="border bg-white rounded-full w-12 h-12" />
                   </button>
+                  </Tooltip>
                   {/*<ThemeProvider theme={theme}>
                     <Fab size="small" color="button4" aria-label="add">
                       
