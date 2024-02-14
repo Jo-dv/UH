@@ -51,7 +51,7 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
         ) : (
           <div className="animate-bounce ">
             <div
-              className="bg-orange-800 hover:bg-orange-800 shadow-xl py-2 px-4 rounded-3xl text-3xl font-[round-extrabold] z-30"
+              className="bg-orange-800 hover:bg-orange-800 shadow-xl py-2 px-4 rounded-3xl text-3xl font-[round-extrabold] z-30 mt-20"
               style={{ width: "300px", height: "70px" }}
             >
             <button
