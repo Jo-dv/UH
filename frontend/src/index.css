@@ -41,6 +41,15 @@ body {
   margin: auto;
 }
 
+.game-container {
+  position: fixed;
+  top: 20px;
+  left: calc(50vw - 640px);
+  width: 1280px;
+  height: 640px;
+  margin: auto;
+}
+
 :root {
   --font-bold: "round-bold";
 }

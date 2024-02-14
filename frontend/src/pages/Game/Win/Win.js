@@ -1,7 +1,23 @@
+import { useEffect, useState } from "react";
+import JSConfetti from "js-confetti";
+
 const Win = ({ ATeamScore, BTeamScore, goWaitRoom, rand01 }) => {
-  // const random
+  const [isExploding, setIsExploding] = useState(false);
+
+  //HTML Canvas 요소를 생성하여 페이지에 추가
+  const jsConfetti = new JSConfetti();
+
+  //색종이 커스터마이징
+  const handleClick = () => {
+    jsConfetti.addConfetti({
+      confettiColors: ["#EF476F", "#fb7185", "#F78C6B", "#FFD166", "#a8d572", "#95c75a"],
+      confettiRadius: 5,
+      confettiNumber: 500,
+    });
+  };
+
   return (
-    <>
+    <div onClick={handleClick} className="w-full h-full">
       {ATeamScore > BTeamScore ? (
         <div className="w-full h-full flex flex-col justify-center items-center bg-tab1">
           {/* <p className="absolute text-9xl font-['Beatster'] animate-jump-out animate-delay-500">
@@ -39,7 +55,7 @@ const Win = ({ ATeamScore, BTeamScore, goWaitRoom, rand01 }) => {
               </button>
             </div>
           ) : (
-            <div className="w-full h-full flex flex-col justify-center items-center bg-tab2 animate-fade-left">
+            <div className="w-full h-full flex flex-col justify-center items-center bg-tab2">
               <p className="text-9xl font-['Beatster'] animate-wiggle animate-infinite">
                 B Team Win
               </p>
@@ -53,7 +69,7 @@ const Win = ({ ATeamScore, BTeamScore, goWaitRoom, rand01 }) => {
           )}
         </>
       )}
-    </>
+    </div>
   );
 };
 

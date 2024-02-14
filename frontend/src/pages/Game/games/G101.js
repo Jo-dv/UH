@@ -91,7 +91,7 @@ const G101 = ({
                     )}
                   </div>
                 ) : (
-                  <div className="opacity-90 absolute w-full bottom-[-24px]">
+                  <div className="opacity-90 absolute w-full top-0">
                     <div className="relative flex justify-center items-center">
                       <Timer
                         maxTime={maxTime}

@@ -182,7 +182,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       {loading ? (
         <p>loading</p>
       ) : (
-        <main className="container-box bg-stone-100 p-4 border rounded-3xl">
+        <main className="game-container bg-stone-100 p-4 border rounded-3xl">
           <div className="flex flex-row justify-around h-full">
             <section className="grid grid-rows-4 gap-2 mr-2">
               {ATeamStreamManagers.map((sub, i) => (
@@ -210,7 +210,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
             <article className="h-full aspect-[12/10] relative flex flex-col">
-              <div className="w-full flex justify-around items-end bg-tab10 text-xl rounded-t-[17px]">
+              <div className="w-full flex justify-around items-end bg-tab10 rounded-t-[17px]">
                 <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p>
                 {/* <p> Team: {TeamTurn}</p> */}
                 <p className="text-3xl">Round {round}</p>
