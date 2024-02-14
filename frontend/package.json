@@ -25,6 +25,7 @@
     "sockjs-client": "^1.6.1",
     "styled-components": "^6.1.8",
     "tailwindcss-animated": "^1.0.1",
+    "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4",
     "zustand": "^4.5.0"
   },
