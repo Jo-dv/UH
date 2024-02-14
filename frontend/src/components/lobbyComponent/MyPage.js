@@ -61,6 +61,9 @@ const MyPage = () => {
   const [myPageInfo, setMyPageInfo] = useState(null);
   const [recordPercent, setRecordPercent] = useState(null); // recordPercent 상태 추가
   const [winPercent, setWinPercent] = useState(0); // winPercent 상태 추가
+  const [winCount, setWinCount] = useState(0);
+  const [loseCount, setLoseCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     if (userSeq) {
@@ -85,6 +88,9 @@ const MyPage = () => {
           totalCount,
         });
         setWinPercent(winPercent);
+        setWinCount(winCount);
+        setLoseCount(loseCount);
+        setTotalCount(totalCount);
       });
     }
   }, [userSeq]);
@@ -107,8 +113,9 @@ const MyPage = () => {
                   경기 승률
                 </p>
                 {myPageInfo?.record?.length !== 0 && (
-                  <div className="flex justify-center items-center content-center h-full mt-4">
+                  <div className="h-full mt-4 ml-5">
                     <DonutChart color="#3498db" percent={winPercent} size="250px" />
+                    {/* <p className="ml-20 text-gray-500">{totalCount}전 {winCount}승 {loseCount}패</p> */}
                   </div>
                 )}
                 {myPageInfo?.record?.length === 0 && (

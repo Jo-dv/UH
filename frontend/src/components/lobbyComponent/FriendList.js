@@ -27,7 +27,8 @@ const FriendList = () => {
   const dropdownRef = useRef(null);
   const { requestList, setRequestList } = UseFriendRequestStore();
   const modalRef = useRef(null);
-  const { playClick } = useClick();
+  const buttonRef = useRef(null);
+
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -46,10 +47,15 @@ const FriendList = () => {
     };
   }, []);
 
-  // 모달 외부 클릭  감지
+  // 모달 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (showModal && modalRef.current && !modalRef.current.contains(event.target)) {
+      if (
+        showModal &&
+        modalRef.current &&
+        !modalRef.current.contains(event.target) &&
+        !buttonRef.current.contains(event.target)
+      ) {
         setShowModal(false); // 모달 외부 클릭 시 모달 닫기
       }
     };
@@ -60,16 +66,24 @@ const FriendList = () => {
     };
   }, [showModal]);
 
-  // 친구 삭제 모달
-  const handleFriendDelete = (friend) => {
-    setSelectedFriend(friend.userNickname);
+  // 오프라인 친구 삭제 모달
+  const handleOnlineFriendDelete = (friend) => {
+    setSelectedFriend(friend.nickname);
     setSelectedFriendId(friend.friendsId);
     setDelete(true);
   };
 
+  // 오프라인 친구 삭제 모달
+  const handleOfflineFriendDelete = (friend) => {
+    setSelectedFriend(friend.userNickname);
+    setSelectedFriendId(friend.friendsId);
+    setDelete(true);
+  };
+  
+
   // 요청 모달 닫기
   const closeModal = (event) => {
-    if (event.target === event.currentTarget) {
+    if (event.target === event.currentTarget || event.target.closest(".notification-button")) {
       setShowModal(false);
     }
   };
@@ -177,16 +191,9 @@ const FriendList = () => {
                       <hr></hr>
                       <div
                         className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
-                        onClick={() => handleFriendDelete(friend)}
+                        onClick={() => handleOnlineFriendDelete(friend)}
                       >
-                        <button
-                          onClick={() => {
-                            handleFriendDelete(friend);
-                            playClick();
-                          }}
-                        >
-                          삭제하기
-                        </button>
+                        <button onClick={() => handleOnlineFriendDelete(friend)}>삭제하기</button>
                       </div>
                     </div>
                   )}
@@ -224,16 +231,9 @@ const FriendList = () => {
                     >
                       <div
                         className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
-                        onClick={() => handleFriendDelete(friend)}
+                        onClick={() => handleOfflineFriendDelete(friend)}
                       >
-                        <button
-                          onClick={() => {
-                            handleFriendDelete(friend);
-                            playClick();
-                          }}
-                        >
-                          삭제하기
-                        </button>
+                        <button onClick={() => handleOfflineFriendDelete(friend)}>삭제하기</button>
                       </div>
                     </div>
                   )}
@@ -248,10 +248,11 @@ const FriendList = () => {
               </div>
             ))}
         </div>
-        <div className="absolute bottom-0 right-0 z-999 mr-6">
+        <div className="absolute bottom-0 right-0 z-20 mr-6">
           <div className="relative mb-2">
             <button
-              className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10"
+              ref={buttonRef}
+              className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10 notification-button"
               onClick={() => {
                 setShowModal((prevState) => !prevState);
                 playClick();
