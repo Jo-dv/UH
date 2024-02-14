@@ -6,6 +6,7 @@ import UserVideoComponent from "./Cam/UserVideoComponent";
 
 import G101 from "./games/G101";
 import G102 from "./games/G102";
+import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
 const getInitials = (src) => {
   let string = '';
@@ -67,6 +68,13 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       setHintUse(false);
     }, 5000);
   }, [hintUse,quizIndex]);
+
+  // 음악 정지
+  const { pause } = UseIsMusicPlay();
+
+  useEffect(() => {
+    pause();
+  }, [pause]);
 
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
