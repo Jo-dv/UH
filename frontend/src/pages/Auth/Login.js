@@ -10,10 +10,8 @@ import kakaoLogo from "./img/kakaoLogoB.png";
 import naverLogo from "./img/naverLogo.png";
 import kakaologinimg from "./img/kakao_login.png";
 import kakaoSymbol from "./img/kakaosymbol.png";
-import useClick from "../../hooks/useClick.js";
-const Login = () => {
-  const { playClick } = useClick();
 
+const Login = () => {
   const navigate = useNavigate();
   // UserAuthStore의 User를 변경하기 위해
   const setUser = useStore((state) => state.setUser);
@@ -51,7 +49,10 @@ const Login = () => {
 
   const handleLogOut = async () => {
     try {
-      const response = await axios.post("user/logout", { userSeq: userSeq });
+      const response = await axios.post(
+        "user/logout",
+        { userSeq: userSeq }
+      );
       const res = response.data;
       // store의 유저 정보 초기화
       if (res === 1) {
@@ -79,7 +80,7 @@ const Login = () => {
         //세션에 로그인된 유저가 없다면 클라이언트의 유저 정보 로그아웃 처리
         if (res == "") {
           handleLogOut();
-        } //로그인된 정보가 있다면 클라이언트의 스토어에 유저 정보를 담고 로비로 보냄
+        }//로그인된 정보가 있다면 클라이언트의 스토어에 유저 정보를 담고 로비로 보냄
         else {
           setUser({ userSeq: res.userSeq, userNickname: res.userNickname });
           navigate("/lobby");
@@ -87,8 +88,9 @@ const Login = () => {
       } catch {
         setErr({ ...err, general: "서버가 아파요ㅠㅠ" });
       }
-    };
+    }
     checkLogin();
+
   }, []);
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -146,12 +148,12 @@ const Login = () => {
                 flex flex-col justify-center items-center z-20"
       >
         {/* 티커 추가 */}
-        {/* <div className="w-full overflow-hidden m-2">
+      {/* <div className="w-full overflow-hidden m-2">
         <div className="whitespace-nowrap animate-scroll">
           <span className="py-2 px-4 bg-mc9">카메라와 마이크 권한이 필요해요!</span>
         </div>
       </div> */}
-        <p className="m-2">카메라와 마이크 권한이 필요해요!</p>
+      <p className="m-2">카메라와 마이크 권한이 필요해요!</p>
         <h2 className=" text-5xl mt-3 mb-5">로그인</h2>
         <div className="p-3">
           <input
@@ -189,34 +191,27 @@ const Login = () => {
           <p className=" text-red-500 mb-1">{err.userPassword}</p>
         </div>
 
-        <button
-          className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-tab10hover"
-          onClick={playClick}
-        >
+        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">
           로그인
         </button>
         <p className=" text-red-500 mb-1">{err.general}</p>
         <button
-          className="flex items-center justify-center p-2 m-1 rounded-xl w-72 bg-[#fee500] hover:bg-[#ddc700]"
-          onClick={() => {
-            kakaoLoginHandler();
-            playClick();
-          }}
-        >
-          <img src={kakaoSymbol} alt="카카오 로그인" className="w-4 h-4 mr-2" />{" "}
-          {/* 이미지 크기와 마진 조정 */}
-          카카오 로그인
-        </button>
+  className="flex items-center justify-center p-2 m-1 rounded-xl w-72 bg-[#fee500] hover:bg-[#ddc700]"
+  onClick={kakaoLoginHandler}
+>
+  <img src={kakaoSymbol} alt="카카오 로그인" className="w-4 h-4 mr-2"/> {/* 이미지 크기와 마진 조정 */}
+  카카오 로그인
+</button>
         {/* <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3> */}
         {/* <h3 className="p-2 ">소셜로그인</h3> */}
 
         {/* <div className="flex flex-row justify-around w-72"> */}
-        {/* <img src={googleLogo} alt="google Logo" />
+          {/* <img src={googleLogo} alt="google Logo" />
           <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
           <img src={naverLogo} alt="google Logo" /> */}
-        {/* <img
+          {/* <img
             src={kakaologinimg}
             alt="카카오로그인버튼"
             type="button"

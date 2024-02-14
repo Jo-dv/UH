@@ -16,7 +16,7 @@ import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import PersonIcon from "@mui/icons-material/Person";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
-import useClick from "../../hooks/useClick.js";
+
 // component, modal
 import Chat from "../../components/Chat/index.js";
 import Game from "../Game/index.js";
@@ -63,7 +63,6 @@ export default function RoomId() {
   const [disableAttack, setDisableAttack] = useState(false);
   const [hintUse, setHintUse] = useState(false);
 
-  const { playClick } = useClick();
   const navigate = useNavigate();
   const [isKickeded, setIsKicked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,19 +74,15 @@ export default function RoomId() {
 
   const itemUse = (myTeam, item) => {
     if (session !== undefined) {
-      if (
-        (item === "meme" && meme == 1) ||
-        (item === "disable" && disable == 1) ||
-        (item === "hint" && hint == 1)
-      ) {
+      if ((item === "meme" && meme == 1) || (item === "disable" && disable == 1) || (item === "hint" && hint == 1)) {
         session
           .signal({
             data: JSON.stringify({
               myTeam: myTeam,
-              item: item,
+              item: item
             }),
             to: [],
-            type: "item",
+            type: "item"
           })
           .catch((error) => {
             console.error(error);
@@ -181,9 +176,9 @@ export default function RoomId() {
       setHint(1);
 
       //아이템 상태 초기화
-      setMemeAttack(false);
-      setDisableAttack(false);
-      setHintUse(false);
+      setMemeAttack(false)
+      setDisableAttack(false)
+      setHintUse(false)
     });
 
     mySession.on("signal:room-playDone", (event) => {
@@ -387,13 +382,12 @@ export default function RoomId() {
       });
 
       //아이템 처리
-      session.off("signal:item");
+      session.off("signal:item")
       session.on("signal:item", (event) => {
-        console.log(event);
+        console.log(event)
         const { myTeam, item } = JSON.parse(event.data);
         console.log(session.connection.connectionId);
-        if (myTeam === "A") {
-          //A팀이 아이템을 사용했을 때
+        if (myTeam === "A") {//A팀이 아이템을 사용했을 때
           //B팀인 경우
           if (teamB.includes(session.connection.connectionId)) {
             if (item === "meme") {
@@ -401,7 +395,7 @@ export default function RoomId() {
             } else if (item === "disable") {
               setDisableAttack(true);
             }
-          } //A팀인 경우
+          }//A팀인 경우
           else if (teamA.includes(session.connection.connectionId)) {
             if (item === "meme") {
               setMeme(0);
@@ -412,8 +406,7 @@ export default function RoomId() {
               setHintUse(true);
             }
           }
-        } else if (myTeam === "B") {
-          //B팀이 아이템을 사용했을 때
+        } else if (myTeam === "B") {//B팀이 아이템을 사용했을 때
           //A팀인 경우
           if (teamA.includes(session.connection.connectionId)) {
             if (item === "meme") {
@@ -421,7 +414,7 @@ export default function RoomId() {
             } else if (item === "disable") {
               setDisableAttack(true);
             }
-          } //B팀인 경우
+          }//B팀인 경우
           else if (teamB.includes(session.connection.connectionId)) {
             if (item === "meme") {
               setMeme(0);
@@ -664,20 +657,14 @@ export default function RoomId() {
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
                   className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center font-[round-bold] text-xl"
-                  onClick={() => {
-                    changeTeam("A");
-                    playClick();
-                  }}
+                  onClick={() => changeTeam("A")}
                 >
                   A팀
                 </button>
 
                 <button
                   className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center font-[round-bold] text-xl"
-                  onClick={() => {
-                    changeTeam("B");
-                    playClick();
-                  }}
+                  onClick={() => changeTeam("B")}
                 >
                   B팀
                 </button>
@@ -686,11 +673,9 @@ export default function RoomId() {
                 <button
                   onClick={() => {
                     setReady();
-                    playClick();
                   }}
-                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${
-                    isReady ? "bg-tab4" : ""
-                  }`}
+                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${isReady ? "bg-tab4" : ""
+                    }`}
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
