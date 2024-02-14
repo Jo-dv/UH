@@ -7,6 +7,10 @@ import DesktopAccessDisabledIcon from "@mui/icons-material/DesktopAccessDisabled
 import EditOffIcon from "@mui/icons-material/EditOff";
 import SearchIcon from "@mui/icons-material/Search";
 import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import chipi from "../../asset/image/chipi.gif";
+import stop from "../../asset/image/stop.gif";
+import talk from "../../asset/image/talk.gif";
+import hint from "../../asset/image/hint.gif";
 
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "./Cam/UserVideoComponent";
@@ -250,21 +254,39 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                 <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-xl"}> B: {BTeamScore}</p>
               </div>
               <section className="relative rounded-b-[17px] overflow-hidden">
-                <div className="absolute top-0 right-0 p-2 flex space-x-2 z-10">
-                  <ThemeProvider theme={theme}>
+                <div className="absolute top-0 right-0 flex space-x-2 p-2 z-40">
+                {!isEnded ? (
+                  <button onClick={() => itemUse(myTeam)}>
+                    <img src={chipi} alt="chipi" className="border rounded-full w-12 h-12" />
+                  </button>
+                  ) : null}
+                  <button>
+                    <img src={stop} alt="stop" className="border rounded-full w-12 h-12" />
+                  </button>
+                  <button>
+                    <img src={hint} alt="hint" className="border rounded-full w-12 h-12" />
+                  </button>
+                  <button>
+                    <img src={talk} alt="talk" className="border bg-white rounded-full w-12 h-12" />
+                  </button>
+                  {/*<ThemeProvider theme={theme}>
                     <Fab size="small" color="button4" aria-label="add">
-                      <DesktopAccessDisabledIcon />
+                      
+                      <img src={chipi} alt="chipi" className="w-12 h-12"/>
                     </Fab>
                     <Fab size="small" color="button1" aria-label="add">
-                      <EditOffIcon />
+                      
+                      <img src={stop} alt="stop" className="w-12 h-12"/>
                     </Fab>
                     <Fab size="small" color="button2" aria-label="add">
-                      <SearchIcon />
+                      
+                      <img src={hint} alt="hint" className="w-12 h-12"/>
                     </Fab>
                     <Fab size="small" color="button3" aria-label="add">
-                      <RecordVoiceOverIcon />
+                      
+                      <img src={talk} alt="talk" className="w-12 h-12"/>
                     </Fab>
-                  </ThemeProvider>
+                  </ThemeProvider>*/}
                 </div>
                 {gameCategory === 101 ? (
                   <G101
@@ -373,11 +395,23 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
           </div>
-          {!isEnded ? (
+          {/* {!isEnded ? (
             <button onClick={() => itemUse(myTeam)}>
               <DesktopAccessDisabledIcon />
             </button>
-          ) : null}
+          ) : null} */}
+          {/* <button>
+            <img src={chipi} alt="chipi" className="border rounded-full w-24 h-24" />
+          </button>
+          <button>
+            <img src={stop} alt="stop" className="border rounded-full w-24 h-24" />
+          </button>
+          <button>
+            <img src={hint} alt="hint" className="border rounded-full w-24 h-24" />
+          </button>
+          <button>
+            <img src={talk} alt="talk" className="border bg-white rounded-full w-24 h-24" />
+          </button> */}
         </main>
       )}
     </>
