@@ -4,6 +4,7 @@ import useAccessors from "../../hooks/useAccessors";
 import UseAccessorsStore from "../../store/UseAccessorsStore";
 import useFriends from "../../hooks/useFriends";
 import UseFriendsStore from "../../store/UseFriendsStore";
+import UseFriendRequestStore from "../../store/UseFriendRequestStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import FriendRequestList from "./FriendRequestList";
 import FriendDeleteModal from "../Modal/Lobby/FriendDeleteModal";
@@ -24,7 +25,9 @@ const FriendList = () => {
   const [onlineFreindDropdown, setOnlineFreindDropdown] = useState(false);
   const [offlineFreindDropdown, setOfflineFreindDropdown] = useState(false);
   const dropdownRef = useRef(null);
-
+  const {requestList, setRequestList} = UseFriendRequestStore();
+  const modalRef = useRef(null);
+  
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -43,6 +46,20 @@ const FriendList = () => {
     };
   }, []);
 
+  // 모달 외부 클릭  감지
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showModal && modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowModal(false); // 모달 외부 클릭 시 모달 닫기
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showModal]);
+
   // 친구 삭제 모달
   const handleFriendDelete = (friend) => {
     setSelectedFriend(friend.userNickname);
@@ -59,10 +76,10 @@ const FriendList = () => {
 
   // 온라인 친구 드롭다운
   const onlineDropdown = (friend) => {
-    if (onlineFreindDropdown === friend.userNickname) {
+    if (onlineFreindDropdown === friend.nickname) {
       setOnlineFreindDropdown(null);
     } else {
-      setOnlineFreindDropdown(friend.userNickname);
+      setOnlineFreindDropdown(friend.nickname);
     }
   };
 
@@ -112,13 +129,20 @@ const FriendList = () => {
 
     // friendsNotInCommon 업데이트
     setFriendsNotInCommon(friendsNotInCommonList);
+
+    // friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
+
+    // 친구 요청 리스트를 불러옴
+    const requestedFriends = friends.filter((friend) => friend.friendsState === false);
+
+    setRequestList(requestedFriends);
   }, [accessors, friends]);
 
   return (
     <div className="relative">
       <div className="p-[16px] overflow-y-scroll h-[250px] scroll-smooth">
         <div className="w-full">
-          <p style={{ fontFamily: "var(--font-bold)" }}>접속한 친구</p>
+          <p style={{ fontFamily: "var(--font-extrabold)" }}>접속한 친구</p>
           {combinedList &&
             combinedList.map((friend, i) => (
               <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
@@ -130,7 +154,7 @@ const FriendList = () => {
                   >
                     {friend.nickname}
                   </button>
-                  {onlineFreindDropdown === friend.userNickname && (
+                  {onlineFreindDropdown === friend.nickname && (
                     <div
                       ref={dropdownRef}
                       className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg"
@@ -166,7 +190,7 @@ const FriendList = () => {
               </div>
             ))}
           <hr className="border-orange-900 my-2"></hr>
-          <p style={{ fontFamily: "var(--font-bold)" }}>미접속 친구</p>
+          <p style={{ fontFamily: "var(--font-extrabold)" }}>미접속 친구</p>
           {friendsNotInCommon &&
             friendsNotInCommon.map((friend, i) => (
               <div className="ml-[12px] mb-[4px] text-l" ref={friendRefs.current[i]} key={i}>
@@ -204,27 +228,34 @@ const FriendList = () => {
             ))}
         </div>
         <div className="absolute bottom-0 right-0 z-999 mr-6">
-          <div className="relative">
-          <button
-            className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10"
-            onClick={() => {
-              setShowModal((prevState) => !prevState);
-            }}
-          >
-            {showModal ? "✖" : "🔔"}
-          </button>
-        </div>
-        {showModal && (
-          <div
-            className="absolute ml-10 h-full flex justify-center items-center z-50"
-            onClick={closeModal}
-          >
-            <div>
-              <FriendRequestList />
+          <div className="relative mb-2">
+            <button
+              className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10"
+              onClick={() => {
+                setShowModal((prevState) => !prevState);
+              }}
+            >
+              {showModal ? "✖" : "🔔"}
+              {requestList.length > 0 && (
+                // requestListLength가 0보다 클 때 뱃지 표시
+                <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                  {requestList.length}
+                </span>
+              )}
+            </button>
+          </div>
+          {showModal && (
+            <div
+              className="absolute ml-10 h-full flex justify-center items-center z-50"
+              onClick={closeModal}
+              ref={modalRef}
+            >
+              <div>
+                <FriendRequestList/>
+              </div>
             </div>
-          </div>
           )}
-          </div>
+        </div>
       </div>
     </div>
   );

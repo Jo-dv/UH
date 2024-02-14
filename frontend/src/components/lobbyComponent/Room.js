@@ -94,7 +94,7 @@ const Room = (props) => {
         <div
           onClick={handleClick}
           className={`${
-            isHover ? "hover:animate-jump" : null
+            isHover ? "hover:bg-tab4" : null
           } h-[137px] w-[430px] mr-1 ml-1 mt-3 mb-3 p-3 border rounded-3xl bg-tab10 relative`}
         >
           <div className="flex flex-wrap justify-start items-center space-x-3 mb-7 mt-1">

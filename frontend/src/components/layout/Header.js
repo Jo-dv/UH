@@ -10,6 +10,7 @@ import RoomSettingTab from "../HeaderComponent/RoomSettingTab";
 import InvitingTab from "../HeaderComponent/InvitingTab";
 import LeavingTab from "../HeaderComponent/LeavingTab";
 import HomeTab from "../HeaderComponent/HomeTab";
+import ManualTab from "../HeaderComponent/ManualTab";
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import logoImg from "../../asset/image/LOGO.png";
 
@@ -51,6 +52,9 @@ const Header = () => {
               </li>
               <li>
                 <HomeTab />
+              </li>
+              <li>
+                <ManualTab />
               </li>
               <li>
                 <CreateRoomTab />
