@@ -85,23 +85,23 @@ const G102 = ({
               />
             ) : (
               <>
-                {isEnded ? (
-                  <video
-                    autoPlay
-                    onEnded={() => setIsEnded(false)}
-                    style={{ width: "100%", height: "100%", objectFit: "fill" }}
-                  >
-                    <source src={selectedVideo} type="video/mp4" />
-                  </video>
-                ) : (
-                  <div className="w-full h-full flex justify-center">
-                    <TimerG102 time={time} setTime={setTime} setIsGameEnd={setIsGameEnd} />
+                <div className="w-full h-full flex justify-center">
+                  <TimerG102 time={time} setTime={setTime} setIsGameEnd={setIsGameEnd} />
+                  {isEnded ? (
+                    <video
+                      autoPlay
+                      onEnded={() => setIsEnded(false)}
+                      style={{ width: "100%", height: "100%", objectFit: "fill" }}
+                    >
+                      <source src={selectedVideo} type="video/mp4" />
+                    </video>
+                  ) : (
                     <img
                       src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
                       alt="정답사진"
-                    />
-                  </div>
-                )}
+                    />)}
+                </div>
+
                 {teamChangeLoading ? (
                   <div className="absolute w-full h-full bg-black text-white text-3xl flex justify-center items-center">
                     {turnPlayerId[2] === "A" ? (
