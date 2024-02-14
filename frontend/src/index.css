@@ -33,7 +33,12 @@
 
 @font-face{
   font-family:'DNFBitBitv2';
-  font-style:normal;font-weight:400;src:url('//cdn.df.nexon.com/img/common/font/DNFBitBitv2.otf')format('opentype')
+  font-style:normal;font-weight:400;src:url('//cdn.df.nexon.com/img/common/font/DNFBitBitv2.otf')format('opentype')}
+  
+@font-face {
+  font-family: "round-extrabold";
+  src: url(./asset/font/NPSfont_extrabold.woff);
+
 }
 
 body {
@@ -48,6 +53,15 @@ body {
 .container-box {
   width: 1280px;
   height: 580px;
+  margin: auto;
+}
+
+.game-container {
+  position: fixed;
+  top: 20px;
+  left: calc(50vw - 640px);
+  width: 1280px;
+  height: 640px;
   margin: auto;
 }
 
