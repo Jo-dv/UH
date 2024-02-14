@@ -19,7 +19,7 @@ import G101 from "./games/G101";
 import G102 from "./games/G102";
 
 const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, isMeme }) => {
-  let maxTime = 60000;
+  let maxTime = 30000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
   const [loading, setLoading] = useState(true);
@@ -54,7 +54,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   const [teamChangeLoading, setTeamChangeLoading] = useState(false);
   const [gameCategory, setGameCategory] = useState(undefined);
   const [isEnded, setIsEnded] = useState(false); // 하위 컴포넌트에게 영상 재생 상태를 전달할 상태
-
+  const [rand01, setRand01] = useState(Math.floor(Math.random() * 2));
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
   };
@@ -124,17 +124,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   useEffect(() => {
     const callData = async () => {
       const roomData = await getRoomInfo(session.sessionId);
-      // console.log(
-      //   "게임 데이터 : ",
-      //   myConnectionId,
-      //   roomData,
-      //   `게임카테고리 : ${roomData.roomData.gameCategory}`,
-      //   publisher,
-      //   subscribers,
-      //   session,
-      //   quiz,
-      //   myUserName
-      // );
       setGameCategory(roomData.roomData.gameCategory);
       const players = roomData.roomStatus.players;
       const myTeamCNT = roomData.roomStatus.players[myConnectionId].team; //A or B
@@ -148,9 +137,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
           BTeamMember.push(key);
         }
       }
-      // console.log("A팀맴버", ATeamMember);
-      // console.log("B팀맴버", BTeamMember);
-
       const ATeamStreamManagersCNT = [];
       const BTeamStreamManagersCNT = [];
       if (myTeamCNT === "A") {
@@ -175,7 +161,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       setBTeamStreamManagers(BTeamStreamManagersCNT);
 
       const quiz = await getGameData(session.sessionId);
-      // console.log("quiz data axios result :", quiz);
       if (quiz !== undefined && quiz.length !== 0) {
         setQuizData(quiz);
       }
@@ -193,6 +178,12 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       endPlay(session.sessionId, "A", ATeamScore, BTeamScore);
     } else if (ATeamScore < BTeamScore) {
       endPlay(session.sessionId, "B", BTeamScore, ATeamScore);
+    } else {
+      if (rand01 > 0) {
+        endPlay(session.sessionId, "A", ATeamScore, BTeamScore);
+      } else {
+        endPlay(session.sessionId, "B", BTeamScore, ATeamScore);
+      }
     }
   };
   // console.log(quizData);
@@ -218,7 +209,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       {loading ? (
         <p>loading</p>
       ) : (
-        <main className="container-box bg-stone-100 p-4 border rounded-3xl">
+        <main className="game-container bg-stone-100 p-4 border rounded-3xl">
           <div className="flex flex-row justify-around h-full">
             <section className="grid grid-rows-4 gap-2 mr-2">
               {ATeamStreamManagers.map((sub, i) => (
@@ -246,12 +237,12 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
             <article className="h-full aspect-[12/10] relative flex flex-col">
-              <div className="w-full flex justify-around items-end bg-tab10 text-xl rounded-t-[17px]">
-                <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-xl"}>A: {ATeamScore}</p>
+              <div className="w-full flex justify-around items-end bg-tab10 rounded-t-[17px]">
+                <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p>
                 {/* <p> Team: {TeamTurn}</p> */}
-                <p className="text-3xl">round: {round}</p>
+                <p className="text-3xl">Round {round}</p>
                 {/* <p>{time}</p> */}
-                <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-xl"}> B: {BTeamScore}</p>
+                <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-lg"}>B : {BTeamScore}</p>
               </div>
               <section className="relative rounded-b-[17px] overflow-hidden">
                 <div className="absolute top-0 right-0 flex space-x-2 p-2 z-40">
@@ -316,6 +307,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                     plusScore={plusScore}
                     changeTeamIndex={changeTeamIndex}
                     plusQuizIndex={plusQuizIndex}
+                    rand01={rand01}
                   />
                 ) : null}
                 {gameCategory === 102 ? (
@@ -347,6 +339,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                     changeTeamIndex={changeTeamIndex}
                     plusQuizIndex={plusQuizIndex}
                     isItem={isMeme}
+                    rand01={rand01}
                   />
                 ) : null}
                 {/* <button onClick={sendPlayDone}>playDone</button> */}

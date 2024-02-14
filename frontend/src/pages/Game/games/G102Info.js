@@ -52,7 +52,7 @@ const G102Info = ({ maxTime, maxRound, setGameLoading, session }) => {
           <button
             onClick={sendGameStart}
             className="animate-bounce
-          p-4 m-4 text-xl"
+          p-4 m-4 text-3xl"
           >
             - Game Start -
           </button>

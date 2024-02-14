@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import useStore from "../../store/UserAuthStore";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import CorrectMusic from "../../components/CorrectMusic";
+
 const Chat = ({
   session,
   myConnectionId,
@@ -49,7 +51,9 @@ const Chat = ({
       });
   };
 
+  session.off("signal:room-chat");
   session.on("signal:room-chat", (event) => {
+    console.log(answer);
     const dataObj = JSON.parse(event.data);
     if (gameCategory === 101) {
       if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
@@ -80,45 +84,32 @@ const Chat = ({
     }
 
     setMessageList([...messageList, dataObj]);
+
+    // session.off("signal:room-chat");
   });
 
   useEffect(() => {
-    const data = JSON.stringify({
-      chat: `${nickname}님 환영합니다`,
-      team: Team,
-      quizIndex: quizIndex,
-      myUserName: nickname,
-    });
-    session
-      .signal({
-        data: data, // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: "room-chat", // The type of message (optional)
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
+    // console.log(session);
     // 컴포넌트가 업데이트 될 때마다 스크롤을 맨 아래로 이동
     if (ulRef.current) {
       ulRef.current.scrollTop = ulRef.current.scrollHeight;
     }
-    console.log(answer, gameCategory);
+    // console.log(answer, gameCategory);
   }, [messageList]);
 
   return (
     <>
-      {isAnswer ? (
-        <TaskAltIcon
-          className="absolute bottom-20 m-auto animate-jump-in"
-          color="success"
-          sx={{ fontSize: 400 }}
-        />
-      ) : null}
-
-      <section className="w-full flex flex-col absolute bottom-9 opacity-70">
+      <section className="w-full flex flex-col absolute bottom-0 opacity-70">
+        {isAnswer ? (
+          <>
+            <TaskAltIcon
+              className="absolute bottom-20 left-32 animate-jump-in"
+              color="success"
+              sx={{ fontSize: 400 }}
+            />
+            <CorrectMusic />
+          </>
+        ) : null}
         {/* <h2 className="bg-neutral-400 px-8 h-6">채팅</h2> */}
 
         <ul ref={ulRef} className=" px-2 h-[200px] overflow-y-auto flex flex-col justify-end">
@@ -135,16 +126,16 @@ const Chat = ({
         </ul>
         {myConnectionId === gamePlayer && gameCategory === 101 ? null : (
           <form
-            className="px-3
+            className="px-3 w-1/2
         rounded-3xl bg-white
-        flex flex-row overflow-hidden"
+        flex flex-row self-center overflow-hidden"
             onSubmit={sendMsg}
           >
             <input
               type="text"
               placeholder="채팅을 입력해 주세요!"
               className="grow focus:outline-none"
-              maxLength="50"
+              maxLength="20"
               value={chat}
               required
               onChange={(e) => setChat(e.target.value)}
