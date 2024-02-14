@@ -18,5 +18,6 @@ public class MypageDto {
 	private String userId;
 	private String userNickname;
 	private int rating;
+	private int myRank;
 	private List<RecordDto> record;
 }

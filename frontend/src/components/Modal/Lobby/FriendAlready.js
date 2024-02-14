@@ -1,23 +1,22 @@
 import React from "react";
 
-const FriendAlready = ({ isOpen, onClose, children }) => {
-  if (!isOpen) return null;
-
+const FriendAlready = (props) => {
   return (
     <div
-      style={{
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "white",
-        padding: "20px",
-        zIndex: 1000,
-      }}
+      className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2"
+      onClick={(e) => e.stopPropagation()}
     >
-      {children}
-			<button onClick={onClose}>닫기</button>
-			
+      <h2 className="text-lg font-medium text-gray-900 mb-4">
+        {props.text}
+      </h2>
+      <div className="flex justify-center items-center space-x-4">
+        <button
+          onClick={props.setModal}
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-xl"
+        >
+          닫기
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import OpenViduVideoComponent from "../RoomId/OvVideo";
 import Mic from "@mui/icons-material/Mic";
 import MicOff from "@mui/icons-material/MicOff";
@@ -23,6 +24,8 @@ const UserVideo = ({
   playerReady,
   connectionId,
 }) => {
+  const navigate = useNavigate();
+  
   const [audioActive, setAudioActive] = useState(streamManager.stream.audioActive);
   const [videoActive, setVideoActive] = useState(streamManager.stream.audioActive);
   const getNicknameTag = () => {
@@ -147,7 +150,7 @@ const UserVideo = ({
                       </button>
                     )}
                   </div>
-                  <div >
+                  <div>
                     {videoActive === false ? (
                       <button onClick={onVideo}>
                         <VideocamOffIcon />
@@ -171,16 +174,8 @@ const UserVideo = ({
             ) : null}
           </div>
           <div className="pt-9 relative">
-            <OpenViduVideoComponent streamManager={streamManager} />
+            <OpenViduVideoComponent isReady={playerReady} streamManager={streamManager} />
           </div>
-          {playerReady ? (
-            <div
-              className="absolute text-center bottom-2 z-10 text-xl text-red-900"
-              style={{ fontFamily: "var(--font-bold)", left: 0, right: 0}}
-            >
-              READY
-            </div>
-          ) : null}
         </div>
       ) : null}
       <KickOutModal
