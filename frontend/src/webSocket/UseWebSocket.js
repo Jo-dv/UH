@@ -3,6 +3,7 @@ import useAccessorsStore from "../store/UseAccessorsStore";
 import useStore from "../store/UserAuthStore";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
+import InviteModal from "../components/Modal/InviteModal";
 
 const WebSocketContext = createContext(null);
 
@@ -28,6 +29,7 @@ export const WebSocketProvider = ({ children }) => {
   const resetUser = useStore((state) => state.resetUser);
   const nickname = useStore((state) => state.user.userNickname);
   const navigate = useNavigate();
+  const [inviteModal, setInviteModal] = useState({ show: false, fromNickname: "", roomId: "" });
 
   useEffect(() => {
     const connect = (url, onOpen, onMessage, onClose) => {
@@ -88,8 +90,8 @@ export const WebSocketProvider = ({ children }) => {
 
     const con = () => {
       connect(
-        "wss://i10e201.p.ssafy.io/ws",
-        // "ws://localhost:5000/ws",
+        // "wss://i10e201.p.ssafy.io/ws",
+        "ws://localhost:5000/ws",
         null,
         (event) => {
           // console.log("WebSocket 메시지 수신:", event.data);
@@ -138,7 +140,8 @@ export const WebSocketProvider = ({ children }) => {
 
   //초대 받기 처리
   const handleInvite = (message) => {
-    console.log("Invite received", message.fromNickname, message.roomId);
+    // console.log("초대 받음", message.fromNickname, message.roomId);
+    setInviteModal({ show: true, fromNickname: message.fromNickname, roomId: message.roomId });
     setNotificationMessage(`You are invited to join room ${message.roomId}`);
   };
 
@@ -170,5 +173,19 @@ export const WebSocketProvider = ({ children }) => {
     setRefreshRequested,
   };
 
-  return <WebSocketContext.Provider value={contextValue}>{children}</WebSocketContext.Provider>;
+  return (
+    <div>
+      <WebSocketContext.Provider value={contextValue}>{children}</WebSocketContext.Provider>
+      <div>
+        {inviteModal.show && (
+          <InviteModal
+            invite={inviteModal.show}
+            fromNickname={inviteModal.fromNickname}
+            setInvite={(show) => setInviteModal((prev) => ({ ...prev, show }))}
+            handleFollow={() => handleFollow(inviteModal.roomId)}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
