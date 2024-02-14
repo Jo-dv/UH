@@ -3,14 +3,14 @@ import useAccessors from "../../hooks/useAccessors";
 import UseAccessorsStore from "../../store/UseAccessorsStore";
 import useStore from "../../store/UserAuthStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
-import useClick from "../../hooks/useClick";
+
 const AccessorsList = () => {
   const { accessorRefs } = useAccessors();
   const { accessors } = UseAccessorsStore();
   const { requestFriends } = useLobbyApiCall();
   const [accessorDropdown, setAccessorDropdown] = useState(null);
   const dropdownRef = useRef(null);
-  const { playClick } = useClick();
+
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -69,8 +69,9 @@ const AccessorsList = () => {
                   </div>
                 )}
               </div>
-            )
-          )}
+            </div>
+          )
+        )}
       </div>
     </div>
   );

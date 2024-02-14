@@ -8,7 +8,7 @@ import UseFriendRequestStore from "../../store/UseFriendRequestStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import FriendRequestList from "./FriendRequestList";
 import FriendDeleteModal from "../Modal/Lobby/FriendDeleteModal";
-import useClick from "../../hooks/useClick";
+
 const FriendList = () => {
   const { accessorRefs } = useAccessors();
   const { accessors } = UseAccessorsStore();
@@ -162,10 +162,7 @@ const FriendList = () => {
               <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
                 <div className="relative inline-block">
                   <button
-                    onClick={() => {
-                      onlineDropdown(friend);
-                      playClick();
-                    }}
+                    onClick={() => onlineDropdown(friend)}
                     aria-expanded={onlineFreindDropdown === friend ? "true" : "false"}
                     aria-haspopup="true"
                   >
@@ -183,7 +180,6 @@ const FriendList = () => {
                             type: "follow",
                             connectionId: friend.connectionId,
                           });
-                          playClick();
                         }}
                       >
                         따라가기
@@ -215,10 +211,7 @@ const FriendList = () => {
                 <div className="relative inline-block">
                   <button
                     className="text-gray-500"
-                    onClick={() => {
-                      offlineDropdown(friend);
-                      playClick();
-                    }}
+                    onClick={() => offlineDropdown(friend)}
                     aria-expanded={offlineFreindDropdown === friend ? "true" : "false"}
                     aria-haspopup="true"
                   >
@@ -255,7 +248,6 @@ const FriendList = () => {
               className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10 notification-button"
               onClick={() => {
                 setShowModal((prevState) => !prevState);
-                playClick();
               }}
             >
               {showModal ? "✖" : "🔔"}

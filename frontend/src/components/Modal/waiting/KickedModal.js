@@ -1,17 +1,16 @@
-import React, { useEffect } from "react";
-import useClick from "../../../hooks/useClick";
+import React, {useEffect} from 'react';
+
 const KickedModal = ({ isOpen, onClose }) => {
-  const { playClick } = useClick();
-  useEffect(() => {
-    let timer;
-    if (isOpen) {
-      // 모달창이 열린 후 3초 뒤에 닫히도록
-      timer = setTimeout(onClose, 3000);
-    }
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [isOpen, onClose]);
+    useEffect(() => {
+        let timer;
+        if (isOpen) {
+          // 모달창이 열린 후 3초 뒤에 닫히도록
+          timer = setTimeout(onClose, 3000);
+        }
+        return () => {
+          clearTimeout(timer);
+        };
+      }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -21,10 +20,7 @@ const KickedModal = ({ isOpen, onClose }) => {
         <h2 className="text-xl text-center font-bold">알림</h2>
         <p className="my-4 ">강퇴당했어요</p>
         <button
-          onClick={() => {
-            onClose();
-            playClick();
-          }}
+          onClick={onClose}
           className="px-4 py-2 bg-tab10 rounded-xl hover:bg-tab10hover "
         >
           확인
