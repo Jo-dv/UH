@@ -13,7 +13,7 @@ const FriendRequestSendModal = (props) => {
   }, [listFriends, setFriends]);
 
   // 삭제 버튼 클릭 시 친구 삭제
-  const handleSendClick = async () => {
+  const handleDeleteClick = async () => {
     try {
       await rejectFriends(props.selectedFriendId);
       updateFriendsList(); // 친구 목록 업데이트

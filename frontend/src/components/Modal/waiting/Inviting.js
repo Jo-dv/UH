@@ -1,6 +1,7 @@
 import UseInvitingStore from "../../../store/UseInvitingStore";
-
+import useClick from "../../../hooks/useClick";
 const Inviting = ({ inviting, onClose, openLink }) => {
+  const { playClick } = useClick();
   const { setInviting } = UseInvitingStore();
   // const invitingLink =  `현재 미지원입니다....`;
   const invitingLink = `http://localhost:3000/room/${openLink}`;
@@ -31,6 +32,7 @@ const Inviting = ({ inviting, onClose, openLink }) => {
               onClick={() => {
                 setInviting(false);
                 copyToClipboard();
+                playClick();
               }}
               className="bg-tab10 hover:bg-[#95c75a] p-3 rounded-xl"
             >

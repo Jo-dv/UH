@@ -3,14 +3,14 @@ import useAccessors from "../../hooks/useAccessors";
 import UseAccessorsStore from "../../store/UseAccessorsStore";
 import useStore from "../../store/UserAuthStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
-
+import useClick from "../../hooks/useClick";
 const AccessorsList = () => {
   const { accessorRefs } = useAccessors();
   const { accessors } = UseAccessorsStore();
   const { requestFriends } = useLobbyApiCall();
   const [accessorDropdown, setAccessorDropdown] = useState(null);
   const dropdownRef = useRef(null);
-
+  const { playClick } = useClick();
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -46,26 +46,38 @@ const AccessorsList = () => {
   return (
     <div className="p-[16px] overflow-y-scroll h-full scroll-smooth">
       <div className="">
-        {accessors && accessors.map((accessor, i) =>
-          nickname === accessor.nickname ? null : (
-            <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
-              <div className="relative inline-block">
-                <button
-                  onClick={() => accessorClick(accessor)}
-                  aria-expanded={accessorDropdown === accessor ? "true" : "false"}
-                  aria-haspopup="true"
-                >
-                  {accessor.nickname}
-                </button>
-                {accessorDropdown === accessor.nickname && (
-                  <div ref={dropdownRef} className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg ">
-                    <button className="text-gray-700 text-sm block px-4 py-1 w-full text-left hover:bg-gray-100 rounded-2xl" onClick={() => requestFriends(accessor.userSeq)}>친구요청</button>
-                  </div>
-                )}
+        {accessors &&
+          accessors.map((accessor, i) =>
+            nickname === accessor.nickname ? null : (
+              <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
+                <div className="relative inline-block">
+                  <button
+                    onClick={() => accessorClick(accessor)}
+                    aria-expanded={accessorDropdown === accessor ? "true" : "false"}
+                    aria-haspopup="true"
+                  >
+                    {accessor.nickname}
+                  </button>
+                  {accessorDropdown === accessor.nickname && (
+                    <div
+                      ref={dropdownRef}
+                      className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg "
+                    >
+                      <button
+                        className="text-gray-700 text-sm block px-4 py-1 w-full text-left hover:bg-gray-100 rounded-2xl"
+                        onClick={() => {
+                          requestFriends(accessor.userSeq);
+                          playClick();
+                        }}
+                      >
+                        친구요청
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )
-        )}
+            )
+          )}
       </div>
     </div>
   );

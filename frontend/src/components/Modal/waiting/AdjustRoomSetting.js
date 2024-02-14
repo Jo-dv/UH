@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
+import useClick from "../../../hooks/useClick";
 
 const AdjustRoomSetting = ({ isOpen, onClose }) => {
+  const { playClick } = useClick();
   useEffect(() => {
     let timer;
     if (isOpen) {
@@ -19,7 +21,13 @@ const AdjustRoomSetting = ({ isOpen, onClose }) => {
       <div className="bg-white text-center rounded-3xl border-gray-200 border shadow-lg p-3 md:p-6 mx-2 w-60">
         <h2 className="text-xl text-center font-bold">알림</h2>
         <p className="my-4 ">방 정보가 변경되었어요.</p>
-        <button onClick={onClose} className="px-4 py-2 bg-tab10 rounded-xl hover:bg-tab10hover ">
+        <button
+          onClick={() => {
+            onClose();
+            playClick();
+          }}
+          className="px-4 py-2 bg-tab10 rounded-xl hover:bg-tab10hover "
+        >
           확인
         </button>
       </div>

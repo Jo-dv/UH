@@ -8,7 +8,7 @@ import UseFriendRequestStore from "../../store/UseFriendRequestStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import FriendRequestList from "./FriendRequestList";
 import FriendDeleteModal from "../Modal/Lobby/FriendDeleteModal";
-
+import useClick from "../../hooks/useClick";
 const FriendList = () => {
   const { accessorRefs } = useAccessors();
   const { accessors } = UseAccessorsStore();
@@ -25,9 +25,9 @@ const FriendList = () => {
   const [onlineFreindDropdown, setOnlineFreindDropdown] = useState(false);
   const [offlineFreindDropdown, setOfflineFreindDropdown] = useState(false);
   const dropdownRef = useRef(null);
-  const {requestList, setRequestList} = UseFriendRequestStore();
+  const { requestList, setRequestList } = UseFriendRequestStore();
   const modalRef = useRef(null);
-  
+  const { playClick } = useClick();
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -148,7 +148,10 @@ const FriendList = () => {
               <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
                 <div className="relative inline-block">
                   <button
-                    onClick={() => onlineDropdown(friend)}
+                    onClick={() => {
+                      onlineDropdown(friend);
+                      playClick();
+                    }}
                     aria-expanded={onlineFreindDropdown === friend ? "true" : "false"}
                     aria-haspopup="true"
                   >
@@ -166,6 +169,7 @@ const FriendList = () => {
                             type: "follow",
                             connectionId: friend.connectionId,
                           });
+                          playClick();
                         }}
                       >
                         따라가기
@@ -175,7 +179,14 @@ const FriendList = () => {
                         className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
                         onClick={() => handleFriendDelete(friend)}
                       >
-                        <button onClick={() => handleFriendDelete(friend)}>삭제하기</button>
+                        <button
+                          onClick={() => {
+                            handleFriendDelete(friend);
+                            playClick();
+                          }}
+                        >
+                          삭제하기
+                        </button>
                       </div>
                     </div>
                   )}
@@ -197,7 +208,10 @@ const FriendList = () => {
                 <div className="relative inline-block">
                   <button
                     className="text-gray-500"
-                    onClick={() => offlineDropdown(friend)}
+                    onClick={() => {
+                      offlineDropdown(friend);
+                      playClick();
+                    }}
                     aria-expanded={offlineFreindDropdown === friend ? "true" : "false"}
                     aria-haspopup="true"
                   >
@@ -212,7 +226,14 @@ const FriendList = () => {
                         className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
                         onClick={() => handleFriendDelete(friend)}
                       >
-                        <button onClick={() => handleFriendDelete(friend)}>삭제하기</button>
+                        <button
+                          onClick={() => {
+                            handleFriendDelete(friend);
+                            playClick();
+                          }}
+                        >
+                          삭제하기
+                        </button>
                       </div>
                     </div>
                   )}
@@ -233,6 +254,7 @@ const FriendList = () => {
               className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10"
               onClick={() => {
                 setShowModal((prevState) => !prevState);
+                playClick();
               }}
             >
               {showModal ? "✖" : "🔔"}
@@ -251,7 +273,7 @@ const FriendList = () => {
               ref={modalRef}
             >
               <div>
-                <FriendRequestList/>
+                <FriendRequestList />
               </div>
             </div>
           )}

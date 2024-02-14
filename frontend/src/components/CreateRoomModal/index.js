@@ -5,7 +5,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-
+import useClick from "../../hooks/useClick";
 const CreateRoomModal = ({ modalOnOff }) => {
   const [roomName, setRoomName] = useState(`P-${Math.floor(Math.random() * 1000)}`);
   const [roomPassword, setRoomPassword] = useState(null);
@@ -21,7 +21,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
     setTimeout(() => setAnimate(true), 10);
   };
   const [showPassword, setShowPassword] = useState(false);
-
+  const { playClick } = useClick();
   const togglePassword = (e) => {
     e.preventDefault();
     setLock((lock) => !lock);
@@ -189,6 +189,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
               <button
                 type="submit"
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-2 rounded-xl"
+                onClick={playClick()}
               >
                 방 만들기
               </button>

@@ -4,8 +4,9 @@ import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 import startBackImg from "../../asset/image/BG.png";
-
+import useClick from "../../hooks/useClick.js";
 const CreateNickname = () => {
+  const { playClick } = useClick();
   const navigate = useNavigate();
   const onClick = (path) => navigate(`/${path}`);
   // UserAuthStore의 User를 변경하기 위해
@@ -19,8 +20,7 @@ const CreateNickname = () => {
     setTimeout(() => setAnimate(true), 10);
   };
 
-  useEffect(() => {
-  }, [userState]);
+  useEffect(() => {}, [userState]);
 
   const [form, setForm] = useState({
     userNickname: "",
@@ -154,7 +154,12 @@ const CreateNickname = () => {
         {/* 에러 메시지 표시 */}
         {err.userNickname && <p className="text-red-500">{err.userNickname}</p>}
 
-        <button className="p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-tab10hover">입장하기</button>
+        <button
+          className="p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-tab10hover"
+          onClick={playClick}
+        >
+          입장하기
+        </button>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
 

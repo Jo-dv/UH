@@ -1,11 +1,11 @@
 import React, { useEffect, useCallback } from "react";
 import UseFriendsStore from "../../../store/UseFriendsStore";
 import useLobbyApiCall from "../../../api/useLobbyApiCall";
-
+import useClick from "../../../hooks/useClick";
 const FriendDeleteModal = (props) => {
   const { friends, setFriends } = UseFriendsStore();
   const { rejectFriends, listFriends } = useLobbyApiCall();
-
+  const { playClick } = useClick();
   // 친구 목록 갱신을 위한 함수 정의
   const updateFriendsList = useCallback(async () => {
     const friendsList = await listFriends();
@@ -29,6 +29,7 @@ const FriendDeleteModal = (props) => {
         className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center z-50"
         onClick={() => {
           props.setModal(false);
+          playClick();
         }}
       >
         <div
@@ -40,13 +41,19 @@ const FriendDeleteModal = (props) => {
           </h2>
           <div className="flex justify-center items-center space-x-4">
             <button
-              onClick={handleDeleteClick}
+              onClick={() => {
+                handleDeleteClick();
+                playClick();
+              }}
               className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl"
             >
               삭제
             </button>
             <button
-              onClick={props.setModal}
+              onClick={() => {
+                props.setModal();
+                playClick();
+              }}
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-xl"
             >
               취소

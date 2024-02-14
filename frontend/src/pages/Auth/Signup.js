@@ -5,10 +5,11 @@ import startBackImg from "../../asset/image/BG.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
+import useClick from "../../hooks/useClick.js";
 const Signup = () => {
   const navigate = useNavigate();
   const onClick = (path) => navigate(`/${path}`);
+  const { playClick } = useClick();
 
   // 에러 메시지 애니메이션 트리거 상태관리
   const [animate, setAnimate] = useState(false);
@@ -88,12 +89,9 @@ const Signup = () => {
       setIdDupMsg({ ...idDupMsg, userId: "" }); // 성공 메시지 초기화
     } else {
       try {
-        const response = await axios.post(
-          "user/idcheck",
-          {
-            userId: form.userId,
-          }
-        );
+        const response = await axios.post("user/idcheck", {
+          userId: form.userId,
+        });
         const res = response.data;
         if (res === 0) {
           setErr({ ...err, userId: "중복된 아이디입니다" }); // 중복된 경우 에러 메시지 설정
@@ -160,10 +158,7 @@ const Signup = () => {
     if (newErr.userId === "" && newErr.userPassword === "" && newErr.passwordCheck === "") {
       const { userId, userPassword } = form;
       try {
-        const response = await axios.post(
-          "user/join",
-          { userId, userPassword }
-        );
+        const response = await axios.post("user/join", { userId, userPassword });
         // 회원가입 성공 후 처리
         // 예: navigate("/login") 또는 성공 메시지 표시
         navigate("/auth/login");
@@ -223,10 +218,17 @@ const Signup = () => {
             }`}
           />
           <button
-            onClick={togglePassword}
+            onClick={() => {
+              togglePassword();
+              playClick();
+            }}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
           >
-            {showPassword ? <VisibilityOffIcon color="disabled" /> : <VisibilityIcon color="disabled"/>}
+            {showPassword ? (
+              <VisibilityOffIcon color="disabled" />
+            ) : (
+              <VisibilityIcon color="disabled" />
+            )}
           </button>
         </div>
         <p className=" text-red-500 mb-1">{err.userPassword}</p>
@@ -249,7 +251,12 @@ const Signup = () => {
         />
         <p className=" text-red-500 mb-1">{err.passwordCheck}</p>
 
-        <button className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">회원가입</button>
+        <button
+          className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-tab10hover"
+          onClick={playClick}
+        >
+          회원가입
+        </button>
         <h3 className="self-start ml-12 mb-2 mt-1 flex items-center">
           <Link to="/auth/Login" className="flex items-center">
             <ArrowBackIcon fontSize="small" />
