@@ -15,6 +15,7 @@ import { usePreventGoBack } from "../../hooks/usePreventGoBack.js";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import PersonIcon from "@mui/icons-material/Person";
+import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
 // component, modal
 import Chat from "../../components/Chat/index.js";
@@ -80,7 +81,12 @@ export default function RoomId() {
         });
     }
   };
-  // 함수 정의
+  // 페이지 입장시, 음악 중지
+  const { pause } = UseIsMusicPlay();
+
+  useEffect(() => {
+    pause();
+  }, [pause]);
 
   const handleMainVideoStream = useCallback(
     (stream) => {

@@ -1,8 +1,9 @@
 import { create } from "zustand";
 
 const UseIsMusicPlay = create((set) => ({
-  isMusicPlay: true,
-  setIsMusicPlay: (isMusicPlay) => set({ isMusicPlay }),
+  isPlaying: true,
+  play: () => set({ isPlaying: true }),
+  pause: () => set({ isPlaying: false }),
 }));
 
 export default UseIsMusicPlay;

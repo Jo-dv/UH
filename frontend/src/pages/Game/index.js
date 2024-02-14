@@ -7,8 +7,9 @@ import UserVideoComponent from "./Cam/UserVideoComponent";
 
 import G101 from "./games/G101";
 import G102 from "./games/G102";
+import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUse,isMeme }) => {
+const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, isMeme }) => {
   let maxTime = 60000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -44,6 +45,13 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
   const [teamChangeLoading, setTeamChangeLoading] = useState(false);
   const [gameCategory, setGameCategory] = useState(undefined);
   const [isEnded, setIsEnded] = useState(false); // 하위 컴포넌트에게 영상 재생 상태를 전달할 상태
+
+  // 음악 정지
+  const { pause } = UseIsMusicPlay();
+
+  useEffect(() => {
+    pause();
+  }, [pause]);
 
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
@@ -332,7 +340,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone,itemUs
               ))}
             </section>
           </div>
-          {!isEnded?<button onClick={()=>itemUse(myTeam)}>bombs</button>:null}
+          {!isEnded ? <button onClick={() => itemUse(myTeam)}>bombs</button> : null}
         </main>
       )}
     </>
