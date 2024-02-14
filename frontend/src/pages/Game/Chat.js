@@ -16,6 +16,7 @@ const Chat = ({
   changeTeamIndex,
   answer,
   plusScore,
+  disableAttack
 }) => {
   const [chat, setChat] = useState("");
   const ulRef = useRef(null);
@@ -35,6 +36,17 @@ const Chat = ({
       confettiNumber: 500,
     });
   };
+  const [isAttcked, setAttacked] = useState(false);
+
+  useEffect(() => {
+    if (disableAttack) {
+      setAttacked(true);
+
+      setTimeout(() => {
+        setAttacked(false);
+      }, 5000);
+    }
+  }, [disableAttack]);
 
   const sendMsg = (e) => {
     e.preventDefault();
@@ -129,7 +141,7 @@ const Chat = ({
           <span className="bg-black opacity-50 text-white p-1 rounded-xl">{receiveMsg}</span>
         </li> */}
         </ul>
-        {myConnectionId === gamePlayer && gameCategory === 101 ? null : (
+        {(myConnectionId === gamePlayer && gameCategory === 101)||isAttcked ? null : (
           <form
             className="px-3 w-1/2
         rounded-3xl bg-white

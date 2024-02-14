@@ -36,19 +36,34 @@ const G102 = ({
   changeTeamIndex,
   changeTeamTurn,
   setIsGameEnd,
-  isItem,
   rand01,
+  memeAttack,
+  disableAttack,
+  hintUse,
 }) => {
-  useEffect(() => {
-    // isEnded 상태가 true일 때 Chipi 영상을 재생
-    if (isItem) {
-      setIsEnded(true); // 영상을 재생하는 것을 알리는 상태 변경
-    }
-  }, [isItem]); // isEnded 상태가 변경될 때마다 실행되도록 useEffect 의존성 배열에 추가
 
+  useEffect(() => {
+    if (memeAttack) {
+      setIsEnded(true);
+    }
+  }, [memeAttack]);
+
+  // 비디오 파일 경로 배열
+  const videoFiles = [
+    Chipi,
+    Tooth,
+    Josh
+  ];
+  const [selectedVideo, setSelectedVideo] = useState("");
   const [maxTurnTime, setMaxTurnTime] = useState(7000);
   const [turnTime, setTurnTime] = useState(0);
   const [isEnded, setIsEnded] = useState(false);
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * videoFiles.length);
+    setSelectedVideo(videoFiles[randomIndex]);
+  }, []);
+
   return (
     <div className="w-full aspect-[4/3] relative flex flex-col ">
       {gameLoading ? (
@@ -76,7 +91,7 @@ const G102 = ({
                     onEnded={() => setIsEnded(false)}
                     style={{ width: "100%", height: "100%", objectFit: "fill" }}
                   >
-                    <source src={Chipi} type="video/mp4" />
+                    <source src={selectedVideo} type="video/mp4" />
                   </video>
                 ) : (
                   <div className="w-full h-full flex justify-center">

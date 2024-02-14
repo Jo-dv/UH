@@ -4,6 +4,9 @@ import AnswerInput from "../AnswerInput";
 import Timer from "../Timer/Timer";
 import G101Info from "./G101Info";
 import Win from "../Win/Win";
+import Chipi from "../../../asset/items/Chipi.mp4"
+import Tooth from "../../../asset/items/Tooth.mp4"
+import Josh from "../../../asset/items/Josh.mp4"
 
 const G101 = ({
   session,
@@ -33,10 +36,33 @@ const G101 = ({
   changeTeamTurn,
   setIsGameEnd,
   rand01,
+  memeAttack,
+  disableAttack,
+  hintUse,
 }) => {
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // isEnded 상태가 true일 때 Chipi 영상을 재생
+    if (memeAttack) {
+      setIsEnded(true); // 영상을 재생하는 것을 알리는 상태 변경
+    }
+  }, [memeAttack]); // isEnded 상태가 변경될 때마다 실행되도록 useEffect 의존성 배열에 추가
+
+  // 비디오 파일 경로 배열
+  const videoFiles = [
+    Chipi,
+    Tooth,
+    Josh
+  ];
+  const [selectedVideo, setSelectedVideo] = useState("");
   const [maxTurnTime, setMaxTurnTime] = useState(5000);
   const [turnTime, setTurnTime] = useState(0);
+  const [isEnded, setIsEnded] = useState(false);
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * videoFiles.length);
+    setSelectedVideo(videoFiles[randomIndex]);
+  }, []);
+
   return (
     <div className="w-full aspect-[4/3] relative flex flex-col ">
       {gameLoading ? (
@@ -58,12 +84,20 @@ const G101 = ({
               />
             ) : (
               <>
-                <UserVideoComponent
-                  streamManager={turnPlayerId[1]}
-                  session={session}
-                  gamePlayer={turnPlayerId[0]}
-                  gameCategory={101}
-                />
+                {isEnded ?
+                  <video
+                    autoPlay
+                    onEnded={() => setIsEnded(false)}
+                    style={{ width: '100%', height: '100%', objectFit: 'fill' }}
+                  >
+                    <source src={selectedVideo} type="video/mp4" />
+                  </video> :
+                  <UserVideoComponent
+                    streamManager={turnPlayerId[1]}
+                    session={session}
+                    gamePlayer={turnPlayerId[0]}
+                    gameCategory={101}
+                  />}
 
                 {/* {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
                   <div className="absolute right-0 w-1/4">
@@ -123,18 +157,18 @@ const G101 = ({
                             /> */}
                           </>
                         ) : // <AnswerInput
-                        //   myUserName={myUserName}
-                        //   session={session}
-                        //   answer={quizData[quizIndex].quizAnswer}
-                        //   quizIndex={quizIndex}
-                        //   setQuizIndex={setQuizIndex}
-                        //   plusQuizIndex={plusQuizIndex}
-                        //   Team={turnPlayerId[2]}
-                        //   plusScore={plusScore}
-                        //   changeTeamIndex={changeTeamIndex}
-                        //   setTurnTime={setTurnTime}
-                        // />
-                        null}
+                          //   myUserName={myUserName}
+                          //   session={session}
+                          //   answer={quizData[quizIndex].quizAnswer}
+                          //   quizIndex={quizIndex}
+                          //   setQuizIndex={setQuizIndex}
+                          //   plusQuizIndex={plusQuizIndex}
+                          //   Team={turnPlayerId[2]}
+                          //   plusScore={plusScore}
+                          //   changeTeamIndex={changeTeamIndex}
+                          //   setTurnTime={setTurnTime}
+                          // />
+                          null}
                       </div>
                     </div>
                   </div>
