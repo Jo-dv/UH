@@ -14,8 +14,8 @@ function Donut({ color, percent, size }) {
           fill="none"
           stroke={color}
           strokeWidth="20"
-          strokeDasharray={`${2 * Math.PI * 70 * percent} ${2 * Math.PI * 70 * (1 - percent)}`}
-          strokeDashoffset={2 * Math.PI * 70 * 0.25}
+          strokeDasharray={`${2 * Math.PI * 40 * percent} ${2 * Math.PI * 40 * (1 - percent)}`}
+          strokeDashoffset={2 * Math.PI * 40 * 0.25}
         />
       </AniSvg>
       {/* <Percent color={color}>{percent * 100}%</Percent> */}
@@ -36,7 +36,7 @@ const AniSvg = styled.svg`
 
 const circleFill = keyframes`
     0%{
-        stroke-dasharray:0 ${2 * Math.PI * 70};
+        stroke-dasharray:0 ${2 * Math.PI * 40};
     }
 `;
 

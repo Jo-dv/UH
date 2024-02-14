@@ -25,10 +25,10 @@
   font-family: "Beatster";
   src: url(./asset/font/Beatster-Font.otf);
 }
+
 @font-face {
   font-family: "round-extrabold";
   src: url(./asset/font/NPSfont_extrabold.woff);
-
 }
 
 body {
