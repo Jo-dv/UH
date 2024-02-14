@@ -13,6 +13,7 @@ import HomeTab from "../HeaderComponent/HomeTab";
 import ManualTab from "../HeaderComponent/ManualTab";
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import logoImg from "../../asset/image/LOGO.png";
+import MusicTab from "../HeaderComponent/MusicTab";
 
 const Header = () => {
   const location = useLocation();
@@ -55,6 +56,9 @@ const Header = () => {
               </li>
               <li>
                 <ManualTab />
+              </li>
+              <li>
+                <MusicTab />
               </li>
               <li>
                 <CreateRoomTab />

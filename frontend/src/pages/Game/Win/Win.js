@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
 import JSConfetti from "js-confetti";
+import "./Win.css";
+import { useEffect } from "react";
 
 const Win = ({ ATeamScore, BTeamScore, goWaitRoom, rand01 }) => {
-  const [isExploding, setIsExploding] = useState(false);
-
   //HTML Canvas 요소를 생성하여 페이지에 추가
   const jsConfetti = new JSConfetti();
 
@@ -15,14 +14,13 @@ const Win = ({ ATeamScore, BTeamScore, goWaitRoom, rand01 }) => {
       confettiNumber: 500,
     });
   };
-
+  useEffect(() => {
+    handleClick();
+  }, []);
   return (
-    <div onClick={handleClick} className="w-full h-full">
+    <div onClick={handleClick} className="w-full h-full z-30 banselect">
       {ATeamScore > BTeamScore ? (
         <div className="w-full h-full flex flex-col justify-center items-center bg-tab1">
-          {/* <p className="absolute text-9xl font-['Beatster'] animate-jump-out animate-delay-500">
-            {ATeamScore} : {BTeamScore}
-          </p> */}
           <p className="text-9xl font-['Beatster'] animate-wiggle animate-infinite">A Team Win</p>
           <button
             onClick={goWaitRoom}

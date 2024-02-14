@@ -15,6 +15,7 @@ import { usePreventGoBack } from "../../hooks/usePreventGoBack.js";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import PersonIcon from "@mui/icons-material/Person";
+import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
 // component, modal
 import Chat from "../../components/Chat/index.js";
@@ -54,7 +55,13 @@ export default function RoomId() {
   const [sessionID, setSessionID] = useState("");
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
-  const [isMeme, setIsMeme] = useState(false);
+  //아이템 상태 관리
+  const [meme, setMeme] = useState(0);
+  const [disable, setDisable] = useState(0);
+  const [hint, setHint] = useState(0);
+  const [memeAttack, setMemeAttack] = useState(false);
+  const [disableAttack, setDisableAttack] = useState(false);
+  const [hintUse, setHintUse] = useState(false);
 
   const navigate = useNavigate();
   const [isKickeded, setIsKicked] = useState(false);
@@ -65,22 +72,30 @@ export default function RoomId() {
   const [roomGame, setRoomGame] = useState(roomInfo.roomData?.gameCategory || "");
   const [adjusting, setAdjusting] = useState(false);
 
-  const itemUse = (myTeam) => {
+  const itemUse = (myTeam, item) => {
     if (session !== undefined) {
-      session
-        .signal({
-          data: JSON.stringify({
-            myTeam: myTeam,
-          }),
-          to: [],
-          type: "meme",
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      if ((item === "meme" && meme == 1) || (item === "disable" && disable == 1) || (item === "hint" && hint == 1)) {
+        session
+          .signal({
+            data: JSON.stringify({
+              myTeam: myTeam,
+              item: item
+            }),
+            to: [],
+            type: "item"
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
     }
   };
-  // 함수 정의
+  // 페이지 입장시, 음악 중지
+  const { pause } = UseIsMusicPlay();
+
+  useEffect(() => {
+    pause();
+  }, [pause]);
 
   const handleMainVideoStream = useCallback(
     (stream) => {
@@ -149,6 +164,27 @@ export default function RoomId() {
         // setIsKicked(true);
         navigate("/lobby?kicked=true");
       }
+    });
+
+    mySession.on("signal:room-play", (event) => {
+      console.log("플레이 소켓 받음", event.data);
+      setIsPlay(true);
+
+      //아이템 개수 초기화
+      setMeme(1);
+      setDisable(1);
+      setHint(1);
+
+      //아이템 상태 초기화
+      setMemeAttack(false)
+      setDisableAttack(false)
+      setHintUse(false)
+    });
+
+    mySession.on("signal:room-playDone", (event) => {
+      // console.log("플레이 소켓 받음", event.data);
+      setIsReady(false);
+      setIsPlay(false);
     });
 
     setSession(mySession);
@@ -346,18 +382,48 @@ export default function RoomId() {
       });
 
       //아이템 처리
-      session.on("signal:meme", (event) => {
-        const { myTeam } = JSON.parse(event.data);
+      session.off("signal:item")
+      session.on("signal:item", (event) => {
+        console.log(event)
+        const { myTeam, item } = JSON.parse(event.data);
         console.log(session.connection.connectionId);
-        if (myTeam === "A") {
+        if (myTeam === "A") {//A팀이 아이템을 사용했을 때
+          //B팀인 경우
           if (teamB.includes(session.connection.connectionId)) {
-            // console.log("공격받음")
-            setIsMeme(true);
+            if (item === "meme") {
+              setMemeAttack(true);
+            } else if (item === "disable") {
+              setDisableAttack(true);
+            }
+          }//A팀인 경우
+          else if (teamA.includes(session.connection.connectionId)) {
+            if (item === "meme") {
+              setMeme(0);
+            } else if (item === "disable") {
+              setDisable(0);
+            } else if (item === "hint") {
+              setHint(0);
+              setHintUse(true);
+            }
           }
-        } else if (myTeam === "B") {
+        } else if (myTeam === "B") {//B팀이 아이템을 사용했을 때
+          //A팀인 경우
           if (teamA.includes(session.connection.connectionId)) {
-            // console.log("공격받음")
-            setIsMeme(true);
+            if (item === "meme") {
+              setMemeAttack(true);
+            } else if (item === "disable") {
+              setDisableAttack(true);
+            }
+          }//B팀인 경우
+          else if (teamB.includes(session.connection.connectionId)) {
+            if (item === "meme") {
+              setMeme(0);
+            } else if (item === "disable") {
+              setDisable(0);
+            } else if (item === "hint") {
+              setHint(0);
+              setHintUse(true);
+            }
           }
         }
       });
@@ -416,12 +482,6 @@ export default function RoomId() {
       send({ type: "refresh" });
     }
   };
-  if (session !== undefined) {
-    session.on("signal:room-play", (event) => {
-      // console.log("플레이 소켓 받음", event.data);
-      setIsPlay(true);
-    });
-  }
   const sendPlayDone = () => {
     // console.log("플레이 소켓 보냄");
     if (session !== undefined) {
@@ -441,13 +501,7 @@ export default function RoomId() {
       send({ type: "refresh" });
     }
   };
-  if (session !== undefined) {
-    session.on("signal:room-playDone", (event) => {
-      // console.log("플레이 소켓 받음", event.data);
-      setIsReady(false);
-      setIsPlay(false);
-    });
-  }
+
   // 새 사용자가 접속할 때 실행되는 함수
   const handleNewRoomInfo = async (session) => {
     try {
@@ -545,14 +599,18 @@ export default function RoomId() {
             {roomInfo && roomInfo.roomData && (
               <div className="flex items-center space-x-3 w-full">
                 <p>{roomPassword === null ? <LockOpenIcon /> : <LockIcon />}</p>
-                <div className="text-2xl">
-                  {roomName} - {roomGame === 101 ? "고요 속의 외침" : "인물 맞추기"}
+                <div className="flex flex-wrap space-x-4">
+                  <p className="font-[round-bold] text-3xl">{roomName}</p>
+                  <p className="font-[round-bold] text-3xl">-</p>
+                  <p className="font-[round-bold] text-3xl">
+                    {roomGame === 101 ? "고요 속의 외침" : "인물 맞추기"}
+                  </p>
                 </div>
                 <div className="absolute right-11 flex flex-wrap items-center space-x-3">
                   <p>
                     <PersonIcon />
                   </p>
-                  <p className="text-2xl">
+                  <p className="font-[round-bold] text-2xl">
                     {roomInfo.roomData.count}/{roomMax}
                   </p>
                 </div>
@@ -598,14 +656,14 @@ export default function RoomId() {
             <div className="grid col-start-7 col-end-9 row-start-1 row-end-13">
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
-                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center"
+                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center font-[round-bold] text-xl"
                   onClick={() => changeTeam("A")}
                 >
                   A팀
                 </button>
 
                 <button
-                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center"
+                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center font-[round-bold] text-xl"
                   onClick={() => changeTeam("B")}
                 >
                   B팀
@@ -616,9 +674,8 @@ export default function RoomId() {
                   onClick={() => {
                     setReady();
                   }}
-                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${
-                    isReady ? "bg-tab4" : ""
-                  }`}
+                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${isReady ? "bg-tab4" : ""
+                    }`}
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
@@ -638,7 +695,18 @@ export default function RoomId() {
           myUserName={myUserName}
           sendPlayDone={sendPlayDone}
           itemUse={itemUse}
-          isMeme={isMeme}
+          meme={meme}
+          disable={disable}
+          hint={hint}
+          setMeme={setMeme}
+          setDisable={setDisable}
+          setHint={setHint}
+          memeAttack={memeAttack}
+          setMemeAttack={setMemeAttack}
+          disableAttack={disableAttack}
+          setDisableAttack={setDisableAttack}
+          hintUse={hintUse}
+          setHintUse={setHintUse}
         />
       ) : null}
       {leaving && (

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import useStore from "../../store/UserAuthStore";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import CorrectMusic from "../../components/CorrectMusic";
+import JSConfetti from "js-confetti";
 
 const Chat = ({
   session,
@@ -15,6 +16,7 @@ const Chat = ({
   changeTeamIndex,
   answer,
   plusScore,
+  disableAttack
 }) => {
   const [chat, setChat] = useState("");
   const ulRef = useRef(null);
@@ -22,7 +24,30 @@ const Chat = ({
   const nickname = useStore((state) => state.user.userNickname);
   const [messageList, setMessageList] = useState([]);
   const [isAnswer, setIsAnswer] = useState(false);
-  // const [receiveMsg, setReceiveMsg] = useState(`${nickname}님 환영합니다`);
+
+  //HTML Canvas 요소를 생성하여 페이지에 추가
+  const jsConfetti = new JSConfetti();
+
+  //색종이 커스터마이징
+  const handleClick = () => {
+    jsConfetti.addConfetti({
+      confettiColors: ["#EF476F", "#fb7185", "#F78C6B", "#FFD166", "#a8d572", "#95c75a"],
+      confettiRadius: 5,
+      confettiNumber: 500,
+    });
+  };
+  const [isAttcked, setAttacked] = useState(false);
+
+  useEffect(() => {
+    if (disableAttack) {
+      setAttacked(true);
+
+      setTimeout(() => {
+        setAttacked(false);
+      }, 5000);
+    }
+  }, [disableAttack]);
+
   const sendMsg = (e) => {
     e.preventDefault();
     // console.log(session);
@@ -57,6 +82,7 @@ const Chat = ({
     const dataObj = JSON.parse(event.data);
     if (gameCategory === 101) {
       if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
+        handleClick();
         setQuizIndex(dataObj.quizIndex + 1);
         plusScore(dataObj.team);
         changeTeamIndex();
@@ -70,6 +96,7 @@ const Chat = ({
       }
     } else if (gameCategory === 102) {
       if (dataObj.ans === answer) {
+        handleClick();
         setQuizIndex(dataObj.quizIndex + 1);
         plusScore(dataObj.myTeam);
         changeTeamIndex();
@@ -100,16 +127,6 @@ const Chat = ({
   return (
     <>
       <section className="w-full flex flex-col absolute bottom-0 opacity-70">
-        {isAnswer ? (
-          <>
-            <TaskAltIcon
-              className="absolute bottom-20 left-32 animate-jump-in"
-              color="success"
-              sx={{ fontSize: 400 }}
-            />
-            <CorrectMusic />
-          </>
-        ) : null}
         {/* <h2 className="bg-neutral-400 px-8 h-6">채팅</h2> */}
 
         <ul ref={ulRef} className=" px-2 h-[200px] overflow-y-auto flex flex-col justify-end">
@@ -124,7 +141,7 @@ const Chat = ({
           <span className="bg-black opacity-50 text-white p-1 rounded-xl">{receiveMsg}</span>
         </li> */}
         </ul>
-        {myConnectionId === gamePlayer && gameCategory === 101 ? null : (
+        {(myConnectionId === gamePlayer && gameCategory === 101)||isAttcked ? null : (
           <form
             className="px-3 w-1/2
         rounded-3xl bg-white

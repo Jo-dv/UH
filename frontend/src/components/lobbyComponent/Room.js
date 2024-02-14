@@ -95,48 +95,48 @@ const Room = (props) => {
           onClick={handleClick}
           className={`${
             isHover ? "hover:bg-tab4" : null
-          } h-[137px] w-[430px] mr-1 ml-1 mt-3 mb-3 p-3 border rounded-3xl bg-tab10 relative`}
+          } cursor-pointer h-[137px] w-[430px] mr-1 ml-1 mt-3 mb-3 p-3 border rounded-3xl bg-tab10 relative`}
         >
-          <div className="flex flex-wrap justify-start items-center space-x-3 mb-7 mt-1">
+          <div className="flex flex-wrap justify-start items-center space-x-1 mb-7 mt-1">
             <p className="ml-3">{props.isLocked === null ? <LockOpenIcon /> : <LockIcon />}</p>
-            <p className="text-3xl">{props.roomTitle}</p>
-            <div className="absolute flex flex-wrap right-7">
+            <p className="font-[round-bold] text-3xl">{props.roomTitle}</p>
+            <div className="absolute flex flex-wrap space-x-2 right-7">
               <p className="pl-40">
                 <PersonIcon />
               </p>
-              <p>
+              <p className="text-xl">
                 {props.numberOfPeople}/{props.totalNumberOfPeople}
               </p>
             </div>
             <div className="flex flex-wrap ">
-              <p className="mt-2 ml-4 absolute left-8 bottom-4">
+              <p className="text-xl mt-2 ml-4 absolute left-3 bottom-4">
                 {props.gameType === 101 ? "고요 속의 외침" : "인물 맞추기"}
               </p>
-              <p className="text-2xl absolute right-7 bottom-4">Wait</p>
+              <p className="font-[round-bold] text-3xl absolute right-7 bottom-4">Wait</p>
             </div>
           </div>
         </div>
       ) : (
         <div
           onClick={handleClick}
-          className="h-[137px] w-[430px] mr-1 ml-1 mt-3 mb-3 p-3 border rounded-3xl bg-tab2 relative"
+          className="cursor-pointer h-[137px] w-[430px] mr-1 ml-1 mt-3 mb-3 p-3 border rounded-3xl bg-tab2 relative"
         >
-          <div className="flex flex-wrap justify-start items-center space-x-3 mb-7 mt-1">
+          <div className="flex flex-wrap justify-start items-center space-x-1 mb-7 mt-1">
             <p className="ml-3">{props.isLocked === null ? <LockOpenIcon /> : <LockIcon />}</p>
-            <p className="text-3xl">{props.roomTitle}</p>
-            <div className="absolute flex flex-wrap right-7">
+            <p className="font-[round-bold] text-3xl">{props.roomTitle}</p>
+            <div className="absolute flex flex-wrap space-x-2 right-7">
               <p className="pl-40">
                 <PersonIcon />
               </p>
-              <p>
+              <p className="text-xl">
                 {props.numberOfPeople}/{props.totalNumberOfPeople}
               </p>
             </div>
             <div className="flex flex-wrap">
-              <p className="mt-2 ml-4 absolute left-8 bottom-4">
+              <p className="text-xl mt-2 ml-4 absolute left-3 bottom-4">
                 {props.gameType === 101 ? "고요 속의 외침" : "인물 맞추기"}
               </p>
-              <p className="text-2xl absolute right-7 bottom-4">Play</p>
+              <p className="font-[round-bold] text-3xl absolute right-7 bottom-4">Play</p>
             </div>
           </div>
         </div>

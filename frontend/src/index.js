@@ -9,7 +9,7 @@ import BackgroundMusic from "./components/BackgroundMusic.js";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <>
-    {/* <BackgroundMusic /> */}
+    <BackgroundMusic />
     <RouterProvider router={rootRouter} />
   </>
 );
