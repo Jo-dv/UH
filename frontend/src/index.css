@@ -18,12 +18,22 @@
 }
 
 @font-face {
+  font-family: "round-extrabold";
+  src: url(./asset/font/NPSfont_extrabold.woff);
+}
+
+@font-face {
   font-family: "TAEBAEK";
   src: url(./asset/font/TAEBAEK_font.otf);
 }
 @font-face {
   font-family: "Beatster";
   src: url(./asset/font/Beatster-Font.otf);
+}
+
+@font-face{
+  font-family:'DNFBitBitv2';
+  font-style:normal;font-weight:400;src:url('//cdn.df.nexon.com/img/common/font/DNFBitBitv2.otf')format('opentype')
 }
 
 body {
