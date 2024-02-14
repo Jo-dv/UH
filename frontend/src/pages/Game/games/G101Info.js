@@ -35,7 +35,7 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
   }, []);
   return (
     <div className="z-30 text-xl">
-      <br/>
+      <br />
       <p className="text-3xl font-[round-extrabold]">고요 속의 외침</p>
       <br /> 제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.
       <br />
@@ -54,14 +54,15 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
               className="bg-orange-800 hover:bg-orange-800 shadow-xl py-2 px-4 rounded-3xl text-3xl font-[round-extrabold] z-30"
               style={{ width: "300px", height: "70px" }}
             >
-              <button
+            <button
                 onClick={sendGameStart}
-                  className="bg-tab2 hover:bg-tab7 shadow-inner py-2 px-4 rounded-3xl text-3xl font-[round-extrabold] z-31 -ml-5 -mt-5"
+                  className="bg-tab2 hover:bg-tab7 shadow-inner py-2 px-4 rounded-3xl text-4xl font-[round-extrabold] z-31 -ml-5 -mt-5"
                   style={{ width: "300px", height: "70px" }}
               >
-                <p className="text-white font-[DNFBitBitv2]">Game Start</p>
+                <p className="text-white font-[button]">Game Start</p>
               </button>
-            </div>
+
+          </div>
           </div>
         )}
       </div>
