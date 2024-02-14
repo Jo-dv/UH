@@ -4,6 +4,7 @@ import useAccessors from "../../hooks/useAccessors";
 import UseAccessorsStore from "../../store/UseAccessorsStore";
 import useFriends from "../../hooks/useFriends";
 import UseFriendsStore from "../../store/UseFriendsStore";
+import UseFriendRequestStore from "../../store/UseFriendRequestStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import FriendRequestList from "./FriendRequestList";
 import FriendDeleteModal from "../Modal/Lobby/FriendDeleteModal";
@@ -24,7 +25,8 @@ const FriendList = () => {
   const [onlineFreindDropdown, setOnlineFreindDropdown] = useState(false);
   const [offlineFreindDropdown, setOfflineFreindDropdown] = useState(false);
   const dropdownRef = useRef(null);
-  const [requestListLength, setRequestListLength] = useState(0);
+  const {requestList, setRequestList} = UseFriendRequestStore();
+  const modalRef = useRef(null);
   
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
@@ -44,6 +46,20 @@ const FriendList = () => {
     };
   }, []);
 
+  // 모달 외부 클릭  감지
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showModal && modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowModal(false); // 모달 외부 클릭 시 모달 닫기
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showModal]);
+
   // 친구 삭제 모달
   const handleFriendDelete = (friend) => {
     setSelectedFriend(friend.userNickname);
@@ -60,10 +76,10 @@ const FriendList = () => {
 
   // 온라인 친구 드롭다운
   const onlineDropdown = (friend) => {
-    if (onlineFreindDropdown === friend.userNickname) {
+    if (onlineFreindDropdown === friend.nickname) {
       setOnlineFreindDropdown(null);
     } else {
-      setOnlineFreindDropdown(friend.userNickname);
+      setOnlineFreindDropdown(friend.nickname);
     }
   };
 
@@ -113,8 +129,14 @@ const FriendList = () => {
 
     // friendsNotInCommon 업데이트
     setFriendsNotInCommon(friendsNotInCommonList);
-  }, [accessors, friends]);
 
+    // friendRefs.current = friends.map((_, i) => friendRefs.current[i] || React.createRef());
+
+    // 친구 요청 리스트를 불러옴
+    const requestedFriends = friends.filter((friend) => friend.friendsState === false);
+
+    setRequestList(requestedFriends);
+  }, [accessors, friends]);
 
   return (
     <div className="relative">
@@ -132,7 +154,7 @@ const FriendList = () => {
                   >
                     {friend.nickname}
                   </button>
-                  {onlineFreindDropdown === friend.userNickname && (
+                  {onlineFreindDropdown === friend.nickname && (
                     <div
                       ref={dropdownRef}
                       className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg"
@@ -214,10 +236,10 @@ const FriendList = () => {
               }}
             >
               {showModal ? "✖" : "🔔"}
-              {requestListLength > 0 && (
+              {requestList.length > 0 && (
                 // requestListLength가 0보다 클 때 뱃지 표시
                 <span className="absolute -top-1.5 -right-1.5 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
-                  {requestListLength}
+                  {requestList.length}
                 </span>
               )}
             </button>
@@ -226,9 +248,10 @@ const FriendList = () => {
             <div
               className="absolute ml-10 h-full flex justify-center items-center z-50"
               onClick={closeModal}
+              ref={modalRef}
             >
               <div>
-                <FriendRequestList onListUpdate={setRequestListLength} />
+                <FriendRequestList/>
               </div>
             </div>
           )}

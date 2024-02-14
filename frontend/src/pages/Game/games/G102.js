@@ -4,9 +4,10 @@ import AnswerInput from "../AnswerInput";
 import TimerG102 from "../Timer/TimerG102";
 import G102Info from "./G102Info";
 import TurnTimer from "../Timer/TurnTimer";
-import Chipi from "../../../asset/items/Chipi.mp4"
-import Tooth from "../../../asset/items/Tooth.mp4"
-import Josh from "../../../asset/items/Josh.mp4"
+import Chipi from "../../../asset/items/Chipi.mp4";
+import Tooth from "../../../asset/items/Tooth.mp4";
+import Josh from "../../../asset/items/Josh.mp4";
+import Win from "../Win/Win";
 
 const G102 = ({
   session,
@@ -18,7 +19,7 @@ const G102 = ({
   teamChangeLoading,
   time,
   setTime,
-  maxTime,
+  // maxTime,
   round,
   setRound,
   maxRound,
@@ -35,27 +36,39 @@ const G102 = ({
   changeTeamIndex,
   changeTeamTurn,
   setIsGameEnd,
-  isItem
+  rand01,
+  memeAttack,
+  disableAttack,
+  hintUse,
 }) => {
-  useEffect(() => {
-  }, []);
 
   useEffect(() => {
-    // isEnded 상태가 true일 때 Chipi 영상을 재생
-    if (isItem) {
-      setIsEnded(true); // 영상을 재생하는 것을 알리는 상태 변경
+    if (memeAttack) {
+      setIsEnded(true);
     }
-  }, [isItem]); // isEnded 상태가 변경될 때마다 실행되도록 useEffect 의존성 배열에 추가
+  }, [memeAttack]);
 
-
-  const [maxTurnTime, setMaxTurnTime] = useState(10000);
+  // 비디오 파일 경로 배열
+  const videoFiles = [
+    Chipi,
+    Tooth,
+    Josh
+  ];
+  const [selectedVideo, setSelectedVideo] = useState("");
+  const [maxTurnTime, setMaxTurnTime] = useState(7000);
   const [turnTime, setTurnTime] = useState(0);
   const [isEnded, setIsEnded] = useState(false);
+
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * videoFiles.length);
+    setSelectedVideo(videoFiles[randomIndex]);
+  }, []);
+
   return (
     <div className="w-full aspect-[4/3] relative flex flex-col ">
       {gameLoading ? (
         <G102Info
-          maxTime={maxTime}
+          maxTime={60000}
           maxRound={maxRound}
           setGameLoading={setGameLoading}
           session={session}
@@ -64,52 +77,31 @@ const G102 = ({
         <>
           <div className="w-full h-full absolute flex flex-col">
             {isGameEnd ? (
-              <>
-                {ATeamScore > BTeamScore ? (
-                  <div className="w-full h-full flex flex-col justify-center items-center bg-mc1">
-                    <p className="text-3xl animate-shake animate-thrice">A Team Win</p>
-                    <br />
-                    <button onClick={goWaitRoom} className="text-xl z-30">
-                      로비로
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    {ATeamScore === BTeamScore ? (
-                      <div className="w-full h-full flex flex-col justify-center items-center bg-mc10">
-                        <p className="text-3xl animate-shake animate-thrice">무승부</p>
-                        <button onClick={goWaitRoom} className="text-xl z-30">
-                          로비로
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="w-full h-full flex flex-col justify-center items-center bg-mc5">
-                        <p className="text-3xl animate-bounce">B Team Win</p>
-                        <button onClick={goWaitRoom} className="text-xl z-30">
-                          로비로
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </>
+              <Win
+                ATeamScore={ATeamScore}
+                BTeamScore={BTeamScore}
+                goWaitRoom={goWaitRoom}
+                rand01={rand01}
+              />
             ) : (
               <>
-                {isEnded ?
+                {isEnded ? (
                   <video
                     autoPlay
-                    onEnded={()=>setIsEnded(false)}
-                    style={{ width: '100%', height: '100%', objectFit: 'fill' }}
+                    onEnded={() => setIsEnded(false)}
+                    style={{ width: "100%", height: "100%", objectFit: "fill" }}
                   >
-                    <source src={Chipi} type="video/mp4" />
-                  </video> :
+                    <source src={selectedVideo} type="video/mp4" />
+                  </video>
+                ) : (
                   <div className="w-full h-full flex justify-center">
                     <TimerG102 time={time} setTime={setTime} setIsGameEnd={setIsGameEnd} />
                     <img
                       src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
                       alt="정답사진"
                     />
-                  </div>}
+                  </div>
+                )}
                 {teamChangeLoading ? (
                   <div className="absolute w-full h-full bg-black text-white text-3xl flex justify-center items-center">
                     {turnPlayerId[2] === "A" ? (
@@ -137,22 +129,6 @@ const G102 = ({
                         plusQuizIndex={plusQuizIndex}
                       />
                     </div>
-                    {/* <div className="opacity-90 absolute w-full bottom-0 bg-tab10 p-1">
-                      <div className="relative flex justify-center items-center">
-                        <AnswerInput
-                          myUserName={myUserName}
-                          session={session}
-                          answer={quizData[quizIndex].quizAnswer}
-                          quizIndex={quizIndex}
-                          setQuizIndex={setQuizIndex}
-                          plusQuizIndex={plusQuizIndex}
-                          Team={myTeam}
-                          plusScore={plusScore}
-                          changeTeamIndex={changeTeamIndex}
-                          setTurnTime={setTurnTime}
-                        />
-                      </div>
-                    </div> */}
                   </>
                 )}
               </>

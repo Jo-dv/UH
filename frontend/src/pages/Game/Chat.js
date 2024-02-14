@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import useStore from "../../store/UserAuthStore";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import CorrectMusic from "../../components/CorrectMusic";
+import JSConfetti from "js-confetti";
+
 const Chat = ({
   session,
   myConnectionId,
@@ -13,6 +16,7 @@ const Chat = ({
   changeTeamIndex,
   answer,
   plusScore,
+  disableAttack
 }) => {
   const [chat, setChat] = useState("");
   const ulRef = useRef(null);
@@ -20,7 +24,30 @@ const Chat = ({
   const nickname = useStore((state) => state.user.userNickname);
   const [messageList, setMessageList] = useState([]);
   const [isAnswer, setIsAnswer] = useState(false);
-  // const [receiveMsg, setReceiveMsg] = useState(`${nickname}님 환영합니다`);
+
+  //HTML Canvas 요소를 생성하여 페이지에 추가
+  const jsConfetti = new JSConfetti();
+
+  //색종이 커스터마이징
+  const handleClick = () => {
+    jsConfetti.addConfetti({
+      confettiColors: ["#EF476F", "#fb7185", "#F78C6B", "#FFD166", "#a8d572", "#95c75a"],
+      confettiRadius: 5,
+      confettiNumber: 500,
+    });
+  };
+  const [isAttcked, setAttacked] = useState(false);
+
+  useEffect(() => {
+    if (disableAttack) {
+      setAttacked(true);
+
+      setTimeout(() => {
+        setAttacked(false);
+      }, 5000);
+    }
+  }, [disableAttack]);
+
   const sendMsg = (e) => {
     e.preventDefault();
     // console.log(session);
@@ -49,64 +76,57 @@ const Chat = ({
       });
   };
 
+  session.off("signal:room-chat");
   session.on("signal:room-chat", (event) => {
+    console.log(answer);
     const dataObj = JSON.parse(event.data);
-    if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
-      // plusQuizIndex();
-      setQuizIndex(dataObj.quizIndex + 1);
-      plusScore(dataObj.team);
-      changeTeamIndex();
-      setIsAnswer(true);
-      setTimeout(() => setIsAnswer(false), 1000);
-      dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-start";
-    } else if (dataObj.team === dataObj.myTeam) {
-      dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
-    } else {
-      dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+    if (gameCategory === 101) {
+      if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
+        handleClick();
+        setQuizIndex(dataObj.quizIndex + 1);
+        plusScore(dataObj.team);
+        changeTeamIndex();
+        setIsAnswer(true);
+        setTimeout(() => setIsAnswer(false), 1000);
+        dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-center";
+      } else if (dataObj.team === dataObj.myTeam) {
+        dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
+      } else {
+        dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+      }
+    } else if (gameCategory === 102) {
+      if (dataObj.ans === answer) {
+        handleClick();
+        setQuizIndex(dataObj.quizIndex + 1);
+        plusScore(dataObj.myTeam);
+        changeTeamIndex();
+        setIsAnswer(true);
+        setTimeout(() => setIsAnswer(false), 1000);
+        dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-center";
+      } else if (dataObj.myTeam === "A") {
+        dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
+      } else if (dataObj.myTeam === "B") {
+        dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+      }
     }
-    // console.log(dataObj);
+
     setMessageList([...messageList, dataObj]);
-    // console.log(messageList)
-    // console.log('폼',event.from); // Connection object of the sender
-    // console.log('타입',event.type); // The type of message ("my-chat")
+
+    // session.off("signal:room-chat");
   });
 
   useEffect(() => {
-    const data = JSON.stringify({
-      chat: `${nickname}님 환영합니다`,
-      team: Team,
-      quizIndex: quizIndex,
-      myUserName: nickname,
-    });
-    session
-      .signal({
-        data: data, // Any string (optional)
-        to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: "room-chat", // The type of message (optional)
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
-
-  useEffect(() => {
+    // console.log(session);
     // 컴포넌트가 업데이트 될 때마다 스크롤을 맨 아래로 이동
     if (ulRef.current) {
       ulRef.current.scrollTop = ulRef.current.scrollHeight;
     }
+    // console.log(answer, gameCategory);
   }, [messageList]);
 
   return (
     <>
-      {isAnswer ? (
-        <TaskAltIcon
-          className="absolute bottom-20 m-auto animate-jump-in"
-          color="success"
-          sx={{ fontSize: 400 }}
-        />
-      ) : null}
-
-      <section className="w-full flex flex-col absolute bottom-9 opacity-70">
+      <section className="w-full flex flex-col absolute bottom-0 opacity-70">
         {/* <h2 className="bg-neutral-400 px-8 h-6">채팅</h2> */}
 
         <ul ref={ulRef} className=" px-2 h-[200px] overflow-y-auto flex flex-col justify-end">
@@ -121,18 +141,18 @@ const Chat = ({
           <span className="bg-black opacity-50 text-white p-1 rounded-xl">{receiveMsg}</span>
         </li> */}
         </ul>
-        {myConnectionId === gamePlayer && gameCategory === 101 ? null : (
+        {(myConnectionId === gamePlayer && gameCategory === 101)||isAttcked ? null : (
           <form
-            className="px-3
+            className="px-3 w-1/2
         rounded-3xl bg-white
-        flex flex-row overflow-hidden"
+        flex flex-row self-center overflow-hidden"
             onSubmit={sendMsg}
           >
             <input
               type="text"
               placeholder="채팅을 입력해 주세요!"
               className="grow focus:outline-none"
-              maxLength="50"
+              maxLength="20"
               value={chat}
               required
               onChange={(e) => setChat(e.target.value)}
