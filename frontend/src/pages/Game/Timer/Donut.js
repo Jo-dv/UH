@@ -2,7 +2,7 @@ import React from "react";
 // import DonutChart from "react-donut-chart";
 import styled, { keyframes } from "styled-components";
 
-function Donut({ color, percent, size }) {
+function Donut({ color, percent, size, time }) {
   return (
     <Chart size={size}>
       <AniSvg viewBox="0 0 200 200">
@@ -18,7 +18,7 @@ function Donut({ color, percent, size }) {
           strokeDashoffset={2 * Math.PI * 70 * 0.25}
         />
       </AniSvg>
-      {/* <Percent color={color}>{percent * 100}%</Percent> */}
+      <Percent>{time}</Percent>
     </Chart>
   );
 }

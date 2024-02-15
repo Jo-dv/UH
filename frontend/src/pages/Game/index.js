@@ -7,6 +7,7 @@ import UserVideoComponent from "./Cam/UserVideoComponent";
 import G101 from "./games/G101";
 import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
+import ScoreTable from "./ScoreTable";
 
 /**
  *
@@ -238,13 +239,12 @@ const Game = ({
               ))}
             </section>
             <article className="h-full aspect-[12/10] relative flex flex-col">
-              <div className="w-full flex justify-around items-end bg-tab10 rounded-t-[17px]">
-                <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p>
-                {/* <p> Team: {TeamTurn}</p> */}
-                <p className="text-3xl">Round {round}</p>
-                {/* <p>{time}</p> */}
-                <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-lg"}>B : {BTeamScore}</p>
-              </div>
+              <ScoreTable
+                ATeamScore={ATeamScore}
+                BTeamScore={BTeamScore}
+                round={round}
+                gameCategory={gameCategory}
+              />
               <section className="relative rounded-b-[17px] overflow-hidden">
                 {gameCategory === 101 ? (
                   <G101
