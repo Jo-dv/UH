@@ -8,6 +8,7 @@ import G101 from "./games/G101";
 import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
+//초성
 const getInitials = (src) => {
   let string = '';
   for (var i = 0; i < src.length; i++) {
@@ -19,8 +20,8 @@ const getInitials = (src) => {
   return string;
 }
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, meme, disable, hint,
-  setMeme, setDisable, setHint, memeAttack, setMemeAttack, disableAttack, setDisableAttack, hintUse, setHintUse }) => {
+const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, meme, disable, hint, stt,
+  memeAttack, disableAttack, hintUse, setHintUse, sttUse, setSttUse }) => {
   let maxTime = 30000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -57,6 +58,60 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   const [gameCategory, setGameCategory] = useState(undefined);
   const [rand01, setRand01] = useState(Math.floor(Math.random() * 2));
 
+  //stt
+  const startRecording = () => {
+    console.log("시작")
+    // 녹음 시작 및 2초 후에 녹음 종료
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        const mediaRecorder = new MediaRecorder(stream);
+        let chunks = [];
+        mediaRecorder.start();
+
+        mediaRecorder.ondataavailable = e => {
+          chunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { 'type': 'audio/wav' });
+          const formData = new FormData();
+          formData.append('audio', blob);
+
+          fetch('http://localhost:80/stt', {
+            method: 'POST',
+            body: formData
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data.results[0].transcript);
+              session
+                .signal({
+                  data: JSON.stringify({
+                    result: data.results[0].transcript
+                  }),
+                  to: [],
+                  type: "stt"
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        };
+
+        setTimeout(() => {
+          console.log("끝")
+          mediaRecorder.stop();
+        }, 2000);
+      })
+      .catch(err => {
+        console.error('Error:', err);
+      });
+  };
+
+  //아이템 사용
   useEffect(() => {
     if (hintUse) {
       const extractedInitials = getInitials(quizData[quizIndex].quizAnswer);
@@ -67,7 +122,19 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
     setTimeout(() => {
       setHintUse(false);
     }, 5000);
-  }, [hintUse,quizIndex]);
+  }, [hintUse, quizIndex]);
+
+  useEffect(() => {
+    if (turnPlayerId) {
+      console.log("들어옴")
+      console.log("idcheck" + myConnectionId, turnPlayerId)
+      if (sttUse) {
+        if (myConnectionId == turnPlayerId[0]) {
+          startRecording();
+        }
+      }
+    }
+  }, [sttUse]);
 
   // 음악 정지
   const { pause } = UseIsMusicPlay();
@@ -365,7 +432,16 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
           </div>
           <button onClick={() => itemUse(myTeam, "meme")}>bombs{meme}</button>
           <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}>disable{disable}</button>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>hint{hint}</button>
+          {gameCategory === 102 ?
+            <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>hint{hint}</button> :
+            <button className="ml-2" onClick={() => {
+              if (myTeam == TeamTurn)
+                itemUse(myTeam, "stt")
+              else {
+                alert("우리 팀의 차례에만 사용 가능합니다.")
+              }
+            }
+            }>stt{stt}</button>}
         </main>
       )}
     </>
