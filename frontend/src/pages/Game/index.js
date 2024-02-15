@@ -292,9 +292,15 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
         case ".": // 채팅 막기
           itemUse(myTeam, "disable");
           break;
-        case "/": // 초성 힌트
+        case "/":
+        if (gameCategory === 102) {
+          // gameCategory가 102일 때 hint
           itemUse(myTeam, "hint");
-          break;
+        } else if (gameCategory === 101) {
+          // gameCategory가 101일 때 talk
+          itemUse(myTeam, "stt");
+        }
+        break;
         default:
           break;
       }
@@ -569,7 +575,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                              className={`rounded-full w-16 h-16 ${stt === 0 ? "grayscale" : ""}`}
                     disabled={stt === 0} // 선택적으로 버튼을 비활성화
                   >
-                    <img src={gethint} alt="stt" className="rounded-full w-16 h-16" />
+                    <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
                   </button>
                 </Badge>
               </Tooltip>}
