@@ -62,7 +62,7 @@ export default function RoomId() {
   const [stt, setStt] = useState(0);
   const [memeAttack, setMemeAttack] = useState(false);
 
-  
+
   const [disableAttack, setDisableAttack] = useState(false);
   const [hintUse, setHintUse] = useState(false);
   const [sttUse, setSttUse] = useState(false);
@@ -174,7 +174,6 @@ export default function RoomId() {
     });
 
     mySession.on("signal:room-play", (event) => {
-      console.log("플레이 소켓 받음", event.data);
       setIsPlay(true);
 
       //아이템 개수 초기화
@@ -198,7 +197,6 @@ export default function RoomId() {
 
     mySession.on("signal:stt", (event) => {
       const { result } = JSON.parse(event.data);
-      console.log(result)
       setSttMsg(result);
     });
 
@@ -399,7 +397,6 @@ export default function RoomId() {
       //아이템 처리
       session.off("signal:item")
       session.on("signal:item", (event) => {
-        console.log("아이템 사용")
         const { myTeam, item } = JSON.parse(event.data);
         if (myTeam === "A") {//A팀이 아이템을 사용했을 때
           //B팀인 경우
@@ -447,15 +444,24 @@ export default function RoomId() {
             }
           }
         }
-        sendNotice(item, myTeam);
       });
     }
   }, [session, teamA, teamB]); // session 객체를 의존성 배열에 추가
 
   //아이템 사용 알림
-  const sendNotice = (item, myTeam) => {
+  const sendNotice = (myTeam, item) => {
+    let itemName = "";
+    if (item == "meme")
+      itemName = "화면 가리기"
+    else if (item == "disable")
+      itemName = "채팅 막기"
+    else if (item == "hint")
+      itemName = "초성 힌트"
+    else if (item == "disable")
+      itemName = "말풍선"
+
     const data = JSON.stringify({
-      chat: `[알림] ${item} 아이템을 사용했습니다.`,
+      chat: `[알림] ${itemName}을(를) 사용했습니다.`,
       ans: "notice",
       team: "notice",
       myTeam: myTeam,
@@ -762,6 +768,7 @@ export default function RoomId() {
           setSttUse={setSttUse}
           sttMsg={sttMsg}
           setSttMsg={setSttMsg}
+          sendNotice={sendNotice}
         />
       ) : null}
       {leaving && (

@@ -16,7 +16,7 @@ const Chat = ({
   changeTeamIndex,
   answer,
   plusScore,
-  disableAttack
+  disableAttack,
 }) => {
   const [chat, setChat] = useState("");
   const ulRef = useRef(null);
@@ -80,6 +80,7 @@ const Chat = ({
     session.off("signal:game-chat");
     session.on("signal:game-chat", (event) => {
       const dataObj = JSON.parse(event.data);
+
       if (gameCategory === 101) {
         if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
           handleClick();
@@ -114,7 +115,7 @@ const Chat = ({
 
       // session.off("signal:room-chat");
     });
-  }, [quizIndex, Team])
+  }, [quizIndex, Team, messageList])
 
 
 
@@ -145,7 +146,7 @@ const Chat = ({
         <ul ref={ulRef} className=" px-2 h-[200px] overflow-y-auto flex flex-col justify-end">
           {messageList.map((item, index) => {
             return (
-              <li className="m-2 flex flex-col" key={index}>
+              <li className="m-2 flex flex-col" key={`chat${index}`}>
                 <span className={item.style}>{item.chat}</span>
               </li>
             );

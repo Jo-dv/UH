@@ -22,8 +22,6 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
   const [roomMax, setRoomMax] = useState(originalRoomInfo?.roomData?.max || "");
   const [roomGame, setRoomGame] = useState(originalRoomInfo?.roomData?.gameCategory || "");
 
-  console.log("받은 방정보", roomName, roomPassword, roomMax, roomGame);
-  // console.log(originalRoomInfo);
   // 비밀 번호 활성화 변수
   const [lock, setLock] = useState(false);
   const togglePassword = (e) => {
