@@ -9,18 +9,36 @@ import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
 const getInitials = (src) => {
-  let string = '';
+  let string = "";
   for (var i = 0; i < src.length; i++) {
-    let index = ((src.charCodeAt(i) - 44032) / 28) / 21;
+    let index = (src.charCodeAt(i) - 44032) / 28 / 21;
     if (index >= 0) {
       string += String.fromCharCode(index + 4352);
     }
   }
   return string;
-}
+};
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, meme, disable, hint,
-  setMeme, setDisable, setHint, memeAttack, setMemeAttack, disableAttack, setDisableAttack, hintUse, setHintUse }) => {
+const Game = ({
+  publisher,
+  subscribers,
+  session,
+  myUserName,
+  sendPlayDone,
+  itemUse,
+  meme,
+  disable,
+  hint,
+  setMeme,
+  setDisable,
+  setHint,
+  memeAttack,
+  setMemeAttack,
+  disableAttack,
+  setDisableAttack,
+  hintUse,
+  setHintUse,
+}) => {
   let maxTime = 30000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -60,14 +78,14 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   useEffect(() => {
     if (hintUse) {
       const extractedInitials = getInitials(quizData[quizIndex].quizAnswer);
-      console.log(quizData[quizIndex].quizAnswer)
-      console.log(extractedInitials)
+      console.log(quizData[quizIndex].quizAnswer);
+      console.log(extractedInitials);
     }
 
     setTimeout(() => {
       setHintUse(false);
     }, 5000);
-  }, [hintUse,quizIndex]);
+  }, [hintUse, quizIndex]);
 
   // 음악 정지
   const { pause } = UseIsMusicPlay();
@@ -81,7 +99,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   };
 
   const plusScore = (Team) => {
-    // console.log(`plusScore: ${Team}`);
     if (Team === "A") {
       setATeamScore(ATeamScore + 1);
     } else if (Team === "B") {
@@ -112,33 +129,24 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   };
 
   const changeTeamTurn = () => {
-    // console.log(TeamTurn);
     if (TeamTurn === "A") {
       setTeamTurn("B");
       setTeamIndex(0);
-      setTurnPlayerId(BTeamStreamManagers[TeamIndex]);
+      setTurnPlayerId(BTeamStreamManagers[0]);
       // changeTeamIndex();
       plusQuizIndex();
-
-      if (round < maxRound) {
-        setTeamChangeLoading(true);
-        setTimeout(() => {
-          setTeamChangeLoading(false);
-        }, 2000);
-      }
     } else if (TeamTurn === "B") {
       setTeamTurn("A");
       setTeamIndex(0);
-      setTurnPlayerId(ATeamStreamManagers[TeamIndex]);
+      setTurnPlayerId(ATeamStreamManagers[0]);
       // changeTeamIndex();
       plusQuizIndex();
-
-      if (round < maxRound) {
-        setTeamChangeLoading(true);
-        setTimeout(() => {
-          setTeamChangeLoading(false);
-        }, 2000);
-      }
+    }
+    if (round < maxRound) {
+      setTeamChangeLoading(true);
+      setTimeout(() => {
+        setTeamChangeLoading(false);
+      }, 2000);
     }
   };
 
@@ -280,7 +288,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                     rand01={rand01}
                     memeAttack={memeAttack}
                     hintUse={hintUse}
-
                   />
                 ) : null}
                 {gameCategory === 102 ? (
@@ -364,8 +371,12 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
             </section>
           </div>
           <button onClick={() => itemUse(myTeam, "meme")}>bombs{meme}</button>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}>disable{disable}</button>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>hint{hint}</button>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}>
+            disable{disable}
+          </button>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>
+            hint{hint}
+          </button>
         </main>
       )}
     </>
