@@ -57,7 +57,7 @@ const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizInde
       color="#F88585"
       percent={turnTime / maxTurnTime}
       size="200px"
-      time={maxTurnTime - turnTime}
+      time={Math.floor((maxTurnTime - turnTime) / 1000) + 1}
     />
   );
 };

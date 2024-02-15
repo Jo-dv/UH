@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-import AnswerInput from "../AnswerInput";
 import TimerG102 from "../Timer/TimerG102";
 import G102Info from "./G102Info";
 import TurnTimer from "../Timer/TurnTimer";
@@ -19,9 +18,6 @@ const G102 = ({
   teamChangeLoading,
   time,
   setTime,
-  // maxTime,
-  round,
-  setRound,
   maxRound,
   turnPlayerId,
   ATeamScore,
@@ -41,7 +37,6 @@ const G102 = ({
   disableAttack,
   hintUse,
 }) => {
-
   useEffect(() => {
     if (memeAttack) {
       setIsEnded(true);
@@ -49,12 +44,9 @@ const G102 = ({
   }, [memeAttack]);
 
   // 비디오 파일 경로 배열
-  const videoFiles = [
-    Chipi,
-    Tooth,
-    Josh
-  ];
+  const videoFiles = [Chipi, Tooth, Josh];
   const [selectedVideo, setSelectedVideo] = useState("");
+  const [maxTime, setMaxTime] = useState(600000);
   const [maxTurnTime, setMaxTurnTime] = useState(7000);
   const [turnTime, setTurnTime] = useState(0);
   const [isEnded, setIsEnded] = useState(false);
@@ -68,7 +60,7 @@ const G102 = ({
     <div className="w-full aspect-[4/3] relative flex flex-col ">
       {gameLoading ? (
         <G102Info
-          maxTime={60000}
+          maxTime={maxTime}
           maxRound={maxRound}
           setGameLoading={setGameLoading}
           session={session}
@@ -86,7 +78,12 @@ const G102 = ({
             ) : (
               <>
                 <div className="w-full h-full flex justify-center">
-                  <TimerG102 time={time} setTime={setTime} setIsGameEnd={setIsGameEnd} />
+                  <TimerG102
+                    maxTime={maxTime}
+                    time={time}
+                    setTime={setTime}
+                    setIsGameEnd={setIsGameEnd}
+                  />
                   {isEnded ? (
                     <video
                       autoPlay
@@ -99,7 +96,8 @@ const G102 = ({
                     <img
                       src={`https://uhproject.s3.ap-northeast-2.amazonaws.com/${quizData[quizIndex].quizId}.jpg`}
                       alt="정답사진"
-                    />)}
+                    />
+                  )}
                 </div>
 
                 {teamChangeLoading ? (
