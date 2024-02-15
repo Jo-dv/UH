@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install git -y
 # RUN pip3 install markupsafe==2.0.1
 RUN pip3 install -r requirements.txt
 RUN pip3 install "git+https://github.com/openai/whisper.git" 
+RUN pip3 install markupsafe==2.0.1
 RUN apt-get install -y ffmpeg
 
 COPY . .

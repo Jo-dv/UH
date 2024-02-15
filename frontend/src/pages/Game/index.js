@@ -9,12 +9,18 @@ import chipi from "../../asset/image/chipi.gif";
 import stop from "../../asset/image/stop.gif";
 import talk from "../../asset/image/talk.gif";
 import gethint from "../../asset/image/hint.gif";
+import BlockIcon from "@mui/icons-material/Block";
 
 import G101 from "./games/G101";
 import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
+import ScoreTable from "./ScoreTable";
 
-//초성
+/**
+ *
+ * @param {string} src 한글
+ * @returns 한글 초성
+ */
 const getInitials = (src) => {
   let string = "";
   for (var i = 0; i < src.length; i++) {
@@ -26,9 +32,24 @@ const getInitials = (src) => {
   return string;
 };
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, meme, disable, hint, stt,
-  memeAttack, disableAttack, hintUse, setHintUse, sttUse, setSttUse }) => {
-
+const Game = ({
+  publisher,
+  subscribers,
+  session,
+  myUserName,
+  sendPlayDone,
+  itemUse,
+  meme,
+  disable,
+  hint,
+  stt,
+  memeAttack,
+  disableAttack,
+  hintUse,
+  setHintUse,
+  sttUse,
+  setSttUse,
+}) => {
   let maxTime = 30000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -43,21 +64,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   const [TeamTurn, setTeamTurn] = useState("A");
   const [TeamIndex, setTeamIndex] = useState(0);
   const [turnPlayerId, setTurnPlayerId] = useState(undefined);
-  const [quizData, setQuizData] = useState([
-    { quizId: 62, quizAnswer: "이덕화" },
-    { quizId: 180, quizAnswer: "최주봉" },
-    { quizId: 12, quizAnswer: "이병헌" },
-    { quizId: 296, quizAnswer: "윤계상" },
-    { quizId: 73, quizAnswer: "정한용" },
-    { quizId: 353, quizAnswer: "최백호" },
-    { quizId: 49, quizAnswer: "정태춘" },
-    { quizId: 12, quizAnswer: "이병헌" },
-    { quizId: 186, quizAnswer: "예지원" },
-    { quizId: 321, quizAnswer: "최덕문" },
-    { quizId: 363, quizAnswer: "김성겸" },
-    { quizId: 107, quizAnswer: "이정길" },
-    { quizId: 82, quizAnswer: "김희선" },
-  ]);
+  const [quizData, setQuizData] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [ATeamScore, setATeamScore] = useState(0);
   const [BTeamScore, setBTeamScore] = useState(0);
@@ -67,54 +74,55 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
 
   //stt
   const startRecording = () => {
-    console.log("시작")
+    console.log("시작");
     // 녹음 시작 및 2초 후에 녹음 종료
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(stream => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
         const mediaRecorder = new MediaRecorder(stream);
         let chunks = [];
         mediaRecorder.start();
 
-        mediaRecorder.ondataavailable = e => {
+        mediaRecorder.ondataavailable = (e) => {
           chunks.push(e.data);
         };
 
         mediaRecorder.onstop = () => {
-          const blob = new Blob(chunks, { 'type': 'audio/wav' });
+          const blob = new Blob(chunks, { type: "audio/wav" });
           const formData = new FormData();
-          formData.append('audio', blob);
+          formData.append("audio", blob);
 
-          fetch('http://localhost:80/stt', {
-            method: 'POST',
-            body: formData
+          fetch("https://i10e201.p.ssafy.io/stt", {
+            method: "POST",
+            body: formData,
           })
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
               console.log(data.results[0].transcript);
               session
                 .signal({
                   data: JSON.stringify({
-                    result: data.results[0].transcript
+                    result: data.results[0].transcript,
                   }),
                   to: [],
-                  type: "stt"
+                  type: "stt",
                 })
                 .catch((error) => {
                   console.error(error);
                 });
             })
-            .catch(error => {
-              console.error('Error:', error);
+            .catch((error) => {
+              console.error("Error:", error);
             });
         };
 
         setTimeout(() => {
-          console.log("끝")
+          console.log("끝");
           mediaRecorder.stop();
         }, 2000);
       })
-      .catch(err => {
-        console.error('Error:', err);
+      .catch((err) => {
+        console.error("Error:", err);
       });
   };
 
@@ -133,8 +141,8 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
 
   useEffect(() => {
     if (turnPlayerId) {
-      console.log("들어옴")
-      console.log("idcheck" + myConnectionId, turnPlayerId)
+      console.log("들어옴");
+      console.log("idcheck" + myConnectionId, turnPlayerId);
       if (sttUse) {
         if (myConnectionId == turnPlayerId[0]) {
           startRecording();
@@ -142,7 +150,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       }
     }
   }, [sttUse]);
-
 
   // 음악 정지
   const { pause } = UseIsMusicPlay();
@@ -156,7 +163,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   };
 
   const plusScore = (Team) => {
-    // console.log(`plusScore: ${Team}`);
     if (Team === "A") {
       setATeamScore(ATeamScore + 1);
     } else if (Team === "B") {
@@ -187,33 +193,22 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   };
 
   const changeTeamTurn = () => {
-    // console.log(TeamTurn);
     if (TeamTurn === "A") {
       setTeamTurn("B");
       setTeamIndex(0);
-      setTurnPlayerId(BTeamStreamManagers[TeamIndex]);
-      // changeTeamIndex();
+      setTurnPlayerId(BTeamStreamManagers[0]);
       plusQuizIndex();
-
-      if (round < maxRound) {
-        setTeamChangeLoading(true);
-        setTimeout(() => {
-          setTeamChangeLoading(false);
-        }, 2000);
-      }
     } else if (TeamTurn === "B") {
       setTeamTurn("A");
       setTeamIndex(0);
-      setTurnPlayerId(ATeamStreamManagers[TeamIndex]);
-      // changeTeamIndex();
+      setTurnPlayerId(ATeamStreamManagers[0]);
       plusQuizIndex();
-
-      if (round < maxRound) {
-        setTeamChangeLoading(true);
-        setTimeout(() => {
-          setTeamChangeLoading(false);
-        }, 2000);
-      }
+    }
+    if (round < maxRound) {
+      setTeamChangeLoading(true);
+      setTimeout(() => {
+        setTeamChangeLoading(false);
+      }, 2000);
     }
   };
 
@@ -293,14 +288,14 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
           itemUse(myTeam, "disable");
           break;
         case "/":
-        if (gameCategory === 102) {
-          // gameCategory가 102일 때 hint
-          itemUse(myTeam, "hint");
-        } else if (gameCategory === 101) {
-          // gameCategory가 101일 때 talk
-          itemUse(myTeam, "stt");
-        }
-        break;
+          if (gameCategory === 102) {
+            // gameCategory가 102일 때 hint
+            itemUse(myTeam, "hint");
+          } else if (gameCategory === 101) {
+            // gameCategory가 101일 때 talk
+            itemUse(myTeam, "stt");
+          }
+          break;
         default:
           break;
       }
@@ -357,11 +352,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
             <article className="h-full aspect-[12/10] relative flex flex-col">
-              {showHintAnimation && (
-                <div className={`absolute bottom-20 right-30`}>
-                  <span className="text-lg">{getInitials(quizData[quizIndex].quizAnswer)}</span>
-                </div>
-              )}
               <div className="w-full flex justify-around items-end bg-tab10 rounded-t-[17px]">
                 <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p>
                 {/* <p> Team: {TeamTurn}</p> */}
@@ -437,7 +427,13 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                   />
                 ) : null}
                 {/* <button onClick={sendPlayDone}>playDone</button> */}
-
+                <div>
+                {showHintAnimation && (
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2 rounded-md shadow-lg">
+                  <span className="text-lg">{getInitials(quizData[quizIndex].quizAnswer)}</span>
+                </div>
+              )}
+              </div>
                 {turnPlayerId !== undefined ? (
                   <Chat
                     myUserName={myUserName}
@@ -484,34 +480,44 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
             </section>
           </div>
 
-          <div className="bg-white p-1 rounded-3xl border-2 border-slate-500 inline-block mt-[-15px] flex justify-center mx-auto max-w-60">
+          <div className="bg-white p-1 rounded-3xl border-2 border-slate-500 mt-[-15px] flex justify-center mx-auto max-w-60">
             <div className="text-center">
               <h1 className="text-2xl mt-1 mb-2">아이템</h1>
-              <Tooltip title="화면 가리기" arrow>
-                <Badge
-                  badgeContent={
-                    <span style={{ fontSize: "3em" }} className="mb-5">
-                      ,
-                    </span>
-                  }
-                  color="primary"
-                  overlap="circular"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      height: "30px", // 뱃지 높이 조정
-                      minWidth: "30px", // 뱃지 최소 너비 조정
-                    },
-                  }}
-                >
-                  <button
-                    onClick={() => itemUse(myTeam, "meme")}
-                    className={`rounded-full w-16 h-16 m-1 ${meme === 0 ? "grayscale" : ""}`}
-                    disabled={meme === 0} // 선택적으로 버튼을 비활성화
+              <div className="flex">
+              <div className="relative">
+                <Tooltip title="화면 가리기" arrow>
+                  <Badge
+                    badgeContent={
+                      <span style={{ fontSize: "3em" }} className="mb-5">
+                        ,
+                      </span>
+                    }
+                    color="primary"
+                    overlap="circular"
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        height: "30px", // 뱃지 높이 조정
+                        minWidth: "30px", // 뱃지 최소 너비 조정
+                      },
+                    }}
                   >
-                    <img src={chipi} alt="chipi" className="rounded-full w-16 h-16" />
-                  </button>
-                </Badge>
-              </Tooltip>
+                    <button
+                      onClick={() => itemUse(myTeam, "meme")}
+                      className={`rounded-full w-16 h-16 m-1 ${meme === 0 ? "grayscale" : ""}`}
+                      disabled={meme === 0} // 선택적으로 버튼을 비활성화
+                    >
+                      <img src={chipi} alt="chipi" className="rounded-full w-16 h-16" />
+                    </button>
+                  </Badge>
+                </Tooltip>
+                {/* 조건부로 BlockIcon 렌더링 */}
+                {meme === 0 && (
+                  <div className="absolute top-0 right-0">
+                    <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
+                  </div>
+                )}
+              </div>
+              <div className="relative">
               <Tooltip title="채팅 막기" arrow>
                 <Badge
                   badgeContent={
@@ -530,74 +536,97 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                 >
                   <button
                     onClick={() => itemUse(myTeam, "disable")}
-                    className={`rounded-full w-16 h-16 ${disable === 0 ? "grayscale" : ""}`}
+                    className={`rounded-full w-16 h-16 m-1 ${disable === 0 ? "grayscale" : ""}`}
                     disabled={disable === 0} // 선택적으로 버튼을 비활성화
                   >
                     <img src={stop} alt="stop" className="rounded-full w-16 h-16" />
                   </button>
                 </Badge>
               </Tooltip>
-              {gameCategory === 102 ?
-              <Tooltip title="초성 힌트" arrow>
-                <Badge
-                  badgeContent={
-                    <span style={{ fontSize: "2em" }} className="mt-1">
-                      /
-                    </span>
-                  }
-                  color="primary"
-                  overlap="circular"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      height: "30px", // 뱃지 높이 조정
-                      minWidth: "30px", // 뱃지 최소 너비 조정
-                    },
-                  }}
-                >
-                  <button
-                    onClick={() => itemUse(myTeam, "hint")}
-                    className={`rounded-full w-16 h-16 ${hint === 0 ? "grayscale" : ""}`}
-                    disabled={hint === 0} // 선택적으로 버튼을 비활성화
+              {/* 조건부로 BlockIcon 렌더링 */}
+              {disable === 0 && (
+                  <div className="absolute top-0 right-0">
+                    <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
+                  </div>
+                )}
+              </div>
+              <div className="relative">
+              {gameCategory === 102 ? (
+                <>
+                <Tooltip title="초성 힌트" arrow>
+                  <Badge
+                    badgeContent={
+                      <span style={{ fontSize: "2em" }} className="mt-1">
+                        /
+                      </span>
+                    }
+                    color="primary"
+                    overlap="circular"
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        height: "30px", // 뱃지 높이 조정
+                        minWidth: "30px", // 뱃지 최소 너비 조정
+                      },
+                    }}
                   >
-                    <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
-                  </button>
-                </Badge>
-              </Tooltip>:
-
-              //stt
-              <Tooltip title="stt" arrow>
-                <Badge
-                  badgeContent={
-                    <span style={{ fontSize: "2em" }} className="mt-1">
-                      /
-                    </span>
-                  }
-                  color="primary"
-                  overlap="circular"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      height: "30px", // 뱃지 높이 조정
-                      minWidth: "30px", // 뱃지 최소 너비 조정
-                    },
-                  }}
-                >
-                  <button
-                    onClick={() =>{
-                        if (myTeam == TeamTurn)
-                          itemUse(myTeam, "stt")
-                        else 
-                          alert("우리 팀의 차례에만 사용 가능합니다.")
-                             }}
-                             className={`rounded-full w-16 h-16 ${stt === 0 ? "grayscale" : ""}`}
-                    disabled={stt === 0} // 선택적으로 버튼을 비활성화
+                    <button
+                      onClick={() => itemUse(myTeam, "hint")}
+                      className={`rounded-full w-16 h-16 m-1 ${hint === 0 ? "grayscale" : ""}`}
+                      disabled={hint === 0} // 선택적으로 버튼을 비활성화
+                    >
+                      <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
+                    </button>
+                  </Badge>
+                </Tooltip>
+                {hint === 0 && (
+                  <div className="absolute top-0 right-0">
+                    <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
+                  </div>
+                )}
+                </>
+              ) : (
+                //stt
+                <>
+                <Tooltip title="stt" arrow>
+                  <Badge
+                    badgeContent={
+                      <span style={{ fontSize: "2em" }} className="mt-1">
+                        /
+                      </span>
+                    }
+                    color="primary"
+                    overlap="circular"
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        height: "30px", // 뱃지 높이 조정
+                        minWidth: "30px", // 뱃지 최소 너비 조정
+                      },
+                    }}
                   >
-                    <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
-                  </button>
-                </Badge>
-              </Tooltip>}
+                    <button
+                      onClick={() => {
+                        if (myTeam == TeamTurn) itemUse(myTeam, "stt");
+                        else alert("우리 팀의 차례에만 사용 가능합니다.");
+                      }}
+                      className={`rounded-full w-16 h-16 m-1 ${stt === 0 ? "grayscale" : ""}`}
+                      disabled={stt === 0} // 선택적으로 버튼을 비활성화
+                    >
+                      <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
+                    </button>
+                  </Badge>
+                </Tooltip>
+                {stt === 0 && (
+                  <div className="absolute top-0 right-0">
+                    <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
+                  </div>
+                )}
+                </>
+              )}
+              </div>
+            </div>
             </div>
           </div>
-        </main >
+        </main>
       )}
     </>
   );

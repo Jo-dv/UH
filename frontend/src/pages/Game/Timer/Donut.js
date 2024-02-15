@@ -2,7 +2,7 @@ import React from "react";
 // import DonutChart from "react-donut-chart";
 import styled, { keyframes } from "styled-components";
 
-function Donut({ color, percent, size }) {
+function Donut({ color, percent, size, time }) {
   return (
     <Chart size={size}>
       <AniSvg viewBox="0 0 200 200">
@@ -18,7 +18,7 @@ function Donut({ color, percent, size }) {
           strokeDashoffset={2 * Math.PI * 40 * 0.25}
         />
       </AniSvg>
-      {/* <Percent color={color}>{percent * 100}%</Percent> */}
+      <Percent color={time}>{time}초</Percent>
     </Chart>
   );
 }
@@ -46,11 +46,14 @@ const AnimatedCircle = styled.circle`
 
 const Percent = styled.span`
   position: absolute;
-  top: 45%;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 35%;
+  right: 102px;
   font-size: 20px;
-  color: ${(props) => props.color};
+  color: ${(props) => {
+    if (props.color <= 3) {
+      return "red";
+    }
+  }};
 `;
 
 export default Donut;
