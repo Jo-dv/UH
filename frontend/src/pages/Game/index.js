@@ -284,13 +284,13 @@ const Game = ({
     // 키보드 입력에 반응하여 특정 액션 실행
     const handleKeyPress = (event) => {
       switch (event.key) {
-        case ",": // 화면 가리기
+        case "[": // 화면 가리기
           itemUse(myTeam, "meme");
           break;
-        case ".": // 채팅 막기
+        case "]": // 채팅 막기
           itemUse(myTeam, "disable");
           break;
-        case "/":
+        case "\\":
           if (gameCategory === 102) {
             // gameCategory가 102일 때 hint
             itemUse(myTeam, "hint");
@@ -448,11 +448,11 @@ const Game = ({
                 {/* <button onClick={sendPlayDone}>playDone</button> */}
                 <div>
                   {gameCategory === 101 && showSttAnimation ? (
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2 rounded-md shadow-lg">
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 border-2 border-slate-500 bg-white p-2 rounded-md shadow-lg">
                       <span className="text-lg">{sttMsg}</span> {/* STT 메시지 표시 */}
                     </div>
                   ) : gameCategory === 102 && showHintAnimation ? (
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2 rounded-md shadow-lg">
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 border-2 border-slate-500 bg-white p-2 rounded-md shadow-lg">
                       <span className="text-lg">{getInitials(quizData[quizIndex].quizAnswer)}</span>
                       {/* 초성 힌트 표시 */}
                     </div>
@@ -512,8 +512,8 @@ const Game = ({
                   <Tooltip title="화면 가리기" arrow>
                     <Badge
                       badgeContent={
-                        <span style={{ fontSize: "3em" }} className="mb-5">
-                          ,
+                        <span style={{ fontSize: "1.5em" }} className="mb-1">
+                          [
                         </span>
                       }
                       color="primary"
@@ -545,8 +545,8 @@ const Game = ({
                   <Tooltip title="채팅 막기" arrow>
                     <Badge
                       badgeContent={
-                        <span style={{ fontSize: "3em" }} className="mb-5">
-                          .
+                        <span style={{ fontSize: "1.5em" }} className="mb-1">
+                          ]
                         </span>
                       }
                       color="primary"
@@ -580,8 +580,8 @@ const Game = ({
                       <Tooltip title="초성 힌트" arrow>
                         <Badge
                           badgeContent={
-                            <span style={{ fontSize: "2em" }} className="mt-1">
-                              /
+                            <span style={{ fontSize: "2em" }}>
+                              \
                             </span>
                           }
                           color="primary"
@@ -616,8 +616,8 @@ const Game = ({
                       <Tooltip title="stt" arrow>
                         <Badge
                           badgeContent={
-                            <span style={{ fontSize: "2em" }} className="mt-1">
-                              /
+                            <span style={{ fontSize: "2em" }}>
+                              \
                             </span>
                           }
                           color="primary"
