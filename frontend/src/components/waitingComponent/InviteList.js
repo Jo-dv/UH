@@ -21,7 +21,23 @@ const InviteList = (props) => {
   const [buttonText, setButtonText] = useState("초대");
   const [buttonColor, setButtonColor] = useState("bg-tab10");
   const [isInvited, setIsInvited] = useState(false);
+  const [invitedStatus, setInvitedStatus] = useState({});
 
+  const sendInvite = async (friend) => {
+    if (!invitedStatus[friend.nickname]) {
+      await send({
+        type: "invite",
+        fromNickname: user.userNickname,
+        toConnectionId: friend.connectionId,
+      });
+
+      // 특정 친구의 초대 상태를 업데이트
+      setInvitedStatus((prevStatus) => ({
+        ...prevStatus,
+        [friend.nickname]: true,
+      }));
+    }
+  };
   // // 친구 목록 갱신을 위한 함수 정의
   // const updateFriendsList = useCallback(async () => {
   //   const friendsList = await listFriends();
@@ -76,49 +92,21 @@ const InviteList = (props) => {
           <hr className="border border-gray-300 my-3" />
           <div style={{ maxHeight: "200px", overflowY: "auto" }}>
             {combinedList.map((friend, i) => (
-              <div>
-                <div
-                  className="flex items-center justify-between"
-                  ref={accessorRefs.current[i]}
-                  key={i}
-                >
+              <div key={i}>
+                {/* key를 div에 적용 */}
+                <div className="flex items-center justify-between" ref={accessorRefs.current[i]}>
                   <div className="flex-grow pl-4">{friend.nickname}</div>
                   <div className="flex pr-4">
-                    {/* <button
-                      className={`${buttonColor} ${isInvited ? 'cursor-not-allowed' : 'hover:bg-[#95c75a]'} py-1 px-2 rounded-xl mr-1`}
-                      // className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1"
-                      onClick={async () => {
-                        send({
-                          type: "invite",
-                          fromNickname: user.userNickname,
-                          toConnectionId: friend.connectionId,
-                        });
-                        alert(`${friend.nickname}님께 초대를 보냈습니다!`);
-                      }}
-                      disabled={isInvited} // 버튼 비활성화 상태 관리
-                    >
-                      초대
-                    </button> */}
                     <button
                       className={`py-1 px-2 rounded-xl mr-1 ${
-                        isInvited ? "bg-gray-400 cursor-not-allowed" : "bg-tab10 hover:bg-[#95c75a]"
+                        invitedStatus[friend.nickname]
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-tab10 hover:bg-[#95c75a]"
                       }`}
-                      onClick={async () => {
-                        if (!isInvited) {
-                          // isInvited 상태가 false일 때만 요청을 보냄
-                          await send({
-                            type: "invite",
-                            fromNickname: user.userNickname,
-                            toConnectionId: friend.connectionId,
-                          });
-
-                          // 초대 상태를 true로 업데이트
-                          setIsInvited(true);
-                        }
-                      }}
-                      disabled={isInvited} // isInvited가 true일 경우 버튼 비활성화
+                      onClick={() => sendInvite(friend)}
+                      // disabled={invitedStatus[friend.userNickname]} // 특정 친구의 초대 상태를 기반으로 비활성화 상태 결정
                     >
-                      {isInvited ? "요청보냄" : "초대하기"}
+                      {invitedStatus[friend.nickname] ? "요청보냄" : "초대하기"}
                     </button>
                   </div>
                 </div>
