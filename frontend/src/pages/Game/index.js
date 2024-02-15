@@ -9,18 +9,36 @@ import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
 const getInitials = (src) => {
-  let string = '';
+  let string = "";
   for (var i = 0; i < src.length; i++) {
-    let index = ((src.charCodeAt(i) - 44032) / 28) / 21;
+    let index = (src.charCodeAt(i) - 44032) / 28 / 21;
     if (index >= 0) {
       string += String.fromCharCode(index + 4352);
     }
   }
   return string;
-}
+};
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, meme, disable, hint,
-  setMeme, setDisable, setHint, memeAttack, setMemeAttack, disableAttack, setDisableAttack, hintUse, setHintUse }) => {
+const Game = ({
+  publisher,
+  subscribers,
+  session,
+  myUserName,
+  sendPlayDone,
+  itemUse,
+  meme,
+  disable,
+  hint,
+  setMeme,
+  setDisable,
+  setHint,
+  memeAttack,
+  setMemeAttack,
+  disableAttack,
+  setDisableAttack,
+  hintUse,
+  setHintUse,
+}) => {
   let maxTime = 30000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -60,14 +78,14 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   useEffect(() => {
     if (hintUse) {
       const extractedInitials = getInitials(quizData[quizIndex].quizAnswer);
-      console.log(quizData[quizIndex].quizAnswer)
-      console.log(extractedInitials)
+      console.log(quizData[quizIndex].quizAnswer);
+      console.log(extractedInitials);
     }
 
     setTimeout(() => {
       setHintUse(false);
     }, 5000);
-  }, [hintUse,quizIndex]);
+  }, [hintUse, quizIndex]);
 
   // 음악 정지
   const { pause } = UseIsMusicPlay();
@@ -241,12 +259,25 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
             <article className="h-full aspect-[12/10] relative flex flex-col">
-              <div className="w-full flex justify-around items-end bg-tab10 rounded-t-[17px]">
-                <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p>
-                {/* <p> Team: {TeamTurn}</p> */}
-                <p className="text-3xl">Round {round}</p>
-                {/* <p>{time}</p> */}
-                <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-lg"}>B : {BTeamScore}</p>
+              <div className="w-full h-[50px] flex items-center bg-tab10 rounded-t-[17px]">
+                <div className="flex-1 flex justify-center">
+                  <p
+                    className={
+                      ATeamScore > BTeamScore
+                        ? "text-3xl font-[round-bold]"
+                        : "text-3xl font-[round-bold]"
+                    }>A : {ATeamScore}
+                  </p>
+                </div>
+                {/* 중앙 텍스트는 flex 아이템으로 분리되어 항상 가운데에 위치합니다. */}
+                <p className="text-4xl font-[round-extrabold] flex-shrink-0">Round {round}</p>
+                <div className="flex-1 flex justify-center">
+                  <p
+                    className={ATeamScore < BTeamScore ? "text-3xl font-[round-bold]" : "text-2xl"}
+                  >
+                    B : {BTeamScore}
+                  </p>
+                </div>
               </div>
               <section className="relative rounded-b-[17px] overflow-hidden">
                 {gameCategory === 101 ? (
@@ -280,7 +311,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                     rand01={rand01}
                     memeAttack={memeAttack}
                     hintUse={hintUse}
-
                   />
                 ) : null}
                 {gameCategory === 102 ? (
@@ -364,8 +394,12 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
             </section>
           </div>
           <button onClick={() => itemUse(myTeam, "meme")}>bombs{meme}</button>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}>disable{disable}</button>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>hint{hint}</button>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}>
+            disable{disable}
+          </button>
+          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}>
+            hint{hint}
+          </button>
         </main>
       )}
     </>

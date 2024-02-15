@@ -13,21 +13,26 @@ const Manual = ({ viewGameCategoryManual }) => {
   return (
     <div className="ml-3 mt-3">
       {viewGameCategoryManual === "101" ? (
-        <div>
-          <h1>고요 속의 외침</h1>
-          <p>제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.</p>
+        <div className="ml-3 z-10 text-xl mt-5 leading-8">
+          <h1 className="text-3xl font-[round-extrabold]">고요 속의 외침</h1><br/>
+          <p>제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.</p><br/>
           <p>
-            팀에서 한명이 발화자로 지정이 되며, 발화자는 마이크가 꺼지고, 채팅을 칠 수 없습니다.
+            팀에서 한명이 발화자로 지정이 되며,{" "}
+            <span className="text-red-600"> 발화자는 마이크가 꺼지고, 채팅을 칠 수 없습니다.</span>
           </p>
-          <p>다른 팀원이 발화자의 제시어를 맞추면 점수를 획득하고 발화자가 변경 됩니다.</p>
+          <p>
+            다른 팀원이 발화자의 <span className="text-red-600">제시어를 맞추면 </span>점수를
+            획득하고 <span className="text-red-600">발화자가 변경</span> 됩니다.
+          </p><br/>
           <p>팀당 ?초 동안 진행합니다.</p>
           <p>총 ?라운드 진행합니다.</p>
         </div>
       ) : (
-        <div>
-          <h1>인물 맞추기</h1>
-          <p>제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.</p>
-          <p>사진을 보고 인물을 맞추면 됩니다.</p>
+        <div className="ml-3 z-10 text-xl mt-5 leading-8">
+          <h1 className="text-3xl font-[round-extrabold]">인물 맞추기</h1><br/>
+          <p>제한 시간 동안 많은 문제를 맞춘 팀이 승리합니다.</p><br/>
+          <p><span className="text-red-600">사진을 보고 인물을 맞추면</span> 됩니다.</p>
+          <p>인물을 많이 맞추는 팀이 승리합니다.</p><br/>
           <p>팀당 ?초 동안 진행합니다</p>
           <p>총 ?라운드 진행합니다.</p>
         </div>
