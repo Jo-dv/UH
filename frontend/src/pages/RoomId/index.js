@@ -185,10 +185,11 @@ export default function RoomId() {
       setStt(1);
 
       //아이템 상태 초기화
-      setMemeAttack(false);
-      setDisableAttack(false);
-      setHintUse(false);
-      setSttUse(false);
+      setMemeAttack(false)
+      setDisableAttack(false)
+      setHintUse(false)
+      setSttUse(false)
+      setSttMsg("")
     });
 
     mySession.on("signal:room-playDone", (event) => {
