@@ -36,12 +36,16 @@ const Win = ({ ATeamScore, BTeamScore, goWaitRoom, rand01 }) => {
               {/* <p className="text-3xl animate-jump-out animate-delay-500">무승부</p> */}
 
               {rand01 > 0 ? (
-                <p className="text-9xl font-['Beatster'] animate-wiggle animate-infinite">
-                  A Team Win
-                </p>
+                <div>
+                  <p className="text-center text-9xl font-['round-extrabold'] animate-wiggle animate-infinite">
+                    A팀 승리!
+                    </p>
+                    {ATeamScore}
+                    {BTeamScore}
+                </div>
               ) : (
-                <p className="text-9xl font-['Beatster'] animate-wiggle animate-infinite">
-                  B Team Win
+                <p className="text-center text-9xl font-['round-extrabold'] animate-wiggle animate-infinite">
+                  B팀 승리!
                 </p>
               )}
 
