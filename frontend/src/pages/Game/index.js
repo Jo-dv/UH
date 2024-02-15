@@ -102,7 +102,7 @@ const Game = ({
             .then((response) => response.json())
             .then((data) => {
               const transcript = data.results[0].transcript;
-              console.log(transcript);
+              // console.log(transcript);
               if (transcript.trim() != "") {
                 session
                   .signal({
@@ -137,8 +137,8 @@ const Game = ({
   useEffect(() => {
     if (hintUse) {
       const extractedInitials = getInitials(quizData[quizIndex].quizAnswer);
-      console.log(quizData[quizIndex].quizAnswer);
-      console.log(extractedInitials);
+      // console.log(quizData[quizIndex].quizAnswer);
+      // console.log(extractedInitials);
     }
 
     setTimeout(() => {
