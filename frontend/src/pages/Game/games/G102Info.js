@@ -43,7 +43,7 @@ const G102Info = ({ maxTime, maxRound, setGameLoading, session }) => {
       <br /> <span className="text-red-600">사진을 보고 인물을 맞추세요!</span>
       <br /> 인물을 많이 맞추는 팀이 승리합니다.
       <br/>
-      <br /> 팀당 {maxTime / 1000}초 동안, 총 {maxRound}라운드 진행합니다.
+      <br /> 총 {maxTime / 1000}초 동안 진행합니다.
       {/* <br /> 총 {maxRound}라운드 진행합니다. */}
       <br />
       <div className="absolute top-60 bg-white p-1 rounded-3xl border-slate-500 inline-block mt-[-15px] flex justify-center mx-auto w-full">

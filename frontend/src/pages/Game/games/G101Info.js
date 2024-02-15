@@ -71,8 +71,7 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
       <span className="text-red-600"> 발화자는 마이크가 꺼지고, 채팅을 칠 수 없습니다.</span>
       <br /> 다른 팀원이 발화자의 <span className="text-red-600">제시어를 맞추면 </span>점수를 획득하고 <span className="text-red-600">발화자가 변경</span> 됩니다.
       <br />
-      <br /> 팀당 {maxTime / 1000}초 동안 진행합니다.
-      <br /> 총 {maxRound}라운드 진행합니다.
+      <br /> 팀당 {maxTime / 1000}초 동안 총 {maxRound}라운드 진행합니다.
       <br />
 
       <div className="absolute top-60 bg-white p-1 rounded-3xl border-slate-500 inline-block mt-[-15px] flex justify-center mx-auto w-full">
