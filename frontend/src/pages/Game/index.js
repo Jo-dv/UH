@@ -13,8 +13,13 @@ import gethint from "../../asset/image/hint.gif";
 import G101 from "./games/G101";
 import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
+import ScoreTable from "./ScoreTable";
 
-//초성
+/**
+ *
+ * @param {string} src 한글
+ * @returns 한글 초성
+ */
 const getInitials = (src) => {
   let string = "";
   for (var i = 0; i < src.length; i++) {
@@ -43,21 +48,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   const [TeamTurn, setTeamTurn] = useState("A");
   const [TeamIndex, setTeamIndex] = useState(0);
   const [turnPlayerId, setTurnPlayerId] = useState(undefined);
-  const [quizData, setQuizData] = useState([
-    { quizId: 62, quizAnswer: "이덕화" },
-    { quizId: 180, quizAnswer: "최주봉" },
-    { quizId: 12, quizAnswer: "이병헌" },
-    { quizId: 296, quizAnswer: "윤계상" },
-    { quizId: 73, quizAnswer: "정한용" },
-    { quizId: 353, quizAnswer: "최백호" },
-    { quizId: 49, quizAnswer: "정태춘" },
-    { quizId: 12, quizAnswer: "이병헌" },
-    { quizId: 186, quizAnswer: "예지원" },
-    { quizId: 321, quizAnswer: "최덕문" },
-    { quizId: 363, quizAnswer: "김성겸" },
-    { quizId: 107, quizAnswer: "이정길" },
-    { quizId: 82, quizAnswer: "김희선" },
-  ]);
+  const [quizData, setQuizData] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [ATeamScore, setATeamScore] = useState(0);
   const [BTeamScore, setBTeamScore] = useState(0);
@@ -156,7 +147,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   };
 
   const plusScore = (Team) => {
-    // console.log(`plusScore: ${Team}`);
     if (Team === "A") {
       setATeamScore(ATeamScore + 1);
     } else if (Team === "B") {
@@ -187,33 +177,22 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   };
 
   const changeTeamTurn = () => {
-    // console.log(TeamTurn);
     if (TeamTurn === "A") {
       setTeamTurn("B");
       setTeamIndex(0);
-      setTurnPlayerId(BTeamStreamManagers[TeamIndex]);
-      // changeTeamIndex();
+      setTurnPlayerId(BTeamStreamManagers[0]);
       plusQuizIndex();
-
-      if (round < maxRound) {
-        setTeamChangeLoading(true);
-        setTimeout(() => {
-          setTeamChangeLoading(false);
-        }, 2000);
-      }
     } else if (TeamTurn === "B") {
       setTeamTurn("A");
       setTeamIndex(0);
-      setTurnPlayerId(ATeamStreamManagers[TeamIndex]);
-      // changeTeamIndex();
+      setTurnPlayerId(ATeamStreamManagers[0]);
       plusQuizIndex();
-
-      if (round < maxRound) {
-        setTeamChangeLoading(true);
-        setTimeout(() => {
-          setTeamChangeLoading(false);
-        }, 2000);
-      }
+    }
+    if (round < maxRound) {
+      setTeamChangeLoading(true);
+      setTimeout(() => {
+        setTeamChangeLoading(false);
+      }, 2000);
     }
   };
 
@@ -346,13 +325,12 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
             <article className="h-full aspect-[12/10] relative flex flex-col">
-              <div className="w-full flex justify-around items-end bg-tab10 rounded-t-[17px]">
-                <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p>
-                {/* <p> Team: {TeamTurn}</p> */}
-                <p className="text-3xl">Round {round}</p>
-                {/* <p>{time}</p> */}
-                <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-lg"}>B : {BTeamScore}</p>
-              </div>
+              <ScoreTable
+                ATeamScore={ATeamScore}
+                BTeamScore={BTeamScore}
+                round={round}
+                gameCategory={gameCategory}
+              />
               <section className="relative rounded-b-[17px] overflow-hidden">
                 {gameCategory === 101 ? (
                   <G101
