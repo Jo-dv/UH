@@ -187,6 +187,7 @@ export default function RoomId() {
       setDisableAttack(false)
       setHintUse(false)
       setSttUse(false)
+      setSttMsg("")
     });
 
     mySession.on("signal:room-playDone", (event) => {

@@ -101,8 +101,10 @@ const Game = ({
           })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data.results[0].transcript);
-              session
+              const transcript = data.results[0].transcript
+              console.log(transcript);
+              if (transcript.trim() != ""){
+                session
                 .signal({
                   data: JSON.stringify({
                     result: data.results[0].transcript,
@@ -113,6 +115,9 @@ const Game = ({
                 .catch((error) => {
                   console.error(error);
                 });
+              } else {
+                setSttMsg("앗! 다음 기회에 ㅋㅋ;;ㅎㅎ;;ㅈㅅ;;")
+              }
             })
             .catch((error) => {
               console.error("Error:", error);
@@ -198,11 +203,15 @@ const Game = ({
     if (TeamTurn === "A") {
       setTeamTurn("B");
       setTeamIndex(0);
+      setShowSttAnimation(false);
+      setSttMsg("");
       setTurnPlayerId(BTeamStreamManagers[0]);
       plusQuizIndex();
     } else if (TeamTurn === "B") {
       setTeamTurn("A");
       setTeamIndex(0);
+      setShowSttAnimation(false);
+      setSttMsg("");
       setTurnPlayerId(ATeamStreamManagers[0]);
       plusQuizIndex();
     }
@@ -329,17 +338,28 @@ const Game = ({
     }
   }, [hintUse]);
 
-  useEffect(() => {
-    if (sttUse) {
-      setTimeout(() => {
-        setShowSttAnimation(true); // 변환된 텍스트를 화면에 표시
+  // useEffect(() => {
+  //   if (sttUse) {
+  //     setTimeout(() => {
+  //       setShowSttAnimation(true); // 변환된 텍스트를 화면에 표시
 
-        setTimeout(() => {
-          setShowSttAnimation(false);
-        }, 5000);
-      }, 3000);
+  //       setTimeout(() => {
+  //         setShowSttAnimation(false);
+  //       }, 5000);
+  //     }, 3000);
+  //   }
+  // }, [sttUse]);
+  useEffect(() => {
+    if (sttMsg) {
+      // sttMsg에 값이 있을 때 실행할 로직
+      // 예: 메시지 표시 애니메이션 활성화
+      setShowSttAnimation(true);
+      // 일정 시간(예: 5초) 후에 메시지를 화면에서 숨기기
+      setTimeout(() => {
+        setShowSttAnimation(false);
+      }, 5000);
     }
-  }, [sttUse, setSttMsg]);
+  }, [sttMsg]);
 
   return (
     <>
@@ -588,11 +608,7 @@ const Game = ({
                     <>
                       <Tooltip title="초성 힌트" arrow>
                         <Badge
-                          badgeContent={
-                            <span style={{ fontSize: "2em" }}>
-                              \
-                            </span>
-                          }
+                          badgeContent={<span style={{ fontSize: "2em" }}>\</span>}
                           color="primary"
                           overlap="circular"
                           sx={{
@@ -624,13 +640,9 @@ const Game = ({
                   ) : (
                     //stt
                     <>
-                      <Tooltip title="stt" arrow>
+                      <Tooltip title="말풍선" arrow>
                         <Badge
-                          badgeContent={
-                            <span style={{ fontSize: "2em" }}>
-                              \
-                            </span>
-                          }
+                          badgeContent={<span style={{ fontSize: "2em" }}>\</span>}
                           color="primary"
                           overlap="circular"
                           sx={{
