@@ -4,7 +4,7 @@ const KickOutModal = ({ isOpen, onClose, onConfirm, userName }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="z-40 fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
       <div className="bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2">
         <p className="mb-4">{userName}님을 정말로 강퇴하시겠습니까?</p>
         <div className="flex justify-center items-center space-x-4">

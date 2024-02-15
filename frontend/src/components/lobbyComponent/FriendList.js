@@ -156,7 +156,7 @@ const FriendList = () => {
     <div className="relative">
       <div className="p-[16px] overflow-y-scroll h-[250px] scroll-smooth">
         <div className="w-full">
-          <p style={{ fontFamily: "var(--font-extrabold)" }}>접속한 친구</p>
+          <p className="font-[round-extrabold]">접속한 친구</p>
           {combinedList &&
             combinedList.map((friend, i) => (
               <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
@@ -204,7 +204,7 @@ const FriendList = () => {
               </div>
             ))}
           <hr className="border-orange-900 my-2"></hr>
-          <p style={{ fontFamily: "var(--font-extrabold)" }}>미접속 친구</p>
+          <p className="font-[round-extrabold]">미접속 친구</p>
           {friendsNotInCommon &&
             friendsNotInCommon.map((friend, i) => (
               <div className="ml-[12px] mb-[4px] text-l" ref={friendRefs.current[i]} key={i}>
