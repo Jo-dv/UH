@@ -84,7 +84,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
           const formData = new FormData();
           formData.append('audio', blob);
 
-          fetch('http://localhost:80/stt', {
+          fetch('https://i10e201.p.ssafy.io/stt', {
             method: 'POST',
             body: formData
           })
