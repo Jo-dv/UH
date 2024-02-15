@@ -1,7 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-
+import useClick from "../../hooks/useClick.js";
 // api, store
 import { useWebSocket } from "../../webSocket/UseWebSocket.js";
 import { createSession, createToken, addPlayer, exitRoom } from "../../api/roomAPI.js";
@@ -73,7 +73,7 @@ export default function RoomId() {
   const [roomPassword, setRoomPassword] = useState(roomInfo.roomData?.roomPassword || "");
   const [roomMax, setRoomMax] = useState(roomInfo.roomData?.max || "");
   const [roomGame, setRoomGame] = useState(roomInfo.roomData?.gameCategory || "");
-  const [adjusting, setAdjusting] = useState(false);
+  const { playClick } = useClick();
 
   const itemUse = (myTeam, item) => {
     if (session !== undefined) {
@@ -99,7 +99,7 @@ export default function RoomId() {
 
   useEffect(() => {
     pause();
-  }, [pause]);
+  }, []);
 
   const handleMainVideoStream = useCallback(
     (stream) => {
@@ -395,9 +395,8 @@ export default function RoomId() {
       //아이템 처리
       session.off("signal:item")
       session.on("signal:item", (event) => {
-        console.log(event)
+        console.log("아이템 사용")
         const { myTeam, item } = JSON.parse(event.data);
-        console.log(session.connection.connectionId);
         if (myTeam === "A") {//A팀이 아이템을 사용했을 때
           //B팀인 경우
           if (teamB.includes(session.connection.connectionId)) {
@@ -444,9 +443,36 @@ export default function RoomId() {
             }
           }
         }
+        sendNotice(item, myTeam);
       });
     }
   }, [session, teamA, teamB]); // session 객체를 의존성 배열에 추가
+
+  //아이템 사용 알림
+  const sendNotice = (item, myTeam) => {
+    const data = JSON.stringify({
+      chat: `[알림] ${item} 아이템을 사용했습니다.`,
+      ans: "notice",
+      team: "notice",
+      myTeam: myTeam,
+      quizIndex: "notice",
+      myUserName: "notice",
+    });
+
+    session
+      .signal({
+        data: data,
+        to: [],
+        type: "game-chat",
+      })
+      .then(() => {
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+
 
   const setReady = async () => {
     // console.log("준비");
@@ -675,14 +701,20 @@ export default function RoomId() {
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
                   className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center font-[round-bold] text-xl"
-                  onClick={() => changeTeam("A")}
+                  onClick={() => {
+                    changeTeam("A");
+                    playClick();
+                  }}
                 >
                   A팀
                 </button>
 
                 <button
                   className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center font-[round-bold] text-xl"
-                  onClick={() => changeTeam("B")}
+                  onClick={() => {
+                    changeTeam("B");
+                    playClick();
+                  }}
                 >
                   B팀
                 </button>
@@ -691,6 +723,7 @@ export default function RoomId() {
                 <button
                   onClick={() => {
                     setReady();
+                    playClick();
                   }}
                   className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${isReady ? "bg-tab4" : ""
                     }`}

@@ -12,7 +12,7 @@ DEVICE = "cpu"
 # Load the Whisper model:
 
 # pipeline = FlaxWhisperPipline("openai/whisper-base", dtype=jnp.float16)
-model = whisper.load_model("small", device=DEVICE)
+model = whisper.load_model("base", device=DEVICE)
 
 app = Flask(__name__)
 CORS(app)

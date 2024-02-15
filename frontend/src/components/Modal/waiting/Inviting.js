@@ -1,8 +1,10 @@
 import UseInvitingStore from "../../../store/UseInvitingStore";
 import InviteList from "../../waitingComponent/InviteList";
+import useClick from "../../../hooks/useClick";
 
 const Inviting = ({ onClose, openLink }) => {
   const { inviting, setInviting } = UseInvitingStore();
+  const { playClick } = useClick();
 
   return (
     <>
@@ -13,6 +15,7 @@ const Inviting = ({ onClose, openLink }) => {
           onClick={() => {
             setInviting(false); // 여기서 inviting을 false로 설정하면, 사용자가 백그라운드를 클릭할 때 초대 팝업이 닫힙니다.
             onClose && onClose(); // onClose 함수가 제공되었다면 호출
+            playClick();
           }}
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
