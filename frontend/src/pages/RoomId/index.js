@@ -61,9 +61,12 @@ export default function RoomId() {
   const [hint, setHint] = useState(0);
   const [stt, setStt] = useState(0);
   const [memeAttack, setMemeAttack] = useState(false);
+
+  
   const [disableAttack, setDisableAttack] = useState(false);
   const [hintUse, setHintUse] = useState(false);
   const [sttUse, setSttUse] = useState(false);
+  const [sttMsg, setSttMsg] = useState("");
 
 
   const navigate = useNavigate();
@@ -196,6 +199,7 @@ export default function RoomId() {
     mySession.on("signal:stt", (event) => {
       const { result } = JSON.parse(event.data);
       console.log(result)
+      setSttMsg(result);
     });
 
     setSession(mySession);
@@ -723,6 +727,8 @@ export default function RoomId() {
           setHintUse={setHintUse}
           sttUse={sttUse}
           setSttUse={setSttUse}
+          sttMsg={sttMsg}
+          setSttMsg={setSttMsg}
         />
       ) : null}
       {leaving && (

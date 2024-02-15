@@ -49,6 +49,8 @@ const Game = ({
   setHintUse,
   sttUse,
   setSttUse,
+  sttMsg,
+  setSttMsg,
 }) => {
   let maxTime = 30000;
   let maxRound = 4;
@@ -75,6 +77,7 @@ const Game = ({
   //stt
   const startRecording = () => {
     console.log("시작");
+    setSttMsg('');
     // 녹음 시작 및 2초 후에 녹음 종료
     navigator.mediaDevices
       .getUserMedia({ audio: true })
@@ -309,6 +312,7 @@ const Game = ({
   }, [myTeam, itemUse]);
 
   const [showHintAnimation, setShowHintAnimation] = useState(false);
+  const [showSttAnimation, setShowSttAnimation] = useState(false);
 
   useEffect(() => {
     if (hintUse) {
@@ -318,6 +322,18 @@ const Game = ({
       }, 5000); // 애니메이션 지속 시간과 일치해야 함
     }
   }, [hintUse]);
+
+  useEffect(() => {
+    if (sttUse) {
+      setTimeout(() => {
+        setShowSttAnimation(true); // 변환된 텍스트를 화면에 표시
+
+        setTimeout(() => {
+          setShowSttAnimation(false);
+        }, 5000);
+      }, 3000);
+    }
+  }, [sttUse, setSttMsg]);
 
   return (
     <>
@@ -428,12 +444,17 @@ const Game = ({
                 ) : null}
                 {/* <button onClick={sendPlayDone}>playDone</button> */}
                 <div>
-                {showHintAnimation && (
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2 rounded-md shadow-lg">
-                  <span className="text-lg">{getInitials(quizData[quizIndex].quizAnswer)}</span>
+                  {gameCategory === 101 && showSttAnimation ? (
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2 rounded-md shadow-lg">
+                      <span className="text-lg">{sttMsg}</span> {/* STT 메시지 표시 */}
+                    </div>
+                  ) : gameCategory === 102 && showHintAnimation ? (
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 bg-white p-2 rounded-md shadow-lg">
+                      <span className="text-lg">{getInitials(quizData[quizIndex].quizAnswer)}</span>
+                      {/* 초성 힌트 표시 */}
+                    </div>
+                  ) : null}
                 </div>
-              )}
-              </div>
                 {turnPlayerId !== undefined ? (
                   <Chat
                     myUserName={myUserName}
@@ -484,146 +505,148 @@ const Game = ({
             <div className="text-center">
               <h1 className="text-2xl mt-1 mb-2">아이템</h1>
               <div className="flex">
-              <div className="relative">
-                <Tooltip title="화면 가리기" arrow>
-                  <Badge
-                    badgeContent={
-                      <span style={{ fontSize: "3em" }} className="mb-5">
-                        ,
-                      </span>
-                    }
-                    color="primary"
-                    overlap="circular"
-                    sx={{
-                      "& .MuiBadge-badge": {
-                        height: "30px", // 뱃지 높이 조정
-                        minWidth: "30px", // 뱃지 최소 너비 조정
-                      },
-                    }}
-                  >
-                    <button
-                      onClick={() => itemUse(myTeam, "meme")}
-                      className={`rounded-full w-16 h-16 m-1 ${meme === 0 ? "grayscale" : ""}`}
-                      disabled={meme === 0} // 선택적으로 버튼을 비활성화
-                    >
-                      <img src={chipi} alt="chipi" className="rounded-full w-16 h-16" />
-                    </button>
-                  </Badge>
-                </Tooltip>
-                {/* 조건부로 BlockIcon 렌더링 */}
-                {meme === 0 && (
-                  <div className="absolute top-0 right-0">
-                    <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
-                  </div>
-                )}
-              </div>
-              <div className="relative">
-              <Tooltip title="채팅 막기" arrow>
-                <Badge
-                  badgeContent={
-                    <span style={{ fontSize: "3em" }} className="mb-5">
-                      .
-                    </span>
-                  }
-                  color="primary"
-                  overlap="circular"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      height: "30px", // 뱃지 높이 조정
-                      minWidth: "30px", // 뱃지 최소 너비 조정
-                    },
-                  }}
-                >
-                  <button
-                    onClick={() => itemUse(myTeam, "disable")}
-                    className={`rounded-full w-16 h-16 m-1 ${disable === 0 ? "grayscale" : ""}`}
-                    disabled={disable === 0} // 선택적으로 버튼을 비활성화
-                  >
-                    <img src={stop} alt="stop" className="rounded-full w-16 h-16" />
-                  </button>
-                </Badge>
-              </Tooltip>
-              {/* 조건부로 BlockIcon 렌더링 */}
-              {disable === 0 && (
-                  <div className="absolute top-0 right-0">
-                    <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
-                  </div>
-                )}
-              </div>
-              <div className="relative">
-              {gameCategory === 102 ? (
-                <>
-                <Tooltip title="초성 힌트" arrow>
-                  <Badge
-                    badgeContent={
-                      <span style={{ fontSize: "2em" }} className="mt-1">
-                        /
-                      </span>
-                    }
-                    color="primary"
-                    overlap="circular"
-                    sx={{
-                      "& .MuiBadge-badge": {
-                        height: "30px", // 뱃지 높이 조정
-                        minWidth: "30px", // 뱃지 최소 너비 조정
-                      },
-                    }}
-                  >
-                    <button
-                      onClick={() => itemUse(myTeam, "hint")}
-                      className={`rounded-full w-16 h-16 m-1 ${hint === 0 ? "grayscale" : ""}`}
-                      disabled={hint === 0} // 선택적으로 버튼을 비활성화
-                    >
-                      <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
-                    </button>
-                  </Badge>
-                </Tooltip>
-                {hint === 0 && (
-                  <div className="absolute top-0 right-0">
-                    <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
-                  </div>
-                )}
-                </>
-              ) : (
-                //stt
-                <>
-                <Tooltip title="stt" arrow>
-                  <Badge
-                    badgeContent={
-                      <span style={{ fontSize: "2em" }} className="mt-1">
-                        /
-                      </span>
-                    }
-                    color="primary"
-                    overlap="circular"
-                    sx={{
-                      "& .MuiBadge-badge": {
-                        height: "30px", // 뱃지 높이 조정
-                        minWidth: "30px", // 뱃지 최소 너비 조정
-                      },
-                    }}
-                  >
-                    <button
-                      onClick={() => {
-                        if (myTeam == TeamTurn) itemUse(myTeam, "stt");
-                        else alert("우리 팀의 차례에만 사용 가능합니다.");
+                <div className="relative">
+                  <Tooltip title="화면 가리기" arrow>
+                    <Badge
+                      badgeContent={
+                        <span style={{ fontSize: "3em" }} className="mb-5">
+                          ,
+                        </span>
+                      }
+                      color="primary"
+                      overlap="circular"
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          height: "30px", // 뱃지 높이 조정
+                          minWidth: "30px", // 뱃지 최소 너비 조정
+                        },
                       }}
-                      className={`rounded-full w-16 h-16 m-1 ${stt === 0 ? "grayscale" : ""}`}
-                      disabled={stt === 0} // 선택적으로 버튼을 비활성화
                     >
-                      <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
-                    </button>
-                  </Badge>
-                </Tooltip>
-                {stt === 0 && (
-                  <div className="absolute top-0 right-0">
-                    <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
-                  </div>
-                )}
-                </>
-              )}
+                      <button
+                        onClick={() => itemUse(myTeam, "meme")}
+                        className={`rounded-full w-16 h-16 m-1 ${meme === 0 ? "grayscale" : ""}`}
+                        disabled={meme === 0} // 선택적으로 버튼을 비활성화
+                      >
+                        <img src={chipi} alt="chipi" className="rounded-full w-16 h-16" />
+                      </button>
+                    </Badge>
+                  </Tooltip>
+                  {/* 조건부로 BlockIcon 렌더링 */}
+                  {meme === 0 && (
+                    <div className="absolute top-0 right-0">
+                      <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
+                    </div>
+                  )}
+                </div>
+                <div className="relative">
+                  <Tooltip title="채팅 막기" arrow>
+                    <Badge
+                      badgeContent={
+                        <span style={{ fontSize: "3em" }} className="mb-5">
+                          .
+                        </span>
+                      }
+                      color="primary"
+                      overlap="circular"
+                      sx={{
+                        "& .MuiBadge-badge": {
+                          height: "30px", // 뱃지 높이 조정
+                          minWidth: "30px", // 뱃지 최소 너비 조정
+                        },
+                      }}
+                    >
+                      <button
+                        onClick={() => itemUse(myTeam, "disable")}
+                        className={`rounded-full w-16 h-16 m-1 ${disable === 0 ? "grayscale" : ""}`}
+                        disabled={disable === 0} // 선택적으로 버튼을 비활성화
+                      >
+                        <img src={stop} alt="stop" className="rounded-full w-16 h-16" />
+                      </button>
+                    </Badge>
+                  </Tooltip>
+                  {/* 조건부로 BlockIcon 렌더링 */}
+                  {disable === 0 && (
+                    <div className="absolute top-0 right-0">
+                      <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
+                    </div>
+                  )}
+                </div>
+                <div className="relative">
+                  {gameCategory === 102 ? (
+                    <>
+                      <Tooltip title="초성 힌트" arrow>
+                        <Badge
+                          badgeContent={
+                            <span style={{ fontSize: "2em" }} className="mt-1">
+                              /
+                            </span>
+                          }
+                          color="primary"
+                          overlap="circular"
+                          sx={{
+                            "& .MuiBadge-badge": {
+                              height: "30px", // 뱃지 높이 조정
+                              minWidth: "30px", // 뱃지 최소 너비 조정
+                            },
+                          }}
+                        >
+                          <button
+                            onClick={() => itemUse(myTeam, "hint")}
+                            className={`rounded-full w-16 h-16 m-1 ${
+                              hint === 0 ? "grayscale" : ""
+                            }`}
+                            disabled={hint === 0} // 선택적으로 버튼을 비활성화
+                          >
+                            <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
+                          </button>
+                        </Badge>
+                      </Tooltip>
+                      {hint === 0 && (
+                        <div className="absolute top-0 right-0">
+                          <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    //stt
+                    <>
+                      <Tooltip title="stt" arrow>
+                        <Badge
+                          badgeContent={
+                            <span style={{ fontSize: "2em" }} className="mt-1">
+                              /
+                            </span>
+                          }
+                          color="primary"
+                          overlap="circular"
+                          sx={{
+                            "& .MuiBadge-badge": {
+                              height: "30px", // 뱃지 높이 조정
+                              minWidth: "30px", // 뱃지 최소 너비 조정
+                            },
+                          }}
+                        >
+                          <button
+                            onClick={() => {
+                              if (myTeam == TeamTurn) itemUse(myTeam, "stt");
+                              else alert("우리 팀의 차례에만 사용 가능합니다.");
+                            }}
+                            className={`rounded-full w-16 h-16 m-1 ${stt === 0 ? "grayscale" : ""}`}
+                            disabled={stt === 0} // 선택적으로 버튼을 비활성화
+                          >
+                            <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
+                          </button>
+                        </Badge>
+                      </Tooltip>
+                      {stt === 0 && (
+                        <div className="absolute top-0 right-0">
+                          <BlockIcon style={{ color: "red", fontSize: "4.5rem" }} />
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
             </div>
           </div>
         </main>
