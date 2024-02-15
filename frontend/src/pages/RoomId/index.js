@@ -457,7 +457,7 @@ export default function RoomId() {
       itemName = "채팅 막기"
     else if (item == "hint")
       itemName = "초성 힌트"
-    else if (item == "disable")
+    else if (item == "stt")
       itemName = "말풍선"
 
     const data = JSON.stringify({
