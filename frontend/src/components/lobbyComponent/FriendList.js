@@ -8,6 +8,7 @@ import UseFriendRequestStore from "../../store/UseFriendRequestStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import FriendRequestList from "./FriendRequestList";
 import FriendDeleteModal from "../Modal/Lobby/FriendDeleteModal";
+import useClick from "../../hooks/useClick";
 
 const FriendList = () => {
   const { accessorRefs } = useAccessors();
@@ -28,6 +29,7 @@ const FriendList = () => {
   const { requestList, setRequestList } = UseFriendRequestStore();
   const modalRef = useRef(null);
   const buttonRef = useRef(null);
+  const { playClick } = useClick();
 
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
@@ -79,7 +81,7 @@ const FriendList = () => {
     setSelectedFriendId(friend.friendsId);
     setDelete(true);
   };
-  
+
 
   // 요청 모달 닫기
   const closeModal = (event) => {
@@ -162,7 +164,10 @@ const FriendList = () => {
               <div className="ml-[12px] mb-[4px] text-l" ref={accessorRefs.current[i]} key={i}>
                 <div className="relative inline-block">
                   <button
-                    onClick={() => onlineDropdown(friend)}
+                    onClick={() => {
+                      onlineDropdown(friend);
+                      playClick();
+                    }}
                     aria-expanded={onlineFreindDropdown === friend ? "true" : "false"}
                     aria-haspopup="true"
                   >
@@ -180,6 +185,7 @@ const FriendList = () => {
                             type: "follow",
                             connectionId: friend.connectionId,
                           });
+                          playClick();
                         }}
                       >
                         따라가기
@@ -189,7 +195,10 @@ const FriendList = () => {
                         className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
                         onClick={() => handleOnlineFriendDelete(friend)}
                       >
-                        <button onClick={() => handleOnlineFriendDelete(friend)}>삭제하기</button>
+                        <button onClick={() => {
+                          handleOnlineFriendDelete(friend);
+                          playClick();
+                        }}>삭제하기</button>
                       </div>
                     </div>
                   )}
@@ -211,7 +220,10 @@ const FriendList = () => {
                 <div className="relative inline-block">
                   <button
                     className="text-gray-500"
-                    onClick={() => offlineDropdown(friend)}
+                    onClick={() => {
+                      offlineDropdown(friend);
+                      playClick();
+                    }}
                     aria-expanded={offlineFreindDropdown === friend ? "true" : "false"}
                     aria-haspopup="true"
                   >
@@ -226,7 +238,10 @@ const FriendList = () => {
                         className="text-gray-700 text-sm block px-4 py-1 text-sm w-full text-left hover:bg-gray-100 rounded-b-2xl"
                         onClick={() => handleOfflineFriendDelete(friend)}
                       >
-                        <button onClick={() => handleOfflineFriendDelete(friend)}>삭제하기</button>
+                        <button onClick={() => {
+                          handleOfflineFriendDelete(friend);
+                          playClick();
+                        }}>삭제하기</button>
                       </div>
                     </div>
                   )}
@@ -248,6 +263,7 @@ const FriendList = () => {
               className="bg-tab10 hover:bg-[#95c75a] py-1 px-2 rounded-xl mr-1 w-10 notification-button"
               onClick={() => {
                 setShowModal((prevState) => !prevState);
+                playClick();
               }}
             >
               {showModal ? "✖" : "🔔"}

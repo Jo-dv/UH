@@ -1,7 +1,9 @@
 import { useState } from "react";
+import useClick from "../../hooks/useClick";
 
 const RoomSearchBar = ({ onSearch }) => {
   const [searchRoomTittle, setSearchRoomTitle] = useState("");
+  const { playClick } = useClick();
 
   const handleRoomTitleSearch = (event) => {
     const RoomTitleValue = event.target.value;
@@ -22,7 +24,7 @@ const RoomSearchBar = ({ onSearch }) => {
         value={searchRoomTittle}
         onChange={handleRoomTitleSearch}
       />
-      <button type="submit" className="hover:bg-tab9 rounded-3xl mr-4">
+      <button type="submit" className="hover:bg-tab9 rounded-3xl mr-4" onClick={() => playClick()}>
         검색
       </button>
     </div>

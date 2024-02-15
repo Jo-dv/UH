@@ -76,44 +76,47 @@ const Chat = ({
       });
   };
 
-  session.off("signal:game-chat");
-  session.on("signal:game-chat", (event) => {
-    console.log(answer);
-    const dataObj = JSON.parse(event.data);
-    if (gameCategory === 101) {
-      if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
-        handleClick();
-        setQuizIndex(dataObj.quizIndex + 1);
-        plusScore(dataObj.team);
-        changeTeamIndex();
-        setIsAnswer(true);
-        setTimeout(() => setIsAnswer(false), 1000);
-        dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-center";
-      } else if (dataObj.team === dataObj.myTeam) {
-        dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
-      } else {
-        dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+  useEffect(() => {
+    session.off("signal:game-chat");
+    session.on("signal:game-chat", (event) => {
+      const dataObj = JSON.parse(event.data);
+      if (gameCategory === 101) {
+        if (dataObj.ans === answer && dataObj.team === dataObj.myTeam) {
+          handleClick();
+          setQuizIndex(dataObj.quizIndex + 1);
+          plusScore(dataObj.team);
+          changeTeamIndex();
+          setIsAnswer(true);
+          setTimeout(() => setIsAnswer(false), 1000);
+          dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-center";
+        } else if (dataObj.myTeam === "A") {
+          dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
+        } else if (dataObj.myTeam === "B") {
+          dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+        }
+      } else if (gameCategory === 102) {
+        if (dataObj.ans === answer) {
+          handleClick();
+          setQuizIndex(dataObj.quizIndex + 1);
+          plusScore(dataObj.myTeam);
+          changeTeamIndex();
+          setIsAnswer(true);
+          setTimeout(() => setIsAnswer(false), 1000);
+          dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-center";
+        } else if (dataObj.myTeam === "A") {
+          dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
+        } else if (dataObj.myTeam === "B") {
+          dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
+        }
       }
-    } else if (gameCategory === 102) {
-      if (dataObj.ans === answer) {
-        handleClick();
-        setQuizIndex(dataObj.quizIndex + 1);
-        plusScore(dataObj.myTeam);
-        changeTeamIndex();
-        setIsAnswer(true);
-        setTimeout(() => setIsAnswer(false), 1000);
-        dataObj.style = "bg-tab10 opacity-70 py-1 px-2 rounded-xl self-center";
-      } else if (dataObj.myTeam === "A") {
-        dataObj.style = "bg-tab1 opacity-70 py-1 px-2 rounded-xl self-start";
-      } else if (dataObj.myTeam === "B") {
-        dataObj.style = "bg-tab2 opacity-70 py-1 px-2 rounded-xl self-end";
-      }
-    }
 
-    setMessageList([...messageList, dataObj]);
+      setMessageList([...messageList, dataObj]);
 
-    // session.off("signal:room-chat");
-  });
+      // session.off("signal:room-chat");
+    });
+  }, [quizIndex, Team])
+
+
 
   useEffect(() => {
     // console.log(session);
@@ -123,6 +126,16 @@ const Chat = ({
     }
     // console.log(answer, gameCategory);
   }, [messageList]);
+
+  // 입력 필터링 함수
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+    // 특정 키가 입력되었을 때 무시
+    if (value.includes(',') || value.includes('.') || value.includes('/')) {
+      return;
+    }
+    setChat(value);
+  };
 
   return (
     <>
@@ -141,7 +154,7 @@ const Chat = ({
           <span className="bg-black opacity-50 text-white p-1 rounded-xl">{receiveMsg}</span>
         </li> */}
         </ul>
-        {(myConnectionId === gamePlayer && gameCategory === 101)||isAttcked ? null : (
+        {(myConnectionId === gamePlayer && gameCategory === 101) || isAttcked ? null : (
           <form
             className="px-3 w-1/2
         rounded-3xl bg-white
@@ -155,7 +168,7 @@ const Chat = ({
               maxLength="20"
               value={chat}
               required
-              onChange={(e) => setChat(e.target.value)}
+              onChange={handleInputChange}
             />
             <button className="w-12 m-1 pl-3 border-l-2 border-solid" type="submit">
               채팅

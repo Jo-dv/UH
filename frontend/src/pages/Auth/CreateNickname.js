@@ -4,6 +4,7 @@ import axios from "../../api/axios.js";
 // zustand에서 생성한 useStore 사용
 import useStore from "../../store/UserAuthStore";
 import startBackImg from "../../asset/image/BG.png";
+import useClick from "../../hooks/useClick.js";
 
 const CreateNickname = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const CreateNickname = () => {
   const setUser = useStore((state) => state.setUser);
   const userState = useStore((state) => state.user);
   const [animate, setAnimate] = useState(false);
+  const { playClick } = useClick();
 
   // 애니메이션 트리거 로직
   const triggerAnimate = () => {
@@ -139,13 +141,12 @@ const CreateNickname = () => {
           onBlur={checkUserNicknameDuplicate}
           name="userNickname"
           value={form.userNickname}
-          className={`p-2 m-1 w-72 border-2 rounded-xl text-center ${
-            err.userNickname
+          className={`p-2 m-1 w-72 border-2 rounded-xl text-center ${err.userNickname
               ? animate
                 ? "animate-shake animate-twice animate-duration-150"
                 : ""
               : ""
-          }`}
+            }`}
         />
         {/* 성공 메시지 표시 */}
         {nicknameDupMsg.userNickname && (
@@ -154,7 +155,8 @@ const CreateNickname = () => {
         {/* 에러 메시지 표시 */}
         {err.userNickname && <p className="text-red-500">{err.userNickname}</p>}
 
-        <button className="p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-tab10hover">입장하기</button>
+        <button className="p-2 m-1 rounded-xl w-72 mb-5 bg-tab10 hover:bg-tab10hover"
+          onClick={playClick}>입장하기</button>
       </form>
       <img className="absolute h-screen w-full" alt="Background" src={startBackImg} />
 

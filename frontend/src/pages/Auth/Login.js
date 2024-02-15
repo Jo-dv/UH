@@ -11,7 +11,11 @@ import naverLogo from "./img/naverLogo.png";
 import kakaologinimg from "./img/kakao_login.png";
 import kakaoSymbol from "./img/kakaosymbol.png";
 
+import useClick from "../../hooks/useClick.js";
+
 const Login = () => {
+  const { playClick } = useClick();
+
   const navigate = useNavigate();
   // UserAuthStore의 User를 변경하기 위해
   const setUser = useStore((state) => state.setUser);
@@ -148,12 +152,12 @@ const Login = () => {
                 flex flex-col justify-center items-center z-20"
       >
         {/* 티커 추가 */}
-      {/* <div className="w-full overflow-hidden m-2">
+        {/* <div className="w-full overflow-hidden m-2">
         <div className="whitespace-nowrap animate-scroll">
           <span className="py-2 px-4 bg-mc9">카메라와 마이크 권한이 필요해요!</span>
         </div>
       </div> */}
-      <p className="m-2">카메라와 마이크 권한이 필요해요!</p>
+        <p className="m-2">카메라와 마이크 권한이 필요해요!</p>
         <h2 className=" text-5xl mt-3 mb-5">로그인</h2>
         <div className="p-3">
           <input
@@ -162,13 +166,12 @@ const Login = () => {
             onChange={onChange}
             name="userId"
             value={form.userId}
-            className={` p-2 m-1 border-2 rounded-xl w-72 ${
-              err.userId || err.general
-                ? animate
-                  ? "animate-shake animate-twice animate-duration-150 border-red-500"
-                  : ""
-                : "border-stone-500"
-            }`}
+            className={` p-2 m-1 border-2 rounded-xl w-72 ${err.userId || err.general
+              ? animate
+                ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                : ""
+              : "border-stone-500"
+              }`}
           />
           <p className=" text-red-500 mb-1">{err.userId}</p>
           {/* {!err.userId && <p>{err.userId}</p>} */}
@@ -180,38 +183,41 @@ const Login = () => {
             name="userPassword"
             autoComplete="off"
             value={form.userPassword}
-            className={` p-2 m-1 border-2 rounded-xl bg-input w-72 ${
-              err.userPassword || err.general
-                ? animate
-                  ? "animate-shake animate-twice animate-duration-150 border-red-500"
-                  : ""
-                : "border-stone-500"
-            }`}
+            className={` p-2 m-1 border-2 rounded-xl bg-input w-72 ${err.userPassword || err.general
+              ? animate
+                ? "animate-shake animate-twice animate-duration-150 border-red-500"
+                : ""
+              : "border-stone-500"
+              }`}
           />
           <p className=" text-red-500 mb-1">{err.userPassword}</p>
         </div>
 
-        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">
+        <button className=" p-2 m-1 rounded-xl w-72 bg-tab10 hover:bg-tab10hover"
+          onClick={playClick}>
           로그인
         </button>
         <p className=" text-red-500 mb-1">{err.general}</p>
         <button
-  className="flex items-center justify-center p-2 m-1 rounded-xl w-72 bg-[#fee500] hover:bg-[#ddc700]"
-  onClick={kakaoLoginHandler}
->
-  <img src={kakaoSymbol} alt="카카오 로그인" className="w-4 h-4 mr-2"/> {/* 이미지 크기와 마진 조정 */}
-  카카오 로그인
-</button>
+          className="flex items-center justify-center p-2 m-1 rounded-xl w-72 bg-[#fee500] hover:bg-[#ddc700]"
+          onClick={() => {
+            kakaoLoginHandler();
+            playClick();
+          }}
+        >
+          <img src={kakaoSymbol} alt="카카오 로그인" className="w-4 h-4 mr-2" /> {/* 이미지 크기와 마진 조정 */}
+          카카오 로그인
+        </button>
         {/* <h3 className="p-2 m-2">
           <Link to="/auth/signup">회원가입</Link>
         </h3> */}
         {/* <h3 className="p-2 ">소셜로그인</h3> */}
 
         {/* <div className="flex flex-row justify-around w-72"> */}
-          {/* <img src={googleLogo} alt="google Logo" />
+        {/* <img src={googleLogo} alt="google Logo" />
           <img src={kakaoLogo} alt="google Logo" type="button" onClick={kakaoLoginHandler} />
           <img src={naverLogo} alt="google Logo" /> */}
-          {/* <img
+        {/* <img
             src={kakaologinimg}
             alt="카카오로그인버튼"
             type="button"
