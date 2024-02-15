@@ -1,0 +1,74 @@
+<template>
+  <div>
+    <!-- 음성 녹음 시작/종료 버튼 -->
+    <button @click="startRecording" v-if="!recording">Start Recording</button>
+    <button @click="stopRecording" v-if="recording">Stop Recording</button>
+
+    <!-- 음성 파일 업로드 -->
+    <input type="file" @change="handleFileChange" />
+
+    <!-- 서버 응답 표시 -->
+    <div v-if="serverResponse">Server Response: {{ serverResponse }}</div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      recording: false,
+      mediaRecorder: null,
+      audioChunks: [],
+      serverResponse: null,
+    };
+  },
+  methods: {
+    startRecording() {
+      this.audioChunks = [];
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          this.mediaRecorder = new MediaRecorder(stream);
+          this.mediaRecorder.ondataavailable = event => {
+            if (event.data.size > 0) {
+              this.audioChunks.push(event.data);
+            }
+          };
+          this.mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+            this.uploadAudioFile(audioBlob);
+          };
+          this.mediaRecorder.start();
+          this.recording = true;
+        })
+        .catch(error => console.error('Error accessing microphone:', error));
+    },
+    stopRecording() {
+      this.mediaRecorder.stop();
+      this.recording = false;
+    },
+    uploadAudioFile(audioBlob) {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.wav');
+
+      // 서버로 음성 파일 전송
+      fetch('http://localhost:5000/stt', {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        // 서버 응답 처리
+        this.serverResponse = data.results[0].transcript;
+      })
+      .catch(error => console.error('Error uploading audio file:', error));
+    },
+    handleFileChange(event) {
+      // 파일 선택 시 직접 업로드하는 경우
+      const file = event.target.files[0];
+      if (file) {
+        this.uploadAudioFile(file);
+      }
+    },
+  },
+};
+</script>
