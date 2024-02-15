@@ -74,7 +74,7 @@ const G101Info = ({ maxTime, maxRound, setGameLoading, session }) => {
       <br /> 팀당 {maxTime / 1000}초 동안 총 {maxRound}라운드 진행합니다.
       <br />
 
-      <div className="absolute top-60 bg-white p-1 rounded-3xl border-slate-500 inline-block mt-[-15px] flex justify-center mx-auto w-full">
+      <div className="absolute top-52 bg-white p-1 rounded-3xl border-slate-500 inline-block mt-[-15px] flex justify-center mx-auto w-full">
         <div className="text-center text-lg">
           {/* <h1 className="text-2xl font-[round-bold] mt-1 mb-2">아이템</h1> */}
           <div>

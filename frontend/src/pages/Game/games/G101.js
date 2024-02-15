@@ -111,14 +111,14 @@ const G101 = ({
                 {teamChangeLoading ? (
                   <div className="absolute w-full h-full bg-black text-white text-3xl flex justify-center items-center">
                     {turnPlayerId[2] === "A" ? (
-                      <p className="animate-fade-left animate-duration-1000">
-                        <p className="animate-fade-right animate-duration-1000 animate-delay-1000 animate-reverse text-mc1 font-bold">
+                      <p className="animate-fade-right animate-duration-1000">
+                        <p className="animate-fade-right animate-duration-1000 animate-delay-1000 animate-reverse text-mc1 text-8xl font-[button]">
                           A팀 차례
                         </p>
                       </p>
                     ) : (
-                      <p className="animate-fade-right animate-duration-1000">
-                        <p className="animate-fade-left animate-duration-1000 animate-delay-1000 animate-reverse text-mc8 font-bold">
+                      <p className="animate-fade-left animate-duration-1000">
+                        <p className="animate-fade-left animate-duration-1000 animate-delay-1000 animate-reverse text-mc9 text-8xl font-[button]">
                           B팀 차례
                         </p>
                       </p>
@@ -140,7 +140,7 @@ const G101 = ({
                       <div className="absolute flex">
                         {myConnectionId === turnPlayerId[0] || turnPlayerId[2] !== myTeam ? (
                           <>
-                            <p>{quizData[quizIndex].quizAnswer}</p>
+                            <p className="text-3xl font-[round-extrabold]">{quizData[quizIndex].quizAnswer}</p>
 
                             {/* <AnswerInput
                               myUserName={myUserName}

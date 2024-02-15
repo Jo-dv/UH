@@ -11,7 +11,6 @@ const ScoreTable = ({ ATeamScore, BTeamScore, round, gameCategory }) => {
             A : {ATeamScore}
           </p>
         </div>
-        {/* 중앙 텍스트는 flex 아이템으로 분리되어 항상 가운데에 위치합니다. */}
         <p className="text-4xl font-[round-extrabold] flex-shrink-0">Round {round}</p>
         <div className="flex-1 flex justify-center">
           <p
