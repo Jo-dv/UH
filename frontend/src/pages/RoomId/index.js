@@ -59,9 +59,12 @@ export default function RoomId() {
   const [meme, setMeme] = useState(0);
   const [disable, setDisable] = useState(0);
   const [hint, setHint] = useState(0);
+  const [stt, setStt] = useState(0);
   const [memeAttack, setMemeAttack] = useState(false);
   const [disableAttack, setDisableAttack] = useState(false);
   const [hintUse, setHintUse] = useState(false);
+  const [sttUse, setSttUse] = useState(false);
+
 
   const navigate = useNavigate();
   const [isKickeded, setIsKicked] = useState(false);
@@ -74,7 +77,8 @@ export default function RoomId() {
 
   const itemUse = (myTeam, item) => {
     if (session !== undefined) {
-      if ((item === "meme" && meme == 1) || (item === "disable" && disable == 1) || (item === "hint" && hint == 1)) {
+      if ((item === "meme" && meme == 1) || (item === "disable" && disable == 1) ||
+        (item === "hint" && hint == 1) || (item === "stt" && stt == 1)) {
         session
           .signal({
             data: JSON.stringify({
@@ -174,17 +178,24 @@ export default function RoomId() {
       setMeme(1);
       setDisable(1);
       setHint(1);
+      setStt(1);
 
       //아이템 상태 초기화
       setMemeAttack(false)
       setDisableAttack(false)
       setHintUse(false)
+      setSttUse(false)
     });
 
     mySession.on("signal:room-playDone", (event) => {
       // console.log("플레이 소켓 받음", event.data);
       setIsReady(false);
       setIsPlay(false);
+    });
+
+    mySession.on("signal:stt", (event) => {
+      const { result } = JSON.parse(event.data);
+      console.log(result)
     });
 
     setSession(mySession);
@@ -404,7 +415,11 @@ export default function RoomId() {
             } else if (item === "hint") {
               setHint(0);
               setHintUse(true);
+            } else if (item === "stt") {
+              setStt(0);
+              setSttUse(true);
             }
+
           }
         } else if (myTeam === "B") {//B팀이 아이템을 사용했을 때
           //A팀인 경우
@@ -423,6 +438,9 @@ export default function RoomId() {
             } else if (item === "hint") {
               setHint(0);
               setHintUse(true);
+            } else if (item === "stt") {
+              setStt(0);
+              setSttUse(true);
             }
           }
         }
@@ -698,15 +716,13 @@ export default function RoomId() {
           meme={meme}
           disable={disable}
           hint={hint}
-          setMeme={setMeme}
-          setDisable={setDisable}
-          setHint={setHint}
+          stt={stt}
           memeAttack={memeAttack}
-          setMemeAttack={setMemeAttack}
           disableAttack={disableAttack}
-          setDisableAttack={setDisableAttack}
           hintUse={hintUse}
           setHintUse={setHintUse}
+          sttUse={sttUse}
+          setSttUse={setSttUse}
         />
       ) : null}
       {leaving && (
@@ -736,3 +752,4 @@ export default function RoomId() {
     </>
   );
 }
+

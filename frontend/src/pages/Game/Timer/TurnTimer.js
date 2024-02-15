@@ -52,7 +52,14 @@ const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizInde
     isRunning ? delay : null
   );
 
-  return <Donut color="#F88585" percent={turnTime / maxTurnTime} size="200px" />;
+  return (
+    <Donut
+      color="#F88585"
+      percent={turnTime / maxTurnTime}
+      size="200px"
+      time={Math.floor((maxTurnTime - turnTime) / 1000) + 1}
+    />
+  );
 };
 
 export default TurnTimer;
