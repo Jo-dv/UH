@@ -4,6 +4,7 @@ import "./Game.css";
 import { endPlay, getGameData, getRoomInfo } from "../../api/waitRoom";
 import UserVideoComponent from "./Cam/UserVideoComponent";
 import Tooltip from "@mui/material/Tooltip";
+import Badge from "@mui/material/Badge";
 import chipi from "../../asset/image/chipi.gif";
 import stop from "../../asset/image/stop.gif";
 import talk from "../../asset/image/talk.gif";
@@ -14,18 +15,36 @@ import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
 const getInitials = (src) => {
-  let string = '';
+  let string = "";
   for (var i = 0; i < src.length; i++) {
-    let index = ((src.charCodeAt(i) - 44032) / 28) / 21;
+    let index = (src.charCodeAt(i) - 44032) / 28 / 21;
     if (index >= 0) {
       string += String.fromCharCode(index + 4352);
     }
   }
   return string;
-}
+};
 
-const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, meme, disable, hint,
-  setMeme, setDisable, setHint, memeAttack, setMemeAttack, disableAttack, setDisableAttack, hintUse, setHintUse }) => {
+const Game = ({
+  publisher,
+  subscribers,
+  session,
+  myUserName,
+  sendPlayDone,
+  itemUse,
+  meme,
+  disable,
+  hint,
+  setMeme,
+  setDisable,
+  setHint,
+  memeAttack,
+  setMemeAttack,
+  disableAttack,
+  setDisableAttack,
+  hintUse,
+  setHintUse,
+}) => {
   let maxTime = 30000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -65,14 +84,14 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
   useEffect(() => {
     if (hintUse) {
       const extractedInitials = getInitials(quizData[quizIndex].quizAnswer);
-      console.log(quizData[quizIndex].quizAnswer)
-      console.log(extractedInitials)
+      console.log(quizData[quizIndex].quizAnswer);
+      console.log(extractedInitials);
     }
 
     setTimeout(() => {
       setHintUse(false);
     }, 5000);
-  }, [hintUse,quizIndex]);
+  }, [hintUse, quizIndex]);
 
   // 음악 정지
   const { pause } = UseIsMusicPlay();
@@ -216,13 +235,13 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
     // 키보드 입력에 반응하여 특정 액션 실행
     const handleKeyPress = (event) => {
       switch (event.key) {
-        case ',': // 화면 가리기
+        case ",": // 화면 가리기
           itemUse(myTeam, "meme");
           break;
-        case '.': // 채팅 막기
+        case ".": // 채팅 막기
           itemUse(myTeam, "disable");
           break;
-        case '/': // 초성 힌트
+        case "/": // 초성 힌트
           itemUse(myTeam, "hint");
           break;
         default:
@@ -230,10 +249,10 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
       }
     };
 
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener("keydown", handleKeyPress);
     };
   }, [myTeam, itemUse]);
 
@@ -309,7 +328,6 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                     rand01={rand01}
                     memeAttack={memeAttack}
                     hintUse={hintUse}
-
                   />
                 ) : null}
                 {gameCategory === 102 ? (
@@ -392,15 +410,86 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
               ))}
             </section>
           </div>
-          <Tooltip title="화면 가리기" arrow>
-          <button onClick={() => itemUse(myTeam, "meme")}><img src={chipi} alt="chipi" className="border rounded-full w-12 h-12" />{meme}</button>
-          </Tooltip>
-          <Tooltip title="채팅 막기" arrow>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "disable")}><img src={stop} alt="stop" className="border rounded-full w-12 h-12" />{disable}</button>
-          </Tooltip>
-          <Tooltip title="초성 힌트" arrow>
-          <button className="ml-2" onClick={() => itemUse(myTeam, "hint")}><img src={gethint} alt="hint" className="border rounded-full w-12 h-12" />{hint}</button>
-          </Tooltip>
+          <div className="bg-white p-1 rounded-3xl border-2 border-slate-500 inline-block mt-[-15px] flex justify-center mx-auto max-w-60">
+            <div className="text-center">
+              <h1 className="text-2xl mt-1 mb-2">아이템</h1>
+              <Tooltip title="화면 가리기" arrow>
+                <Badge
+                  badgeContent={
+                    <span style={{ fontSize: "3em" }} className="mb-5">
+                      ,
+                    </span>
+                  }
+                  color="primary"
+                  overlap="circular"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      height: "30px", // 뱃지 높이 조정
+                      minWidth: "30px", // 뱃지 최소 너비 조정
+                    },
+                  }}
+                >
+                  <button
+                    onClick={() => itemUse(myTeam, "meme")}
+                    className={`rounded-full w-16 h-16 m-1 ${meme === 0 ? "grayscale" : ""}`}
+                    disabled={meme === 0} // 선택적으로 버튼을 비활성화
+                  >
+                    <img src={chipi} alt="chipi" className="rounded-full w-16 h-16" />
+                  </button>
+                </Badge>
+              </Tooltip>
+              <Tooltip title="채팅 막기" arrow>
+                <Badge
+                  badgeContent={
+                    <span style={{ fontSize: "3em" }} className="mb-5">
+                      .
+                    </span>
+                  }
+                  color="primary"
+                  overlap="circular"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      height: "30px", // 뱃지 높이 조정
+                      minWidth: "30px", // 뱃지 최소 너비 조정
+                    },
+                  }}
+                >
+                  <button
+                    onClick={() => itemUse(myTeam, "disable")}
+                    className={`rounded-full w-16 h-16 ${disable === 0 ? "grayscale" : ""}`}
+                    disabled={disable === 0} // 선택적으로 버튼을 비활성화
+                  >
+                    <img src={stop} alt="stop" className="rounded-full w-16 h-16" />
+                  </button>
+                </Badge>
+              </Tooltip>
+              <Tooltip title="초성 힌트" arrow>
+                <Badge
+                  badgeContent={
+                    <span style={{ fontSize: "2em" }} className="mt-1">
+                      /
+                    </span>
+                  }
+                  color="primary"
+                  overlap="circular"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      height: "30px", // 뱃지 높이 조정
+                      minWidth: "30px", // 뱃지 최소 너비 조정
+                    },
+                  }}
+                >
+                  <button
+                    onClick={() => itemUse(myTeam, "hint")}
+                    className={`rounded-full w-16 h-16 ${hint === 0 ? "grayscale" : ""}`}
+                    disabled={hint === 0} // 선택적으로 버튼을 비활성화
+                  >
+                    <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
+                  </button>
+                </Badge>
+              </Tooltip>
+            </div>
+          </div>
         </main>
       )}
     </>
