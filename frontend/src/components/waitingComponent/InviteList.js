@@ -6,6 +6,7 @@ import UseFriendsStore from "../../store/UseFriendsStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import useStore from "../../store/UserAuthStore.js";
 import { useWebSocket } from "../../webSocket/UseWebSocket.js";
+import useClick from "../../hooks/useClick";
 
 const InviteList = (props) => {
   const { accessorRefs } = useAccessors();
@@ -22,6 +23,7 @@ const InviteList = (props) => {
   const [buttonColor, setButtonColor] = useState("bg-tab10");
   const [isInvited, setIsInvited] = useState(false);
   const [invitedStatus, setInvitedStatus] = useState({});
+  const { playClick } = useClick();
 
   const sendInvite = async (friend) => {
     if (!invitedStatus[friend.nickname]) {
@@ -98,13 +100,12 @@ const InviteList = (props) => {
                   <div className="flex-grow pl-4">{friend.nickname}</div>
                   <div className="flex pr-4">
                     <button
-                      className={`py-1 px-2 rounded-xl mr-1 ${
-                        invitedStatus[friend.nickname]
+                      className={`py-1 px-2 rounded-xl mr-1 ${invitedStatus[friend.nickname]
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-tab10 hover:bg-[#95c75a]"
-                      }`}
-                      onClick={() => sendInvite(friend)}
-                      // disabled={invitedStatus[friend.userNickname]} // 특정 친구의 초대 상태를 기반으로 비활성화 상태 결정
+                        }`}
+                      onClick={() => { sendInvite(friend); playClick(); }}
+                    // disabled={invitedStatus[friend.userNickname]} // 특정 친구의 초대 상태를 기반으로 비활성화 상태 결정
                     >
                       {invitedStatus[friend.nickname] ? "요청보냄" : "초대하기"}
                     </button>
@@ -124,7 +125,7 @@ const InviteList = (props) => {
           <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 pb-5">
             <button
               ref={buttonRef}
-              onClick={props.setShowInviteList}
+              onClick={() => { props.setShowInviteList(); playClick(); }}
               className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-xl"
             >
               닫기

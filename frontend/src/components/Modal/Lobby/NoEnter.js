@@ -1,9 +1,16 @@
+import useClick from "../../../hooks/useClick";
+
 const NoEnter = ({ showNoEnter, onClose }) => {
+  const { playClick } = useClick();
+
   return (
     <>
       {showNoEnter && (
         <div
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+            playClick();
+          }}
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
           <section
@@ -15,7 +22,10 @@ const NoEnter = ({ showNoEnter, onClose }) => {
             </p>
             <div className="flex justify-center items-center">
               <button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  playClick();
+                }}
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl"
               >
                 확인

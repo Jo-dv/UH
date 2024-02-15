@@ -5,10 +5,12 @@ import startBackImg from "../../asset/image/BG.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import useClick from "../../hooks/useClick.js";
 
 const Signup = () => {
   const navigate = useNavigate();
   const onClick = (path) => navigate(`/${path}`);
+  const { playClick } = useClick();
 
   // 에러 메시지 애니메이션 트리거 상태관리
   const [animate, setAnimate] = useState(false);
@@ -192,13 +194,12 @@ const Signup = () => {
           onBlur={checkUserIdDuplicate}
           name="userId"
           value={form.userId}
-          className={`w-72 p-2 m-1 mb-2 border-2 rounded-xl ${
-            err.userId
+          className={`w-72 p-2 m-1 mb-2 border-2 rounded-xl ${err.userId
               ? animate
                 ? "animate-shake animate-twice animate-duration-150 border-red-500"
                 : ""
               : ""
-          }`}
+            }`}
         />
         {/* 성공 메시지 표시 */}
         {idDupMsg.userId && <p className="text-emerald-600">{idDupMsg.userId}</p>}
@@ -214,19 +215,21 @@ const Signup = () => {
             name="userPassword"
             value={form.userPassword}
             onBlur={checkPassword}
-            className={`p-2 w-72 border-2 rounded-xl ${
-              err.userPassword
+            className={`p-2 w-72 border-2 rounded-xl ${err.userPassword
                 ? animate
                   ? "animate-shake animate-twice animate-duration-150 border-red-500"
                   : ""
                 : ""
-            }`}
+              }`}
           />
           <button
-            onClick={togglePassword}
+            onClick={() => {
+              togglePassword();
+              playClick();
+            }}
             className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
           >
-            {showPassword ? <VisibilityOffIcon color="disabled" /> : <VisibilityIcon color="disabled"/>}
+            {showPassword ? <VisibilityOffIcon color="disabled" /> : <VisibilityIcon color="disabled" />}
           </button>
         </div>
         <p className=" text-red-500 mb-1">{err.userPassword}</p>
@@ -239,17 +242,17 @@ const Signup = () => {
           onBlur={checkPasswordMatch}
           name="passwordCheck"
           value={form.passwordCheck}
-          className={`p-2 m-1 w-72 border-2 rounded-xl ${
-            err.passwordCheck
+          className={`p-2 m-1 w-72 border-2 rounded-xl ${err.passwordCheck
               ? animate
                 ? "animate-shake animate-twice animate-duration-150 border-red-500"
                 : ""
               : ""
-          }`}
+            }`}
         />
         <p className=" text-red-500 mb-1">{err.passwordCheck}</p>
 
-        <button className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-tab10hover">회원가입</button>
+        <button className=" p-2 m-3 rounded-xl w-72 bg-tab10 hover:bg-tab10hover"
+        onClick={playClick}>회원가입</button>
         <h3 className="self-start ml-12 mb-2 mt-1 flex items-center">
           <Link to="/auth/Login" className="flex items-center">
             <ArrowBackIcon fontSize="small" />

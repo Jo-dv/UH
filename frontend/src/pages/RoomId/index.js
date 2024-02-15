@@ -1,7 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-
+import useClick from "../../hooks/useClick.js";
 // api, store
 import { useWebSocket } from "../../webSocket/UseWebSocket.js";
 import { createSession, createToken, addPlayer, exitRoom } from "../../api/roomAPI.js";
@@ -73,7 +73,7 @@ export default function RoomId() {
   const [roomPassword, setRoomPassword] = useState(roomInfo.roomData?.roomPassword || "");
   const [roomMax, setRoomMax] = useState(roomInfo.roomData?.max || "");
   const [roomGame, setRoomGame] = useState(roomInfo.roomData?.gameCategory || "");
-  const [adjusting, setAdjusting] = useState(false);
+  const { playClick } = useClick();
 
   const itemUse = (myTeam, item) => {
     if (session !== undefined) {
@@ -701,14 +701,20 @@ export default function RoomId() {
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
                   className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center font-[round-bold] text-xl"
-                  onClick={() => changeTeam("A")}
+                  onClick={() => {
+                    changeTeam("A");
+                    playClick();
+                  }}
                 >
                   A팀
                 </button>
 
                 <button
                   className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center font-[round-bold] text-xl"
-                  onClick={() => changeTeam("B")}
+                  onClick={() => {
+                    changeTeam("B");
+                    playClick();
+                  }}
                 >
                   B팀
                 </button>
@@ -717,6 +723,7 @@ export default function RoomId() {
                 <button
                   onClick={() => {
                     setReady();
+                    playClick();
                   }}
                   className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${isReady ? "bg-tab4" : ""
                     }`}
