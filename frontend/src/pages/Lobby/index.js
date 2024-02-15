@@ -1,5 +1,6 @@
 /*eslint-disable*/
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
 import SelectedRanking from "../../components/lobbyComponent/SelectedRanking";
@@ -8,20 +9,22 @@ import RoomList from "../../components/lobbyComponent/RoomList";
 import UserMediaProfile from "../../components/lobbyComponent/UserMediaProfile";
 import GameRoomSearchPanel from "../../components/lobbyComponent/GameRoomSearchPanel";
 import MyPage from "../../components/lobbyComponent/MyPage";
+import SelectGameManual from "../../components/lobbyComponent/SelectGameManual";
+import KickedModal from '../../components/Modal/waiting/KickedModal';
+
 
 import UseIsLobbyStore from "../../store/UseIsLobbyStore";
 import useStore from "../../store/UserAuthStore";
-import useFriendsStore from "../../store/UseFriendsStore";
-import useLobbyApiCall from "../../api/useLobbyApiCall";
 
 const Lobby = () => {
   // currentComponent 설정
   const { isLobby, setIsLobby } = UseIsLobbyStore();
   const resetUser = useStore((state) => state.resetUser);
-  const { setFriends } = useFriendsStore();
-  const { listFriends } = useLobbyApiCall();
   // [userAuth] 페이지가 이동할 때 사용
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showKickedModal, setShowKickedModal] = useState(false);
+  
 
   useEffect(() => {
     // 로비로 들어올 때마다 isLobby의 값을 null로
@@ -35,13 +38,13 @@ const Lobby = () => {
     //   }
     // };
     // fetchUserAuth();
-    const friend = async () => {
-      const friendsList = await listFriends();
-      setFriends(friendsList);
+    const queryParams = new URLSearchParams(location.search);
+    if (queryParams.get('kicked') === 'true') {
+      setShowKickedModal(true);
+      // 쿼리 파라미터를 제거합니다.
+      navigate(location.pathname, {replace: true});
     }
-    friend();
-
-  }, []);
+  }, [location, navigate]);
 
   // [RoomList] 전체방, 대기방만 보기
   const [viewAllRooms, setViewAllRooms] = useState(true);
@@ -70,6 +73,7 @@ const Lobby = () => {
   return (
     <>
       <div className="container-box bg-[#FFFBF7]  grid grid-rows-12 grid-cols-12 p-2 border rounded-3xl">
+        {/* <Alarm/> */}
         <UserList />
         <UserMediaProfile />
         {isLobby === null ? (
@@ -89,7 +93,10 @@ const Lobby = () => {
           <SelectedRanking />
         ) : isLobby === "MyPage" ? (
           <MyPage />
+        ) : isLobby === "Manual" ? (
+          <SelectGameManual />
         ) : null}
+        <KickedModal isOpen={showKickedModal} onClose={() => setShowKickedModal(false)} />
       </div>
     </>
   );

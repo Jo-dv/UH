@@ -15,7 +15,7 @@ const GameScrollSelector = ({ onGameCategory, extraOptions = [], showAllOption =
       onChange={handleCategoryChange}
       value={selectedCategory}
     >
-      {showAllOption && <option value="0">전체 게임</option>}
+      {showAllOption && <option value="">전체 게임</option>}
       {extraOptions.map((option) => (
         <option key={option.value} value={option.value}>
           {option.label}

@@ -61,6 +61,9 @@ const MyPage = () => {
   const [myPageInfo, setMyPageInfo] = useState(null);
   const [recordPercent, setRecordPercent] = useState(null); // recordPercent 상태 추가
   const [winPercent, setWinPercent] = useState(0); // winPercent 상태 추가
+  const [winCount, setWinCount] = useState(0);
+  const [loseCount, setLoseCount] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     if (userSeq) {
@@ -78,8 +81,6 @@ const MyPage = () => {
         const totalCount = winCount + loseCount;
         const winPercent = Math.round((winCount / totalCount) * 100) / 100;
         const losePercent = Math.round((loseCount / totalCount) * 100) / 100;
-        // console.log("카운트",winCount, loseCount)
-        // console.log("퍼센트",winPercent, losePercent );
 
         setRecordPercent({
           winPercent,
@@ -87,33 +88,34 @@ const MyPage = () => {
           totalCount,
         });
         setWinPercent(winPercent);
+        setWinCount(winCount);
+        setLoseCount(loseCount);
+        setTotalCount(totalCount);
       });
     }
   }, [userSeq]);
 
   return (
-    <section className="rounded-lg mt-4 col-start-4 col-end-13 row-start-1 row-end-13 overflow-auto p-4">
-      <h1 className="text-5xl ml-5" style={{ fontFamily: "var(--font-bold)" }}>
-        {myPageInfo && myPageInfo.userNickname}님 마이페이지
-      </h1>
-      <p className="text-2xl ml-5 mt-5">레이팅 : {myPageInfo && myPageInfo.rating}</p>
+    <section className="rounded-lg mt-4 col-start-4 col-end-13 row-start-1 row-end-13 ">
+      <div className="flex items-center justify-between">
+        <h1 className="text-5xl ml-10" style={{ fontFamily: "var(--font-bold)" }}>
+          {myPageInfo && myPageInfo.userNickname}
+        </h1>
+        <p className="text-2xl mr-10 mt-5">개인랭킹 {myPageInfo && myPageInfo.myRank}등</p>
+        <p className="text-2xl mr-10 mt-5">레이팅 : {myPageInfo && myPageInfo.rating}</p>
+      </div>
       <div className="grid grid-cols-3 col-start-1 col-end-2">
         <div className="mt-5">
           {myPageInfo && (
             <div className="mt-7">
-              {/* <h2 className="text-2xl text-center mb-3" style={{ fontFamily: "var(--font-bold)" }}>
-                프로필
-              </h2>
-              <p className="text-2xl text-center">닉네임: {myPageInfo.userNickname}</p>
-              <p className="text-2xl text-center">레이팅: {myPageInfo.rating}</p>
-              <br></br> */}
-              <div className="mt-10">
+              <div className="mt-6 ml-6">
                 <p className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
                   경기 승률
                 </p>
                 {myPageInfo?.record?.length !== 0 && (
-                  <div className="flex justify-center items-center content-center h-full">
+                  <div className="h-full mt-4 ml-5">
                     <DonutChart color="#3498db" percent={winPercent} size="250px" />
+                    {/* <p className="ml-20 text-gray-500">{totalCount}전 {winCount}승 {loseCount}패</p> */}
                   </div>
                 )}
                 {myPageInfo?.record?.length === 0 && (
@@ -126,26 +128,34 @@ const MyPage = () => {
           )}
         </div>
 
-        <div className="col-start-2 col-end-4 relative mt-7">
-          <div className="ml-5 mt-8">
-            <h2 className="text-2xl" style={{ fontFamily: "var(--font-bold)" }}>
+        <div className="col-start-2 col-end-4 relative mt-5">
+          <div className="ml-5 mt-7">
+            <h2 className="text-2xl text-center" style={{ fontFamily: "var(--font-bold)" }}>
               경기 기록
             </h2>
-            <div className="record-container overflow-auto h-100 mt-4">
+            <div className="record-container overflow-auto p-4 h-[360px]">
               {myPageInfo?.record?.map((record, index) => (
                 <div
                   key={index}
                   className={`record-entry rounded-md border-cancelButton pb-2 pt-2 mb-2 ${
                     record.win ? "bg-blue-100" : "bg-red-100"
                   }`}
+                  style={{ height: "7rem", display: "flex", alignItems: "center" }}
                 >
-                  <div className="grid grid-cols-3 gap-4 text-center">
+                  <div className="grid grid-cols-3 gap-4 text-center w-full">
                     <div className="my-auto">
                       <p className="text-2xl ml-2" style={{ fontFamily: "var(--font-bold)" }}>
                         {record.gameCategory === 101 ? "고요속의 외침" : "인물 퀴즈"}
                       </p>
                       <p className="ml-2">점수: {record.score}</p>
-                      <p className="ml-2">{new Date(record.created).toLocaleString()}</p>
+                      <p className="ml-2 text-gray-500">
+                        {new Date(record.created).toLocaleDateString("ko-KR", {
+                          year: "2-digit",
+                          month: "2-digit",
+                          day: "2-digit",
+                          separator: "",
+                        })}
+                      </p>
                     </div>
                     <div className="my-auto">
                       <p className="ml-2">

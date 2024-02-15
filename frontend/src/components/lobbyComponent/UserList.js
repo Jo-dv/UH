@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 
 import FriendList from "../../components/lobbyComponent/FriendList";
 import AccessorsList from "../../components/lobbyComponent/AccessorList";
+import useClick from "../../hooks/useClick";
 
 const UserList = () => {
   // [친구 목록, 접속자 목록] 2개 토글
   const [toggleFriend, setToggleFriend] = useState(true);
   const [click, setClick] = useState(true);
+  const { playClick } = useClick();
 
   return (
     <>
@@ -15,10 +17,11 @@ const UserList = () => {
           <button
             className={`text-center rounded-t-lg ${
               toggleFriend === true ? "bg-tab11" : "bg-tab9"
-            } hover:bg-tab9 ml-[12px] pt-[8px] px-[20px] text-xl transform origin-bottom transition duration-200 hover:scale-y-125`}
+            } hover:bg-tab11 ml-[12px] pt-[8px] px-[20px] text-xl transform origin-bottom transition duration-200 hover:scale-y-125`}
             onClick={() => {
               setClick(true);
               setToggleFriend(true);
+              playClick();
             }}
           >
             친구
@@ -26,10 +29,11 @@ const UserList = () => {
           <button
             className={`text-center rounded-t-lg ${
               toggleFriend === false ? "bg-tab11" : "bg-tab9"
-            } hover:bg-tab9 pt-[8px] px-[20px] text-xl transform origin-bottom transition duration-200 hover:scale-y-125`}
+            } hover:bg-tab11 pt-[8px] px-[20px] text-xl transform origin-bottom transition duration-200 hover:scale-y-125`}
             onClick={() => {
               setClick(false);
               setToggleFriend(false);
+              playClick();
             }}
           >
             접속자

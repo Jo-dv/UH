@@ -1,7 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-
+import useClick from "../../hooks/useClick.js";
 // api, store
 import { useWebSocket } from "../../webSocket/UseWebSocket.js";
 import { createSession, createToken, addPlayer, exitRoom } from "../../api/roomAPI.js";
@@ -12,26 +12,30 @@ import UseInvitingStore from "../../store/UseInvitingStore.js";
 import useStore from "../../store/UserAuthStore";
 import UseLeavingStore from "../../store/UseLeavingStore.js";
 import { usePreventGoBack } from "../../hooks/usePreventGoBack.js";
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import PersonIcon from "@mui/icons-material/Person";
+import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
 // component, modal
 import Chat from "../../components/Chat/index.js";
-import MyCam from "../../components/lobbyComponent/UserMediaProfile.js";
 import Game from "../Game/index.js";
 import Leaving from "../../components/Modal/waiting/Leaving.js";
 import RoomSetting from "../../components/Modal/waiting/RoomSetting.js";
 import Inviting from "../../components/Modal/waiting/Inviting.js";
 import Person from "../../components/waitingComponent/Person.js";
+import KickedModal from "../../components/Modal/waiting/KickedModal.js";
 
 export default function RoomId() {
   // usePreventGoBack();
-  const OV = useRef(new OpenVidu());
+  const OV = useRef(undefined);
   const { getRoomInfo } = useWaitingRoomApiCall();
   const nickname = useStore((state) => state.user.userNickname);
   const { inviting, setInviting } = UseInvitingStore();
   const { send } = useWebSocket();
   const { roomSetting, setRoomSetting } = UseRoomSetting();
   const { leaving, setLeaving } = UseLeavingStore();
-
+  const { refreshRequested, setRefreshRequested } = useWebSocket();
   const [myUserName, setMyUserName] = useState(nickname);
   const { id } = useParams();
   const [mySessionId, setMySessionId] = useState(id);
@@ -51,9 +55,57 @@ export default function RoomId() {
   const [sessionID, setSessionID] = useState("");
   const [teamA, setTeamA] = useState([]);
   const [teamB, setTeamB] = useState([]);
-  const navigate = useNavigate();
+  //아이템 상태 관리
+  const [meme, setMeme] = useState(0);
+  const [disable, setDisable] = useState(0);
+  const [hint, setHint] = useState(0);
+  const [stt, setStt] = useState(0);
+  const [memeAttack, setMemeAttack] = useState(false);
 
-  // 함수 정의
+  const [disableAttack, setDisableAttack] = useState(false);
+  const [hintUse, setHintUse] = useState(false);
+  const [sttUse, setSttUse] = useState(false);
+  const [sttMsg, setSttMsg] = useState("");
+
+  const navigate = useNavigate();
+  const [isKickeded, setIsKicked] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [roomName, setRoomName] = useState(roomInfo.roomData?.roomName || "");
+  const [roomPassword, setRoomPassword] = useState(roomInfo.roomData?.roomPassword || "");
+  const [roomMax, setRoomMax] = useState(roomInfo.roomData?.max || "");
+  const [roomGame, setRoomGame] = useState(roomInfo.roomData?.gameCategory || "");
+  const { playClick } = useClick();
+
+  const itemUse = (myTeam, item) => {
+    if (session !== undefined) {
+      if (
+        (item === "meme" && meme == 1) ||
+        (item === "disable" && disable == 1) ||
+        (item === "hint" && hint == 1) ||
+        (item === "stt" && stt == 1)
+      ) {
+        session
+          .signal({
+            data: JSON.stringify({
+              myTeam: myTeam,
+              item: item,
+            }),
+            to: [],
+            type: "item",
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    }
+  };
+  // 페이지 입장시, 음악 중지
+  const { pause } = UseIsMusicPlay();
+
+  useEffect(() => {
+    pause();
+  }, []);
+
   const handleMainVideoStream = useCallback(
     (stream) => {
       if (mainStreamManager !== stream) {
@@ -68,7 +120,8 @@ export default function RoomId() {
     if (session) {
       session.disconnect();
     }
-    // console.log("OpenVidu 세션 초기화 시도");
+    OV.current = new OpenVidu();
+    OV.current.enableProdMode(); // 로그 기록 해제
     const mySession = OV.current.initSession();
     // console.log("OpenVidu 세션 초기화 완료:", mySession);
     mySession.on("streamCreated", (event) => {
@@ -100,6 +153,10 @@ export default function RoomId() {
         setTeamA((prev) => prev.filter((id) => id !== connectionId));
       }
     });
+    mySession.on("signal:ready", (event) => {
+      //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
+      handleNewRoomInfo(mySession);
+    });
 
     mySession.on("signal:ready", (event) => {
       //ready를 누군가 눌렀을 때 방 정보 새로 불러오기
@@ -110,10 +167,40 @@ export default function RoomId() {
     mySession.on("signal:disconnect", async (event) => {
       const { connectionId } = JSON.parse(event.data);
       if (mySession.connection.connectionId === connectionId) {
-        await leaveSession();
-        navigate("/lobby");
-        alert("강퇴당했습니다.");
+        // alert("강퇴");
+        // await leaveSession();
+        // navigate("/lobby");
+        // setIsKicked(true);
+        navigate("/lobby?kicked=true");
       }
+    });
+
+    mySession.on("signal:room-play", (event) => {
+      setIsPlay(true);
+
+      //아이템 개수 초기화
+      setMeme(1);
+      setDisable(1);
+      setHint(1);
+      setStt(1);
+
+      //아이템 상태 초기화
+      setMemeAttack(false)
+      setDisableAttack(false)
+      setHintUse(false)
+      setSttUse(false)
+      setSttMsg("")
+    });
+
+    mySession.on("signal:room-playDone", (event) => {
+      // console.log("플레이 소켓 받음", event.data);
+      setIsReady(false);
+      setIsPlay(false);
+    });
+
+    mySession.on("signal:stt", (event) => {
+      const { result } = JSON.parse(event.data);
+      setSttMsg(result);
     });
 
     setSession(mySession);
@@ -173,11 +260,11 @@ export default function RoomId() {
         //방조회
         .then(async () => {
           const serverRoomInfo = await getRoomInfo(session.sessionId);
-          // console.log("서버에서 받은 방정보", serverRoomInfo);
-
           setroomInfo(serverRoomInfo);
           send({ type: "refresh" });
           handleNewRoomInfo(session);
+
+          // console.log("서버에서 받은 방정보", serverRoomInfo);
         });
     }
   }, [session, myUserName]);
@@ -185,12 +272,23 @@ export default function RoomId() {
   const leaveSession = useCallback(async () => {
     // Leave the session
     if (session) {
+      //나갔을 때 알림
+      await session
+        .signal({
+          data: `[알림] ${nickname}님이 나갔습니다.`,
+          to: [],
+          type: "room-chat",
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+
       await exitRoom(session.sessionId, session.connection.connectionId);
       await session.disconnect();
       await send({ type: "refresh" });
     }
 
-    OV.current = new OpenVidu();
+    OV.current = undefined;
     setSession(undefined);
     setSubscribers([]);
     setMainStreamManager(undefined);
@@ -298,8 +396,90 @@ export default function RoomId() {
           setTeamA((prev) => prev.filter((id) => id !== connectionId));
         }
       });
+
+      //아이템 처리
+      session.off("signal:item");
+      session.on("signal:item", (event) => {
+        const { myTeam, item } = JSON.parse(event.data);
+        if (myTeam === "A") {
+          //A팀이 아이템을 사용했을 때
+          //B팀인 경우
+          if (teamB.includes(session.connection.connectionId)) {
+            if (item === "meme") {
+              setMemeAttack(true);
+            } else if (item === "disable") {
+              setDisableAttack(true);
+            }
+          } //A팀인 경우
+          else if (teamA.includes(session.connection.connectionId)) {
+            if (item === "meme") {
+              setMeme(0);
+            } else if (item === "disable") {
+              setDisable(0);
+            } else if (item === "hint") {
+              setHint(0);
+              setHintUse(true);
+            } else if (item === "stt") {
+              setStt(0);
+              setSttUse(true);
+            }
+          }
+        } else if (myTeam === "B") {
+          //B팀이 아이템을 사용했을 때
+          //A팀인 경우
+          if (teamA.includes(session.connection.connectionId)) {
+            if (item === "meme") {
+              setMemeAttack(true);
+            } else if (item === "disable") {
+              setDisableAttack(true);
+            }
+          } //B팀인 경우
+          else if (teamB.includes(session.connection.connectionId)) {
+            if (item === "meme") {
+              setMeme(0);
+            } else if (item === "disable") {
+              setDisable(0);
+            } else if (item === "hint") {
+              setHint(0);
+              setHintUse(true);
+            } else if (item === "stt") {
+              setStt(0);
+              setSttUse(true);
+            }
+          }
+        }
+      });
     }
-  }, [session]); // session 객체를 의존성 배열에 추가
+  }, [session, teamA, teamB]); // session 객체를 의존성 배열에 추가
+
+  //아이템 사용 알림
+  const sendNotice = (myTeam, item) => {
+    let itemName = "";
+    if (item == "meme") itemName = "화면 가리기";
+    else if (item == "disable") itemName = "채팅 막기";
+    else if (item == "hint") itemName = "초성 힌트";
+    else if (item == "stt") itemName = "말풍선";
+
+    const data = JSON.stringify({
+      chat: `[알림] ${itemName}을(를) 사용했습니다.`,
+      ans: "notice",
+      team: "notice",
+      myTeam: myTeam,
+      quizIndex: "notice",
+      myUserName: "notice",
+    });
+
+    session
+      .signal({
+        data: data,
+        to: [],
+        type: "game-chat",
+      })
+      .then(() => {})
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   const setReady = async () => {
     // console.log("준비");
@@ -321,11 +501,10 @@ export default function RoomId() {
       } else {
         setIsPlay(false);
       }
-
       if (session !== undefined) {
         session
           .signal({
-            type: "ready"
+            type: "ready",
           })
           .catch((error) => {
             console.error(error);
@@ -354,12 +533,6 @@ export default function RoomId() {
       send({ type: "refresh" });
     }
   };
-  if (session !== undefined) {
-    session.on("signal:room-play", (event) => {
-      // console.log("플레이 소켓 받음", event.data);
-      setIsPlay(true);
-    });
-  }
   const sendPlayDone = () => {
     // console.log("플레이 소켓 보냄");
     if (session !== undefined) {
@@ -379,13 +552,7 @@ export default function RoomId() {
       send({ type: "refresh" });
     }
   };
-  if (session !== undefined) {
-    session.on("signal:room-playDone", (event) => {
-      // console.log("플레이 소켓 받음", event.data);
-      setIsReady(false);
-      setIsPlay(false);
-    });
-  }
+
   // 새 사용자가 접속할 때 실행되는 함수
   const handleNewRoomInfo = async (session) => {
     try {
@@ -407,7 +574,6 @@ export default function RoomId() {
       });
       setTeamA(teamAData);
       setTeamB(teamBData);
-
     } catch (error) {
       console.error("Error fetching room info:", error);
     }
@@ -430,32 +596,73 @@ export default function RoomId() {
     }
   };
 
+  useEffect(() => {
+    if (roomInfo && roomInfo.roomData) {
+      setRoomName(roomInfo.roomData.roomName);
+      setRoomPassword(roomInfo.roomData.roomPassword);
+      setRoomGame(roomInfo.roomData.gameCategory);
+      setRoomMax(roomInfo.roomData.max);
+    }
+  }, [roomInfo]);
+
+  useEffect(() => {
+    joinSession();
+    setIsLoading(false);
+  }, []);
+
+  const fetchData = async () => {
+    if (session.sessionId != undefined)
+      try {
+        const data = await getRoomInfo(session.sessionId);
+        setroomInfo(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+  };
+
+  // WebSocket을 통한 새로고침 요청에 대한 처리
+  useEffect(() => {
+    if (refreshRequested) {
+      fetchData();
+      setRefreshRequested(false);
+    }
+  }, [refreshRequested]);
+
   return (
     <>
-      {session === undefined ? (
+      {/* {isLoading ? (<p>Loading</p>) : ( */}
+
+      {/* {session === undefined ? (
         <div>
-          <button onClick={joinSession} className="bg-mc1 p-2">
+        <button onClick={joinSession} className="bg-mc1 p-2">
             {firstRoomInfo.roomName} : JOIN ROOM
           </button>
           <section className="w-1/2">
-            <MyCam />
+          <MyCam />
           </section>
         </div>
-      ) : null}
+      ) : null} */}
 
       {session !== undefined && isPlay === false ? (
         <div className="container-box bg-[#FFFBF7] grid grid-rows-10 grid-cols-12 p-2 mx-2 mb-2 border rounded-3xl h-screen-80">
           {/* 방 정보 출력 */}
-          <div className="flex flex-wrap col-start-1 col-end-13 row-start-1 row-end-2 ml-10 items-center">
+          <div className="flex flex-wrap col-start-1 col-end-13 row-start-1 row-end-2 ml-10 relative">
             {roomInfo && roomInfo.roomData && (
-              <div className="flex justify-between items-center w-full">
-                <div className="text-2xl">
-                  {roomInfo.roomData.roomName} -{" "}
-                  {roomInfo.roomData.gameCategory === 101 ? "고요 속의 외침" : "인물 맞추기"}
+              <div className="flex items-center space-x-3 w-full">
+                <p>{roomPassword === null ? <LockOpenIcon /> : <LockIcon />}</p>
+                <div className="flex flex-wrap space-x-4">
+                  <p className="font-[round-bold] text-3xl">{roomName}</p>
+                  <p className="font-[round-bold] text-3xl">-</p>
+                  <p className="font-[round-bold] text-3xl">
+                    {roomGame === 101 ? "고요 속의 외침" : "인물 맞추기"}
+                  </p>
                 </div>
-                <div className="flex justify-end mr-11">
-                  <p className="text-2xl">
-                    {roomInfo.roomData.count}/{roomInfo.roomData.max}
+                <div className="absolute right-11 flex flex-wrap items-center space-x-3">
+                  <p>
+                    <PersonIcon />
+                  </p>
+                  <p className="font-[round-bold] text-2xl">
+                    {roomInfo.roomData.count}/{roomMax}
                   </p>
                 </div>
               </div>
@@ -474,8 +681,16 @@ export default function RoomId() {
                 teamB={teamB}
                 deleteSubscriber={deleteSubscriber}
                 kickOutUser={kickOutUser}
-                hostId={roomInfo.roomStatus && roomInfo.roomStatus.hostId ? roomInfo.roomStatus.hostId : undefined}
-                playersInfo={roomInfo.roomStatus && roomInfo.roomStatus.players ? roomInfo.roomStatus.players : undefined}
+                hostId={
+                  roomInfo.roomStatus && roomInfo.roomStatus.hostId
+                    ? roomInfo.roomStatus.hostId
+                    : undefined
+                }
+                playersInfo={
+                  roomInfo.roomStatus && roomInfo.roomStatus.players
+                    ? roomInfo.roomStatus.players
+                    : undefined
+                }
               />
             }
           </div>
@@ -492,15 +707,21 @@ export default function RoomId() {
             <div className="grid col-start-7 col-end-9 row-start-1 row-end-13">
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
-                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center"
-                  onClick={() => changeTeam("A")}
+                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center font-[round-bold] text-5xl"
+                  onClick={() => {
+                    changeTeam("A");
+                    playClick();
+                  }}
                 >
                   A팀
                 </button>
 
                 <button
-                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center"
-                  onClick={() => changeTeam("B")}
+                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center font-[round-bold] text-5xl"
+                  onClick={() => {
+                    changeTeam("B");
+                    playClick();
+                  }}
                 >
                   B팀
                 </button>
@@ -509,8 +730,11 @@ export default function RoomId() {
                 <button
                   onClick={() => {
                     setReady();
+                    playClick();
                   }}
-                  className="bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full"
+                  className={`font-[round-bold] text-5xl bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${
+                    isReady ? "bg-tab4" : ""
+                  }`}
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
@@ -529,6 +753,20 @@ export default function RoomId() {
           session={session}
           myUserName={myUserName}
           sendPlayDone={sendPlayDone}
+          itemUse={itemUse}
+          meme={meme}
+          disable={disable}
+          hint={hint}
+          stt={stt}
+          memeAttack={memeAttack}
+          disableAttack={disableAttack}
+          hintUse={hintUse}
+          setHintUse={setHintUse}
+          sttUse={sttUse}
+          setSttUse={setSttUse}
+          sttMsg={sttMsg}
+          setSttMsg={setSttMsg}
+          sendNotice={sendNotice}
         />
       ) : null}
       {leaving && (
@@ -540,11 +778,21 @@ export default function RoomId() {
           onClose={() => setRoomSetting(false)}
           roomSetting={roomSetting}
           roomInfo={roomInfo}
+          connectionId={session.connection.connectionId}
+          isHost={isHost}
         />
       )}
       {inviting && (
         <Inviting onClose={() => setInviting(false)} inviting={inviting} openLink={openLink} />
       )}
+      {/* <KickedModal isOpen={isKickeded} onClose={handleKickedModalClose} /> */}
+      <KickedModal
+        isOpen={isKickeded}
+        onClose={() => {
+          setIsKicked(false); // 모달 닫기
+          navigate("/lobby"); // 사용자를 로비로 이동
+        }}
+      />
     </>
   );
 }

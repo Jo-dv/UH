@@ -32,8 +32,10 @@ module.exports = {
         tab8: "#99b7db",
         tab9: "#f8d44c",
         tab10: "#a8d572",
+        tab10hover: "#95c75a",
         tab11: "#f6ecc9",
         tab12: "#f2ac3c",
+        tab13: "#fb7185"
       },
       height: {
         "screen-80": "calc(100vh - 96px)",
@@ -42,6 +44,20 @@ module.exports = {
       },
       transformOrigin: {
         bottom: "bottom",
+      },
+      keyframes: {
+        slideRightToLeft: {
+          '0%': { transform: 'translateX(100%)', opacity: '1' },
+          '100%': { transform: 'translateX(-100%)', opacity: '0' },
+        },
+        scroll: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(-68%)' },
+        },
+      },
+      animation: {
+        scroll: 'scroll 8s linear infinite',
+        slideRightToLeft: 'slideRightToLeft 5s ease-in-out forwards',
       },
     },
   },

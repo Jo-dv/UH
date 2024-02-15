@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useLobbyApiCall from "../../../api/useLobbyApiCall";
+import useClick from "../../../hooks/useClick";
 
 const EnterPassword = ({ showModal, isLocked, sessionId, onClose }) => {
   const navigate = useNavigate();
@@ -10,20 +11,29 @@ const EnterPassword = ({ showModal, isLocked, sessionId, onClose }) => {
     setRoomPassword(e.target.value);
   }, []);
   const [again, setAgain] = useState(false);
+  const { playClick } = useClick();
+
+  useEffect(() => {
+    console.log("Effect:", again);
+  }, [again]);
 
   const handleRoomClick = async () => {
     try {
       const checkPassword = await postCheckPassword(sessionId, roomPassword);
+      console.log("checkPassword", checkPassword);
       if (checkPassword) {
         navigate(`/room/${sessionId}`);
       } else {
         setAgain(true);
+        console.log("3333333333", again);
+        console.log("비밀번호가 틀렸습니다.");
       }
     } catch (error) {
       console.error("서버에 요청하는 동안 오류가 발생했습니다.", error);
+      setAgain(true);
     }
   };
-
+  console.log("2222222222222222222", again);
   return (
     <>
       {showModal && (
@@ -58,13 +68,20 @@ const EnterPassword = ({ showModal, isLocked, sessionId, onClose }) => {
             </div>
             <div className="flex justify-center items-center space-x-4">
               <button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  playClick();
+                }}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-xl"
               >
                 취소
               </button>
               <button
-                onClick={handleRoomClick}
+                onClick={() => {
+                  handleRoomClick();
+                  onClose();
+                  playClick();
+                }}
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl"
               >
                 확인

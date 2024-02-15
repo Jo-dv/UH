@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Donut from "./Donut";
 
 const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizIndex }) => {
   const startTime = useRef(null);
@@ -52,7 +53,12 @@ const TurnTimer = ({ maxTurnTime, turnTime, setTurnTime, quizIndex, plusQuizInde
   );
 
   return (
-    <div className={`bg-[#00${maxTurnTime - turnTime}] w-full h-32`}>{maxTurnTime - turnTime}</div>
+    <Donut
+      color="#F88585"
+      percent={turnTime / maxTurnTime}
+      size="200px"
+      time={Math.floor((maxTurnTime - turnTime) / 1000) + 1}
+    />
   );
 };
 

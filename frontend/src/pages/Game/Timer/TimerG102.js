@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const Timer102 = ({ time, setTime, setIsGameEnd }) => {
-  const maxTime = 180000;
+const Timer102 = ({ maxTime, time, setTime, setIsGameEnd }) => {
   const startTime = useRef(null);
   const nowTime = useRef(null);
   const [delay, setDelay] = useState(500);

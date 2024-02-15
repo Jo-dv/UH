@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import LockIcon from '@mui/icons-material/Lock';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
+import LockIcon from "@mui/icons-material/Lock";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
+import useClick from "../../hooks/useClick";
 
 const CreateRoomModal = ({ modalOnOff }) => {
   const [roomName, setRoomName] = useState(`P-${Math.floor(Math.random() * 1000)}`);
@@ -21,7 +22,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
     setTimeout(() => setAnimate(true), 10);
   };
   const [showPassword, setShowPassword] = useState(false);
-
+  const { playClick } = useClick();
   const togglePassword = (e) => {
     e.preventDefault();
     setLock((lock) => !lock);
@@ -98,7 +99,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
                   type="text"
                   placeholder="방 제목을 입력해주세요!"
                   value={roomName}
-                  maxLength={12}
+                  maxLength={9}
                   onChange={handleChangeRoomName}
                   className="ml-3"
                   required
@@ -108,10 +109,8 @@ const CreateRoomModal = ({ modalOnOff }) => {
             {errorMessage && <div className="error-message ml-12 text-red-500">{errorMessage}</div>}
             <div className="flex flex-wrap">
               <label className="mt-3 mr-3">비밀번호</label>
-              <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto">
-                <button onClick={togglePassword}>
-                  {lock ? <LockIcon /> : <LockOpenIcon />}
-                </button>
+              <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto flex flex-wrap">
+                <button onClick={togglePassword}>{lock ? <LockIcon /> : <LockOpenIcon />}</button>
                 {lock && (
                   <input
                     type="text"
@@ -122,12 +121,6 @@ const CreateRoomModal = ({ modalOnOff }) => {
                     className="text-center"
                   />
                 )}
-                {/* <button
-                  onClick={togglePassword}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
-                >
-                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                </button> */}
               </div>
             </div>
 
@@ -146,11 +139,23 @@ const CreateRoomModal = ({ modalOnOff }) => {
                   4명
                 </label>
                 <label className="p-1 m-1">
-                  <input type="radio" value={6} name="num" onChange={handleChangeRoomMax} className="mr-2" />
+                  <input
+                    type="radio"
+                    value={6}
+                    name="num"
+                    onChange={handleChangeRoomMax}
+                    className="mr-2"
+                  />
                   6명
                 </label>
                 <label className="p-1 m-1">
-                  <input type="radio" value={8} name="num" onChange={handleChangeRoomMax} className="mr-2" />
+                  <input
+                    type="radio"
+                    value={8}
+                    name="num"
+                    onChange={handleChangeRoomMax}
+                    className="mr-2"
+                  />
                   8명
                 </label>
               </div>
@@ -170,7 +175,13 @@ const CreateRoomModal = ({ modalOnOff }) => {
                   고요 속의 외침
                 </label>
                 <label>
-                  <input type="radio" value={102} name="game" onChange={handleChangeRoomGame} className="mr-2" />
+                  <input
+                    type="radio"
+                    value={102}
+                    name="game"
+                    onChange={handleChangeRoomGame}
+                    className="mr-2"
+                  />
                   인물 맞추기
                 </label>
               </div>
@@ -179,6 +190,7 @@ const CreateRoomModal = ({ modalOnOff }) => {
               <button
                 type="submit"
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 mt-2 rounded-xl"
+                onClick={playClick()}
               >
                 방 만들기
               </button>

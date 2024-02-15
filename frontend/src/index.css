@@ -17,6 +17,37 @@
   src: url(./asset/font/NPSfont_bold.woff);
 }
 
+@font-face {
+  font-family: "round-extrabold";
+  src: url(./asset/font/NPSfont_extrabold.woff);
+}
+
+@font-face {
+  font-family: "TAEBAEK";
+  src: url(./asset/font/TAEBAEK_font.otf);
+}
+@font-face {
+  font-family: "Beatster";
+  src: url(./asset/font/Beatster-Font.otf);
+}
+
+@font-face{
+  font-family:'DNFBitBitv2';
+  font-style:normal;font-weight:400;src:url('//cdn.df.nexon.com/img/common/font/DNFBitBitv2.otf')format('opentype')}
+  
+@font-face {
+  font-family: "round-extrabold";
+  src: url(./asset/font/NPSfont_extrabold.woff);
+
+}
+
+@font-face {
+  font-family: 'button';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   background-image: url("./asset/image/BG.png");
   background-repeat: no-repeat;
@@ -32,14 +63,34 @@ body {
   margin: auto;
 }
 
-:root {
-  --font-bold: "round-bold";
+.game-container {
+  position: fixed;
+  top: 20px;
+  left: calc(50vw - 640px);
+  width: 1280px;
+  height: 640px;
+  margin: auto;
 }
 
 :root {
   --font-bold: "round-bold";
 }
 
-:root {
-  --font-bold: "round-bold";
+/* 스크롤바 디자인 */
+::-webkit-scrollbar {
+  width: 10px;
+  /* height: 20px; */
+}
+
+::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4d4d4;
+  border-radius: 24px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a3a3a3;
 }

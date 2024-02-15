@@ -19,7 +19,6 @@ public interface UserDao {
 	@Options(useGeneratedKeys = true, keyProperty = "userSeq")
 	public int insertUser(UserDto dto);
 
-
 	// 회원 목록조회
 	@Select("select * from user")
 	public List<UserDto> listUser();
@@ -59,6 +58,10 @@ public interface UserDao {
 		+ "ORDER BY created DESC LIMIT 20")
 	public List<RecordDto> userRecord(int userSeq);
 
+	@Select("SELECT (SELECT COUNT(*) + 1 FROM rank_user AS v2 WHERE v2.rating > v1.rating) AS myRank "
+		+ "FROM rank_user AS v1 WHERE user_seq = #{userSeq};")
+	public int userRank(int userSeq);
+
 	// 아이디 가지고 회원 정보 조회
 	@Select("SELECT * from user WHERE user_id = #{userId}")
 	public UserDto findById(String userId);
@@ -66,6 +69,5 @@ public interface UserDao {
 	// seq로 회원 정보 조회
 	@Select("SELECT * FROM user WHERE user_seq = #{userSeq}")
 	public UserDto findBySeq(int userSeq);
-
 
 }

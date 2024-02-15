@@ -3,12 +3,11 @@ import useAccessorsStore from "../store/UseAccessorsStore";
 import useStore from "../store/UserAuthStore";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-
+import InviteModal from "../components/Modal/InviteModal";
 
 const WebSocketContext = createContext(null);
 
 export const useWebSocket = () => {
-
   const context = useContext(WebSocketContext);
 
   if (!context) {
@@ -30,6 +29,7 @@ export const WebSocketProvider = ({ children }) => {
   const resetUser = useStore((state) => state.resetUser);
   const nickname = useStore((state) => state.user.userNickname);
   const navigate = useNavigate();
+  const [inviteModal, setInviteModal] = useState({ show: false, fromNickname: "", roomId: "" });
 
   useEffect(() => {
     const connect = (url, onOpen, onMessage, onClose) => {
@@ -52,13 +52,12 @@ export const WebSocketProvider = ({ children }) => {
           // 로그인 된 유저가 없을 때
           console.error("로그인 필요");
         } else if (event.code === 1002) {
-          alert("이미 접속 중인 세션입니다.")
-          navigate("/")
+          alert("이미 접속 중인 세션입니다.");
+          navigate("/");
         } else if (event.code === 1007) {
           handleLogOut();
-          alert("이미 로그인된 유저입니다.")
-        }
-        else {
+          alert("이미 로그인된 유저입니다.");
+        } else {
           setTimeout(() => {
             con();
           }, 1000);
@@ -68,12 +67,9 @@ export const WebSocketProvider = ({ children }) => {
 
     const handleLogOut = async () => {
       try {
-        const response = await axios.post(
-          "user/logout",
-          { userSeq: userSeq }
-        );
+        const response = await axios.post("user/logout", { userSeq: userSeq });
         const res = response.data;
-        console.log(res);
+        // console.log(res);
         // store의 유저 정보 초기화
         if (res === 1) {
           resetUser();
@@ -116,7 +112,7 @@ export const WebSocketProvider = ({ children }) => {
                 handleInvite(parsedMessage);
                 break;
               case "follow":
-                handleFollow(parsedMessage);
+                handleFollow(parsedMessage.roomId);
                 break;
               default:
                 // 기타 메시지 처리
@@ -135,22 +131,27 @@ export const WebSocketProvider = ({ children }) => {
 
     return () => {
       if (socket.current) {
-
         socket.current.onclose = null;
         socket.current.close();
-        console.log("웹 소캣 연결 종료");
+        // console.log("웹 소캣 연결 종료");
       }
     };
   }, [nickname]);
 
+  //초대 받기 처리
   const handleInvite = (message) => {
-    console.log("Invite received", message);
+    // console.log("초대 받음", message.fromNickname, message.roomId);
+    setInviteModal({ show: true, fromNickname: message.fromNickname, roomId: message.roomId });
     setNotificationMessage(`You are invited to join room ${message.roomId}`);
   };
 
-  const handleFollow = (message) => {
-    console.log("Follow received", message);
-    // 따라가기 메시지 처리 로직
+  const handleFollow = (roomId) => {
+    if (roomId == null) {
+      alert("입장할 방이 없습니다.");
+    } else {
+      navigate(`/room/${roomId}`);
+      // 따라가기 메시지 처리 로직
+    }
   };
 
   const handleRefresh = () => {
@@ -172,5 +173,19 @@ export const WebSocketProvider = ({ children }) => {
     setRefreshRequested,
   };
 
-  return <WebSocketContext.Provider value={contextValue}>{children}</WebSocketContext.Provider>;
+  return (
+    <div>
+      <WebSocketContext.Provider value={contextValue}>{children}</WebSocketContext.Provider>
+      <div>
+        {inviteModal.show && (
+          <InviteModal
+            invite={inviteModal.show}
+            fromNickname={inviteModal.fromNickname}
+            setInvite={(show) => setInviteModal((prev) => ({ ...prev, show }))}
+            handleFollow={() => handleFollow(inviteModal.roomId)}
+          />
+        )}
+      </div>
+    </div>
+  );
 };
