@@ -21,13 +21,13 @@ const Manual = ({ viewGameCategoryManual }) => {
 
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (event.key === ",") {
+      if (event.key === "[") {
         setIsChipiPressed(true);
         setTimeout(() => setIsChipiPressed(false), 200); // 200ms 후에 버튼 색을 원래대로 돌립니다.
-      } else if (event.key === ".") {
+      } else if (event.key === "]") {
         setIsStopPressed(true);
         setTimeout(() => setIsStopPressed(false), 200); // 200ms 후에 버튼 색을 원래대로 돌립니다.
-      } else if (event.key === "/") {
+      } else if (event.key === "\\") {
         setIsTalkPressed(true);
         setTimeout(() => setIsTalkPressed(false), 200); // 200ms 후에 버튼 색을 원래대로 돌립니다.
       }
@@ -83,21 +83,21 @@ const Manual = ({ viewGameCategoryManual }) => {
                       isChipiPressed ? "bg-tab6" : "bg-mc3"
                     }`}
                   >
-                    ,
+                    [
                   </button>
                   <button
                     className={`transition duration-200 ease-in-out text-white font-bold py-2 mr-44 px-4 rounded-2xl w-10 h-10 ${
                       isStopPressed ? "bg-tab6" : "bg-mc3"
                     }`}
                   >
-                    .
+                    ]
                   </button>
                   <button
                     className={`transition duration-200 ease-in-out text-white font-bold py-2 mr-44 px-4 rounded-2xl w-10 h-11 ${
                       isTalkPressed ? "bg-tab6" : "bg-mc3"
                     }`}
                   >
-                    /
+                    \
                   </button>
                 </div>
               </div>
@@ -142,21 +142,21 @@ const Manual = ({ viewGameCategoryManual }) => {
                       isChipiPressed ? "bg-tab6" : "bg-mc3"
                     }`}
                   >
-                    ,
+                    [
                   </button>
                   <button
                     className={`transition duration-200 ease-in-out text-white font-bold py-2 mr-44 px-4 rounded-2xl w-10 h-10 ${
                       isStopPressed ? "bg-tab6" : "bg-mc3"
                     }`}
                   >
-                    .
+                    ]
                   </button>
                   <button
                     className={`transition duration-200 ease-in-out text-white font-bold py-2 mr-44 px-4 rounded-2xl w-10 h-11 ${
                       isTalkPressed ? "bg-tab6" : "bg-mc3"
                     }`}
                   >
-                    /
+                    \
                   </button>
                 </div>
               </div>

@@ -107,7 +107,7 @@ const G102 = ({
                         <p className="animate-fade-right animate-duration-1000 animate-delay-1000 animate-reverse text-mc1 font-bold">
                           A팀 차례
                         </p>
-                      </p>
+                          </p>
                     ) : (
                       <p className="animate-fade-right animate-duration-1000">
                         <p className="animate-fade-left animate-duration-1000 animate-delay-1000 animate-reverse text-mc8 font-bold">
