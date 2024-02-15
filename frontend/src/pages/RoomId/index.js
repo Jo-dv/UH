@@ -99,7 +99,7 @@ export default function RoomId() {
 
   useEffect(() => {
     pause();
-  }, [pause]);
+  }, []);
 
   const handleMainVideoStream = useCallback(
     (stream) => {
@@ -395,9 +395,8 @@ export default function RoomId() {
       //아이템 처리
       session.off("signal:item")
       session.on("signal:item", (event) => {
-        console.log(event)
+        console.log("아이템 사용")
         const { myTeam, item } = JSON.parse(event.data);
-        console.log(session.connection.connectionId);
         if (myTeam === "A") {//A팀이 아이템을 사용했을 때
           //B팀인 경우
           if (teamB.includes(session.connection.connectionId)) {
@@ -444,9 +443,36 @@ export default function RoomId() {
             }
           }
         }
+        sendNotice(item, myTeam);
       });
     }
   }, [session, teamA, teamB]); // session 객체를 의존성 배열에 추가
+
+  //아이템 사용 알림
+  const sendNotice = (item, myTeam) => {
+    const data = JSON.stringify({
+      chat: `[알림] ${item} 아이템을 사용했습니다.`,
+      ans: "notice",
+      team: "notice",
+      myTeam: myTeam,
+      quizIndex: "notice",
+      myUserName: "notice",
+    });
+
+    session
+      .signal({
+        data: data,
+        to: [],
+        type: "game-chat",
+      })
+      .then(() => {
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+
 
   const setReady = async () => {
     // console.log("준비");

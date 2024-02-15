@@ -140,7 +140,7 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
 
   useEffect(() => {
     pause();
-  }, [pause]);
+  }, []);
 
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
@@ -272,14 +272,17 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
           itemUse(myTeam, "disable");
           break;
         case "/":
-        if (gameCategory === 102) {
-          // gameCategory가 102일 때 hint
-          itemUse(myTeam, "hint");
-        } else if (gameCategory === 101) {
-          // gameCategory가 101일 때 talk
-          itemUse(myTeam, "stt");
-        }
-        break;
+          if (gameCategory === 102) {
+            // gameCategory가 102일 때 hint
+            itemUse(myTeam, "hint");
+          } else if (gameCategory === 101) {
+            // gameCategory가 101일 때 talk
+            if (myTeam == TeamTurn)
+              itemUse(myTeam, "stt")
+            else
+              alert("우리 팀의 차례에만 사용 가능합니다.")
+          }
+          break;
         default:
           break;
       }
@@ -500,63 +503,63 @@ const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemU
                 </Badge>
               </Tooltip>
               {gameCategory === 102 ?
-              <Tooltip title="초성 힌트" arrow>
-                <Badge
-                  badgeContent={
-                    <span style={{ fontSize: "2em" }} className="mt-1">
-                      /
-                    </span>
-                  }
-                  color="primary"
-                  overlap="circular"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      height: "30px", // 뱃지 높이 조정
-                      minWidth: "30px", // 뱃지 최소 너비 조정
-                    },
-                  }}
-                >
-                  <button
-                    onClick={() => itemUse(myTeam, "hint")}
-                    className={`rounded-full w-16 h-16 ${hint === 0 ? "grayscale" : ""}`}
-                    disabled={hint === 0} // 선택적으로 버튼을 비활성화
+                <Tooltip title="초성 힌트" arrow>
+                  <Badge
+                    badgeContent={
+                      <span style={{ fontSize: "2em" }} className="mt-1">
+                        /
+                      </span>
+                    }
+                    color="primary"
+                    overlap="circular"
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        height: "30px", // 뱃지 높이 조정
+                        minWidth: "30px", // 뱃지 최소 너비 조정
+                      },
+                    }}
                   >
-                    <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
-                  </button>
-                </Badge>
-              </Tooltip>:
+                    <button
+                      onClick={() => itemUse(myTeam, "hint")}
+                      className={`rounded-full w-16 h-16 ${hint === 0 ? "grayscale" : ""}`}
+                      disabled={hint === 0} // 선택적으로 버튼을 비활성화
+                    >
+                      <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
+                    </button>
+                  </Badge>
+                </Tooltip> :
 
-              //stt
-              <Tooltip title="stt" arrow>
-                <Badge
-                  badgeContent={
-                    <span style={{ fontSize: "2em" }} className="mt-1">
-                      /
-                    </span>
-                  }
-                  color="primary"
-                  overlap="circular"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      height: "30px", // 뱃지 높이 조정
-                      minWidth: "30px", // 뱃지 최소 너비 조정
-                    },
-                  }}
-                >
-                  <button
-                    onClick={() =>{
+                //stt
+                <Tooltip title="stt" arrow>
+                  <Badge
+                    badgeContent={
+                      <span style={{ fontSize: "2em" }} className="mt-1">
+                        /
+                      </span>
+                    }
+                    color="primary"
+                    overlap="circular"
+                    sx={{
+                      "& .MuiBadge-badge": {
+                        height: "30px", // 뱃지 높이 조정
+                        minWidth: "30px", // 뱃지 최소 너비 조정
+                      },
+                    }}
+                  >
+                    <button
+                      onClick={() => {
                         if (myTeam == TeamTurn)
                           itemUse(myTeam, "stt")
-                        else 
+                        else
                           alert("우리 팀의 차례에만 사용 가능합니다.")
-                             }}
-                             className={`rounded-full w-16 h-16 ${stt === 0 ? "grayscale" : ""}`}
-                    disabled={stt === 0} // 선택적으로 버튼을 비활성화
-                  >
-                    <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
-                  </button>
-                </Badge>
-              </Tooltip>}
+                      }}
+                      className={`rounded-full w-16 h-16 ${stt === 0 ? "grayscale" : ""}`}
+                      disabled={stt === 0} // 선택적으로 버튼을 비활성화
+                    >
+                      <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
+                    </button>
+                  </Badge>
+                </Tooltip>}
             </div>
           </div>
         </main >
