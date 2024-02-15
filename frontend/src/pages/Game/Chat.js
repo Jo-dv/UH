@@ -132,7 +132,7 @@ const Chat = ({
   const handleInputChange = (event) => {
     const { value } = event.target;
     // 특정 키가 입력되었을 때 무시
-    if (value.includes(',') || value.includes('.') || value.includes('/')) {
+    if (value.includes('[') || value.includes(']') || value.includes('\\')) {
       return;
     }
     setChat(value);
