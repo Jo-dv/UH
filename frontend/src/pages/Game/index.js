@@ -51,6 +51,7 @@ const Game = ({
   setSttUse,
   sttMsg,
   setSttMsg,
+  sendNotice,
 }) => {
   let maxTime = 30000;
   let maxRound = 4;
@@ -76,8 +77,7 @@ const Game = ({
 
   //stt
   const startRecording = () => {
-    console.log("시작");
-    setSttMsg("");
+    setSttMsg('');
     // 녹음 시작 및 2초 후에 녹음 종료
     navigator.mediaDevices
       .getUserMedia({ audio: true })
@@ -125,7 +125,6 @@ const Game = ({
         };
 
         setTimeout(() => {
-          console.log("끝");
           mediaRecorder.stop();
         }, 2000);
       })
@@ -149,8 +148,8 @@ const Game = ({
 
   useEffect(() => {
     if (turnPlayerId) {
-      console.log("들어옴");
-      console.log("idcheck" + myConnectionId, turnPlayerId);
+      // console.log("들어옴");
+      // console.log("idcheck" + myConnectionId, turnPlayerId);
       if (sttUse) {
         if (myConnectionId == turnPlayerId[0]) {
           startRecording();
@@ -295,18 +294,24 @@ const Game = ({
       switch (event.key) {
         case "[": // 화면 가리기
           itemUse(myTeam, "meme");
+          sendNotice(myTeam, "meme");
           break;
         case "]": // 채팅 막기
           itemUse(myTeam, "disable");
+          sendNotice(myTeam, "disable");
           break;
         case "\\":
           if (gameCategory === 102) {
             // gameCategory가 102일 때 hint
             itemUse(myTeam, "hint");
+            sendNotice(myTeam, "hint");
           } else if (gameCategory === 101) {
             // gameCategory가 101일 때 talk
-            if (myTeam == TeamTurn) itemUse(myTeam, "stt");
-            else alert("우리 팀의 차례에만 사용 가능합니다.");
+            if (myTeam === turnPlayerId[2]) {
+              itemUse(myTeam, "stt")
+              sendNotice(myTeam, "stt");
+            }
+            else { alert("우리 팀의 차례에만 사용 가능합니다.") }
           }
           break;
         default:
@@ -319,7 +324,7 @@ const Game = ({
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [myTeam, itemUse]);
+  }, [myTeam, itemUse,turnPlayerId]);
 
   const [showHintAnimation, setShowHintAnimation] = useState(false);
   const [showSttAnimation, setShowSttAnimation] = useState(false);
@@ -367,7 +372,7 @@ const Game = ({
               {ATeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={i} className="cam bg-tab10">
+                    <div key={`A${i}`} className="cam bg-tab10">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -376,7 +381,7 @@ const Game = ({
                       />
                     </div>
                   ) : (
-                    <div key={i} className="cam bg-tab1">
+                    <div key={`A${i}`} className="cam bg-tab1">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -504,7 +509,7 @@ const Game = ({
               {BTeamStreamManagers.map((sub, i) => (
                 <>
                   {myConnectionId === sub[0] ? (
-                    <div key={i} className="cam bg-tab10">
+                    <div key={`B${i}`} className="cam bg-tab10">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -513,7 +518,7 @@ const Game = ({
                       />
                     </div>
                   ) : (
-                    <div key={i} className="cam bg-tab12">
+                    <div key={`B${i}`} className="cam bg-tab12">
                       <UserVideoComponent
                         streamManager={sub[1]}
                         session={session}
@@ -549,7 +554,10 @@ const Game = ({
                       }}
                     >
                       <button
-                        onClick={() => itemUse(myTeam, "meme")}
+                        onClick={() => {
+                          itemUse(myTeam, "meme");
+                          sendNotice(myTeam, "meme");
+                        }}
                         className={`rounded-full w-16 h-16 m-1 ${meme === 0 ? "grayscale" : ""}`}
                         disabled={meme === 0} // 선택적으로 버튼을 비활성화
                       >
@@ -582,7 +590,10 @@ const Game = ({
                       }}
                     >
                       <button
-                        onClick={() => itemUse(myTeam, "disable")}
+                        onClick={() => {
+                          itemUse(myTeam, "disable");
+                          sendNotice(myTeam, "disable");
+                        }}
                         className={`rounded-full w-16 h-16 m-1 ${disable === 0 ? "grayscale" : ""}`}
                         disabled={disable === 0} // 선택적으로 버튼을 비활성화
                       >
@@ -613,10 +624,12 @@ const Game = ({
                           }}
                         >
                           <button
-                            onClick={() => itemUse(myTeam, "hint")}
-                            className={`rounded-full w-16 h-16 m-1 ${
-                              hint === 0 ? "grayscale" : ""
-                            }`}
+                            onClick={() => {
+                              itemUse(myTeam, "hint");
+                              sendNotice(myTeam, "hint");
+                            }}
+                            className={`rounded-full w-16 h-16 m-1 ${hint === 0 ? "grayscale" : ""
+                              }`}
                             disabled={hint === 0} // 선택적으로 버튼을 비활성화
                           >
                             <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
@@ -646,7 +659,10 @@ const Game = ({
                         >
                           <button
                             onClick={() => {
-                              if (myTeam == TeamTurn) itemUse(myTeam, "stt");
+                              if (myTeam === turnPlayerId[2]) {
+                                itemUse(myTeam, "stt");
+                                sendNotice(myTeam, "stt");
+                              }
                               else alert("우리 팀의 차례에만 사용 가능합니다.");
                             }}
                             className={`rounded-full w-16 h-16 m-1 ${stt === 0 ? "grayscale" : ""}`}
