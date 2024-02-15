@@ -14,6 +14,7 @@ import G101 from "./games/G101";
 import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
+//초성
 const getInitials = (src) => {
   let string = "";
   for (var i = 0; i < src.length; i++) {
@@ -25,26 +26,9 @@ const getInitials = (src) => {
   return string;
 };
 
-const Game = ({
-  publisher,
-  subscribers,
-  session,
-  myUserName,
-  sendPlayDone,
-  itemUse,
-  meme,
-  disable,
-  hint,
-  setMeme,
-  setDisable,
-  setHint,
-  memeAttack,
-  setMemeAttack,
-  disableAttack,
-  setDisableAttack,
-  hintUse,
-  setHintUse,
-}) => {
+const Game = ({ publisher, subscribers, session, myUserName, sendPlayDone, itemUse, meme, disable, hint, stt,
+  memeAttack, disableAttack, hintUse, setHintUse, sttUse, setSttUse }) => {
+
   let maxTime = 30000;
   let maxRound = 4;
   const myConnectionId = session.connection.connectionId;
@@ -81,6 +65,60 @@ const Game = ({
   const [gameCategory, setGameCategory] = useState(undefined);
   const [rand01, setRand01] = useState(Math.floor(Math.random() * 2));
 
+  //stt
+  const startRecording = () => {
+    console.log("시작")
+    // 녹음 시작 및 2초 후에 녹음 종료
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        const mediaRecorder = new MediaRecorder(stream);
+        let chunks = [];
+        mediaRecorder.start();
+
+        mediaRecorder.ondataavailable = e => {
+          chunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { 'type': 'audio/wav' });
+          const formData = new FormData();
+          formData.append('audio', blob);
+
+          fetch('http://localhost:80/stt', {
+            method: 'POST',
+            body: formData
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data.results[0].transcript);
+              session
+                .signal({
+                  data: JSON.stringify({
+                    result: data.results[0].transcript
+                  }),
+                  to: [],
+                  type: "stt"
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        };
+
+        setTimeout(() => {
+          console.log("끝")
+          mediaRecorder.stop();
+        }, 2000);
+      })
+      .catch(err => {
+        console.error('Error:', err);
+      });
+  };
+
+  //아이템 사용
   useEffect(() => {
     if (hintUse) {
       const extractedInitials = getInitials(quizData[quizIndex].quizAnswer);
@@ -92,6 +130,19 @@ const Game = ({
       setHintUse(false);
     }, 5000);
   }, [hintUse, quizIndex]);
+
+  useEffect(() => {
+    if (turnPlayerId) {
+      console.log("들어옴")
+      console.log("idcheck" + myConnectionId, turnPlayerId)
+      if (sttUse) {
+        if (myConnectionId == turnPlayerId[0]) {
+          startRecording();
+        }
+      }
+    }
+  }, [sttUse]);
+
 
   // 음악 정지
   const { pause } = UseIsMusicPlay();
@@ -247,7 +298,7 @@ const Game = ({
           itemUse(myTeam, "hint");
         } else if (gameCategory === 101) {
           // gameCategory가 101일 때 talk
-          itemUse(myTeam, "talk");
+          itemUse(myTeam, "stt");
         }
         break;
         default:
@@ -416,6 +467,7 @@ const Game = ({
               ))}
             </section>
           </div>
+
           <div className="bg-white p-1 rounded-3xl border-2 border-slate-500 inline-block mt-[-15px] flex justify-center mx-auto max-w-60">
             <div className="text-center">
               <h1 className="text-2xl mt-1 mb-2">아이템</h1>
@@ -469,55 +521,67 @@ const Game = ({
                   </button>
                 </Badge>
               </Tooltip>
-              {/* 게임 카테고리에 따라 다른 아이템 렌더링 */}
-              {gameCategory === 102 ? (
-                // gameCategory가 102일 때 초성 힌트 아이템
-                <Tooltip title="초성 힌트" arrow>
-                  <Badge
-                    badgeContent={
-                      <span style={{ fontSize: "2em" }} className="mt-1">
-                        /
-                      </span>
-                    }
-                    color="primary"
-                    overlap="circular"
-                    sx={{ "& .MuiBadge-badge": { height: "30px", minWidth: "30px" } }}
+              {gameCategory === 102 ?
+              <Tooltip title="초성 힌트" arrow>
+                <Badge
+                  badgeContent={
+                    <span style={{ fontSize: "2em" }} className="mt-1">
+                      /
+                    </span>
+                  }
+                  color="primary"
+                  overlap="circular"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      height: "30px", // 뱃지 높이 조정
+                      minWidth: "30px", // 뱃지 최소 너비 조정
+                    },
+                  }}
+                >
+                  <button
+                    onClick={() => itemUse(myTeam, "hint")}
+                    className={`rounded-full w-16 h-16 ${hint === 0 ? "grayscale" : ""}`}
+                    disabled={hint === 0} // 선택적으로 버튼을 비활성화
                   >
-                    <button
-                      onClick={() => itemUse(myTeam, "hint")}
-                      className={`rounded-full w-16 h-16 ${hint === 0 ? "grayscale" : ""}`}
-                      disabled={hint === 0}
-                    >
-                      <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
-                    </button>
-                  </Badge>
-                </Tooltip>
-              ) : (
-                // gameCategory가 101일 때 대화하기 아이템
-                <Tooltip title="대화하기" arrow>
-                  <Badge
-                    badgeContent={
-                      <span style={{ fontSize: "2em" }} className="mt-1">
-                        /
-                      </span>
-                    }
-                    color="primary"
-                    overlap="circular"
-                    sx={{ "& .MuiBadge-badge": { height: "30px", minWidth: "30px" } }}
+                    <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
+                  </button>
+                </Badge>
+              </Tooltip>:
+
+              //stt
+              <Tooltip title="stt" arrow>
+                <Badge
+                  badgeContent={
+                    <span style={{ fontSize: "2em" }} className="mt-1">
+                      /
+                    </span>
+                  }
+                  color="primary"
+                  overlap="circular"
+                  sx={{
+                    "& .MuiBadge-badge": {
+                      height: "30px", // 뱃지 높이 조정
+                      minWidth: "30px", // 뱃지 최소 너비 조정
+                    },
+                  }}
+                >
+                  <button
+                    onClick={() =>{
+                        if (myTeam == TeamTurn)
+                          itemUse(myTeam, "stt")
+                        else 
+                          alert("우리 팀의 차례에만 사용 가능합니다.")
+                             }}
+                             className={`rounded-full w-16 h-16 ${stt === 0 ? "grayscale" : ""}`}
+                    disabled={stt === 0} // 선택적으로 버튼을 비활성화
                   >
-                    <button
-                      onClick={() => itemUse(myTeam, "talk")} // "talk" 액션에 해당하는 함수 호출 필요
-                      className={`rounded-full w-16 h-16 ${talk === 0 ? "grayscale" : ""}`} // "talk" 상태 관리 필요
-                      disabled={talk === 0} // "talk" 상태에 따른 비활성화 처리 필요
-                    >
-                      <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
-                    </button>
-                  </Badge>
-                </Tooltip>
-              )}
+                    <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
+                  </button>
+                </Badge>
+              </Tooltip>}
             </div>
           </div>
-        </main>
+        </main >
       )}
     </>
   );

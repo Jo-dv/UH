@@ -18,6 +18,11 @@
 }
 
 @font-face {
+  font-family: "round-extrabold";
+  src: url(./asset/font/NPSfont_extrabold.woff);
+}
+
+@font-face {
   font-family: "TAEBAEK";
   src: url(./asset/font/TAEBAEK_font.otf);
 }
@@ -25,10 +30,22 @@
   font-family: "Beatster";
   src: url(./asset/font/Beatster-Font.otf);
 }
+
+@font-face{
+  font-family:'DNFBitBitv2';
+  font-style:normal;font-weight:400;src:url('//cdn.df.nexon.com/img/common/font/DNFBitBitv2.otf')format('opentype')}
+  
 @font-face {
   font-family: "round-extrabold";
   src: url(./asset/font/NPSfont_extrabold.woff);
 
+}
+
+@font-face {
+  font-family: 'button';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
 }
 
 body {
@@ -57,10 +74,6 @@ body {
 
 :root {
   --font-bold: "round-bold";
-}
-
-:root {
-  --font-extrabold: "round-extrabold";
 }
 
 /* 스크롤바 디자인 */
