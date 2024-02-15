@@ -552,6 +552,10 @@ const Game = ({
                           minWidth: "30px", // 뱃지 최소 너비 조정
                         },
                       }}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
                     >
                       <button
                         onClick={() => {
@@ -588,6 +592,10 @@ const Game = ({
                           minWidth: "30px", // 뱃지 최소 너비 조정
                         },
                       }}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
                     >
                       <button
                         onClick={() => {
@@ -622,6 +630,10 @@ const Game = ({
                               minWidth: "30px", // 뱃지 최소 너비 조정
                             },
                           }}
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
                         >
                           <button
                             onClick={() => {
@@ -655,6 +667,10 @@ const Game = ({
                               height: "30px", // 뱃지 높이 조정
                               minWidth: "30px", // 뱃지 최소 너비 조정
                             },
+                          }}
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
                           }}
                         >
                           <button
