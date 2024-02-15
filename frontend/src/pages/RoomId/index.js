@@ -62,12 +62,10 @@ export default function RoomId() {
   const [stt, setStt] = useState(0);
   const [memeAttack, setMemeAttack] = useState(false);
 
-
   const [disableAttack, setDisableAttack] = useState(false);
   const [hintUse, setHintUse] = useState(false);
   const [sttUse, setSttUse] = useState(false);
   const [sttMsg, setSttMsg] = useState("");
-
 
   const navigate = useNavigate();
   const [isKickeded, setIsKicked] = useState(false);
@@ -80,16 +78,20 @@ export default function RoomId() {
 
   const itemUse = (myTeam, item) => {
     if (session !== undefined) {
-      if ((item === "meme" && meme == 1) || (item === "disable" && disable == 1) ||
-        (item === "hint" && hint == 1) || (item === "stt" && stt == 1)) {
+      if (
+        (item === "meme" && meme == 1) ||
+        (item === "disable" && disable == 1) ||
+        (item === "hint" && hint == 1) ||
+        (item === "stt" && stt == 1)
+      ) {
         session
           .signal({
             data: JSON.stringify({
               myTeam: myTeam,
-              item: item
+              item: item,
             }),
             to: [],
-            type: "item"
+            type: "item",
           })
           .catch((error) => {
             console.error(error);
@@ -183,10 +185,10 @@ export default function RoomId() {
       setStt(1);
 
       //아이템 상태 초기화
-      setMemeAttack(false)
-      setDisableAttack(false)
-      setHintUse(false)
-      setSttUse(false)
+      setMemeAttack(false);
+      setDisableAttack(false);
+      setHintUse(false);
+      setSttUse(false);
     });
 
     mySession.on("signal:room-playDone", (event) => {
@@ -395,10 +397,11 @@ export default function RoomId() {
       });
 
       //아이템 처리
-      session.off("signal:item")
+      session.off("signal:item");
       session.on("signal:item", (event) => {
         const { myTeam, item } = JSON.parse(event.data);
-        if (myTeam === "A") {//A팀이 아이템을 사용했을 때
+        if (myTeam === "A") {
+          //A팀이 아이템을 사용했을 때
           //B팀인 경우
           if (teamB.includes(session.connection.connectionId)) {
             if (item === "meme") {
@@ -406,7 +409,7 @@ export default function RoomId() {
             } else if (item === "disable") {
               setDisableAttack(true);
             }
-          }//A팀인 경우
+          } //A팀인 경우
           else if (teamA.includes(session.connection.connectionId)) {
             if (item === "meme") {
               setMeme(0);
@@ -419,9 +422,9 @@ export default function RoomId() {
               setStt(0);
               setSttUse(true);
             }
-
           }
-        } else if (myTeam === "B") {//B팀이 아이템을 사용했을 때
+        } else if (myTeam === "B") {
+          //B팀이 아이템을 사용했을 때
           //A팀인 경우
           if (teamA.includes(session.connection.connectionId)) {
             if (item === "meme") {
@@ -429,7 +432,7 @@ export default function RoomId() {
             } else if (item === "disable") {
               setDisableAttack(true);
             }
-          }//B팀인 경우
+          } //B팀인 경우
           else if (teamB.includes(session.connection.connectionId)) {
             if (item === "meme") {
               setMeme(0);
@@ -451,14 +454,10 @@ export default function RoomId() {
   //아이템 사용 알림
   const sendNotice = (myTeam, item) => {
     let itemName = "";
-    if (item == "meme")
-      itemName = "화면 가리기"
-    else if (item == "disable")
-      itemName = "채팅 막기"
-    else if (item == "hint")
-      itemName = "초성 힌트"
-    else if (item == "stt")
-      itemName = "말풍선"
+    if (item == "meme") itemName = "화면 가리기";
+    else if (item == "disable") itemName = "채팅 막기";
+    else if (item == "hint") itemName = "초성 힌트";
+    else if (item == "stt") itemName = "말풍선";
 
     const data = JSON.stringify({
       chat: `[알림] ${itemName}을(를) 사용했습니다.`,
@@ -475,14 +474,11 @@ export default function RoomId() {
         to: [],
         type: "game-chat",
       })
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error) => {
         console.error(error);
       });
   };
-
-
 
   const setReady = async () => {
     // console.log("준비");
@@ -710,7 +706,7 @@ export default function RoomId() {
             <div className="grid col-start-7 col-end-9 row-start-1 row-end-13">
               <div className="grid grid-cols-2 gap-2 col-start-1 col-end-9 row-start-1 row-end-6">
                 <button
-                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center font-[round-bold] text-xl"
+                  className="bg-tab1 border rounded-2xl w-full h-full flex justify-center items-center font-[round-bold] text-5xl"
                   onClick={() => {
                     changeTeam("A");
                     playClick();
@@ -720,7 +716,7 @@ export default function RoomId() {
                 </button>
 
                 <button
-                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center font-[round-bold] text-xl"
+                  className="border rounded-2xl bg-tab12 w-full h-full flex justify-center items-center font-[round-bold] text-5xl"
                   onClick={() => {
                     changeTeam("B");
                     playClick();
@@ -735,8 +731,9 @@ export default function RoomId() {
                     setReady();
                     playClick();
                   }}
-                  className={`bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${isReady ? "bg-tab4" : ""
-                    }`}
+                  className={`font-[round-bold] text-5xl bg-tab10 active:bg-tab4 border rounded-2xl h-full flex justify-center items-center w-full ${
+                    isReady ? "bg-tab4" : ""
+                  }`}
                 >
                   {isHost ? "게임시작" : isReady ? "준비완료" : "준비"}
                 </button>
@@ -798,4 +795,3 @@ export default function RoomId() {
     </>
   );
 }
-
