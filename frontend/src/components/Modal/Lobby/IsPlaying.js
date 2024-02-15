@@ -1,9 +1,15 @@
+import useClick from "../../../hooks/useClick";
+
 const IsPlaying = ({ isPlaying, onClose }) => {
+  const { playClick } = useClick();
   return (
     <>
       {isPlaying && (
         <div
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+            playClick();
+          }}
           className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
         >
           <section
@@ -15,7 +21,10 @@ const IsPlaying = ({ isPlaying, onClose }) => {
             </p>
             <div className="flex justify-center items-center text-lg font-medium mt-2">
               <button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  playClick();
+                }}
                 className="bg-tab10 hover:bg-[#95c75a] py-2 px-4 rounded-xl"
               >
                 확인

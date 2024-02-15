@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import axios from "../../api/axios.js";
+import useClick from "../../hooks/useClick";
 
 const FeedbackModal = (props) => {
   const [feedbackContent, setFeedback] = useState("");
   const userSeq = sessionStorage.getItem("userSeq");
   const [feedbackError, setFeedbackError] = useState("");
   const [ModalOpen, setModalOpen] = useState(false);
+  const { playClick } = useClick();
   const modalOnOff = () => {
     setModalOpen(!ModalOpen);
   };
@@ -35,8 +37,8 @@ const FeedbackModal = (props) => {
       return; // 함수 실행 중단
     }
     try {
-      await axios.post("feedback", 
-      { userSeq, feedbackContent }
+      await axios.post("feedback",
+        { userSeq, feedbackContent }
       );
       // console.log({ userSeq, feedbackContent });
       // props.setFeedback(false);
@@ -48,13 +50,13 @@ const FeedbackModal = (props) => {
   return (
     <>
       <div
-      onClick={() => {
-        if ( feedbackContent === "" ) {
-        props.setFeedback(!props.feedback);
-      } else {
-        setFeedbackError("피드백 전송해주세요ㅠㅠ");
-      }
-      }}
+        onClick={() => {
+          if (feedbackContent === "") {
+            props.setFeedback(!props.feedback);
+          } else {
+            setFeedbackError("피드백 전송해주세요ㅠㅠ");
+          }
+        }}
         className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       >
         <form
@@ -73,10 +75,18 @@ const FeedbackModal = (props) => {
               />
               {feedbackError && <div className="text-red-500">{feedbackError}</div>}
             </div>
-            <button onClick={closeModal} className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 mr-2 rounded-xl">
+            <button onClick={() => {
+              closeModal();
+              playClick();
+            }}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 mr-2 rounded-xl">
               취소
             </button>
-            <button onClick={sendFeedback} className="bg-tab10 py-2 px-3 m-2 rounded-xl hover:bg-tab10hover">
+            <button onClick={() => {
+              sendFeedback();
+              playClick();
+            }}
+              className="bg-tab10 py-2 px-3 m-2 rounded-xl hover:bg-tab10hover">
               보내기
             </button>
           </div>
