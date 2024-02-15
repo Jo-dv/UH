@@ -4,8 +4,10 @@ import useWaitingRoomApiCall from "../../../api/useWaitingRoomApiCall";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { useWebSocket } from "../../../webSocket/UseWebSocket";
+import useClick from "../../../hooks/useClick";
 
 const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) => {
+  const { playClick } = useClick();
   const { putRoomsList } = useWaitingRoomApiCall();
   // 원래 방 정보 받기
   // console.log(roomInfo);
@@ -139,7 +141,11 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
             <div className="flex flex-wrap">
               <label className="mt-3 mr-3">비밀번호</label>
               <div className="rounded-2xl w-60 p-3 mb-3 border flex-auto flex flex-warp">
-                <button onClick={togglePassword}>{lock ? <LockIcon /> : <LockOpenIcon />}</button>
+                <button onClick={() => {
+                  togglePassword();
+                  playClick();
+                }}
+                >{lock ? <LockIcon /> : <LockOpenIcon />}</button>
                 {lock && (
                   <input
                     type="text"
@@ -226,6 +232,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
                   e.preventDefault();
                   handleUpdateRoom(e);
                   onClose();
+                  playClick();
                 }}
                 disabled={isLoading}
               >
