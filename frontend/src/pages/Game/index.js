@@ -241,9 +241,15 @@ const Game = ({
         case ".": // 채팅 막기
           itemUse(myTeam, "disable");
           break;
-        case "/": // 초성 힌트
+        case "/":
+        if (gameCategory === 102) {
+          // gameCategory가 102일 때 hint
           itemUse(myTeam, "hint");
-          break;
+        } else if (gameCategory === 101) {
+          // gameCategory가 101일 때 talk
+          itemUse(myTeam, "talk");
+        }
+        break;
         default:
           break;
       }
@@ -463,31 +469,52 @@ const Game = ({
                   </button>
                 </Badge>
               </Tooltip>
-              <Tooltip title="초성 힌트" arrow>
-                <Badge
-                  badgeContent={
-                    <span style={{ fontSize: "2em" }} className="mt-1">
-                      /
-                    </span>
-                  }
-                  color="primary"
-                  overlap="circular"
-                  sx={{
-                    "& .MuiBadge-badge": {
-                      height: "30px", // 뱃지 높이 조정
-                      minWidth: "30px", // 뱃지 최소 너비 조정
-                    },
-                  }}
-                >
-                  <button
-                    onClick={() => itemUse(myTeam, "hint")}
-                    className={`rounded-full w-16 h-16 ${hint === 0 ? "grayscale" : ""}`}
-                    disabled={hint === 0} // 선택적으로 버튼을 비활성화
+              {/* 게임 카테고리에 따라 다른 아이템 렌더링 */}
+              {gameCategory === 102 ? (
+                // gameCategory가 102일 때 초성 힌트 아이템
+                <Tooltip title="초성 힌트" arrow>
+                  <Badge
+                    badgeContent={
+                      <span style={{ fontSize: "2em" }} className="mt-1">
+                        /
+                      </span>
+                    }
+                    color="primary"
+                    overlap="circular"
+                    sx={{ "& .MuiBadge-badge": { height: "30px", minWidth: "30px" } }}
                   >
-                    <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
-                  </button>
-                </Badge>
-              </Tooltip>
+                    <button
+                      onClick={() => itemUse(myTeam, "hint")}
+                      className={`rounded-full w-16 h-16 ${hint === 0 ? "grayscale" : ""}`}
+                      disabled={hint === 0}
+                    >
+                      <img src={gethint} alt="hint" className="rounded-full w-16 h-16" />
+                    </button>
+                  </Badge>
+                </Tooltip>
+              ) : (
+                // gameCategory가 101일 때 대화하기 아이템
+                <Tooltip title="대화하기" arrow>
+                  <Badge
+                    badgeContent={
+                      <span style={{ fontSize: "2em" }} className="mt-1">
+                        /
+                      </span>
+                    }
+                    color="primary"
+                    overlap="circular"
+                    sx={{ "& .MuiBadge-badge": { height: "30px", minWidth: "30px" } }}
+                  >
+                    <button
+                      onClick={() => itemUse(myTeam, "talk")} // "talk" 액션에 해당하는 함수 호출 필요
+                      className={`rounded-full w-16 h-16 ${talk === 0 ? "grayscale" : ""}`} // "talk" 상태 관리 필요
+                      disabled={talk === 0} // "talk" 상태에 따른 비활성화 처리 필요
+                    >
+                      <img src={talk} alt="talk" className="rounded-full w-16 h-16" />
+                    </button>
+                  </Badge>
+                </Tooltip>
+              )}
             </div>
           </div>
         </main>
