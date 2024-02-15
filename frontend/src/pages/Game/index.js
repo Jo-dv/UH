@@ -8,6 +8,11 @@ import G101 from "./games/G101";
 import G102 from "./games/G102";
 import UseIsMusicPlay from "../../store/UseIsMusicPlay";
 
+/**
+ *
+ * @param {string} src 한글
+ * @returns 한글 초성
+ */
 const getInitials = (src) => {
   let string = "";
   for (var i = 0; i < src.length; i++) {
@@ -53,21 +58,7 @@ const Game = ({
   const [TeamTurn, setTeamTurn] = useState("A");
   const [TeamIndex, setTeamIndex] = useState(0);
   const [turnPlayerId, setTurnPlayerId] = useState(undefined);
-  const [quizData, setQuizData] = useState([
-    { quizId: 62, quizAnswer: "이덕화" },
-    { quizId: 180, quizAnswer: "최주봉" },
-    { quizId: 12, quizAnswer: "이병헌" },
-    { quizId: 296, quizAnswer: "윤계상" },
-    { quizId: 73, quizAnswer: "정한용" },
-    { quizId: 353, quizAnswer: "최백호" },
-    { quizId: 49, quizAnswer: "정태춘" },
-    { quizId: 12, quizAnswer: "이병헌" },
-    { quizId: 186, quizAnswer: "예지원" },
-    { quizId: 321, quizAnswer: "최덕문" },
-    { quizId: 363, quizAnswer: "김성겸" },
-    { quizId: 107, quizAnswer: "이정길" },
-    { quizId: 82, quizAnswer: "김희선" },
-  ]);
+  const [quizData, setQuizData] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
   const [ATeamScore, setATeamScore] = useState(0);
   const [BTeamScore, setBTeamScore] = useState(0);
@@ -133,13 +124,11 @@ const Game = ({
       setTeamTurn("B");
       setTeamIndex(0);
       setTurnPlayerId(BTeamStreamManagers[0]);
-      // changeTeamIndex();
       plusQuizIndex();
     } else if (TeamTurn === "B") {
       setTeamTurn("A");
       setTeamIndex(0);
       setTurnPlayerId(ATeamStreamManagers[0]);
-      // changeTeamIndex();
       plusQuizIndex();
     }
     if (round < maxRound) {
