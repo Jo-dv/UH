@@ -3,6 +3,7 @@ import useAccessors from "../../hooks/useAccessors";
 import UseAccessorsStore from "../../store/UseAccessorsStore";
 import useStore from "../../store/UserAuthStore";
 import useLobbyApiCall from "../../api/useLobbyApiCall";
+import useClick from "../../hooks/useClick";
 
 const AccessorsList = () => {
   const { accessorRefs } = useAccessors();
@@ -10,6 +11,7 @@ const AccessorsList = () => {
   const { requestFriends } = useLobbyApiCall();
   const [accessorDropdown, setAccessorDropdown] = useState(null);
   const dropdownRef = useRef(null);
+  const { playClick } = useClick();
 
   // 드롭다운 외부 클릭 감지
   useEffect(() => {
@@ -46,7 +48,7 @@ const AccessorsList = () => {
 
   // 접속자 목록에서 친구요청 보내고 뜨는 alert에서 확인 눌렀을때, 드롭다운 닫기
   const handleFriendRequest = async (toUserSeq) => {
-    await requestFriends(toUserSeq); 
+    await requestFriends(toUserSeq);
     setAccessorDropdown(null);
   };
   return (
@@ -65,7 +67,7 @@ const AccessorsList = () => {
                 </button>
                 {accessorDropdown === accessor.nickname && (
                   <div ref={dropdownRef} className="absolute ml-5 z-10 w-[87px] bg-white bg-opacity-95 rounded-2xl border-gray-200 border shadow-lg ">
-                    <button className="text-gray-700 text-sm block px-4 py-1 w-full text-left hover:bg-gray-100 rounded-2xl" onClick={() => handleFriendRequest(accessor.userSeq)}>친구요청</button>
+                    <button className="text-gray-700 text-sm block px-4 py-1 w-full text-left hover:bg-gray-100 rounded-2xl" onClick={() => { handleFriendRequest(accessor.userSeq); playClick(); }}>친구요청</button>
                   </div>
                 )}
               </div>

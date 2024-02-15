@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 
 import FriendList from "../../components/lobbyComponent/FriendList";
 import AccessorsList from "../../components/lobbyComponent/AccessorList";
+import useClick from "../../hooks/useClick";
 
 const UserList = () => {
   // [친구 목록, 접속자 목록] 2개 토글
   const [toggleFriend, setToggleFriend] = useState(true);
   const [click, setClick] = useState(true);
+  const { playClick } = useClick();
 
   return (
     <>
@@ -19,6 +21,7 @@ const UserList = () => {
             onClick={() => {
               setClick(true);
               setToggleFriend(true);
+              playClick();
             }}
           >
             친구
@@ -30,6 +33,7 @@ const UserList = () => {
             onClick={() => {
               setClick(false);
               setToggleFriend(false);
+              playClick();
             }}
           >
             접속자

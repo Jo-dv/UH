@@ -5,6 +5,7 @@ import WebcamComponent from "./WebcamMicStateManager";
 import alternativeImage from "../../asset/image/character.jpg";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import useClick from "../../hooks/useClick";
 
 const UserMediaProfile = () => {
   // 오디오 상태 조절
@@ -13,6 +14,7 @@ const UserMediaProfile = () => {
   const [play, setPlay] = useState(true);
   // 닉네임 가져오기
   const nickname = useStore((state) => state.user.userNickname);
+  const { playClick } = useClick();
 
   return (
     <div className="col-start-1 col-end-4 row-start-8 row-end-13 m-2 p-2 rounded-2xl bg-tab11">
@@ -25,6 +27,7 @@ const UserMediaProfile = () => {
             <button
               onClick={() => {
                 setPlay(!play);
+                playClick();
               }}
               className="bg-tab9 hover:bg-tab12 pr-3 pl-3 rounded-3xl"
             >

@@ -159,7 +159,7 @@ const Game = ({
 
   useEffect(() => {
     pause();
-  }, [pause]);
+  }, []);
 
   const plusQuizIndex = () => {
     setQuizIndex(quizIndex + 1);
@@ -296,7 +296,10 @@ const Game = ({
             itemUse(myTeam, "hint");
           } else if (gameCategory === 101) {
             // gameCategory가 101일 때 talk
-            itemUse(myTeam, "stt");
+            if (myTeam == TeamTurn)
+              itemUse(myTeam, "stt")
+            else
+              alert("우리 팀의 차례에만 사용 가능합니다.")
           }
           break;
         default:
