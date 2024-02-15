@@ -43,11 +43,11 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
   }, []);
 
   const handleChangeRoomMax = useCallback((e) => {
-    setRoomMax(e.target.value);
+    setRoomMax(Number(e.target.value));
   }, []);
 
   const handleChangeRoomGame = useCallback((e) => {
-    setRoomGame(e.target.value);
+    setRoomGame(Number(e.target.value));
   }, []);
 
   useEffect(() => {
@@ -161,9 +161,8 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
                     type="radio"
                     value={4}
                     name="num"
-                    // checked={roomMax === 4}
+                    checked={roomMax === 4}
                     onChange={handleChangeRoomMax}
-                    defaultChecked
                     className="mr-2"
                   />
                   4명
@@ -173,7 +172,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
                     type="radio"
                     value={6}
                     name="num"
-                    // checked={roomMax === 6}
+                    checked={roomMax === 6}
                     onChange={handleChangeRoomMax}
                     className="mr-2"
                   />
@@ -184,7 +183,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
                     type="radio"
                     value={8}
                     name="num"
-                    // checked={roomMax === 8}
+                    checked={roomMax === 8}
                     onChange={handleChangeRoomMax}
                     className="mr-2"
                   />
@@ -200,9 +199,8 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
                     type="radio"
                     value={101}
                     name="game"
-                    // checked={roomGame === 101}
+                    checked={roomGame === 101}
                     onChange={handleChangeRoomGame}
-                    defaultChecked
                     className="mr-2"
                   />
                   고요 속의 외침
@@ -211,7 +209,7 @@ const RoomSetting = ({ onClose, roomSetting, roomInfo, connectionId, isHost }) =
                   <input
                     type="radio"
                     value={102}
-                    // checked={roomGame === 102}
+                    checked={roomGame === 102}
                     name="game"
                     onChange={handleChangeRoomGame}
                     className="mr-2"
