@@ -23,19 +23,18 @@ const InviteList = (props) => {
   const [isInvited, setIsInvited] = useState(false);
   const [invitedStatus, setInvitedStatus] = useState({});
 
-
   const sendInvite = async (friend) => {
-    if (!invitedStatus[friend.userNickname]) {
+    if (!invitedStatus[friend.nickname]) {
       await send({
         type: "invite",
         fromNickname: user.userNickname,
         toConnectionId: friend.connectionId,
       });
-  
+
       // 특정 친구의 초대 상태를 업데이트
       setInvitedStatus((prevStatus) => ({
         ...prevStatus,
-        [friend.userNickname]: true,
+        [friend.nickname]: true,
       }));
     }
   };
@@ -92,25 +91,30 @@ const InviteList = (props) => {
           <p className="text-xl text-center">접속중인 친구</p>
           <hr className="border border-gray-300 my-3" />
           <div style={{ maxHeight: "200px", overflowY: "auto" }}>
-          {combinedList.map((friend, i) => (
-  <div key={i}> {/* key를 div에 적용 */}
-    <div className="flex items-center justify-between" ref={accessorRefs.current[i]}>
-      <div className="flex-grow pl-4">{friend.nickname}</div>
-      <div className="flex pr-4">
-        <button
-          className={`py-1 px-2 rounded-xl mr-1 ${
-            invitedStatus[friend.userNickname] ? "bg-gray-400 cursor-not-allowed" : "bg-tab10 hover:bg-[#95c75a]"
-          }`}
-          onClick={() => sendInvite(friend)}
-          disabled={invitedStatus[friend.userNickname]} // 특정 친구의 초대 상태를 기반으로 비활성화 상태 결정
-        >
-          {invitedStatus[friend.userNickname] ? "요청보냄" : "초대하기"}
-        </button>
-      </div>
-    </div>
-    {i !== combinedList.length - 1 && <hr className="border-1 border-gray-300 my-1 w-full" />}
-  </div>
-))}
+            {combinedList.map((friend, i) => (
+              <div key={i}>
+                {/* key를 div에 적용 */}
+                <div className="flex items-center justify-between" ref={accessorRefs.current[i]}>
+                  <div className="flex-grow pl-4">{friend.nickname}</div>
+                  <div className="flex pr-4">
+                    <button
+                      className={`py-1 px-2 rounded-xl mr-1 ${
+                        invitedStatus[friend.nickname]
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-tab10 hover:bg-[#95c75a]"
+                      }`}
+                      onClick={() => sendInvite(friend)}
+                      // disabled={invitedStatus[friend.userNickname]} // 특정 친구의 초대 상태를 기반으로 비활성화 상태 결정
+                    >
+                      {invitedStatus[friend.nickname] ? "요청보냄" : "초대하기"}
+                    </button>
+                  </div>
+                </div>
+                {i !== combinedList.length - 1 && (
+                  <hr className="border-1 border-gray-300 my-1 w-full" />
+                )}
+              </div>
+            ))}
           </div>
           {combinedList.length === 0 && (
             <div>
