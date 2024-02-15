@@ -372,12 +372,33 @@ const Game = ({
             </section>
             <article className="h-full aspect-[12/10] relative flex flex-col">
               <div className="w-full flex justify-around items-end bg-tab10 rounded-t-[17px]">
-                <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p>
+                {/* <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p> */}
                 {/* <p> Team: {TeamTurn}</p> */}
-                <p className="text-3xl">Round {round}</p>
+                {/* <p className="text-4xl font-[round-extrabold]">Round {round}</p> */}
                 {/* <p>{time}</p> */}
-                <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-lg"}>B : {BTeamScore}</p>
-              </div>
+                {/* <p className={ATeamScore < BTeamScore ? "text-2xl" : "text-lg"}>B : {BTeamScore}</p> */}
+                <div className="w-full h-[50px] flex items-center bg-tab10 rounded-t-[17px]">
+        <div className="flex-1 flex justify-center">
+          <p
+            className={
+              ATeamScore > BTeamScore ? "text-4xl text-tab1 font-bold" : "text-2xl font-semibold"
+            }
+          >
+            A : {ATeamScore}
+          </p>
+        </div>
+        <p className="text-4xl font-[round-extrabold] flex-shrink-0">Round {round}</p>
+        <div className="flex-1 flex justify-center">
+          <p
+            className={
+              ATeamScore < BTeamScore ? "text-4xl text-tab12 font-bold" : "text-2xl font-semibold"
+            }
+          >
+            B : {BTeamScore}
+          </p>
+        </div>
+      </div>
+                </div>
               <section className="relative rounded-b-[17px] overflow-hidden">
                 {gameCategory === 101 ? (
                   <G101
