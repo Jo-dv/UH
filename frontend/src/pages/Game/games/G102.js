@@ -46,7 +46,7 @@ const G102 = ({
   // 비디오 파일 경로 배열
   const videoFiles = [Chipi, Tooth, Josh];
   const [selectedVideo, setSelectedVideo] = useState("");
-  const [maxTime, setMaxTime] = useState(600000);
+  const [maxTime, setMaxTime] = useState(60000);
   const [maxTurnTime, setMaxTurnTime] = useState(7000);
   const [turnTime, setTurnTime] = useState(0);
   const [isEnded, setIsEnded] = useState(false);
