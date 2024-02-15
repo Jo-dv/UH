@@ -64,7 +64,7 @@ const Chat = ({
       .signal({
         data: data, // Any string (optional)
         to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
-        type: "room-chat", // The type of message (optional)
+        type: "game-chat", // The type of message (optional)
       })
       .then(() => {
         // console.log("보냄 :", chat);
@@ -76,8 +76,8 @@ const Chat = ({
       });
   };
 
-  session.off("signal:room-chat");
-  session.on("signal:room-chat", (event) => {
+  session.off("signal:game-chat");
+  session.on("signal:game-chat", (event) => {
     console.log(answer);
     const dataObj = JSON.parse(event.data);
     if (gameCategory === 101) {
