@@ -293,25 +293,33 @@ const Game = ({
     const handleKeyPress = (event) => {
       switch (event.key) {
         case "[": // 화면 가리기
-          itemUse(myTeam, "meme");
-          sendNotice(myTeam, "meme");
+          if (meme == 1) {
+            itemUse(myTeam, "meme");
+            sendNotice(myTeam, "meme");
+          }
           break;
         case "]": // 채팅 막기
-          itemUse(myTeam, "disable");
-          sendNotice(myTeam, "disable");
+          if (disable == 1) {
+            itemUse(myTeam, "disable");
+            sendNotice(myTeam, "disable");
+          }
           break;
         case "\\":
           if (gameCategory === 102) {
             // gameCategory가 102일 때 hint
-            itemUse(myTeam, "hint");
-            sendNotice(myTeam, "hint");
-          } else if (gameCategory === 101) {
-            // gameCategory가 101일 때 talk
-            if (myTeam === turnPlayerId[2]) {
-              itemUse(myTeam, "stt")
-              sendNotice(myTeam, "stt");
+            if (hint == 1) {
+              itemUse(myTeam, "hint");
+              sendNotice(myTeam, "hint");
             }
-            else { alert("우리 팀의 차례에만 사용 가능합니다.") }
+          } else if (gameCategory === 101) {
+            // gameCategory가 101일 때 stt
+            if (stt == 1) {
+              if (myTeam === turnPlayerId[2]) {
+                itemUse(myTeam, "stt")
+                sendNotice(myTeam, "stt");
+              }
+              else { alert("우리 팀의 차례에만 사용 가능합니다.") }
+            }
           }
           break;
         default:
@@ -324,7 +332,7 @@ const Game = ({
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [myTeam, itemUse,turnPlayerId]);
+  }, [myTeam, itemUse, turnPlayerId]);
 
   const [showHintAnimation, setShowHintAnimation] = useState(false);
   const [showSttAnimation, setShowSttAnimation] = useState(false);
