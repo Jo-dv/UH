@@ -242,14 +242,14 @@ const Game = ({
           itemUse(myTeam, "disable");
           break;
         case "/":
-        if (gameCategory === 102) {
-          // gameCategory가 102일 때 hint
-          itemUse(myTeam, "hint");
-        } else if (gameCategory === 101) {
-          // gameCategory가 101일 때 talk
-          itemUse(myTeam, "talk");
-        }
-        break;
+          if (gameCategory === 102) {
+            // gameCategory가 102일 때 hint
+            itemUse(myTeam, "hint");
+          } else if (gameCategory === 101) {
+            // gameCategory가 101일 때 talk
+            itemUse(myTeam, "talk");
+          }
+          break;
         default:
           break;
       }
@@ -261,6 +261,17 @@ const Game = ({
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, [myTeam, itemUse]);
+
+  const [showHintAnimation, setShowHintAnimation] = useState(false);
+
+  useEffect(() => {
+    if (hintUse) {
+      setShowHintAnimation(true); // 애니메이션 시작
+      setTimeout(() => {
+        setShowHintAnimation(false); // 애니메이션 숨김
+      }, 5000); // 애니메이션 지속 시간과 일치해야 함
+    }
+  }, [hintUse]);
 
   return (
     <>
@@ -295,6 +306,11 @@ const Game = ({
               ))}
             </section>
             <article className="h-full aspect-[12/10] relative flex flex-col">
+              {showHintAnimation && (
+                <div className={`absolute bottom-20 right-30`}>
+                  <span className="text-lg">{getInitials(quizData[quizIndex].quizAnswer)}</span>
+                </div>
+              )}
               <div className="w-full flex justify-around items-end bg-tab10 rounded-t-[17px]">
                 <p className={ATeamScore > BTeamScore ? "text-2xl" : "text-lg"}>A : {ATeamScore}</p>
                 {/* <p> Team: {TeamTurn}</p> */}
