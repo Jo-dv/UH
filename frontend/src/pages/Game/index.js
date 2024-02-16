@@ -101,22 +101,22 @@ const Game = ({
           })
             .then((response) => response.json())
             .then((data) => {
-              const transcript = data.results[0].transcript
-              console.log(transcript);
-              if (transcript.trim() != ""){
+              const transcript = data.results[0].transcript;
+              // console.log(transcript);
+              if (transcript.trim() != "") {
                 session
-                .signal({
-                  data: JSON.stringify({
-                    result: data.results[0].transcript,
-                  }),
-                  to: [],
-                  type: "stt",
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
+                  .signal({
+                    data: JSON.stringify({
+                      result: data.results[0].transcript,
+                    }),
+                    to: [],
+                    type: "stt",
+                  })
+                  .catch((error) => {
+                    console.error(error);
+                  });
               } else {
-                setSttMsg("앗! 다음 기회에 ㅋㅋ;;ㅎㅎ;;ㅈㅅ;;")
+                setSttMsg("앗! 다음 기회에 ㅋㅋ;;ㅎㅎ;;ㅈㅅ;;");
               }
             })
             .catch((error) => {
@@ -137,8 +137,8 @@ const Game = ({
   useEffect(() => {
     if (hintUse) {
       const extractedInitials = getInitials(quizData[quizIndex].quizAnswer);
-      console.log(quizData[quizIndex].quizAnswer);
-      console.log(extractedInitials);
+      // console.log(quizData[quizIndex].quizAnswer);
+      // console.log(extractedInitials);
     }
 
     setTimeout(() => {
@@ -500,8 +500,13 @@ const Game = ({
                 {/* <button onClick={sendPlayDone}>playDone</button> */}
                 <div>
                   {gameCategory === 101 && showSttAnimation ? (
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 border-2 border-slate-500 bg-white p-2 rounded-md shadow-lg">
-                      <span className="text-lg">{sttMsg}</span> {/* STT 메시지 표시 */}
+                    <div
+                      className="absolute top-1/2 left-3 transform -translate-y-1/2"
+                      style={{ width: "300px", height: "150px" }}
+                    >
+                      <div className="bubble flex items-center justify-center">
+                        <span className="text-lg text-center">{sttMsg}</span>
+                      </div>
                     </div>
                   ) : gameCategory === 102 && showHintAnimation ? (
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10 border-2 border-slate-500 bg-white p-2 rounded-md shadow-lg">
@@ -576,6 +581,10 @@ const Game = ({
                           minWidth: "30px", // 뱃지 최소 너비 조정
                         },
                       }}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
                     >
                       <button
                         onClick={() => {
@@ -612,6 +621,10 @@ const Game = ({
                           minWidth: "30px", // 뱃지 최소 너비 조정
                         },
                       }}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'left',
+                      }}
                     >
                       <button
                         onClick={() => {
@@ -646,6 +659,10 @@ const Game = ({
                               minWidth: "30px", // 뱃지 최소 너비 조정
                             },
                           }}
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
+                          }}
                         >
                           <button
                             onClick={() => {
@@ -679,6 +696,10 @@ const Game = ({
                               height: "30px", // 뱃지 높이 조정
                               minWidth: "30px", // 뱃지 최소 너비 조정
                             },
+                          }}
+                          anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'left',
                           }}
                         >
                           <button

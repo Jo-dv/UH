@@ -114,7 +114,7 @@ const MyPage = () => {
                 </p>
                 {myPageInfo?.record?.length !== 0 && (
                   <div className="h-full mt-4 ml-5">
-                    <DonutChart color="#3498db" percent={winPercent} size="250px" />
+                    <DonutChart color="#3498db" percent={winPercent.toFixed(2)} size="250px" />
                     {/* <p className="ml-20 text-gray-500">{totalCount}전 {winCount}승 {loseCount}패</p> */}
                   </div>
                 )}

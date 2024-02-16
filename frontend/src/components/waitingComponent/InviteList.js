@@ -84,9 +84,9 @@ const InviteList = (props) => {
 
   return (
     <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="fixed inset-0 flex justify-center items-center z-50">
         <div
-          className="relative z-40 bg-white bg-opacity-95 rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2"
+          className="relative z-40 bg-white rounded-3xl border-gray-200 border shadow-lg p-5 md:p-6 mx-2"
           style={{ width: "300px", height: "300px" }}
           ref={modalRef}
         >
