@@ -20,6 +20,23 @@
 
 ![skills](./README_asset/Skills.jpg)
 
+### FE
+
+![React](https://img.shields.io/badge/react_18.2.0-444444?style=for-the-badge&logo=react)
+![axios](https://img.shields.io/badge/axios_1.6.5-444444?style=for-the-badge&logo=axios)
+![styled-components](https://img.shields.io/badge/styled_components_6.1.8-444444?style=for-the-badge&logo=styled-components)
+![tailwindcss](https://img.shields.io/badge/tailwindcss_3.4.1-444444?style=for-the-badge&logo=tailwindcss)
+![zustand](https://img.shields.io/badge/zustand_4.5.0-444444?style=for-the-badge&logo=zustand)
+![openvidu-browser](https://img.shields.io/badge/openvidu_browser_2.29.1-444444?style=for-the-badge&logo=openvidu-browser)
+
+### BE
+
+![SpringBoot](https://img.shields.io/badge/SpringBoot_3.2.1-444444?style=for-the-badge&logo=SpringBoot)
+![JDK](https://img.shields.io/badge/JDK:Zulu_17.0.9-444444?style=for-the-badge&logo=JDK)
+![Python](https://img.shields.io/badge/Python_3.11-444444?style=for-the-badge&logo=Python)
+![Flask](https://img.shields.io/badge/Flask_1.1.4-444444?style=for-the-badge&logo=Flask)
+![MySQL](https://img.shields.io/badge/MySQL_8.0.35-444444?style=for-the-badge&logo=MySQL)
+
 ## 아키텍처
 
 ![Architecture](./README_asset/Architecture.jpg)
