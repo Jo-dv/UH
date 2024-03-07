@@ -95,7 +95,7 @@ const Game = ({
           const formData = new FormData();
           formData.append("audio", blob);
 
-          fetch("https://i10e201.p.ssafy.io/stt", {
+          fetch("http://localhost:5002/stt", {
             method: "POST",
             body: formData,
           })

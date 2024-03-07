@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
--- Host: i10e201.p.ssafy.io    Database: uh
+-- Host: localhost:3306    Database: uh
 -- ------------------------------------------------------
 -- Server version	8.0.35
 

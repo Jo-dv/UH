@@ -1,4 +1,4 @@
-# [UH!?](https://i10e201.p.ssafy.io)
+# UH!?
 
 ![StartPage](./README_asset/StartPage.gif)
 
@@ -9,12 +9,6 @@
 - 예능 게임을 즐기고 싶은데, 여건이 되지 않는 사람들
 
 에게 추천 드립니다.
-
-[- 플레이 하기- ](https://i10e201.p.ssafy.io)
-
-컨설턴트용 접속 계정 : admin / admin
-
-실습코치용 접속 계정 : adminCoach / adminCoach
 
 ## 기술스택
 

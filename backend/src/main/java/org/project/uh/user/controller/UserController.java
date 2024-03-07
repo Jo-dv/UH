@@ -41,8 +41,8 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 	private final UserService service;
 
-	private final String clientId = "4fffa78521feee5e1eb947c704c08cf2"; // 카카오 앱의 Client ID
-	private final String redirectUri = "https://i10e201.p.ssafy.io/callback/kakao"; // Redirect URI
+	private final String clientId = ""; // 카카오 앱의 Client ID
+	private final String redirectUri = "http://localhost:3000/callback/kakao"; // Redirect URI
 	private final String tokenRequestUri = "https://kauth.kakao.com/oauth/token"; // 카카오 토큰 요청 URI
 	private final String requestUri = "https://kapi.kakao.com/v2/user/me"; // 카카오 사용자 정보 요청 URI
 	private final String kakaoLogoutUri = "https://kauth.kakao.com/oauth/logout"; // 카카오 로그아웃 URI

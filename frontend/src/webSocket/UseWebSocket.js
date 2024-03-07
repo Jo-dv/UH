@@ -90,8 +90,7 @@ export const WebSocketProvider = ({ children }) => {
 
     const con = () => {
       connect(
-        "wss://i10e201.p.ssafy.io/ws",
-        // "ws://localhost:5000/ws",
+        "ws://localhost:5000/ws",
         null,
         (event) => {
           // console.log("WebSocket 메시지 수신:", event.data);
