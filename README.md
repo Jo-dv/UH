@@ -12,7 +12,7 @@
 
 ## 기술스택
 
-![skills](./README_asset/Skills.jpg)
+![skills](./README_asset/Skills.png)
 
 ### FE
 
@@ -33,11 +33,11 @@
 
 ## 아키텍처
 
-![Architecture](./README_asset/Architecture.jpg)
+![Architecture](./README_asset/Architecture.png)
 
 ## 팀원
 
-![Team](./README_asset/Team.jpg)
+![Team](./README_asset/Team.png)
 
 ## 특장점
 
